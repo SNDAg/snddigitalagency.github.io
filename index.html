@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SND Digital Agency</title>
   <style>
     body {
@@ -11,50 +11,44 @@
       font-family: Arial, sans-serif;
       margin: 0;
     }
-
     header {
       background-color: #111827;
       color: #fff;
       padding: 2rem 1rem;
       text-align: center;
     }
-
     header h1 {
       margin: 0;
       font-size: 2.2rem;
       letter-spacing: 1px;
-      transition: transform 0.2s ease-out;
-      will-change: transform;
-      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
     }
-
+    header h1:hover {
+      color: #38bdf8;
+      transform: scale(1.05);
+    }
     main {
       max-width: 800px;
       margin: 3rem auto;
       padding: 0 1rem;
       line-height: 1.6;
     }
-
     section {
       margin-bottom: 3rem;
     }
-
     h2 {
       color: #111827;
       margin-bottom: 1rem;
     }
-
     ul {
       padding-left: 1.2rem;
     }
-
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
       margin-top: 1rem;
     }
-
     .card {
       background: white;
       border-radius: 8px;
@@ -62,39 +56,41 @@
       padding: 1rem;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-
     .card:hover {
-      transform: scale(1.07) rotate(-1deg);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
-
     footer {
       background-color: #f1f1f1;
       padding: 2rem 1rem;
       text-align: center;
     }
-
     .contact-icons {
       display: flex;
       justify-content: center;
-      gap: 2rem;
+      gap: 1rem;
       margin-top: 1rem;
       flex-wrap: wrap;
     }
-
     .contact-icons a {
-      color: #111827;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: #e5f8f0;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
       text-decoration: none;
+      color: #111827;
       font-weight: bold;
+      transition: background-color 0.3s ease;
     }
-
+    .contact-icons a:hover {
+      background-color: #d0f1e3;
+    }
     .contact-icons img {
       width: 24px;
       height: 24px;
-      margin-right: 0.5rem;
-      vertical-align: middle;
     }
-
     .logos {
       display: flex;
       justify-content: center;
@@ -102,26 +98,41 @@
       gap: 2rem;
       margin-top: 2rem;
     }
-
     .logos img {
       height: 40px;
       opacity: 0.7;
     }
 
-    .cta-button {
-      display: inline-block;
-      background-color: #111827;
+    /* כפתור קבוע */
+    .floating-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
       color: white;
-      padding: 1rem 2rem;
-      border-radius: 5px;
-      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
       font-weight: bold;
-      margin: 2rem auto;
-      text-align: center;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 999;
+    }
+    .floating-button img {
+      width: 20px;
+      height: 20px;
+    }
+    .floating-button:hover {
+      background-color: #1ebe5d;
+      transform: scale(1.05);
     }
   </style>
 </head>
 <body>
+
   <header>
     <h1>SND Digital Agency</h1>
     <p>Digital Strategy & Business Partnerships</p>
@@ -203,7 +214,8 @@
         info@snddigitalagency.com
       </a>
       <a href="https://wa.me/972506986298" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/50/000000/whatsapp.png" alt="WhatsApp Icon" />WhatsApp
+        <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon" />
+        WhatsApp
       </a>
     </div>
   </footer>
@@ -212,13 +224,11 @@
     &copy; 2025 SND Digital Agency
   </footer>
 
-  <script>
-    const h1 = document.querySelector("header h1");
-    document.addEventListener("mousemove", (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 10;
-      const y = (e.clientY / window.innerHeight - 0.5) * 10;
-      h1.style.transform = `translate(${x}px, ${y}px)`;
-    });
-  </script>
+  <!-- כפתור וואטסאפ קבוע -->
+  <a class="floating-button" href="https://wa.me/972506986298" target="_blank">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
+    WhatsApp
+  </a>
+
 </body>
 </html>
