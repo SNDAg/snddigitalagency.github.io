@@ -222,17 +222,17 @@
     </section>
   </main>
 
-  <footer>
+    <footer>
     <h2>Let’s Grow Together</h2>
     <p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
     <div class="contact-icons">
+      <a class="whatsapp-button" target="_blank">
+        <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon" />
+        WhatsApp
+      </a>
       <a href="mailto:info@snddigitalagency.com">
         <img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email Icon" />
         info@snddigitalagency.com
-      </a>
-      <a href="https://wa.me/972506986298" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon" />
-        WhatsApp
       </a>
     </div>
     <br><br>
@@ -241,7 +241,48 @@
     </p>
   </footer>
   <br><br>
-  <a class="floating-button" href="https://wa.me/972506986298" target="_blank">
+
+  <!-- קישור אחיד בלינק אחד בלבד -->
+  <div id="whatsapp-data" data-whatsapp="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency."></div>
+
+  <a class="floating-button whatsapp-button" target="_blank">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
+    WhatsApp
+  </a>
+
+  <script>
+    // פונקציה לבדיקת כניסת אלמנט לviewport עם רווח קטן לתחילת האנימציה
+    function isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
+        && rect.bottom >= 0
+      );
+    }
+
+    function checkFadeSections() {
+      const sections = document.querySelectorAll('.fade-section');
+      sections.forEach(section => {
+        if (isInViewport(section)) {
+          section.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkFadeSections);
+    window.addEventListener('resize', checkFadeSections);
+    window.addEventListener('load', checkFadeSections);
+
+    // הכנסת לינק הוואטסאפ באופן דינמי
+    window.addEventListener('DOMContentLoaded', () => {
+      const whatsappLink = document.getElementById('whatsapp-data').dataset.whatsapp;
+      document.querySelectorAll('.whatsapp-button').forEach(btn => {
+        btn.href = whatsappLink;
+      });
+    });
+  </script>
+  <br><br>
+  <a class="floating-button" href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency." target="_blank">
     <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
     WhatsApp
   </a>
