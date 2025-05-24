@@ -17,6 +17,7 @@
       color: #fff;
       padding: 2rem 1rem;
       text-align: center;
+      animation: fadeIn 1s ease-in-out;
     }
     header h1 {
       margin: 0;
@@ -36,7 +37,18 @@
     }
     section {
       margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s ease-in-out forwards;
     }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.4s; }
+    section:nth-child(4) { animation-delay: 0.6s; }
+    section:nth-child(5) { animation-delay: 0.8s; }
+    section:nth-child(6) { animation-delay: 1s; }
+    section:nth-child(7) { animation-delay: 1.2s; }
+    section:nth-child(8) { animation-delay: 1.4s; }
+
     h2 {
       color: #111827;
       margin-bottom: 1rem;
@@ -58,7 +70,7 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .card:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
       box-shadow: 0 6px 16px rgba(0,0,0,0.2);
     }
     footer {
@@ -83,10 +95,11 @@
       text-decoration: none;
       color: #111827;
       font-weight: bold;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
     }
     .contact-icons a:hover {
       background-color: #d0f1e3;
+      transform: translateY(-2px);
     }
     .contact-icons img {
       width: 24px;
@@ -104,7 +117,6 @@
       opacity: 0.7;
     }
 
-    /* כפתור קבוע */
     .floating-button {
       position: fixed;
       bottom: 20px;
@@ -129,6 +141,16 @@
     .floating-button:hover {
       background-color: #1ebe5d;
       transform: scale(1.05);
+    }
+
+    /* אנימציות */
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
@@ -219,13 +241,15 @@
         WhatsApp
       </a>
     </div>
+    <p style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+      Found an issue? Report at: <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
+    </p>
   </footer>
 
   <footer>
     &copy; SND Digital Agency
   </footer>
 
-  <!-- כפתור וואטסאפ קבוע -->
   <a class="floating-button" href="https://wa.me/972506986298" target="_blank">
     <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
     WhatsApp
