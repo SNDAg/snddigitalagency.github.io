@@ -35,19 +35,17 @@
       padding: 0 1rem;
       line-height: 1.6;
     }
-    section {
-      margin-bottom: 3rem;
+    /* אפקט fade-up התחלה - כל המקטעים */
+    section.fade-section {
       opacity: 0;
       transform: translateY(30px);
-      animation: fadeUp 1s ease-in-out forwards;
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
     }
-    section:nth-child(2) { animation-delay: 0.2s; }
-    section:nth-child(3) { animation-delay: 0.4s; }
-    section:nth-child(4) { animation-delay: 0.6s; }
-    section:nth-child(5) { animation-delay: 0.8s; }
-    section:nth-child(6) { animation-delay: 1s; }
-    section:nth-child(7) { animation-delay: 1.2s; }
-    section:nth-child(8) { animation-delay: 1.4s; }
+    /* מחלקה שמתווספת כשהאלמנט נראה במסך */
+    section.fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
     h2 {
       color: #111827;
@@ -144,10 +142,6 @@
     }
 
     /* אנימציות */
-    @keyframes fadeUp {
-      0% { opacity: 0; transform: translateY(30px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
     @keyframes fadeIn {
       0% { opacity: 0; }
       100% { opacity: 1; }
@@ -162,7 +156,7 @@
   </header>
 
   <main>
-    <section>
+    <section class="fade-section">
       <h2>Who We Are</h2>
       <p>
         SND Digital Agency is a boutique consultancy specializing in digital strategy,
@@ -171,7 +165,7 @@
       </p>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>About Us</h2>
       <p>
         Founded by digital strategist with over a decade of experience in marketing and partnerships, 
@@ -180,7 +174,7 @@
       </p>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>What We Do</h2>
       <ul>
         <li>Digital Strategy & Marketing Consulting</li>
@@ -190,7 +184,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>Why Choose Us</h2>
       <ul>
         <li>Results-driven and insight-based strategies</li>
@@ -200,7 +194,7 @@
       </ul>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>Our Services</h2>
       <div class="cards">
         <div class="card">Strategy & Audit for Travel Brands</div>
@@ -209,7 +203,7 @@
       </div>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>Selected Collaborations</h2>
       <ul>
         <li>Growth strategy for a boutique hotel chain in Italy</li>
@@ -218,12 +212,12 @@
       </ul>
     </section>
 
-    <section>
+    <section class="fade-section">
       <h2>Our Clients</h2>
       <p>We work with boutique hotels, local tour operators, digital platforms, and marketing agencies worldwide to build growth-focused collaborations.</p>
     </section>
 
-    <section>
+    <section class="fade-section">
       <blockquote style="font-style: italic; font-size: 1.1rem; margin: 2rem 0; text-align: center;">“We don’t just connect brands — we create meaningful partnerships.”</blockquote>
     </section>
   </main>
@@ -254,6 +248,30 @@
     <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
     WhatsApp
   </a>
+
+  <script>
+    // פונקציה לבדיקת כניסת אלמנט לviewport עם רווח קטן לתחילת האנימציה
+    function isInViewport(el) {
+      const rect = el.getBoundingClientRect();
+      return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
+        && rect.bottom >= 0
+      );
+    }
+
+    function checkFadeSections() {
+      const sections = document.querySelectorAll('.fade-section');
+      sections.forEach(section => {
+        if (isInViewport(section)) {
+          section.classList.add('visible');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', checkFadeSections);
+    window.addEventListener('resize', checkFadeSections);
+    window.addEventListener('load', checkFadeSections);
+  </script>
 
 </body>
 </html>
