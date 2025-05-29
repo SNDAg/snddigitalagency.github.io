@@ -4,9 +4,17 @@
   <link rel="icon" href="/favicon-32x32.png" type="image/png" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <img src="logo.png" alt="SND Digital Agency Logo" class="logo" />
   <title>SND Digital Agency</title>
   <style>
+    .header {
+      display: flex;
+      align-items: center; 
+      gap: 10px; 
+    }
+    .logo {
+      height: 40px; 
+      width: auto;
+    }
     body {
       background: #f5f7fa;
       color: #333;
@@ -14,8 +22,8 @@
       margin: 0;
     }
     header {
-      background-color: #111827;
-      color: #fff;
+      background-color: #0d1b2a;
+      color: #c39555;
       padding: 2rem 1rem;
       text-align: center;
       animation: fadeIn 1s ease-in-out;
@@ -27,7 +35,6 @@
       transition: all 0.3s ease;
     }
     header h1:hover {
-      color: #38bdf8;
       transform: scale(1.05);
     }
     main {
@@ -147,21 +154,16 @@
       0% { opacity: 0; }
       100% { opacity: 1; }
     }
-    
-    .logo {
-      display: block;
-      margin: 0 auto 1rem;
-      max-width: 160px;
-      height: auto;
-      animation: fadeIn 1s ease-in-out;
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>SND Digital Agency</h1>
-    <p>Digital Strategy & Business Partnerships</p>
+    <img src="logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
+    <div>
+      <h1>SND Digital Agency</h1>
+      <p>Digital Strategy & Business Partnerships</p>
+    </div>
   </header>
 
   <main>
