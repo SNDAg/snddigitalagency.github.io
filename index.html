@@ -437,11 +437,11 @@
     const message = document.getElementById("message").value.trim();
 
     const recipient = "info@snddigitalagency.com";
-    const subject = `Message from ${name}`;
-    const body = `You have a new message from your website:\n\n` +
+    const subject = `Contact form message from ${name}`;
+    const body = `Hello SND Digital Agency,\n\n` +
+                `${message}\n\n`
                  `Name: ${name}\n` +
-                 `Email: ${email}\n\n` +
-                 `${message}`;
+                 `Email: ${email}`;
 
     const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
