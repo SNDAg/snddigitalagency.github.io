@@ -410,22 +410,44 @@
     </section>
     <button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
 
-    <section class="contact" id="contact-form">
-        <h2>Get in Touch</h2>
-        <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
-        <form action="mailto:info@snddigitalagency.com" method="POST" enctype="text/plain">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="Full Name" required/>
+<section class="contact" id="contact-form">
+  <h2>Get in Touch</h2>
+  <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
 
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="Email Address" required/>
+  <form id="contactForm">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="Full Name" required />
 
-            <label for="message">Message</label>
-            <textarea id="message" name="Message" required></textarea>
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="Email Address" required />
 
-            <button type="submit">Send Message</button>
-        </form>
-    </section>
+    <label for="message">Message</label>
+    <textarea id="message" name="Message" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    const recipient = "info@snddigitalagency.com";
+    const subject = `Message from ${name}`;
+    const body = `You have a new message from your website:\n\n` +
+                 `Name: ${name}\n` +
+                 `Email: ${email}\n\n` +
+                 `${message}`;
+
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+  });
+</script>
+
 </main>
 
 <footer>
@@ -490,16 +512,6 @@
     <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/>
     WhatsApp
 </a>
-<script>
-    // פונקציה לבדיקת כניסת אלמנט לviewport עם רווח קטן לתחילת האנימציה
-    function isInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
-            && rect.bottom >= 0
-        );
-    }
-</script>
 <script>
     function toggleContactForm() {
         const form = document.getElementById('contact-form');
