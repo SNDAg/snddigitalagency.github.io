@@ -14,14 +14,12 @@
   <meta name="keywords" content="Digital Marketing, Travel Marketing, Hotel Promotion, Tourism Ads, Global Hospitality Marketing, SND Digital Agency" />
   <meta name="author" content="SND Digital Agency" />
 
-  <!-- Open Graph for social media sharing -->
+  <!-- Social Meta -->
   <meta property="og:title" content="SND Digital Agency | Global Marketing for Travel & Hospitality" />
   <meta property="og:description" content="Connecting hotels and tourism brands to global travelers with premium digital marketing solutions." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://snddigitalagency.com/landing" />
   <meta property="og:image" content="https://snddigitalagency.com/landing/preview.jpg" />
-
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="SND Digital Agency | Global Marketing for Travel & Hospitality" />
   <meta name="twitter:description" content="Connecting hotels and tourism brands to global travelers with premium digital marketing solutions." />
@@ -76,13 +74,13 @@
     a.main-site-link:hover {
       border-color: #c9a548;
     }
-    /* Contact Form */
     section.contact {
       border: 2px solid #021b33;
       border-radius: 8px;
       padding: 30px 25px;
       background-color: #ffffff;
       box-shadow: 0 0 10px rgba(2, 27, 51, 0.1);
+      margin-top: 2rem;
     }
     section.contact h2 {
       margin-top: 0;
@@ -131,54 +129,121 @@
     button:hover {
       background-color: #a88a35;
     }
-    /* Footer */
     footer {
       margin-top: 60px;
       text-align: center;
       color: #666666;
       font-size: 0.9rem;
     }
+    .contact-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+    .contact-icons a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      background-color: #e5f8f0;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-weight: bold;
+      color: #111827;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .contact-icons a:hover {
+      background-color: #d0f1e3;
+      transform: translateY(-2px);
+    }
+    .contact-icons img {
+      width: 20px;
+      height: 20px;
+    }
+    .floating-button {
+      position: fixed;
+      bottom: 20px;
+     
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 0.65rem 1.3rem;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      z-index: 999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s ease;
+    }
+    .floating-button img {
+      width: 22px;
+      height: 22px;
+    }
+    .floating-button:hover {
+      background-color: #1ebe5d;
+    }
   </style>
 </head>
+
 <body>
+  <header>
+    <img src="../logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
+    SND Digital Agency
+  </header>
 
-<header>
-  <img src="../logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
-  SND Digital Agency
-</header>
+  <main>
+    <h1>Your Trusted Partner in Digital Marketing for Hospitality</h1>
+    <p>At SND Digital Agency, we specialize in crafting tailored digital marketing solutions for hotels, resorts, and tourism destinations. Our focus is on increasing visibility, driving quality traffic, and boosting bookings through strategic campaigns.</p>
+    <p>We combine expertise in SEO, social media, and influencer partnerships to connect travelers worldwide with premium hospitality experiences. Our approach ensures that every campaign is customized to meet the unique goals of our partners.</p>
+    <p>We are proud to collaborate with industry leaders, including Booking.com, to deliver impactful marketing results that drive growth and revenue.</p>
 
-<main>
-  <h1>Your Trusted Partner in Digital Marketing for Hospitality</h1>
-  <p>At SND Digital Agency, we specialize in crafting tailored digital marketing solutions for hotels, resorts, and tourism destinations. Our focus is on increasing visibility, driving quality traffic, and boosting bookings through strategic campaigns.</p>
-  <p>We combine expertise in SEO, social media, and influencer partnerships to connect travelers worldwide with premium hospitality experiences. Our approach ensures that every campaign is customized to meet the unique goals of our partners.</p>
-  <p>We are proud to collaborate with industry leaders, including Booking.com, to deliver impactful marketing results that drive growth and revenue.</p>
+    <a class="main-site-link" href="https://snddigitalagency.com" target="_blank" rel="noopener noreferrer">Visit Our Main Website >></a>
 
-  <a class="main-site-link" href="https://snddigitalagency.com" target="_blank" rel="noopener noreferrer">Visit Our Main Website</a>
+    <section class="contact">
+      <h2>Get in Touch</h2>
+      <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
+      <form action="mailto:info@snddigitalagency.com" method="POST" enctype="text/plain">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="Full Name" required />
 
-  <section class="contact">
-    <h2>Get in Touch</h2>
-    <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
-    <form action="mailto:info@snddigitalagency.com" method="POST" enctype="text/plain">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="Full Name" required />
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="Email Address" required />
 
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="Email Address" required />
+        <label for="message">Message</label>
+        <textarea id="message" name="Message" required></textarea>
 
-      <label for="message">Message</label>
-      <textarea id="message" name="Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
 
-      <button type="submit">Send Message</button>
-    </form>
-  </section>
-</main>
+    </section>
+  </main>
 
-<div style="text-align:center; color:#666666; font-size:0.7rem; margin-top: 20px;">
-  Found an issue? <a href="mailto:support@snddigitalagency.com" style="color:#c9a548; text-decoration:none;">Support@snddigitalagency.com</a>
-</div>
+  <a class="floating-button" href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I'm%20interested%20in%20learning%20more%20about%20SND%20Digital%20Agency" target="_blank">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
+    WhatsApp
+  </a>
 
-<footer>
-</footer>
-
+      <div class="contact-icons">
+        <a href="mailto:info@snddigitalagency.com">
+          <img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email Icon" />
+          info@snddigitalagency.com
+        </a>
+        <a href="https://wa.me/972506986298?text=Hi%20there!%20I’m%20interested%20in%20working%20with%20SND%20Digital%20Agency." target="_blank">
+          <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon" />
+          WhatsApp
+        </a>
+      </div>
+  <footer>
+      
+    <p style="margin-top: 2rem; font-size: 0.75rem; color: #999;">
+      Found an issue? <a href="mailto:support@snddigitalagency.com" style="color: #c9a548;">support@snddigitalagency.com</a>
+    </p>
+  </footer>
 </body>
 </html>
