@@ -1,307 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    .header {
-      display: flex;
-      align-items: center; 
-      gap: 10px; 
-    }
-    .logo {
-      height: 40px; 
-      width: auto;
-    }
-    body {
-      background: #f5f7fa;
-      color: #0d1b2a;
-      font-family: Arial, sans-serif;
-      margin: 0;
-    }
-    header {
-      background-color: #0d1b2a;
-      color: #c39555;
-      padding: 2rem 1rem;
-      text-align: center;
-      animation: fadeIn 1s ease-in-out;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 2.2rem;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-    }
-    header h1:hover {
-      transform: scale(1.05);
-    }
-    main {
-      max-width: 800px;
-      margin: 3rem auto;
-      padding: 0 1rem;
-      line-height: 1.6;
-    }
-    /* אפקט fade-up התחלה - כל המקטעים */
-    section.fade-section {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    /* מחלקה שמתווספת כשהאלמנט נראה במסך */
-    section.fade-section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    h2 {
-      color: #111827;
-      margin-bottom: 1rem;
-    }
-    ul {
-      padding-left: 1.2rem;
-    }
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-    .card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 1rem;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-    }
-    footer {
-      background-color: #f1f1f1;
-      padding: 2rem 1rem;
-      text-align: center;
-    }
-    .contact-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-    }
-    .contact-icons a {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background-color: #e5f8f0;
-      padding: 0.5rem 1rem;
-      border-radius: 5px;
-      text-decoration: none;
-      color: #111827;
-      font-weight: bold;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-    .contact-icons a:hover {
-      background-color: #d0f1e3;
-      transform: translateY(-2px);
-    }
-    .contact-icons img {
-      width: 24px;
-      height: 24px;
-    }
-    .logos {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 2rem;
-      margin-top: 2rem;
-    }
-    .logos img {
-      height: 40px;
-      opacity: 0.7;
-    }
-    .floating-button {
-      position: fixed;
-      bottom: 20px;
-      right: 26px;
-      background-color: #25D366;
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 50px;
-      font-weight: bold;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      transition: background-color 0.3s ease, transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      z-index: 999;
-    }
-    .floating-button img {
-      width: 22px;
-      height: 22px;
-    }
-    .floating-button:hover {
-      background-color: #1ebe5d;
-      transform: scale(1.05);
-    }
+        .logo {
+            height: 40px;
+            width: auto;
+        }
 
-    /* אנימציות */
-    @keyframes fadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-    }
-  </style>
-  <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+        body {
+            background: #f5f7fa;
+            color: #0d1b2a;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
 
-<title>SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism</title>
-<meta name="description" content="SND Digital Agency provides tailored digital marketing solutions for hotels, resorts, and tourism businesses. Boost your bookings and online presence with expert campaigns." />
-<meta name="keywords" content="Digital Marketing, Hospitality Marketing, Tourism Marketing, Hotels Marketing, Resorts Advertising, Online Marketing, SEO for Hotels, Social Media Marketing, Influencer Marketing, Booking Collaboration, Travel Marketing Agency" />
-<meta name="author" content="SND Digital Agency" />
-<meta name="robots" content="index, follow" />
+        header {
+            background-color: #0d1b2a;
+            color: #c39555;
+            padding: 2rem 1rem;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism" />
-<meta property="og:description" content="Tailored marketing solutions for hotels, resorts, and tourism destinations. Increase visibility, traffic, and bookings with SND Digital Agency." />
-<meta property="og:url" content="https://snddigitalagency.com" />
-<meta property="og:site_name" content="SND Digital Agency" />
-<meta property="og:image" content="https://snddigitalagency.com/og-image.jpg" />
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism" />
-<meta name="twitter:description" content="Boost your hospitality business with customized digital marketing campaigns by SND Digital Agency." />
-<meta name="twitter:image" content="https://snddigitalagency.com/twitter-image.jpg" />
-<meta name="twitter:site" content="@SNDdigital" />
+        header h1:hover {
+            transform: scale(1.05);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            line-height: 1.6;
+        }
+
+        /* אפקט fade-up התחלה - כל המקטעים */
+        section.fade-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* מחלקה שמתווספת כשהאלמנט נראה במסך */
+        section.fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-icons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #e5f8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #111827;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-icons a:hover {
+            background-color: #d0f1e3;
+            transform: translateY(-2px);
+        }
+
+        .contact-icons img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .logos img {
+            height: 40px;
+            opacity: 0.7;
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 26px;
+            background-color: #25D366;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 999;
+        }
+
+        .floating-button img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .floating-button:hover {
+            background-color: #1ebe5d;
+            transform: scale(1.05);
+        }
+
+        /* Contact Form */
+        section.contact {
+            border: 2px solid #021b33;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(2, 27, 51, 0.1);
+            max-width: 500px;
+            margin: 2rem auto 0; /* הוספנו רווח למעלה + מרכזנו */
+            display: none;
+            transition: all 0.5s ease;
+        }
+
+        section.contact h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #021b33;
+        }
+
+        section.contact p {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #021b33;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #021b33;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 10px;
+            border: 1.8px solid #c9a548;
+            border-radius: 5px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #c9a548;
+            color: #021b33;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a88a35;
+        }
+
+        /* אנימציות */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        }
+        .toggle-button {
+            background-color: #c39555;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2rem auto 1rem; /* מוסיף ריווח מלמטה + ממרכז */
+            display: block; /* הכפתור יתמרכז */
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-button:hover {
+            background-color: #a8803a;
+        }
+    </style>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <title>SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism</title>
+    <meta name="description"
+          content="SND Digital Agency provides tailored digital marketing solutions for hotels, resorts, and tourism businesses. Boost your bookings and online presence with expert campaigns."/>
+    <meta name="keywords"
+          content="Digital Marketing, Hospitality Marketing, Tourism Marketing, Hotels Marketing, Resorts Advertising, Online Marketing, SEO for Hotels, Social Media Marketing, Influencer Marketing, Booking Collaboration, Travel Marketing Agency"/>
+    <meta name="author" content="SND Digital Agency"/>
+    <meta name="robots" content="index, follow"/>
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism"/>
+    <meta property="og:description"
+          content="Tailored marketing solutions for hotels, resorts, and tourism destinations. Increase visibility, traffic, and bookings with SND Digital Agency."/>
+    <meta property="og:url" content="https://snddigitalagency.com"/>
+    <meta property="og:site_name" content="SND Digital Agency"/>
+    <meta property="og:image" content="https://snddigitalagency.com/og-image.jpg"/>
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism"/>
+    <meta name="twitter:description"
+          content="Boost your hospitality business with customized digital marketing campaigns by SND Digital Agency."/>
+    <meta name="twitter:image" content="https://snddigitalagency.com/twitter-image.jpg"/>
+    <meta name="twitter:site" content="@SNDdigital"/>
 
 </head>
 <body>
-  <header>
-    <img src="logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
+<header>
+    <img src="logo_no_text.png" alt="SND Digital Agency Logo" class="logo"/>
     <div>
-      <h1>SND Digital Agency</h1>
-      <p>Digital Strategy & Business Partnerships</p>
+        <h1>SND Digital Agency</h1>
+        <p>Digital Strategy & Business Partnerships</p>
     </div>
-  </header>
+</header>
 
-  <main>
+<main>
     <section class="fade-section">
-      <h2>Who We Are</h2>
-      <p>
-        SND Digital Agency is a boutique consultancy specializing in digital strategy,
-        business partnerships, and tailored marketing solutions in the travel and hospitality sector.
-        We support brands and entrepreneurs with impactful campaigns and growth models.
-      </p>
+        <h2>Who We Are</h2>
+        <p>
+            SND Digital Agency is a boutique consultancy specializing in digital strategy,
+            business partnerships, and tailored marketing solutions in the travel and hospitality sector.
+            We support brands and entrepreneurs with impactful campaigns and growth models.
+        </p>
     </section>
 
     <section class="fade-section">
-      <h2>About Us</h2>
-      <p>
-        Founded by digital strategist with over a decade of experience in marketing and partnerships, 
-        SND Digital Agency brings a human-first, insight-led approach to brand growth. Our work spans 
-        from local campaigns to international collaborations.
-      </p>
+        <h2>About Us</h2>
+        <p>
+            Founded by digital strategist with over a decade of experience in marketing and partnerships,
+            SND Digital Agency brings a human-first, insight-led approach to brand growth. Our work spans
+            from local campaigns to international collaborations.
+        </p>
     </section>
 
     <section class="fade-section">
-      <h2>What We Do</h2>
-      <ul>
-        <li>Digital Strategy & Marketing Consulting</li>
-        <li>Network Development</li>
-        <li>Hospitality & Travel Campaigns</li>
-        <li>Content and Partnership Management</li>
-      </ul>
+        <h2>What We Do</h2>
+        <ul>
+            <li>Digital Strategy & Marketing Consulting</li>
+            <li>Network Development</li>
+            <li>Hospitality & Travel Campaigns</li>
+            <li>Content and Partnership Management</li>
+        </ul>
     </section>
 
     <section class="fade-section">
-      <h2>Why Choose Us</h2>
-      <ul>
-        <li>Results-driven and insight-based strategies</li>
-        <li>Deep understanding of the travel and hospitality industries</li>
-        <li>Personal approach with agile delivery</li>
-        <li>Global mindset, local impact</li>
-      </ul>
+        <h2>Why Choose Us</h2>
+        <ul>
+            <li>Results-driven and insight-based strategies</li>
+            <li>Deep understanding of the travel and hospitality industries</li>
+            <li>Personal approach with agile delivery</li>
+            <li>Global mindset, local impact</li>
+        </ul>
     </section>
 
     <section class="fade-section">
-      <h2>Our Services</h2>
-      <div class="cards">
-        <div class="card">Strategy & Audit for Travel Brands</div>
-        <div class="card">Content Management</div>
-        <div class="card">Business Partnership Curation</div>
-      </div>
+        <h2>Our Services</h2>
+        <div class="cards">
+            <div class="card">Strategy & Audit for Travel Brands</div>
+            <div class="card">Content Management</div>
+            <div class="card">Business Partnership Curation</div>
+        </div>
     </section>
 
     <section class="fade-section">
-      <h2>Selected Collaborations</h2>
-      <ul>
-        <li>Growth strategy for a boutique hotel chain in Italy</li>
-        <li>Partnership launch between travel-tech startup and regional DMO</li>
-        <li>Campaign localization for a global OTA</li>
-      </ul>
+        <h2>Selected Collaborations</h2>
+        <ul>
+            <li>Growth strategy for a boutique hotel chain in Italy</li>
+            <li>Partnership launch between travel-tech startup and regional DMO</li>
+            <li>Campaign localization for a global OTA</li>
+        </ul>
     </section>
 
     <section class="fade-section">
-      <h2>Our Clients</h2>
-      <p>We work with boutique hotels, local tour operators, digital platforms, and marketing agencies worldwide to build growth-focused collaborations.</p>
+        <h2>Our Clients</h2>
+        <p>We work with boutique hotels, local tour operators, digital platforms, and marketing agencies worldwide to
+            build growth-focused collaborations.</p>
     </section>
 
     <section class="fade-section">
-      <blockquote style="font-style: italic; font-size: 1.1rem; margin: 2rem 0; text-align: center;">“We don’t just connect brands — we create meaningful partnerships.”</blockquote>
+        <blockquote style="font-style: italic; font-size: 1.1rem; margin: 2rem 0; text-align: center;">“We don’t just
+            connect brands — we create meaningful partnerships.”
+        </blockquote>
     </section>
-  </main>
+    <section class="fade-section">
 
-    <footer>
+
+        <h2>🌍 Hotel Highlights from Our Community</h2>
+        <p>
+            Each month, we feature hotel partners whose guest experiences stood out in feedback from clients and
+            collaborators. These highlights reflect the power of brand-aligned experiences and the results of great
+            partnerships.
+        </p>
+
+        <br>
+        <div class="card">
+            <h3>🌅 Mykonos Bliss Hotel – Mykonos, Greece</h3>
+            <p>A romantic haven with panoramic views and warm service. This property continuously ranks high among
+                couples and influencers alike.</p>
+            <a href="/notFound/index.html" style="color: #b88b14; font-weight: bold;">Discover more &gt;&gt;</a>
+        </div>
+        <br>
+        <div class="card">
+            <h3>🕌 Boutique Taksim Palace – Istanbul, Turkey</h3>
+            <p>Nestled in the heart of Istanbul, this boutique property is celebrated for its authenticity and location
+                near cultural landmarks.</p>
+            <a href="/notFound/index.html" style="color: #b88b14; font-weight: bold;">Learn more &gt;&gt;</a>
+        </div>
+        <br>
+        <div class="card">
+            <h3>🏝️ U Pattaya – Thailand</h3>
+            <p>Beachfront serenity with standout design. A client favorite for immersive hospitality and consistent
+                guest satisfaction.</p>
+            <a href="/notFound/index.html" style="color: #b88b14; font-weight: bold;">More info &gt;&gt;</a>
+        </div>
+        <br>
+        <p style="margin-top: 1.5rem; color: #444;">Want to feature your hotel in next month's picks?
+    </section>
+    <button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
+
+    <section class="contact" id="contact-form">
+        <h2>Get in Touch</h2>
+        <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
+        <form action="mailto:info@snddigitalagency.com" method="POST" enctype="text/plain">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="Full Name" required/>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="Email Address" required/>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="Message" required></textarea>
+
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
+</main>
+
+<footer>
     <h2>Let’s Grow Together</h2>
     <p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
     <div class="contact-icons">
-      <a class="whatsapp-button" target="_blank">
-        <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon" />
-        WhatsApp
-      </a>
-      <a href="mailto:info@snddigitalagency.com">
-        <img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email Icon" />
-        info@snddigitalagency.com
-      </a>
+        <a class="whatsapp-button" target="_blank">
+            <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon"/>
+            WhatsApp
+        </a>
+        <a href="mailto:info@snddigitalagency.com">
+            <img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email Icon"/>
+            info@snddigitalagency.com
+        </a>
     </div>
     <br><br>
     <p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
-     Found an issue?  <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
+        Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
     </p>
-  </footer>
-  <br><br>
+</footer>
+<br><br>
 
-  <!-- קישור אחיד בלינק אחד בלבד -->
-  <div id="whatsapp-data" data-whatsapp="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency."></div>
+<!-- קישור אחיד בלינק אחד בלבד -->
+<div id="whatsapp-data"
+     data-whatsapp="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency."></div>
 
-  <a class="floating-button whatsapp-button" target="_blank">
-    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
-    WhatsApp
-  </a>
-
-  <script>
+<script>
     // פונקציה לבדיקת כניסת אלמנט לviewport עם רווח קטן לתחילת האנימציה
     function isInViewport(el) {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
-        && rect.bottom >= 0
-      );
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
+            && rect.bottom >= 0
+        );
     }
 
     function checkFadeSections() {
-      const sections = document.querySelectorAll('.fade-section');
-      sections.forEach(section => {
-        if (isInViewport(section)) {
-          section.classList.add('visible');
-        }
-      });
+        const sections = document.querySelectorAll('.fade-section');
+        sections.forEach(section => {
+            if (isInViewport(section)) {
+                section.classList.add('visible');
+            }
+        });
     }
 
     window.addEventListener('scroll', checkFadeSections);
@@ -310,40 +477,34 @@
 
     // הכנסת לינק הוואטסאפ באופן דינמי
     window.addEventListener('DOMContentLoaded', () => {
-      const whatsappLink = document.getElementById('whatsapp-data').dataset.whatsapp;
-      document.querySelectorAll('.whatsapp-button').forEach(btn => {
-        btn.href = whatsappLink;
-      });
+        const whatsappLink = document.getElementById('whatsapp-data').dataset.whatsapp;
+        document.querySelectorAll('.whatsapp-button').forEach(btn => {
+            btn.href = whatsappLink;
+        });
     });
-  </script>
-  <br><br>
-  <a class="floating-button" href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency." target="_blank">
-    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp" />
+</script>
+<br><br>
+<a class="floating-button"
+   href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency."
+   target="_blank">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/>
     WhatsApp
-  </a>
-  <script>
+</a>
+<script>
     // פונקציה לבדיקת כניסת אלמנט לviewport עם רווח קטן לתחילת האנימציה
     function isInViewport(el) {
-      const rect = el.getBoundingClientRect();
-      return (
-        rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
-        && rect.bottom >= 0
-      );
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
+            && rect.bottom >= 0
+        );
     }
-
-    function checkFadeSections() {
-      const sections = document.querySelectorAll('.fade-section');
-      sections.forEach(section => {
-        if (isInViewport(section)) {
-          section.classList.add('visible');
-        }
-      });
+</script>
+<script>
+    function toggleContactForm() {
+        const form = document.getElementById('contact-form');
+        form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
     }
-
-    window.addEventListener('scroll', checkFadeSections);
-    window.addEventListener('resize', checkFadeSections);
-    window.addEventListener('load', checkFadeSections);
-  </script>
-
+</script>
 </body>
 </html>
