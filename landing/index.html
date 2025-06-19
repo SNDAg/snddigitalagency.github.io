@@ -243,22 +243,43 @@
 
     <a class="main-site-link" href="https://snddigitalagency.com" target="_blank" rel="noopener noreferrer">Visit Our Main Website >></a>
 
-    <section class="contact">
-      <h2>Get in Touch</h2>
-      <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
-      <form action="mailto:info@snddigitalagency.com" method="POST" enctype="text/plain">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="Full Name" required />
+    <section class="contact" id="contact-form">
+  <h2>Get in Touch</h2>
+  <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
 
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="Email Address" required />
+  <form id="contactForm">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="Full Name" required />
 
-        <label for="message">Message</label>
-        <textarea id="message" name="Message" required></textarea>
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="Email Address" required />
 
-        <button type="submit">Send Message</button>
-      </form>
-    </section>
+    <label for="message">Message</label>
+    <textarea id="message" name="Message" required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+</section>
+
+<script>
+  document.getElementById("contactForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    const recipient = "info@snddigitalagency.com";
+    const subject = `Contact form message from ${name}`;
+    const body = `Hello SND Digital Agency,\n\n` +
+                `${message}\n\n`
+                 `Name: ${name}\n` +
+                 `Email: ${email}`;
+
+    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
+  });
+</script>
 
     <div class="contact-icons">
       <a href="mailto:info@snddigitalagency.com">
