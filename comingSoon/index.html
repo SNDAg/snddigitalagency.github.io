@@ -19,27 +19,42 @@
     }
     .container {
       max-width: 500px;
-      padding: 30px;
+      width: 90%;
       background-color: #ffffff;
       box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       border-radius: 12px;
+      overflow: hidden;
       animation: fadeIn 1s ease;
     }
-    .container img {
-      width: 80px;
-      margin-bottom: 20px;
+    .logo-header {
+      background-color: #0d1b2a;
+      padding: 30px 0;
     }
-    h1 {
-      color: #c39555;
+    .logo-header img {
+      height: 60px;
+      width: auto;
+    }
+    .content {
+      padding: 30px 20px;
+    }
+    .content h1 {
       font-size: 2rem;
-      margin-bottom: 10px;
+      color: #c39555;
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
     }
-    p {
+    .content h1 .icon {
+      font-size: 2.2rem;
+    }
+    .content p {
       color: #333;
       font-size: 1.1rem;
       margin-bottom: 30px;
     }
-    a {
+    .content a {
       background-color: #c39555;
       color: white;
       text-decoration: none;
@@ -48,8 +63,13 @@
       font-weight: bold;
       transition: background-color 0.3s ease;
     }
-    a:hover {
+    .content a:hover {
       background-color: #a8803a;
+    }
+    .countdown {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #666;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
@@ -59,10 +79,29 @@
 </head>
 <body>
   <div class="container">
-    <img src="/logo_no_text.png" alt="SND Logo" />
-    <h1>Coming Soon</h1>
-    <p>We're working on bringing you more details about this hotel partner. Stay tuned for updates!</p>
-    <a href="/">← Back to Home</a>
+    <div class="logo-header">
+      <img src="/logo_no_text.png" alt="SND Logo" />
+    </div>
+    <div class="content">
+      <h1><span class="icon">✈️</span> Coming Soon</h1>
+      <p>We're working on bringing you more details about this hotel. Stay tuned for updates!</p>
+      <a href="/">← Back to Home</a>
+      <div class="countdown">Redirecting in <span id="timer">15</span> seconds...</div>
+    </div>
   </div>
+
+  <script>
+    let timeLeft = 15;
+    const timerElem = document.getElementById('timer');
+
+    const countdownInterval = setInterval(() => {
+      timeLeft--;
+      timerElem.textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(countdownInterval);
+        window.location.href = '/';
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
