@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Page Not Found | SND Digital Agency</title>
+  <style>
+    body {
+      background: #f5f7fa;
+      color: #0d1b2a;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    header {
+      background-color: #0d1b2a;
+      color: #c39555;
+      padding: 2rem 1rem;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+    .logo {
+      height: 40px;
+      width: auto;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+    header h1:hover {
+      transform: scale(1.05);
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 480px;
+      margin: 3rem auto;
+    }
+    h1.page-title {
+      font-size: 3rem;
+      color: #0b2545;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    h1.page-title .icon {
+      font-size: 3.2rem;
+      color: #b88b14;
+    }
+    p {
+      font-size: 1.25rem;
+      color: #444;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    a {
+      color: #b88b14;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 1.1rem;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    a:hover {
+      border-color: #b88b14;
+    }
+    .countdown {
+      margin-top: 1rem;
+      font-size: 1rem;
+      color: #666;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header">
+      <img src="logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
+      <h1>SND Digital Agency</h1>
+    </div>
+  </header>
+  <main>
+    <h1 class="page-title">
+      <span class="icon">✈️</span>
+      Page Not Found
+    </h1>
+    <p>
+      Oops! The page you are looking for does not exist or has been moved.<br />
+      Please check the URL or return to the homepage.
+    </p>
+    <a href="../index.html">Return to Homepage &raquo;</a>
+    <div class="countdown">Redirecting in <span id="timer">10</span> seconds...</div>
+  </main>
+
+  <script>
+    let timeLeft = 16;
+    const timerElem = document.getElementById('timer');
+
+    const countdownInterval = setInterval(() => {
+      timeLeft--;
+      timerElem.textContent = timeLeft;
+      if(timeLeft <= 0) {
+        clearInterval(countdownInterval);
+        window.location.href = '../index.html';
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
