@@ -22,7 +22,7 @@
       margin-bottom: 0.2em;
     }
     img {
-      max-width: 80%;
+      max-width: 24%;
       height: auto;
       border-radius: 1em;
       margin-bottom: 1em;
@@ -80,8 +80,10 @@
   <p>מזהים את הדמות או הרמז שבתמונה? 👀</p>
   <img src="21_6.png" alt="רמז מצויר">
 
-  <div class="letter-boxes" id="letter-boxes"></div>
-  <button onclick="checkAnswer()">!יאללה</button>
+  <form onsubmit="checkAnswer(); return false;">
+    <div class="letter-boxes" id="letter-boxes"></div>
+    <button type="submit">יאללה!</button>
+  </form>
   <div class="result" id="result"></div>
 
   <canvas class="fireworks" id="fireworks"></canvas>
@@ -99,9 +101,17 @@
       const input = document.createElement("input");
       input.maxLength = 1;
       input.pattern = "[א-תa-zA-Z]";
-      input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^\u0590-\u05FFa-zA-Z]/g, "");
+      input.addEventListener("input", (e) => {
+        const value = e.data ? e.data : input.value.slice(-1);
+        input.value = value.replace(/[^\u0590-\u05FFa-zA-Z]/g, "");
         if (input.value.length === 1 && input.nextElementSibling) {
+          input.nextElementSibling.focus();
+        }
+      });
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" && input.previousElementSibling) {
+          input.previousElementSibling.focus();
+        } else if (e.key === "ArrowRight" && input.nextElementSibling) {
           input.nextElementSibling.focus();
         }
       });
