@@ -229,7 +229,7 @@
     const shareBtn = document.getElementById("whatsapp-share");
     if (shareBtn) {
       shareBtn.addEventListener("click", () => {
-        const pageUrl = encodeURIComponent(window.location.href);
+        const pageUrl = encodeURIComponent("https://rb.gy/pts63y");
         const text = encodeURIComponent("עם כלביא 🐶🦁 - החידה היומית, תנסו לפתור! 👀");
         const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${pageUrl}`;
         window.open(whatsappUrl, "_blank");
