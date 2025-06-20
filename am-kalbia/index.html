@@ -4,8 +4,8 @@
   <!--   google ads -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535"
      crossorigin="anonymous"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>החידה היומית</title>
   <style>
     body {
@@ -38,12 +38,18 @@
       flex-wrap: wrap;
     }
     .letter-boxes input {
-      width: 40px;
-      height: 50px;
-      font-size: 1.5em;
+      width: 45px;
+      height: 55px;
+      font-size: 1.6em;
       text-align: center;
-      border: 2px solid #ccc;
-      border-radius: 6px;
+      border: 2px solid #bbb;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+    .letter-boxes input:focus {
+      border-color: #0077cc;
+      outline: none;
+      box-shadow: 0 0 5px #0077cc;
     }
     .letter-boxes .space {
       width: 20px;
@@ -74,18 +80,54 @@
       pointer-events: none;
       z-index: 1000;
     }
+
+    /* כפתור וואטסאפ */
+    #whatsapp-share {
+      background-color: #25D366;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+      border-radius: 6px;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      border: none;
+      cursor: pointer;
+      color: white;
+      margin-top: 2em;
+    }
+    #whatsapp-share:hover {
+      background-color: #1ebe57;
+    }
+
+    /* רספונסיבי */
+    @media (max-width: 480px) {
+      img {
+        max-width: 60%;
+      }
+      #whatsapp-share {
+        font-size: 1.4em;
+        padding: 1em 2em;
+        width: 90%;
+        justify-content: center;
+      }
+      .letter-boxes input {
+        width: 35px;
+        height: 45px;
+        font-size: 1.3em;
+      }
+    }
   </style>
 </head>
 <body>
   <h1>החידה היומית</h1>
-  <h1>עם כלביא 🐶🦁 </h1>
-  <br>
+  <h1>עם כלביא 🐶🦁</h1>
+  <br />
   <p>מזהים את הדמות או הרמז שבתמונה? 👀</p>
-  <img src="21_6.png" alt="רמז מצויר">
-<br>
+  <img src="21_6.png" alt="רמז מצויר" />
+  <br />
   <form onsubmit="checkAnswer(); return false;">
     <div class="letter-boxes" id="letter-boxes"></div>
-    <br>
+    <br />
     <button type="submit">יאללה!</button>
   </form>
   <div class="result" id="result"></div>
@@ -113,7 +155,11 @@
         }
       });
       input.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft" && input.previousElementSibling) {
+        if (e.key === "Backspace" && input.value === "" && input.previousElementSibling) {
+          e.preventDefault();
+          input.previousElementSibling.focus();
+          input.previousElementSibling.value = "";
+        } else if (e.key === "ArrowLeft" && input.previousElementSibling) {
           input.previousElementSibling.focus();
         } else if (e.key === "ArrowRight" && input.nextElementSibling) {
           input.nextElementSibling.focus();
@@ -125,7 +171,7 @@
     function checkAnswer() {
       const inputs = document.querySelectorAll(".letter-boxes input");
       let userAnswer = "";
-      inputs.forEach(input => userAnswer += input.value.trim());
+      inputs.forEach((input) => (userAnswer += input.value.trim()));
       const result = document.getElementById("result");
       if (userAnswer === answer.join("")) {
         result.textContent = "כל הכבוד! פיצחתם את החידה 🎉";
@@ -155,7 +201,7 @@
           speedY: (Math.random() - 0.5) * 10,
           radius: Math.random() * 3 + 2,
           color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          life: 100
+          life: 100,
         });
       }
 
@@ -178,23 +224,32 @@
 
       animate();
     }
-    
-    document.getElementById('whatsapp-share').addEventListener('click', () => {
-  const pageUrl = encodeURIComponent(window.location.href);
-  const text = encodeURIComponent("עם כלביא 🐶🦁 - החידה היומית, תנסו לפתור! 👀");
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${pageUrl}`;
-  window.open(whatsappUrl, '_blank');
-});
 
+    // מאזין כפתור וואטסאפ (צריך להופיע אחרי טעינת הכפתור)
+    document.getElementById("whatsapp-share").addEventListener("click", () => {
+      const pageUrl = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent("עם כלביא 🐶🦁 - החידה היומית, תנסו לפתור! 👀");
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${pageUrl}`;
+      window.open(whatsappUrl, "_blank");
+    });
   </script>
- 
-<div style="text-align: center; margin-top: 2em;">
-  <button id="whatsapp-share" style="background-color: #25D366; display: inline-flex; align-items: center; gap: 0.5em; border-radius: 6px; padding: 0.6em 1.2em; font-size: 1em; border: none; cursor: pointer; color: white;">
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24">
-    <path d="M20.52 3.48A11.75 11.75 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.555 4.14 1.61 5.94L0 24l6.42-1.61A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12a11.75 11.75 0 00-3.48-8.52zM12 21.6a9.59 9.59 0 01-5.106-1.473l-.363-.217-3.809.956.994-3.715-.236-.381A9.552 9.552 0 012.4 12c0-5.303 4.297-9.6 9.6-9.6 2.56 0 4.964 1 6.753 2.81A9.525 9.525 0 0121.6 12c0 5.303-4.297 9.6-9.6 9.6zm5.193-7.68c-.281-.14-1.662-.82-1.92-.91-.257-.09-.444-.14-.63.14-.186.276-.72.91-.883 1.1-.162.186-.324.21-.605.07-.281-.14-1.184-.435-2.255-1.39-.832-.74-1.393-1.65-1.555-1.927-.16-.276-.017-.425.12-.56.123-.123.28-.324.42-.486.14-.162.186-.276.28-.46.093-.186.04-.35-.02-.49-.063-.14-.63-1.52-.863-2.1-.226-.555-.456-.48-.63-.49l-.54-.01c-.186 0-.486.07-.74.35-.256.28-.98.96-.98 2.34s1 2.7 1.14 2.89c.14.186 1.96 2.99 4.76 4.2.665.287 1.183.458 1.587.587.666.21 1.27.18 1.75.11.535-.08 1.662-.68 1.897-1.34.233-.66.233-1.23.163-1.34-.07-.11-.256-.186-.54-.325z"/>
-  </svg>
-  שתפו 
-  </button>
-</div>
+
+
+  <div style="text-align: center;">
+    <button id="whatsapp-share">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="white"
+        viewBox="0 0 24 24"
+      >
+        <path
+          d="M20.52 3.48A11.75 11.75 0 0012 0C5.373 0 0 5.373 0 12c0 2.117.555 4.14 1.61 5.94L0 24l6.42-1.61A11.938 11.938 0 0012 24c6.627 0 12-5.373 12-12a11.75 11.75 0 00-3.48-8.52zM12 21.6a9.59 9.59 0 01-5.106-1.473l-.363-.217-3.809.956.994-3.715-.236-.381A9.552 9.552 0 012.4 12c0-5.303 4.297-9.6 9.6-9.6 2.56 0 4.964 1 6.753 2.81A9.525 9.525 0 0121.6 12c0 5.303-4.297 9.6-9.6 9.6zm5.193-7.68c-.281-.14-1.662-.82-1.92-.91-.257-.09-.444-.14-.63.14-.186.276-.72.91-.883 1.1-.162.186-.324.21-.605.07-.281-.14-1.184-.435-2.255-1.39-.832-.74-1.393-1.65-1.555-1.927-.16-.276-.017-.425.12-.56.123-.123.28-.324.42-.486.14-.162.186-.276.28-.46.093-.186.04-.35-.02-.49-.063-.14-.63-1.52-.863-2.1-.226-.555-.456-.48-.63-.49l-.54-.01c-.186 0-.486.07-.74.35-.256.28-.98.96-.98 2.34s1 2.7 1.14 2.89c.14.186 1.96 2.99 4.76 4.2.665.287 1.183.458 1.587.587.666.21 1.27.18 1.75.11.535-.08 1.662-.68 1.897-1.34.233-.66.233-1.23.163-1.34-.07-.11-.256-.186-.54-.325z"
+        />
+      </svg>
+      שתפו
+    </button>
+  </div>
 </body>
 </html>
