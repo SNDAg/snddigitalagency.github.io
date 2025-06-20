@@ -225,14 +225,18 @@
       animate();
     }
 
-    document.getElementById("whatsapp-share").addEventListener("click", () => {
-      const pageUrl = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent("עם כלביא 🐶🦁 - החידה היומית, תנסו לפתור! 👀");
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${pageUrl}`;
-      window.open(whatsappUrl, "_blank");
-    });
+  document.addEventListener("DOMContentLoaded", () => {
+    const shareBtn = document.getElementById("whatsapp-share");
+    if (shareBtn) {
+      shareBtn.addEventListener("click", () => {
+        const pageUrl = encodeURIComponent(window.location.href);
+        const text = encodeURIComponent("עם כלביא 🐶🦁 - החידה היומית, תנסו לפתור! 👀");
+        const whatsappUrl = `https://api.whatsapp.com/send?text=${text}%20${pageUrl}`;
+        window.open(whatsappUrl, "_blank");
+      });
+    }
+  });
   </script>
-
 
   <div style="text-align: center;">
     <button id="whatsapp-share">
