@@ -1,3 +1,14 @@
-<script>
+<!-- old 404: -->
+<!-- <script>
   window.location.href = "/notFound/";
 </script>
+-->
+
+
+const currentPath = window.location.pathname;
+
+if (currentPath.startsWith("/am-kalbia")) {
+  document.write("<h1>Not Found</h1>");
+} else {
+  window.location.href = "/notFound/";
+}
