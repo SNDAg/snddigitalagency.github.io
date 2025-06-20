@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>החידה היומית</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #fdfdfd;
+      color: #333;
+      padding: 2em;
+      transition: all 0.3s ease-in-out;
+    }
+    body.success {
+      border: 6px solid #4caf50;
+      box-shadow: 0 0 15px #4caf50;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+    }
+    img {
+      max-width: 80%;
+      height: auto;
+      border-radius: 1em;
+      margin-bottom: 1em;
+    }
+    .letter-boxes {
+      display: flex;
+      justify-content: center;
+      gap: 0.5em;
+      margin-bottom: 1em;
+      flex-wrap: wrap;
+    }
+    .letter-boxes input {
+      width: 40px;
+      height: 50px;
+      font-size: 1.5em;
+      text-align: center;
+      border: 2px solid #ccc;
+      border-radius: 6px;
+    }
+    .letter-boxes .space {
+      width: 20px;
+    }
+    .result {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-top: 1em;
+    }
+    button {
+      padding: 0.5em 1em;
+      font-size: 1em;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    .fireworks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <h1>החידה היומית</h1>
+  <h1>עם כלביא 🐶🦁 </h1>
+  <br>
+  <p>מזהים את הדמות או הרמז שבתמונה? 👀</p>
+  <img src="21_6.png" alt="רמז מצויר">
+
+  <div class="letter-boxes" id="letter-boxes"></div>
+  <button onclick="checkAnswer()">!יאללה</button>
+  <div class="result" id="result"></div>
+
+  <canvas class="fireworks" id="fireworks"></canvas>
+
+  <script>
+    const answer = "דניאל הגרי".replace(" ", "").split("");
+    const boxesContainer = document.getElementById("letter-boxes");
+
+    answer.forEach((char, i) => {
+      if (i === 5) {
+        const spacer = document.createElement("div");
+        spacer.className = "space";
+        boxesContainer.appendChild(spacer);
+      }
+      const input = document.createElement("input");
+      input.maxLength = 1;
+      input.pattern = "[א-תa-zA-Z]";
+      input.addEventListener("input", () => {
+        input.value = input.value.replace(/[^\u0590-\u05FFa-zA-Z]/g, "");
+        if (input.value.length === 1 && input.nextElementSibling) {
+          input.nextElementSibling.focus();
+        }
+      });
+      boxesContainer.appendChild(input);
+    });
+
+    function checkAnswer() {
+      const inputs = document.querySelectorAll(".letter-boxes input");
+      let userAnswer = "";
+      inputs.forEach(input => userAnswer += input.value.trim());
+      const result = document.getElementById("result");
+      if (userAnswer === answer.join("")) {
+        result.textContent = "כל הכבוד! פיצחתם את החידה 🎉";
+        result.style.color = "green";
+        document.body.classList.add("success");
+        launchFireworks();
+      } else {
+        result.textContent = "לא בדיוק... נסו שוב 😉";
+        result.style.color = "red";
+        document.body.classList.remove("success");
+      }
+    }
+
+    function launchFireworks() {
+      const canvas = document.getElementById("fireworks");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = [];
+
+      for (let i = 0; i < 100; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          speedX: (Math.random() - 0.5) * 10,
+          speedY: (Math.random() - 0.5) * 10,
+          radius: Math.random() * 3 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          life: 100
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, index) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.fill();
+          p.x += p.speedX;
+          p.y += p.speedY;
+          p.life--;
+          if (p.life <= 0) particles.splice(index, 1);
+        });
+        if (particles.length > 0) {
+          requestAnimationFrame(animate);
+        }
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
