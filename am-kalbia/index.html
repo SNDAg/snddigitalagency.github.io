@@ -190,7 +190,9 @@
       input.pattern = "[א-תa-zA-Z]";
 
       if (i === 3) {
-        input.style.flexBasis = "100%";
+  const lineBreak = document.createElement("div");
+  lineBreak.style.flexBasis = "100%";
+  boxesContainer.appendChild(lineBreak);
       }
 
       input.addEventListener("input", (e) => {
