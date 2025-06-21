@@ -187,8 +187,7 @@
 
     answer.forEach((char, i) => {
       if (i === 3) {
-  const br = document.createElement("br");
-  boxesContainer.appendChild(br);
+  input.style.flexBasis = "100%";
       }
       const input = document.createElement("input");
       input.maxLength = 1;
