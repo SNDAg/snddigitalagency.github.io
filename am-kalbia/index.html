@@ -187,9 +187,8 @@
 
     answer.forEach((char, i) => {
       if (i === 3) {
-        const spacer = document.createElement("div");
-        spacer.className = "space";
-        boxesContainer.appendChild(spacer);
+  const br = document.createElement("br");
+  boxesContainer.appendChild(br);
       }
       const input = document.createElement("input");
       input.maxLength = 1;
