@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <!-- google ads -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535" crossorigin="anonymous"></script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>החידה היומית</title>
@@ -44,6 +42,7 @@
       border: 2px solid #bbb;
       border-radius: 8px;
       transition: border-color 0.3s ease;
+      flex-shrink: 0;
     }
     .letter-boxes input:focus {
       border-color: #0077cc;
@@ -107,11 +106,11 @@
       text-decoration: underline dotted;
       transition: opacity 0.3s ease;
     }
-.hint-button:hover {
-  background: none;
-  color: #444;
-  text-decoration: underline dotted;
-}
+    .hint-button:hover {
+      background: none;
+      color: #444;
+      text-decoration: underline dotted;
+    }
 
     .hint-text {
       display: none;
@@ -182,16 +181,18 @@
   </a>
 
   <script>
-    const answer ="צבי טסלר".replace(" ", "").split("");
+    const answer = "צבי טסלר".replace(" ", "").split("");
     const boxesContainer = document.getElementById("letter-boxes");
 
     answer.forEach((char, i) => {
-      if (i === 3) {
-  input.style.flexBasis = "100%";
-      }
       const input = document.createElement("input");
       input.maxLength = 1;
       input.pattern = "[א-תa-zA-Z]";
+
+      if (i === 3) {
+        input.style.flexBasis = "100%";
+      }
+
       input.addEventListener("input", (e) => {
         const value = e.data ? e.data : input.value.slice(-1);
         input.value = value.replace(/[^\u0590-\u05FFa-zA-Z]/g, "");
@@ -199,6 +200,7 @@
           input.nextElementSibling.focus();
         }
       });
+
       input.addEventListener("keydown", (e) => {
         if (e.key === "Backspace" && input.value === "" && input.previousElementSibling) {
           e.preventDefault();
@@ -210,6 +212,7 @@
           input.nextElementSibling.focus();
         }
       });
+
       boxesContainer.appendChild(input);
     });
 
