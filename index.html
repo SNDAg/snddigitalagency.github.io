@@ -2,34 +2,35 @@
 <html lang="en">
 <head>
     <!--   google ads -->
-<!--   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535"
-     crossorigin="anonymous"></script> -->
+    <!--   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535"
+         crossorigin="anonymous"></script> -->
     <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
         .header {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-/*         disable comingSoon pages */
+        /*         disable comingSoon pages */
         a[href="/comingSoon/"] {
-          pointer-events: none;
-          cursor: default;
-          color: #b88b14;
-          text-decoration: none;
+            pointer-events: none;
+            cursor: default;
+            color: #b88b14;
+            text-decoration: none;
         }
-        
+
         .logo {
             height: 50px;
             width: auto;
         }
-        
+
         body {
             background: #f5f7fa;
             color: #0d1b2a;
@@ -389,10 +390,10 @@
     </section>
     <section class="fade-section">
 
-<br>
-<section style="text-align: center; margin: 1.5rem 0;">
-  <a href="/article-improve-digital-presence" 
-     style="
+        <br>
+        <section style="text-align: center; margin: 1.5rem 0;">
+            <a href="/article-improve-digital-presence"
+               style="
         display: inline-block;
         background: linear-gradient(90deg, #c39555, #a8803a);
         color: white;
@@ -405,13 +406,13 @@
         transition: background 0.3s ease, transform 0.2s ease;
         letter-spacing: 0.03em;
      "
-     onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';"
-     onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';"
-  >
-    Discover how to boost your boutique hotel's digital presence →
-  </a>
-</section>
-<br>
+               onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';"
+               onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';"
+            >
+                Discover how to boost your boutique hotel's digital presence →
+            </a>
+        </section>
+        <br>
 
         <h2>🌍 Hotel Highlights from Our Community</h2>
         <p>
@@ -446,44 +447,44 @@
     </section>
     <button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
 
-<section class="contact" id="contact-form">
-  <h2>Get in Touch</h2>
-  <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
+    <section class="contact" id="contact-form">
+        <h2>Get in Touch</h2>
+        <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
 
-  <form id="contactForm">
-    <label for="name">Full Name</label>
-    <input type="text" id="name" name="Full Name" required />
+        <form id="contactForm">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="Full Name" required/>
 
-    <label for="email">Email Address</label>
-    <input type="email" id="email" name="Email Address" required />
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="Email Address" required/>
 
-    <label for="message">Message</label>
-    <textarea id="message" name="Message" required></textarea>
+            <label for="message">Message</label>
+            <textarea id="message" name="Message" required></textarea>
 
-    <button type="submit">Send Message</button>
-  </form>
-</section>
+            <button type="submit">Send Message</button>
+        </form>
+    </section>
 
-<script>
-  document.getElementById("contactForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+    <script>
+        document.getElementById("contactForm").addEventListener("submit", function (event) {
+            event.preventDefault();
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const message = document.getElementById("message").value.trim();
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const message = document.getElementById("message").value.trim();
 
-    const recipient = "info@snddigitalagency.com";
-    const subject = `Contact form message from ${name}`;
-    const body = `Hello SND Digital Agency,\n\n` +
-             `${message}\n\n` +
-             `Name: ${name}\n` +
-             `Email: ${email}`;
+            const recipient = "info@snddigitalagency.com";
+            const subject = `Contact form message from ${name}`;
+            const body = `Hello SND Digital Agency,\n\n` +
+                `${message}\n\n` +
+                `Name: ${name}\n` +
+                `Email: ${email}`;
 
 
-    const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = mailtoLink;
-  });
-</script>
+            const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
+        });
+    </script>
 
 </main>
 <footer>
@@ -501,9 +502,11 @@
     </div>
 
     <nav style="margin-top: 1.5rem; text-align: center;">
-      <a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">About Us</a> |
-      <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">Contact Us</a> |
-      <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">Privacy Policy</a>
+        <a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">About Us</a> |
+        <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Contact
+            Us</a> |
+        <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Privacy
+            Policy</a>
     </nav>
 
     <br><br>
