@@ -271,8 +271,8 @@
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            margin: 2rem auto 1rem; /* מוסיף ריווח מלמטה + ממרכז */
-            display: block; /* הכפתור יתמרכז */
+            margin: 2rem auto 1rem;
+            display: block;
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
@@ -280,6 +280,41 @@
         .toggle-button:hover {
             background-color: #a8803a;
         }
+
+        ul.custom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul.custom-list li {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            color: #0d1b2a;
+        }
+
+        ul.custom-list li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: #0d1b2a;
+            font-size: 1.2rem;
+            top: 0;
+            line-height: 1;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 550;
+            font-size: 1.6rem;
+            color: #111827;
+            position: relative;
+            margin-bottom: 1.2rem;
+            padding-bottom: 6px;
+        }
+
+
     </style>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -328,7 +363,7 @@
             We support brands and entrepreneurs with impactful campaigns and growth models.
         </p>
     </section>
-
+    <br>
     <section class="fade-section">
         <h2>About Us</h2>
         <p>
@@ -337,12 +372,10 @@
             from local campaigns to international collaborations.
         </p>
     </section>
-
+    <br>
     <section class="fade-section">
         <h2>What We Do</h2>
-        <ul>
-
-
+        <ul class="custom-list">
             <li>Strategic growth planning for travel and hospitality brands</li>
             <li>Development and execution of impactful partnerships</li>
             <li>Campaign localization tailored to audience and region</li>
@@ -351,17 +384,7 @@
             <li>Global perspective with a focus on local resonance</li>
         </ul>
     </section>
-
-    <section class="fade-section">
-        <h2>Why Choose Us</h2>
-        <ul>
-            <li>Results-driven and insight-based strategies</li>
-            <li>Deep understanding of the travel and hospitality industries</li>
-            <li>Personal approach with agile delivery</li>
-            <li>Global mindset, local impact</li>
-        </ul>
-    </section>
-
+    <br>
     <section class="fade-section">
         <h2>Our Services</h2>
         <div class="cards">
@@ -394,7 +417,16 @@
         </a>
     </section>
     <br>
-
+    <section class="fade-section">
+        <h2>Why Choose Us</h2>
+        <ul class="custom-list">
+            <li>Results-driven and insight-based strategies</li>
+            <li>Deep understanding of the travel and hospitality industries</li>
+            <li>Personal approach with agile delivery</li>
+            <li>Global mindset, local impact</li>
+        </ul>
+    </section>
+    <br>
     <section class="fade-section">
         <h2>Our Clients</h2>
         <p>We work with boutique hotels, local tour operators, digital platforms, and marketing agencies worldwide to
