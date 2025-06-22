@@ -454,7 +454,6 @@
 </script>
 
 </main>
-
 <footer>
     <h2>Let’s Grow Together</h2>
     <p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
@@ -468,11 +467,19 @@
             info@snddigitalagency.com
         </a>
     </div>
+
+    <nav style="margin-top: 1.5rem; text-align: center;">
+      <a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">About</a> |
+      <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">Contact</a> |
+      <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 300;">Privacy Policy</a>
+    </nav>
+
     <br><br>
     <p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
         Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
     </p>
 </footer>
+
 <br><br>
 
 <!-- קישור אחיד בלינק אחד בלבד -->
@@ -502,7 +509,6 @@
     window.addEventListener('resize', checkFadeSections);
     window.addEventListener('load', checkFadeSections);
 
-    // הכנסת לינק הוואטסאפ באופן דינמי
     window.addEventListener('DOMContentLoaded', () => {
         const whatsappLink = document.getElementById('whatsapp-data').dataset.whatsapp;
         document.querySelectorAll('.whatsapp-button').forEach(btn => {
