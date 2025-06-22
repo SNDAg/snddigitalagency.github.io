@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About Us - SND Digital Agency</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo {
+            height: 50px;
+            width: auto;
+        }
+        
+        body {
+            background: #f5f7fa;
+            color: #0d1b2a;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background-color: #0d1b2a;
+            color: #c39555;
+            padding: 2rem 1rem;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        header h1:hover {
+            transform: scale(1.05);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+            line-height: 1.6;
+        }
+
+        /* אפקט fade-up התחלה - כל המקטעים */
+        section.fade-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* מחלקה שמתווספת כשהאלמנט נראה במסך */
+        section.fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2 {
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 1.2rem;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-icons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #e5f8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #111827;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-icons a:hover {
+            background-color: #d0f1e3;
+            transform: translateY(-2px);
+        }
+
+        .contact-icons img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .logos img {
+            height: 40px;
+            opacity: 0.7;
+        }
+
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 26px;
+            background-color: #25D366;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 999;
+        }
+
+        .floating-button img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .floating-button:hover {
+            background-color: #1ebe5d;
+            transform: scale(1.05);
+        }
+
+        /* Contact Form */
+        section.contact {
+            border: 2px solid #021b33;
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(2, 27, 51, 0.1);
+            max-width: 500px;
+            margin: 2rem auto 0; /* הוספנו רווח למעלה + מרכזנו */
+            display: none;
+            transition: all 0.5s ease;
+        }
+
+        section.contact h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #021b33;
+        }
+
+        section.contact p {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #021b33;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #021b33;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 10px;
+            border: 1.8px solid #c9a548;
+            border-radius: 5px;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 100px;
+        }
+
+        button {
+            background-color: #c9a548;
+            color: #021b33;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #a88a35;
+        }
+
+        /* אנימציות */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        }
+        .toggle-button {
+            background-color: #c39555;
+            color: white;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 2rem auto 1rem; /* מוסיף ריווח מלמטה + ממרכז */
+            display: block; /* הכפתור יתמרכז */
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-button:hover {
+            background-color: #a8803a;
+        }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Contact Us</h1>
+  </header>
+  <main>
+<section style="padding: 80px 20px; max-width: 600px; margin: auto; font-family: sans-serif;">
+  <p>We’d love to hear from you. Reach out for collaborations or project inquiries:</p>
+
+  <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+    <li><strong>Email:</strong> <a href="mailto:info@snddigitalagency.com">info@snddigitalagency.com</a></li>
+    <li><strong>Website:</strong> <a href="https://snddigitalagency.com">snddigitalagency.com</a></li>
+  </ul>
+
+  <form method="POST" action="mailto:snd4digital@gmail.com" enctype="text/plain">
+    <input type="text" name="name" placeholder="Your name" required style="width: 100%; padding: 10px; margin-bottom: 10px;">
+    <input type="email" name="email" placeholder="Your email" required style="width: 100%; padding: 10px; margin-bottom: 10px;">
+    <textarea name="message" placeholder="Your message" required style="width: 100%; padding: 10px; height: 120px; margin-bottom: 20px;"></textarea>
+    <button type="submit" style="background-color: black; color: white; padding: 12px 24px; border: none; cursor: pointer;">Send</button>
+  </form>
+</section>
+
+
+  </main>
+  <footer>
+     SND Digital Agency
+  </footer>
+</body>
+</html>
