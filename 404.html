@@ -4,11 +4,15 @@
 </script>
 -->
 
+<script>
+  const currentPath = window.location.pathname;
 
-const currentPath = window.location.pathname;
-
-if (currentPath.startsWith("/am-kalbia")) {
-  document.write("<h1>Not Found</h1>");
-} else {
-  window.location.href = "/notFound/";
-}
+  if (currentPath.startsWith("/notFound")) {
+    // כבר בעמוד notFound, לא להפנות שוב
+    document.write("<h1>Page Not Found</h1>");
+  } else if (currentPath.startsWith("/am-kalbia")) {
+    document.write("<h1>Not Found</h1>");
+  } else {
+    window.location.href = "/notFound/";
+  }
+</script>
