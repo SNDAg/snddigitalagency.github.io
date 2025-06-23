@@ -184,18 +184,18 @@
             transform: scale(1.05);
         }
 
-        /* Contact Form */
         section.contact {
-            border: 2px solid #021b33;
+            border: 2px solid #c39555;
             border-radius: 8px;
             padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(2, 27, 51, 0.1);
+            background-color: #fdfcfb;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
             max-width: 500px;
-            margin: 2rem auto 0; /* הוספנו רווח למעלה + מרכזנו */
+            margin: 2rem auto 0;
             display: none;
             transition: all 0.5s ease;
         }
+
 
         section.contact h2 {
             margin-top: 0;
@@ -264,22 +264,25 @@
 
         }
         .toggle-button {
-            background-color: #c39555;
+            background: linear-gradient(90deg, #c39555, #a8803a);
             color: white;
-            padding: 8px 16px;
-            font-size: 0.85rem;
+            padding: 10px 18px;
+            font-size: 1rem;
             border: none;
-            border-radius: 6px;
+            border-radius: 24px;
             cursor: pointer;
             margin: 2rem auto 1rem;
             display: block;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 3px 8px rgba(196, 149, 85, 0.35);
+            transition: background 0.3s ease, transform 0.2s ease;
         }
 
         .toggle-button:hover {
-            background-color: #a8803a;
+            background: linear-gradient(90deg, #a8803a, #c39555);
+            transform: scale(1.05);
         }
+
 
         ul.custom-list {
             list-style: none;
