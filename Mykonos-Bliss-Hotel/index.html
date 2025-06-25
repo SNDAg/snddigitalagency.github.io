@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mykonos Bliss Hotel - SND Digital Agency</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f8fafc;
+      color: #111827;
+      margin: 0;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      animation: fadeInPage 1s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fadeInPage {
+      to { opacity: 1; }
+    }
+    .container {
+      max-width: 600px;
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    img.hotel-image {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      object-fit: cover;
+      max-height: 320px;
+    }
+    h1 {
+      font-weight: 600;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #0d1b2a;
+    }
+    .location {
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+    p.description {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #475569;
+      margin-bottom: 2rem;
+    }
+    a.booking-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #c39555, #a8803a);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 14px rgba(195, 149, 85, 0.35);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    a.booking-btn:hover {
+      background: linear-gradient(90deg, #a8803a, #c39555);
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
+    }
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      a.booking-btn {
+        font-size: 1rem;
+        padding: 0.65rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Mykonos Bliss Hotel description and booking">
+    <img
+      src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/353121914.jpg?k=0c1d69f6a12164ca5ff618ebc6a80b037ce086c68472f784329aa6b97bc19a20&o=&hp=1"
+      alt="View of Mykonos Bliss Hotel with panoramic sea view"
+      class="hotel-image"
+      loading="lazy"
+    />
+    <h1>🌅 Mykonos Bliss Hotel</h1>
+    <div class="location">Mykonos, Greece</div>
+    <p class="description">
+      Experience the perfect romantic escape at Mykonos Bliss Hotel, where breathtaking panoramic views meet warm, attentive service. A favorite among couples and influencers, this sanctuary combines luxury with authenticity to make every stay unforgettable.
+    </p>
+    <a 
+      href="https://www.booking.com/hotel/gr/mykonos-bliss-suites.html?aid=311088&label=mykonos-bliss-suites-Y1fmLEcuh4mVVqZH50mGPAS386194042718%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-546223920857%3Alp9031935%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YV19IumoQ3O5SGaqnztlLZw&sid=97ef020941cc87bc1ee149191c840c42&dest_id=900039613&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1750865527&srpvid=c8266d3bcacd0885&type=total&ucfs=1&" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="booking-btn" 
+      aria-label="Book a room now at Mykonos Bliss Hotel on Booking.com"
+    >
+      Reserve Your Stay Now
+    </a>
+  </div>
+</body>
+</html>
