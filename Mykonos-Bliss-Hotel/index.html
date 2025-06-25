@@ -9,25 +9,32 @@
     * {
       box-sizing: border-box;
     }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f8fafc;
-      color: #111827;
-      margin: 0;
-      padding: 0 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      animation: fadeInPage 1s ease forwards;
-      opacity: 0;
-    }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  animation: fadeInPage 1s ease forwards;
+  opacity: 0;
+  
+  background-image: url('Taksim-Palace–Istanbul.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  color: #111827;
+}
     @keyframes fadeInPage {
       to { opacity: 1; }
     }
     .container {
+    background: rgba(255, 255, 255, 0.85); /* לבן שקוף */
+    backdrop-filter: blur(5px); /* טשטוש הרקע מאחור */
       max-width: 600px;
-      background: white;
       padding: 2.5rem 2rem;
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
@@ -76,10 +83,6 @@
       transform: scale(1.05);
       box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
     }
-    .img {
-            height: 50px;
-            width: auto;
-        }
     /* Responsive */
     @media (max-width: 480px) {
       .container {
@@ -97,7 +100,6 @@
 </head>
 <body>
   <div class="container" role="main" aria-label="Mykonos Bliss Hotel description and booking">
-    <img src="Mykonos-Bliss.png" alt="View of Mykonos Bliss Hotel with panoramic sea view" class="img" loading="lazy"/>
     <h1>🌅 Mykonos Bliss Hotel</h1>
     <div class="location">Mykonos, Greece</div>
     <p class="description">
