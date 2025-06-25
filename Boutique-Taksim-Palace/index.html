@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
@@ -9,25 +10,31 @@
     * {
       box-sizing: border-box;
     }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: #f8fafc;
-      color: #111827;
-      margin: 0;
-      padding: 0 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      animation: fadeInPage 1s ease forwards;
-      opacity: 0;
-    }
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  animation: fadeInPage 1s ease forwards;
+  opacity: 0;
+  
+  background-image: url('Taksim-Palace–Istanbul.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  color: #111827;
+}
     @keyframes fadeInPage {
       to { opacity: 1; }
     }
     .container {
+    background: rgba(255, 255, 255, 0.85); /* לבן שקוף */
+    backdrop-filter: blur(5px); /* טשטוש הרקע מאחור */
       max-width: 600px;
-      background: white;
       padding: 2.5rem 2rem;
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
@@ -96,7 +103,6 @@
 </head>
 <body>
   <div class="container" role="main" aria-label="Boutique Taksim Palace Hotel description and booking">
-    <img src="Taksim-Palace–Istanbul.png" alt="Exterior view of Boutique Taksim Palace, Istanbul" class="img" loading="lazy"/>
     
     <h1>🕌 Boutique Taksim Palace</h1>
     <div class="location">Istanbul, Turkey</div>
