@@ -100,10 +100,17 @@
             padding: 1rem;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .card:hover {
-            transform: scale(1.03);
+            transform: scale(1.04);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        .static-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
         }
 
         footer {
@@ -424,9 +431,9 @@
     <section class="fade-section">
         <h2>Our Services</h2>
         <div class="cards">
-            <div class="card">Strategy & Audit for Travel Brands</div>
-            <div class="card">Content Management</div>
-            <div class="card">Business Partnership Curation</div>
+            <div class="static-card">Strategy & Audit for Travel Brands</div>
+            <div class="static-card">Content Management</div>
+            <div class="static-card">Business Partnership Curation</div>
         </div>
     </section>
 
