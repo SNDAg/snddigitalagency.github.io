@@ -1,16 +1,18 @@
 
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <!--   google ads -->
-    <!--   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535"
+<!--   google ads -->
+<!--   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2213108815222535"
          crossorigin="anonymous"></script> -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <style>
+<link href="/goldBluefavicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="/favicon-48x48.png" rel="icon" sizes="48x48" type="image/png"/>
+<link href="/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
         .header {
@@ -361,79 +363,184 @@
         }
 
 
-    </style>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    
+    background-color: #f9f9fb;
+}
+    background-color: #ffffff;
+}
+.hamburger-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 50px;
+    background-color: #0d1b2a;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+nav.mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 50px;
+    width: 250px;
+    height: auto;
+    max-height: 100vh;
+    overflow-y: auto;
+    background-color: #0d1b2a;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    padding: 2rem 1rem;
+    text-align: left;
+}
 
-    <title>SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism</title>
-    <meta name="description"
-          content="SND Digital Agency provides tailored digital marketing solutions for hotels, resorts, and tourism businesses. Boost your bookings and online presence with expert campaigns."/>
-    <meta name="keywords"
-          content="Digital Marketing, Hospitality Marketing, Tourism Marketing, Hotels Marketing, Resorts Advertising, Online Marketing, SEO for Hotels, Social Media Marketing, Influencer Marketing, Booking Collaboration, Travel Marketing Agency"/>
-    <meta name="author" content="SND Digital Agency"/>
-    <meta name="robots" content="index, follow"/>
+html {
+  scroll-behavior: smooth;
+}
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website"/>
-    <meta property="og:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism"/>
-    <meta property="og:description"
-          content="Tailored marketing solutions for hotels, resorts, and tourism destinations. Increase visibility, traffic, and bookings with SND Digital Agency."/>
-    <meta property="og:url" content="https://snddigitalagency.com"/>
-    <meta property="og:site_name" content="SND Digital Agency"/>
-    <meta property="og:image" content="https://snddigitalagency.com/og-image.jpg"/>
+.hamburger {
+    background-color: #1c2d44;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+.hamburger:hover {
+    background-color: #c39555;
+}
 
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="SND Digital Agency | Expert Digital Marketing for Hospitality & Tourism"/>
-    <meta name="twitter:description"
-          content="Boost your hospitality business with customized digital marketing campaigns by SND Digital Agency."/>
-    <meta name="twitter:image" content="https://snddigitalagency.com/twitter-image.jpg"/>
-    <meta name="twitter:site" content="@SNDdigital"/>
-
+nav.mobile-nav {
+    width: 250px !important;
+    height: auto !important;
+    max-height: 100vh !important;
+    overflow-y: auto !important;
+    border-left: 2px solid #c39555;
+    border-right: 2px solid #c39555;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+</style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism</title>
+<meta content="SND Digital Agency provides tailored digital marketing solutions for hotels, resorts, and tourism businesses. Boost your bookings and online presence with expert campaigns." name="description"/>
+<meta content="Digital Marketing, Hospitality Marketing, Tourism Marketing, Hotels Marketing, Resorts Advertising, Online Marketing, SEO for Hotels, Social Media Marketing, Influencer Marketing, Booking Collaboration, Travel Marketing Agency" name="keywords"/>
+<meta content="SND Digital Agency" name="author"/>
+<meta content="index, follow" name="robots"/>
+<!-- Open Graph / Facebook -->
+<meta content="website" property="og:type"/>
+<meta content="SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism" property="og:title"/>
+<meta content="Tailored marketing solutions for hotels, resorts, and tourism destinations. Increase visibility, traffic, and bookings with SND Digital Agency." property="og:description"/>
+<meta content="https://snddigitalagency.com" property="og:url"/>
+<meta content="SND Digital Agency" property="og:site_name"/>
+<meta content="https://snddigitalagency.com/og-image.jpg" property="og:image"/>
+<!-- Twitter -->
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism" name="twitter:title"/>
+<meta content="Boost your hospitality business with customized digital marketing campaigns by SND Digital Agency." name="twitter:description"/>
+<meta content="https://snddigitalagency.com/twitter-image.jpg" name="twitter:image"/>
+<meta content="@SNDdigital" name="twitter:site"/>
 </head>
-<body>
-<header>
-    <img src="logo_no_text.png" alt="SND Digital Agency Logo" class="logo"/>
-    <div>
-        <h1>SND Digital Agency</h1>
-        <p>Digital Strategy & Business Partnerships</p>
-    </div>
-</header>
+<body><div class="hamburger-wrapper"><button class="hamburger" onclick="toggleMenu()">
+<span></span>
+<span></span>
+<span></span>
+</button></div><nav class="mobile-nav" id="mobileMenu">
+<a href="#who-we-are">Who We Are</a>
+<a href="#about-us">About Us</a>
+<a href="#what-we-do">What We Do</a>
+<a href="#services">Our Services</a>
+<a href="#case-studies">Case Studies</a>
+<a href="#testimonials">Testimonials</a>
+<a href="#process">Our Process</a>
+<a href="#partner">Partner With Us</a>
+</nav>
+<style>
+.hamburger {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+}
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px;
+    background-color: #0d1b2a;
+    border-radius: 2px;
+}
 
+nav.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    background-color: #0d1b2a;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+    padding-top: 9rem;
+    padding-bottom: 24rem;
+    text-align: center;
+}
+nav.mobile-nav.open {
+    transform: translateX(0);
+}
+nav.mobile-nav a {
+    color: #c39555;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+    text-decoration: none;
+}
+</style>
+<header>
+<img alt="SND Digital Agency Logo" class="logo" src="logo_no_text.png"/>
+<div>
+<h1>SND Digital Agency</h1>
+<p>Digital Strategy &amp; Business Partnerships</p>
+</div>
+</header>
 <main>
-    <section class="fade-section">
-        <h2>Who We Are</h2>
-        <p>
+<section class="fade-section" id="who-we-are">
+<h2>Who We Are</h2>
+<p>
             SND Digital Agency is a boutique consultancy specializing in digital strategy,
             business partnerships, and tailored marketing solutions in the travel and hospitality sector.
             We support brands and entrepreneurs with impactful campaigns and growth models.
         </p>
-    </section>
-    <br>
-    <section class="fade-section">
-        <h2>About Us</h2>
-        <p>
+</section>
+<br/>
+<section class="fade-section" id="about-us">
+<h2>About Us</h2>
+<p>
             Founded by digital strategist with over a decade of experience in marketing and partnerships,
             SND Digital Agency brings a human-first, insight-led approach to brand growth. Our work spans
             from local campaigns to international collaborations.
         </p>
-    </section>
-    <br>
-    <section class="fade-section">
-        <h2>What We Do</h2>
-        <ul class="custom-list">
-            <li>Strategic growth planning for travel and hospitality brands</li>
-            <li>Development and execution of impactful partnerships</li>
-            <li>Campaign localization tailored to audience and region</li>
-            <li>Brand positioning through insight-led storytelling</li>
-            <li>Agile delivery rooted in deep industry understanding</li>
-            <li>Global perspective with a focus on local resonance</li>
-        </ul>
-    </section>
-     <br>
-    <section style="text-align: center; margin: 1.5rem 0;">
-        <a href="/article-improve-digital-presence"
-           style="
+</section>
+<br/>
+<section class="fade-section" id="what-we-do">
+<h2>What We Do</h2>
+<ul class="custom-list">
+<li>Strategic growth planning for travel and hospitality brands</li>
+<li>Development and execution of impactful partnerships</li>
+<li>Campaign localization tailored to audience and region</li>
+<li>Brand positioning through insight-led storytelling</li>
+<li>Agile delivery rooted in deep industry understanding</li>
+<li>Global perspective with a focus on local resonance</li>
+</ul>
+</section>
+<br/>
+<section style="text-align: center; margin: 1.5rem 0;">
+<a href="/article-improve-digital-presence" onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';" onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';" style="
         display: inline-block;
         background: linear-gradient(90deg, #c39555, #a8803a);
         color: white;
@@ -445,189 +552,164 @@
         box-shadow: 0 3px 8px rgba(196, 149, 85, 0.35);
         transition: background 0.3s ease, transform 0.2s ease;
         letter-spacing: 0.03em;
-     "
-           onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';"
-           onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';"
-        >
+     ">
             Discover how to boost your boutique hotel's digital presence →
         </a>
-    </section>
-    <br>
-    <section class="fade-section">
-        <h2>Our Services</h2>
-        <div class="cards">
-            <div class="static-card">Strategy & Audit for Travel Brands</div>
-            <div class="static-card">Content Management</div>
-            <div class="static-card">Business Partnership Curation</div>
-        </div>
-    </section>
-
-
-    <br>
-    <section class="fade-section">
-        <h2>Why Choose Us</h2>
-        <ul class="custom-list">
-            <li>Results-driven and insight-based strategies</li>
-            <li>Deep understanding of the travel and hospitality industries</li>
-            <li>Personal approach with agile delivery</li>
-            <li>Global mindset, local impact</li>
-        </ul>
-    </section>
-    <br>
-
-    <section class="fade-section">
-        <h2>Case Studies</h2>
-        <div class="static-card">
-            <h3>📈 Aegeo Bliss Retreat – Cycladic Isles</h3>
-            <p>Led a targeted digital campaign that resulted in a 35% increase in seasonal bookings and a 2.3x ROAS.</p>
-        </div>
-        <br>
-        <div class="static-card">
-            <h3>🏨 Casa Del Mar Palace – Central Anatolia</h3>
-            <p>Increased direct bookings by 42% through multilingual campaign optimization and influencer
+</section>
+<br/>
+<section class="fade-section" id="services">
+<h2>Our Services</h2>
+<div class="cards">
+<div class="static-card">Strategy &amp; Audit for Travel Brands</div>
+<div class="static-card">Content Management</div>
+<div class="static-card">Business Partnership Curation</div>
+</div>
+</section>
+<br/>
+<section class="fade-section" id="why-us">
+<h2>Why Choose Us</h2>
+<ul class="custom-list">
+<li>Results-driven and insight-based strategies</li>
+<li>Deep understanding of the travel and hospitality industries</li>
+<li>Personal approach with agile delivery</li>
+<li>Global mindset, local impact</li>
+</ul>
+</section>
+<br/>
+<section class="fade-section" id="case-studies">
+<h2>Case Studies</h2>
+<div class="static-card">
+<h3>📈 Aegeo Bliss Retreat – Cycladic Isles</h3>
+<p>Led a targeted digital campaign that resulted in a 35% increase in seasonal bookings and a 2.3x ROAS.</p>
+</div>
+<br/>
+<div class="static-card">
+<h3>🏨 Casa Del Mar Palace – Central Anatolia</h3>
+<p>Increased direct bookings by 42% through multilingual campaign optimization and influencer
                 collaborations.</p>
-        </div>
-    </section>
-    <br><br>
-    <section class="fade-section">
-        <h2>Client Testimonials</h2>
-        <blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
+</div>
+</section>
+<br/><br/>
+<section class="fade-section" id="testimonials">
+<h2>Client Testimonials</h2>
+<blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
             “Working with SND was a turning point for our visibility online. Their team understood our boutique vibe and
             elevated our presence perfectly.”
         </blockquote>
-        <p style="text-align: right; font-weight: bold;">– Lea Andros, Owner, The Horizon House (Santorini)</p>
-        <br>
-        <blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
+<p style="text-align: right; font-weight: bold;">– Lea Andros, Owner, The Horizon House (Santorini)</p>
+<br/>
+<blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
             “Our bookings soared and we’ve built stronger brand trust thanks to their strategic yet human approach.”
         </blockquote>
-        <p style="text-align: right; font-weight: bold;">– Marco Del Rio, Manager, Villa Lume (Amalfi Coast)</p>
-    </section>
-   
-    <br>
-    <section class="fade-section">
-        <h2>Our 5-Step Collaboration Process</h2>
-        <ul class="custom-list">
-            <li><strong>Discovery:</strong> Understanding your brand, goals and market landscape</li>
-            <li><strong>Strategy:</strong> Co-creating KPI-aligned campaigns</li>
-            <li><strong>Production:</strong> Crafting creative, partnerships or content</li>
-            <li><strong>Launch:</strong> Targeted execution and iteration</li>
-            <li><strong>Measurement:</strong> Tracking performance and learning</li>
-        </ul>
-    </section>
-
-
-    <section class="fade-section" style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;">
-        <h2>Partner With Us</h2>
-        <p style="font-size: 1.1rem; color: #374151;">
+<p style="text-align: right; font-weight: bold;">– Marco Del Rio, Manager, Villa Lume (Amalfi Coast)</p>
+</section>
+<br/>
+<section class="fade-section" id="process">
+<h2>Our 5-Step Collaboration Process</h2>
+<ul class="custom-list">
+<li><strong>Discovery:</strong> Understanding your brand, goals and market landscape</li>
+<li><strong>Strategy:</strong> Co-creating KPI-aligned campaigns</li>
+<li><strong>Production:</strong> Crafting creative, partnerships or content</li>
+<li><strong>Launch:</strong> Targeted execution and iteration</li>
+<li><strong>Measurement:</strong> Tracking performance and learning</li>
+</ul>
+</section>
+<section class="fade-section" id="partner" style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;">
+<h2>Partner With Us</h2>
+<p style="font-size: 1.1rem; color: #374151;">
             Are you a boutique hotel, resort, or experience provider looking to grow your digital presence and reach the
             right audience?
             We invite select properties to join our curated network and benefit from strategic marketing and tailored
             exposure opportunities.
         </p>
-<br>
-        <button class="toggle-button" onclick="toggleLetsTalkContactForm()">📬 Request to Join</button>
-    </section>
-                <section class="fade-section">
-        <blockquote style="font-style: italic; font-size: 1.2rem; margin: 2rem 0; text-align: center;">“We don’t just
+<br/>
+<button class="toggle-button" onclick="toggleLetsTalkContactForm()">📬 Request to Join</button>
+</section>
+<section class="fade-section">
+<blockquote style="font-style: italic; font-size: 1.2rem; margin: 2rem 0; text-align: center;">“We don’t just
             connect brands — we create meaningful partnerships.”
         </blockquote>
-    </section>
-
-    <section class="contact" id="talk-contact-form">
-        <h2>Join Us!</h2>
-        <p>Let’s work together to elevate your brand!<br>
+</section>
+<section class="contact" id="talk-contact-form">
+<h2>Join Us!</h2>
+<p>Let’s work together to elevate your brand!<br/>
             Submit your details and we’ll reach out to schedule a personalized discovery call.</p>
-
-        <form id="contactForm">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="Full Name" required/>
-
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="Email Address" required/>
-
-            <label for="message">Phone Number</label>
-            <input type="text" id="message" name="Phone Number" required/>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
-    </section>
-    <br>
-    <section class="fade-section">
-
-        <h2>🌍 Hotel Highlights from Our Community</h2>
-        <p>
+<form id="contactForm">
+<label for="name">Full Name</label>
+<input id="name" name="Full Name" required="" type="text"/>
+<label for="email">Email Address</label>
+<input id="email" name="Email Address" required="" type="email"/>
+<label for="message">Phone Number</label>
+<input id="message" name="Phone Number" required="" type="text"/>
+<br/>
+<button type="submit">Submit</button>
+</form>
+</section>
+<br/>
+<section class="fade-section">
+<h2>🌍 Hotel Highlights from Our Community</h2>
+<p>
             Each month, we feature hotel partners whose guest experiences stood out in feedback from clients and
             collaborators. These highlights reflect the power of brand-aligned experiences and the results of great
             partnerships.
         </p>
-
-        <br>
-        <div class="card">
-            <h3>🌅 Mykonos Bliss Hotel – Mykonos, Greece</h3>
-            <p>A romantic haven with panoramic views and warm service. This property continuously ranks high among
+<br/>
+<div class="card">
+<h3>🌅 Mykonos Bliss Hotel – Mykonos, Greece</h3>
+<p>A romantic haven with panoramic views and warm service. This property continuously ranks high among
                 couples and influencers alike.</p>
-            <a href="/Mykonos-Bliss-Hotel//" style="color: #b88b14; font-weight: bold;">Discover more &gt;&gt;</a>
-        </div>
-        <br>
-        <div class="card">
-            <h3>🕌 Boutique Taksim Palace – Istanbul, Turkey</h3>
-            <p>Nestled in the heart of Istanbul, this boutique property is celebrated for its authenticity and location
+<a href="/Mykonos-Bliss-Hotel//" style="color: #b88b14; font-weight: bold;">Discover more &gt;&gt;</a>
+</div>
+<br/>
+<div class="card">
+<h3>🕌 Boutique Taksim Palace – Istanbul, Turkey</h3>
+<p>Nestled in the heart of Istanbul, this boutique property is celebrated for its authenticity and location
                 near cultural landmarks.</p>
-            <a href="/Boutique-Taksim-Palace/" style="color: #b88b14; font-weight: bold;">Learn more &gt;&gt;</a>
-        </div>
-        <br>
-        <div class="card">
-            <h3>🏝️ U Pattaya – Thailand</h3>
-            <p>Beachfront serenity with standout design. A client favorite for immersive hospitality and consistent
+<a href="/Boutique-Taksim-Palace/" style="color: #b88b14; font-weight: bold;">Learn more &gt;&gt;</a>
+</div>
+<br/>
+<div class="card">
+<h3>🏝️ U Pattaya – Thailand</h3>
+<p>Beachfront serenity with standout design. A client favorite for immersive hospitality and consistent
                 guest satisfaction.</p>
-            <a href="/comingSoon/" style="color: #b88b14; font-weight: bold;">More info &gt;&gt;</a>
-        </div>
-        <p style="margin-top: 1.5rem; color: #444;">Want to feature your hotel in next month's picks?
-    </section>
-    <button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
-    <section class="contact" id="contact-form">
-        <h2>Get in Touch</h2>
-        <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
-
-        <form id="contactForm">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="Full Name" required/>
-
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="Email Address" required/>
-
-            <label for="message">Message</label>
-            <textarea id="message" name="Message" required></textarea>
-
-            <button type="submit">Send Message</button>
-        </form>
-    </section>
-
-    <br><br>
-    <section
-            class="bg-gradient-to-r from-[#f8fafc] to-[#eef2f7] py-12 px-6 rounded-2xl shadow-xl max-w-4xl mx-auto my-16 text-center">
-
-        <h2 class="text-3xl font-bold text-gray-800 mb-4" style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;"> <br>
-            <span class="badge-new">New</span> Expanding With Leading Travel Brands
+<a href="/comingSoon/" style="color: #b88b14; font-weight: bold;">More info &gt;&gt;</a>
+</div>
+<p style="margin-top: 1.5rem; color: #444;">Want to feature your hotel in next month's picks?
+    </p></section>
+<button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
+<section class="contact" id="contact-form">
+<h2>Get in Touch</h2>
+<p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
+<form id="contactForm">
+<label for="name">Full Name</label>
+<input id="name" name="Full Name" required="" type="text"/>
+<label for="email">Email Address</label>
+<input id="email" name="Email Address" required="" type="email"/>
+<label for="message">Message</label>
+<textarea id="message" name="Message" required=""></textarea>
+<button type="submit">Send Message</button>
+</form>
+</section>
+<br/><br/>
+<section class="bg-gradient-to-r from-[#f8fafc] to-[#eef2f7] py-12 px-6 rounded-2xl shadow-xl max-w-4xl mx-auto my-16 text-center">
+<h2 class="text-3xl font-bold text-gray-800 mb-4" style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;"> <br/>
+<span class="badge-new">New</span> Expanding With Leading Travel Brands
         </h2>
-
-        <p class="highlight-paragraph">
+<p class="highlight-paragraph">
             We're in the process of partnering with global travel platforms like
             <span class="brand booking">Booking.com</span> and
             <span class="brand viator">Viator</span> by TripAdvisor, to enrich our offerings.
         </p>
-        <p class="text-gray-600 mb-6">
+<p class="text-gray-600 mb-6">
             Soon, you will be able to explore and book curated hotels, experiences, and restaurants directly through our
             recommendations – all seamlessly integrated into your planning journey.
         </p>
-        <div class="text-sm italic text-gray-500">
+<div class="text-sm italic text-gray-500">
             Integration in progress. Stay tuned for exclusive options, tailored by destination.
         </div>
-    </section>
-
-    <br><br>
-    
-    <script>
+</section>
+<br/><br/>
+<script>
         document.getElementById("contactForm").addEventListener("submit", function (event) {
             event.preventDefault();
 
@@ -647,40 +729,35 @@
             window.location.href = mailtoLink;
         });
     </script>
-
 </main>
 <footer>
-    <h2>Let’s Grow Together</h2>
-    <p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
-    <div class="contact-icons">
-        <a class="whatsapp-button" target="_blank">
-            <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp Icon"/>
+<h2>Let’s Grow Together</h2>
+<p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
+<div class="contact-icons">
+<a class="whatsapp-button" target="_blank">
+<img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
             WhatsApp
         </a>
-        <a href="mailto:info@snddigitalagency.com">
-            <img src="https://img.icons8.com/ios-filled/50/000000/new-post.png" alt="Email Icon"/>
+<a href="mailto:info@snddigitalagency.com">
+<img alt="Email Icon" src="https://img.icons8.com/ios-filled/50/000000/new-post.png"/>
             info@snddigitalagency.com
         </a>
-    </div>
-<br><br>
-    <nav style="margin-top: 1.5rem; text-align: center;">
-        <a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">About Us</a> |
+</div>
+<br/><br/>
+<nav style="margin-top: 1.5rem; text-align: center;">
+<a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">About Us</a> |
         <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Contact
             Us</a> |
         <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Privacy
             Policy</a>
-    </nav>
-
-    <br><br>
-    <p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
+</nav>
+<br/><br/>
+<p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
         Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
-    </p>
+</p>
 </footer>
-
-<br><br>
-<div id="whatsapp-data"
-     data-whatsapp="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency."></div>
-
+<br/><br/>
+<div data-whatsapp="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency." id="whatsapp-data"></div>
 <script>
     function isInViewport(el) {
         const rect = el.getBoundingClientRect();
@@ -710,11 +787,9 @@
         });
     });
 </script>
-<br><br>
-<a class="floating-button"
-   href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency"
-   target="_blank">
-    <img src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png" alt="WhatsApp"/>
+<br/><br/>
+<a class="floating-button" href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency" target="_blank">
+<img alt="WhatsApp" src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png"/>
     WhatsApp
 </a>
 <script>
@@ -728,6 +803,11 @@
         form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
     }
 
+</script>
+<script>
+function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+}
 </script>
 </body>
 </html>
