@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,7 +110,36 @@
       color: #0d1b2a;
       text-align: right;
     }
+        .contact-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
 
+        .contact-icons a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: #e5f8f0;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #111827;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .contact-icons a:hover {
+            background-color: #d0f1e3;
+            transform: translateY(-2px);
+        }
+
+        .contact-icons img {
+            width: 24px;
+            height: 24px;
+        }
     footer {
       background-color: #f1f1f1;
       padding: 2rem 1rem;
@@ -182,8 +212,31 @@
       Article by the SND Digital Agency Team
     </p>
   </main>
-  <footer>
-    SND Digital Agency
-  </footer>
+ <footer>
+<h2>Let’s Grow Together</h2>
+<p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
+<div class="contact-icons">
+<a class="whatsapp-button" target="_blank">
+<img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
+            WhatsApp
+        </a>
+<a href="mailto:info@snddigitalagency.com">
+<img alt="Email Icon" src="https://img.icons8.com/ios-filled/50/000000/new-post.png"/>
+            info@snddigitalagency.com
+        </a>
+</div>
+<br/>
+<nav style="margin-top: 1.5rem; text-align: center;">
+<a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">About Us</a> |
+        <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Contact
+            Us</a> |
+        <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Privacy
+            Policy</a>
+</nav>
+
+<p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
+        Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
+</p>
+</footer>
 </body>
 </html>
