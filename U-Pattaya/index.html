@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>U Pattaya – Thailand - SND Digital Agency</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      animation: fadeInPage 1s ease forwards;
+      opacity: 0;
+      background-image: url('pattaya.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #111827;
+    }
+
+    @keyframes fadeInPage {
+      to { opacity: 1; }
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
+      max-width: 600px;
+      padding: 2.5rem 2rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    img.hotel-image {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      object-fit: cover;
+      max-height: 320px;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: #0d1b2a;
+    }
+
+    .location {
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+    }
+
+    p.description {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #475569;
+      margin-bottom: 2rem;
+    }
+
+    a.booking-btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #c39555, #a8803a);
+      color: white;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 14px rgba(195, 149, 85, 0.35);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    a.booking-btn:hover {
+      background: linear-gradient(90deg, #a8803a, #c39555);
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      a.booking-btn {
+        font-size: 1rem;
+        padding: 0.65rem 1.5rem;
+      }
+    }
+
+    a.home-button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0d1b2a;
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    a.home-button:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="U Pattaya Hotel description and booking">
+    <h1>🏖️ U Pattaya Hotel</h1>
+    <div class="location">Pattaya, Thailand</div>
+    <p class="description">
+      Nestled between lush hills and the tranquil sea, U Pattaya offers an intimate and serene getaway on the vibrant coast of Thailand. With luxurious villas, private pools, and stunning sunset views, it's the perfect retreat for romance and relaxation.
+    </p>
+    <a 
+      href="https://www.booking.com/hotel/th/u-pattaya.en-gb.html?aid=311984&label=u-pattaya-9yC%2AaBlufTwP1gLj_2pO6wS392797721468%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-112942276867%3Alp1008006%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YbSsBl3MCvHsD8UKUHIRFxY&sid=470241b3872702cfc72a08cdfb80dbbf&dest_id=900056126&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&hpos=1&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&srepoch=1751312016&srpvid=1d8aba30a2be5d9a7622b592ece39870&type=total&ucfs=1&" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="booking-btn" 
+      aria-label="Book a room now at U Pattaya Hotel on Booking.com"
+    >
+      Reserve Your Stay Now
+    </a>
+    <div style="margin-top: 1.8rem;">
+      <a href="/" class="home-button" aria-label="Back to homepage">← Back to Home</a>
+    </div>
+  </div>
+</body>
+</html>
