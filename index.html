@@ -737,15 +737,18 @@
     <section class="contact" id="contact-form">
         <h2>Get in Touch</h2>
         <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
-        <form id="contactForm">
-            <label for="name">Full Name</label>
-            <input id="name" name="Full Name" required="" type="text"/>
-            <label for="email">Email Address</label>
-            <input id="email" name="Email Address" required="" type="email"/>
-            <label for="message">Message</label>
-            <textarea id="message" name="Message" required=""></textarea>
-            <button type="submit">Send Message</button>
-        </form>
+<form 
+  id="contactForm"
+  action="https://formspree.io/f/mwpbjwvb"
+  method="POST">
+  <label for="name">Full Name</label>
+  <input id="name" name="Full Name" type="text" required />
+  <label for="email">Email Address</label>
+  <input id="email" name="Email Address" type="email" required />
+  <label for="message">Message</label>
+  <textarea id="message" name="Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form>
     </section>
     <br/><br/>
     <section
