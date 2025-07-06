@@ -862,6 +862,45 @@
             btn.href = whatsappLink;
         });
     });
+
+  document.querySelectorAll("form#contactForm").forEach((form, index) => {
+    const button = form.querySelector("button[type='submit']");
+    let status = form.querySelector(".form-status");
+    if (!status) {
+      status = document.createElement("p");
+      status.className = "form-status";
+      status.style.fontSize = "0.9rem";
+      status.style.marginTop = "1rem";
+      form.appendChild(status);
+    }
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      button.disabled = true;
+      button.textContent = "Sending...";
+      const formData = new FormData(form);
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (response.ok) {
+          form.reset();
+          status.textContent = "✅ Thanks! Your message has been sent.";
+          status.style.color = "green";
+        } else {
+          status.textContent = "❌ Oops! Something went wrong. Please try again.";
+          status.style.color = "red";
+        }
+      } catch (error) {
+        status.textContent = "❌ Network error. Please try again later.";
+        status.style.color = "red";
+      }
+      button.disabled = false;
+      button.textContent = "Send";
+    });
+  });
 </script>
 <br/><br/>
 <a class="floating-button"
