@@ -1,50 +1,56 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-      <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mykonos Bliss Hotel - SND Digital Agency</title>
+  <meta name="description" content="Romantic escape at Mykonos Bliss Hotel – luxury, views, and style. Book directly via Booking.com with SND Digital.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  
   <style>
     * {
       box-sizing: border-box;
     }
 
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column; 
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  animation: fadeInPage 1s ease forwards;
-  opacity: 0;
-  
-  background-image: url('Mykonos-Bliss.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed; 
-  color: #111827;
-}
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      animation: fadeInPage 1s ease forwards;
+      opacity: 0;
+      background-image: url('Mykonos-Bliss.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #111827;
+    }
+
     @keyframes fadeInPage {
       to { opacity: 1; }
     }
+
     .container {
-    background: rgba(255, 255, 255, 0.85); /* לבן שקוף */
-    backdrop-filter: blur(5px); /* טשטוש הרקע מאחור */
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
       max-width: 600px;
       padding: 2.5rem 2rem;
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
       text-align: center;
-      margin-bottom: 2rem; /* רווח בין התוכן לפוטר */
+      margin-bottom: 2rem;
     }
+
     img.hotel-image {
       width: 100%;
       border-radius: 15px;
@@ -53,24 +59,28 @@ body {
       object-fit: cover;
       max-height: 320px;
     }
+
     h1 {
       font-weight: 600;
       font-size: 2rem;
       margin-bottom: 0.5rem;
       color: #0d1b2a;
     }
+
     .location {
       font-weight: 400;
       font-size: 1.1rem;
       color: #64748b;
       margin-bottom: 1.5rem;
     }
+
     p.description {
       font-size: 1rem;
       line-height: 1.6;
       color: #475569;
       margin-bottom: 2rem;
     }
+
     a.booking-btn {
       display: inline-block;
       background: linear-gradient(90deg, #c39555, #a8803a);
@@ -83,12 +93,70 @@ body {
       box-shadow: 0 4px 14px rgba(195, 149, 85, 0.35);
       transition: background 0.3s ease, transform 0.2s ease;
     }
+
     a.booking-btn:hover {
       background: linear-gradient(90deg, #a8803a, #c39555);
       transform: scale(1.05);
       box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
     }
-    /* Responsive */
+
+    a.home-button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.6rem 1.8rem;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #0d1b2a;
+      background-color: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(4px);
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    a.home-button:hover {
+      background-color: rgba(255, 255, 255, 0.8);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
+      color: #0d1b2a;
+      padding: 2rem 1rem;
+      font-size: 0.8rem;
+      text-align: center;
+      margin-top: 2rem;
+      border-radius: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    footer p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: #c39555;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      width: 60%;
+      margin: 1.5rem auto;
+    }
+
     @media (max-width: 480px) {
       .container {
         padding: 2rem 1rem;
@@ -101,62 +169,14 @@ body {
         padding: 0.65rem 1.5rem;
       }
     }
-    a.home-button {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.6rem 1.8rem;
-  border-radius: 30px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #0d1b2a;
-  background-color: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(4px);
-  text-decoration: none;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-a.home-button:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-/* Footer styling */
-footer {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(5px);
-  color: #0d1b2a;
-  padding: 2rem 1rem;
-  font-size: 0.6rem;
-  text-align: center;
-  margin-top: 2rem;
-  border-radius: 20px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-}
-
-footer p {
-  margin: 0;
-  line-height: 1.6;
-}
-
-footer a {
-  color: #c39555;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
-
   </style>
 </head>
 <body>
+
+  <!-- preload background image -->
+  <img src="Mykonos-Bliss.png" alt="Mykonos hotel background" style="display:none;" loading="lazy" />
+
   <div class="container" role="main" aria-label="Mykonos Bliss Hotel description and booking">
-      
     <h1>🌅 Mykonos Bliss Hotel</h1>
     <div class="location">Mykonos, Greece</div>
     <p class="description">
@@ -171,24 +191,40 @@ footer a:hover {
     >
       Reserve Your Stay on Booking.com*
     </a>
-        <div style="margin-top: 1.8rem;">
+    <div style="margin-top: 1.8rem;">
       <a href="/" class="home-button" aria-label="Back to homepage">← Back to Home</a>
     </div>
-
   </div>
+<footer style="
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(5px);
+  color: #0d1b2a;
+  padding: 2rem 1rem;
+  font-size: 0.6rem;
+  text-align: center;
+  margin-top: 2rem;
+  border-radius: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+">
+  <p style="margin: 0; line-height: 1.6;">
+    <strong>*</strong> Our affiliate partnership with Booking.com is currently pending approval.<br />
+    Meanwhile, you can still book through these direct links.
+  </p>
+  <div style="margin: 1rem 0;">
+    <hr style="border: none; border-top: 1px solid #ccc; width: 50%; margin: auto;" />
+  </div>
+  <p style="margin: 0; line-height: 1.6;">
+    <strong>Affiliate Disclosure</strong><br />
+    To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
+    <a href="https://www.booking.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Booking.com</a> and 
+    <a href="https://www.viator.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Viator</a> (via TripAdvisor).<br />
+    When you book through these links, we may earn a commission — at no extra cost to you.<br />
+    These partnerships allow us to continue curating and sharing travel recommendations with our community.
+  </p>
+</footer>
 
-  <footer>
-    <p>
-      <strong>*</strong> Our affiliate partnership with Booking.com is currently pending approval. Meanwhile, you can still booking via these direct links <br><br>
-        ------<br><br>
-      <strong>Affiliate Disclosure</strong><br />
-      To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
-      <a href="https://www.booking.com/" target="_blank" rel="nofollow noopener">Booking.com</a> and 
-      <a href="https://www.viator.com/" target="_blank" rel="nofollow noopener">Viator</a> (via TripAdvisor).<br />
-      When you book through these links, we may earn a commission — at no extra cost to you.<br />
-      These partnerships allow us to continue curating and sharing travel recommendations with our community.
-    </p>
-  </footer>
-  
 </body>
 </html>
