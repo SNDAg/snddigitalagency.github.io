@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>U Pattaya – Thailand - SND Digital Agency</title>
+  <meta name="description" content="Romantic luxury escape at U Pattaya – private villas, pools, and sunsets. Book directly via Booking.com with SND Digital.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
   <style>
     * {
       box-sizing: border-box;
@@ -18,12 +22,12 @@
       margin: 0;
       padding: 0 1rem;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       animation: fadeInPage 1s ease forwards;
       opacity: 0;
-      flex-direction: column;
       background-image: url('pattaya.png');
       background-size: cover;
       background-position: center;
@@ -44,16 +48,7 @@
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
       text-align: center;
-      margin-bottom: 2rem; /* רווח בין התוכן לפוטר */
-    }
-
-    img.hotel-image {
-      width: 100%;
-      border-radius: 15px;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      object-fit: cover;
-      max-height: 320px;
+      margin-bottom: 2rem;
     }
 
     h1 {
@@ -90,54 +85,10 @@
       transition: background 0.3s ease, transform 0.2s ease;
     }
 
-/* Footer styling */
-footer {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(5px);
-  color: #0d1b2a;
-  padding: 2rem 1rem;
-  font-size: 0.6rem;
-  text-align: center;
-  margin-top: 2rem;
-  border-radius: 20px;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-}
-
-footer p {
-  margin: 0;
-  line-height: 1.6;
-}
-
-footer a {
-  color: #c39555;
-  text-decoration: none;
-}
-
-footer a:hover {
-  text-decoration: underline;
-}
     a.booking-btn:hover {
       background: linear-gradient(90deg, #a8803a, #c39555);
       transform: scale(1.05);
       box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 2rem 1rem;
-      }
-
-      h1 {
-        font-size: 1.5rem;
-      }
-
-      a.booking-btn {
-        font-size: 1rem;
-        padding: 0.65rem 1.5rem;
-      }
     }
 
     a.home-button {
@@ -160,9 +111,62 @@ footer a:hover {
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
+
+    footer {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
+      color: #0d1b2a;
+      padding: 2rem 1rem;
+      font-size: 0.6rem;
+      text-align: center;
+      margin-top: 2rem;
+      border-radius: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    footer p {
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: #c39555;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #ccc;
+      width: 50%;
+      margin: 1.5rem auto;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 2rem 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      a.booking-btn {
+        font-size: 1rem;
+        padding: 0.65rem 1.5rem;
+      }
+    }
   </style>
 </head>
 <body>
+
+  <!-- preload background image -->
+  <img src="pattaya.png" alt="U Pattaya Thailand hotel background" style="display:none;" loading="lazy" />
+
   <div class="container" role="main" aria-label="U Pattaya Hotel description and booking">
     <h1>🏖️ U Pattaya Hotel</h1>
     <div class="location">Pattaya, Thailand</div>
@@ -182,11 +186,16 @@ footer a:hover {
       <a href="/" class="home-button" aria-label="Back to homepage">← Back to Home</a>
     </div>
   </div>
-  
+
   <footer>
     <p>
-      <strong>*</strong> Our affiliate partnership with Booking.com is currently pending approval. Meanwhile, you can still booking via these direct links <br><br>
-        ------<br><br>
+      <strong>*</strong> Our affiliate partnership with Booking.com is currently pending approval.<br />
+      Meanwhile, you can still book through these direct links.
+    </p>
+    <div style="margin: 1rem 0;">
+      <hr />
+    </div>
+    <p>
       <strong>Affiliate Disclosure</strong><br />
       To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
       <a href="https://www.booking.com/" target="_blank" rel="nofollow noopener">Booking.com</a> and 
@@ -195,5 +204,6 @@ footer a:hover {
       These partnerships allow us to continue curating and sharing travel recommendations with our community.
     </p>
   </footer>
+
 </body>
 </html>
