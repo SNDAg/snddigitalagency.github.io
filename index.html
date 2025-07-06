@@ -688,16 +688,19 @@
         <h2>Join Us!</h2>
         <p>Let’s work together to elevate your brand!<br/>
             Submit your details and we’ll reach out to schedule a personalized discovery call.</p>
-        <form id="contactForm">
-            <label for="name">Full Name</label>
-            <input id="name" name="Full Name" required="" type="text"/>
-            <label for="email">Email Address</label>
-            <input id="email" name="Email Address" required="" type="email"/>
-            <label for="message">Phone Number</label>
-            <input id="message" name="Phone Number" required="" type="text"/>
-            <br/>
-            <button type="submit">Submit</button>
-        </form>
+<form 
+  id="contactForm"
+  action="https://formspree.io/f/xovwzpjq"
+  method="POST">
+  <label for="name">Full Name</label>
+  <input id="name" name="Full Name" type="text" required />
+  <label for="email">Email Address</label>
+  <input id="email" name="Email Address" type="email" required />
+  <label for="phone">Phone Number</label>
+  <input id="phone" name="Phone Number" type="text" required />
+  <br />
+  <button type="submit">Submit</button>
+</form>
     </section>
     <br/>
     <section class="fade-section" id="hotels">
