@@ -689,7 +689,7 @@
         <p>Let’s work together to elevate your brand!<br/>
             Submit your details and we’ll reach out to schedule a personalized discovery call.</p>
 <form 
-  id="contactForm"
+  id="joinForm"
   action="https://formspree.io/f/xovwzpjq"
   method="POST">
   <label for="name">Full Name</label>
@@ -771,26 +771,6 @@
         </div>
     </section>
     <br/><br/>
-    <script>
-        document.getElementById("contactForm").addEventListener("submit", function (event) {
-            event.preventDefault();
-
-            const name = document.getElementById("name").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const message = document.getElementById("message").value.trim();
-
-            const recipient = "info@snddigitalagency.com";
-            const subject = `Contact form message from ${name}`;
-            const body = `Hello SND Digital Agency,\n\n` +
-                `${message}\n\n` +
-                `Name: ${name}\n` +
-                `Email: ${email}`;
-
-
-            const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            window.location.href = mailtoLink;
-        });
-    </script>
 </main>
 <footer style="padding: 2rem; font-size: 0.9rem; text-align: center;">
   <p style="max-width: 700px; margin: auto;">
