@@ -107,36 +107,37 @@
       padding: 2rem 1rem;
       text-align: center;
     }
-            .contact-icons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
 
-        .contact-icons a {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background-color: #e5f8f0;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            color: #111827;
-            font-weight: bold;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
+    .contact-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
 
-        .contact-icons a:hover {
-            background-color: #d0f1e3;
-            transform: translateY(-2px);
-        }
+    .contact-icons a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: #e5f8f0;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #111827;
+      font-weight: bold;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
 
-        .contact-icons img {
-            width: 24px;
-            height: 24px;
-        }
+    .contact-icons a:hover {
+      background-color: #d0f1e3;
+      transform: translateY(-2px);
+    }
+
+    .contact-icons img {
+      width: 24px;
+      height: 24px;
+    }
   </style>
 </head>
 <body>
@@ -144,90 +145,102 @@
     <h1>Contact Us</h1>
   </header>
   <main>
-      <br>
-    <p>We’d love to hear from you. Reach out for collaborations or project inquiries:</p>
     <br>
+    <p>We’d love to hear from you. Reach out for collaborations or project inquiries:</p>
+        <p>You’re welcome to send us a message, email us directly, or contact us via WhatsApp:</p>
+
+
+    <h2>Contact Details</h2>
 
     <ul class="contact-info" style="list-style: none; padding: 0; margin-bottom: 30px;">
       <li><strong>Email:</strong> <a href="mailto:info@snddigitalagency.com">info@snddigitalagency.com</a></li>
       <li><strong>Website:</strong> <a href="https://snddigitalagency.com">snddigitalagency.com</a></li>
+      <li>
+        <a href="https://wa.me/972541234567" target="_blank" style="display: inline-flex;gap: 0.5rem;  padding: 0.1 rem 0.1rem; border-radius: 5px; text-decoration: none; color: #111827; font-weight: bold;">
+          <img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
+          WhatsApp
+        </a>
+      </li>
     </ul>
-    <br>
-<form 
-  id="contactForm"
-  action="https://formspree.io/f/mdkzvpay"
-  method="POST">
-  <input type="text" name="name" placeholder="Your name" required>
-  <input type="email" name="email" placeholder="Your email" required>
-  <textarea name="message" placeholder="Your message" required></textarea>
-  <br>
-  <button type="submit" id="submitButton">Send</button>
-  <p id="formStatus" style="font-size: 0.9rem; margin-top: 1rem;"></p>
-</form>
-
-<script>
-  const form = document.getElementById("contactForm");
-  const submitButton = document.getElementById("submitButton");
-  const status = document.getElementById("formStatus");
-
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    submitButton.disabled = true;
-    submitButton.textContent = "Sending...";
-
-    const formData = new FormData(form);
-
-    try {
-      const response = await fetch(form.action, {
-        method: "POST",
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (response.ok) {
-        form.reset();
-        status.textContent = "✅ Thanks! Your message has been sent.";
-        status.style.color = "green";
-      } else {
-        status.textContent = "❌ Oops! Something went wrong. Please try again.";
-        status.style.color = "red";
-      }
-    } catch (error) {
-      status.textContent = "❌ Network error. Please try again later.";
-      status.style.color = "red";
-    }
-
-    submitButton.disabled = false;
-    submitButton.textContent = "Send";
-  });
-</script>
-
+    
 <br>
+
+    <h2>Send us a message</h2>
+          <p style="margin-top: 0;">We'll get back to you as soon as we can.</p>
+    <form 
+      id="contactForm"
+      action="https://formspree.io/f/mdkzvpay"
+      method="POST">
+      <input type="text" name="name" placeholder="Your name" required>
+      <input type="email" name="email" placeholder="Your email" required>
+      <textarea name="message" placeholder="Your message" required></textarea>
+      <button type="submit" id="submitButton">Send</button>
+      <p id="formStatus" style="font-size: 0.9rem; margin-top: 1rem;"></p>
+    </form>
+
+    <br>
     <div style="text-align: center;">
       <a href="/" class="back-button">← Back to Home</a>
     </div>
   </main>
-<footer>
-<h2>Let’s Connect</h2>
-<p>Have a question or proposal? We’re available right here – feel free to reach out anytime.</p>
+  <footer>
+    <h2>Let’s Connect</h2>
+    <p>Have a question or proposal? We’re available right here – feel free to reach out anytime.</p>
 
-<div class="contact-icons">
-<a class="whatsapp-button" target="_blank">
-<img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
-            WhatsApp
-        </a>
-<a href="mailto:info@snddigitalagency.com">
-<img alt="Email Icon" src="https://img.icons8.com/ios-filled/50/000000/new-post.png"/>
-            info@snddigitalagency.com
-        </a>
-</div>
-<br/>
+    <div class="contact-icons">
+      <a class="whatsapp-button" href="https://wa.me/972541234567" target="_blank">
+        <img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
+        WhatsApp
+      </a>
+      <a href="mailto:info@snddigitalagency.com">
+        <img alt="Email Icon" src="https://img.icons8.com/ios-filled/50/000000/new-post.png"/>
+        info@snddigitalagency.com
+      </a>
+    </div>
+    <br/>
 
-<p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
-        Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
-</p>
-<br>
-SND Digital Agency
-</footer>
+    <p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
+      Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
+    </p>
+    <br>
+    SND Digital Agency
+  </footer>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const submitButton = document.getElementById("submitButton");
+    const status = document.getElementById("formStatus");
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+
+      const formData = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          form.reset();
+          status.textContent = "✅ Thanks! Your message has been sent.";
+          status.style.color = "green";
+        } else {
+          status.textContent = "❌ Oops! Something went wrong. Please try again.";
+          status.style.color = "red";
+        }
+      } catch (error) {
+        status.textContent = "❌ Network error. Please try again later.";
+        status.style.color = "red";
+      }
+
+      submitButton.disabled = false;
+      submitButton.textContent = "Send";
+    });
+  </script>
 </body>
 </html>
