@@ -468,10 +468,23 @@
   <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
     <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
     <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
-    <form onsubmit="event.preventDefault(); document.querySelector('#newsletterModal form').reset(); alert('Thanks! You’re subscribed.');" method="POST">
-      <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
-      <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
-    </form>
+<form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" method="POST">
+  <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
+  <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
+  <div id="newsletterSuccessMsg" style="display:none; color:green; margin-top:1rem; font-weight:500;">
+    Thanks! You’re subscribed.
+  </div>
+</form>
+
+<script>
+  function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const form = document.querySelector('#newsletterForm');
+    form.reset();
+    const msg = document.querySelector('#newsletterSuccessMsg');
+    msg.style.display = 'block';
+  }
+</script>
     <br><button onclick="document.getElementById('newsletterModal').style.display='none'" style="background:none; border:none; color:#666; text-decoration:underline;">No thanks</button>
   </div>
 </div>
