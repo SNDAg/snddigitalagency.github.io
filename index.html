@@ -483,13 +483,14 @@
 </script>
 
 <body>
-    
 <!-- video -->
 <section style="position:relative; height:90vh; overflow:hidden;">
-  <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&rel=0&disablekb=1&fs=0&showinfo=0&start=151" 
-    frameborder="0" allowfullscreen
-    style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
-  </iframe>
+  <div style="position:absolute; top:-10%; left:0; width:100%; height:120%; overflow:hidden; z-index:-1;">
+    <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&rel=0&disablekb=1&fs=0&showinfo=0&start=151" 
+      frameborder="0" allowfullscreen
+      style="width:100%; height:100%;">
+    </iframe>
+  </div>
   <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.1); z-index:1;"></div>
   <div style="position:relative; z-index:2; text-align:center; color:white; top:35%;">
     <h1 style="font-size:3rem;">Let the Journey Begin 🌴</h1>
@@ -497,7 +498,7 @@
   </div>
 </section>
 <!-- video end -->
-
+    
 <div class="hamburger-wrapper">
     <button class="hamburger" onclick="toggleMenu()">
         <span></span>
