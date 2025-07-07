@@ -451,7 +451,42 @@
     <meta content="https://snddigitalagency.com/twitter-image.jpg" name="twitter:image"/>
     <meta content="@SNDdigital" name="twitter:site"/>
 </head>
+
+<!-- Newsletter -->
+<div id="newsletterModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:9999;">
+  <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
+    <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
+    <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
+    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+      <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
+      <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
+    </form>
+    <br><button onclick="document.getElementById('newsletterModal').style.display='none'" style="background:none; border:none; color:#666; text-decoration:underline;">No thanks</button>
+  </div>
+</div>
+
+<script>
+  setTimeout(() => {
+    document.getElementById('newsletterModal').style.display = 'block';
+  }, 12000);
+</script>
+
 <body>
+    
+<!-- video -->
+<section style="position:relative; height:90vh; overflow:hidden;">
+  <iframe src="https://www.youtube.com/embed/gWlYchG4Nt4?autoplay=1&mute=1&controls=0&loop=1&playlist=gWlYchG4Nt4&modestbranding=1" 
+    frameborder="0" allowfullscreen
+    style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
+  </iframe>
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.3); z-index:1;"></div>
+  <div style="position:relative; z-index:2; text-align:center; color:white; top:35%;">
+    <h1 style="font-size:3rem;">Let the Journey Begin 🌴</h1>
+    <p style="font-size:1.2rem;">Inspired hospitality. Digital elevation.</p>
+  </div>
+</section>
+<!-- video end -->
+
 <div class="hamburger-wrapper">
     <button class="hamburger" onclick="toggleMenu()">
         <span></span>
@@ -640,6 +675,9 @@
             <p>Increased direct bookings by 42% through multilingual campaign optimization and influencer
                 collaborations.</p>
         </div>
+                 <p style="font-size: 1.0rem; color: #666; font-style: italic; margin-top:1rem;">
+  These success stories represent just a glimpse of our growing collaborative network.
+</p>
     </section>
     <br/><br/>
     <section class="fade-section" id="testimonials">
@@ -654,6 +692,7 @@
             “Our bookings soared and we’ve built stronger brand trust thanks to their strategic yet human approach.”
         </blockquote>
         <p style="text-align: right; font-weight: bold;">– Marco Del Rio, Manager, Villa Lume (Amalfi Coast)</p>
+
     </section>
     <br/>
     <section class="fade-section" id="process">
