@@ -44,6 +44,14 @@
         header {
             background-color: #0d1b2a;
             color: #c39555;
+            padding: 4rem 1rem;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            color: #c39555;
             padding: 2rem 1rem;
             text-align: center;
             animation: fadeIn 1s ease-in-out;
@@ -51,6 +59,9 @@
 
         header h1 {
             margin: 0;
+            font-size: 3rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
             font-size: 2.2rem;
             letter-spacing: 1px;
             transition: all 0.3s ease;
@@ -457,7 +468,7 @@
   <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
     <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
     <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
-    <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <form onsubmit="event.preventDefault(); document.querySelector('#newsletterModal form').reset(); alert('Thanks! You’re subscribed.');" method="POST">
       <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
       <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
     </form>
@@ -466,15 +477,13 @@
 </div>
 
 <script>
-  setTimeout(() => {
-    document.getElementById('newsletterModal').style.display = 'block';
-  }, 12000);
+  
 </script>
 
 <body>
     
 <!-- video -->
-<section style="position:relative; height:90vh; overflow:hidden;">
+<section style="position:relative; height:90vh; overflow:hidden; background-color:#0d1b2a;">
   <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&start=151" 
     frameborder="0" allowfullscreen
     style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1;">
@@ -931,6 +940,7 @@
         });
     });
 
+
     function toggleContactForm() {
         const form = document.getElementById('contact-form');
         form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
@@ -952,5 +962,20 @@
     <img alt="WhatsApp" src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png"/>
     WhatsApp
 </a>
+
+<script>
+function showNewsletterIfVisible() {
+  const section = document.getElementById('why-us');
+  if (!section) return;
+  const rect = section.getBoundingClientRect();
+  const inView = rect.top < window.innerHeight && rect.bottom >= 0;
+  if (inView) {
+    document.getElementById('newsletterModal').style.display = 'block';
+    window.removeEventListener('scroll', showNewsletterIfVisible);
+  }
+}
+window.addEventListener('scroll', showNewsletterIfVisible);
+</script>
+
 </body>
 </html>
