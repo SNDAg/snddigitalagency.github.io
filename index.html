@@ -927,7 +927,9 @@
          });
       </script>
 <!--       handleNewsletterSubmit -->
-      <script>
+      
+   
+<script>
   function handleNewsletterSubmit(event) {
     event.preventDefault();
     const form = document.querySelector('#newsletterForm');
@@ -941,13 +943,26 @@
     return !params.has('noNewsletter');
   }
 
-  window.addEventListener('DOMContentLoaded', () => {
-    if (shouldShowNewsletter()) {
-      setTimeout(() => {
-        document.getElementById('newsletterModal').style.display = 'block';
-      }, 3000);
+  function showNewsletterIfVisible() {
+    if (!shouldShowNewsletter()) return;
+
+    const section = document.getElementById('services');
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom >= 0;
+
+    if (inView) {
+      document.getElementById('newsletterModal').style.display = 'block';
+      window.removeEventListener('scroll', showNewsletterIfVisible);
     }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    showNewsletterIfVisible();
+    window.addEventListener('scroll', showNewsletterIfVisible);
   });
 </script>
-   </body>
+
+</body>
 </html>
