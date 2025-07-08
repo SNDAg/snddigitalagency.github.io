@@ -903,21 +903,6 @@
       WhatsApp
       </a>
       <script>
-         function showNewsletterIfVisible() {
-            if (!shouldShowNewsletter()) return;
-            
-           const section = document.getElementById('services');
-           if (!section) return;
-           const rect = section.getBoundingClientRect();
-           const inView = rect.top < window.innerHeight && rect.bottom >= 0;
-           if (inView) {
-             document.getElementById('newsletterModal').style.display = 'block';
-             window.removeEventListener('scroll', showNewsletterIfVisible);
-           }
-         }
-         window.addEventListener('scroll', showNewsletterIfVisible);
-      </script>
-      <script>
          window.addEventListener('load', () => {
            const overlay = document.getElementById('youtubeOverlay');
            setTimeout(() => {
@@ -926,10 +911,9 @@
            }, 4000); // מופיע ל־4 שניות
          });
       </script>
-<!--       handleNewsletterSubmit -->
-      
-   
 <script>
+  let newsletterShown = false;
+
   function handleNewsletterSubmit(event) {
     event.preventDefault();
     const form = document.querySelector('#newsletterForm');
@@ -944,7 +928,7 @@
   }
 
   function showNewsletterIfVisible() {
-    if (!shouldShowNewsletter()) return;
+    if (!shouldShowNewsletter() || newsletterShown) return;
 
     const section = document.getElementById('services');
     if (!section) return;
@@ -954,6 +938,7 @@
 
     if (inView) {
       document.getElementById('newsletterModal').style.display = 'block';
+      newsletterShown = true;
       window.removeEventListener('scroll', showNewsletterIfVisible);
     }
   }
