@@ -390,30 +390,22 @@
       <meta content="https://snddigitalagency.com/twitter-image.jpg" name="twitter:image"/>
       <meta content="@SNDdigital" name="twitter:site"/>
    </head>
+  
    <!-- Newsletter -->
-   <div id="newsletterModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:9999;">
-      <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
-         <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
-         <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
-         <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" method="POST">
-            <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
-            <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
-            <div id="newsletterSuccessMsg" style="display:none; color:green; margin-top:1rem; font-weight:500;">
-               Thanks! You’re subscribed.
-            </div>
-         </form>
-         <script>
-            function handleNewsletterSubmit(event) {
-              event.preventDefault();
-              const form = document.querySelector('#newsletterForm');
-              form.reset();
-              const msg = document.querySelector('#newsletterSuccessMsg');
-              msg.style.display = 'block';
-            }
-         </script>
-         <br><button onclick="document.getElementById('newsletterModal').style.display='none'" style="background:none; border:none; color:#666; text-decoration:underline;">No thanks</button>
+<div id="newsletterModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:9999;">
+  <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
+    <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
+    <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
+    <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" method="POST">
+      <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
+      <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
+      <div id="newsletterSuccessMsg" style="display:none; color:green; margin-top:1rem; font-weight:500;">
+        Thanks! You’re subscribed.
       </div>
-   </div>
+    </form>
+    <br><button onclick="document.getElementById('newsletterModal').style.display='none'" style="background:none; border:none; color:#666; text-decoration:underline;">No thanks</button>
+  </div>
+</div>
    <body>
       <!-- video -->
       <section style="position:relative; width:100vw; height:100vh; overflow:hidden; margin:0; padding:0;">
@@ -912,6 +904,8 @@
       </a>
       <script>
          function showNewsletterIfVisible() {
+            if (!shouldShowNewsletter()) return;
+            
            const section = document.getElementById('services');
            if (!section) return;
            const rect = section.getBoundingClientRect();
@@ -932,5 +926,28 @@
            }, 4000); // מופיע ל־4 שניות
          });
       </script>
+<!--       handleNewsletterSubmit -->
+      <script>
+  function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const form = document.querySelector('#newsletterForm');
+    form.reset();
+    const msg = document.querySelector('#newsletterSuccessMsg');
+    msg.style.display = 'block';
+  }
+
+  function shouldShowNewsletter() {
+    const params = new URLSearchParams(window.location.search);
+    return !params.has('noNewsletter');
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    if (shouldShowNewsletter()) {
+      setTimeout(() => {
+        document.getElementById('newsletterModal').style.display = 'block';
+      }, 3000);
+    }
+  });
+</script>
    </body>
 </html>
