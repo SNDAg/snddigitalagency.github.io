@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -407,40 +408,41 @@
   </div>
 </div>
    <body>
-      <!-- video -->
-      <section style="position:relative; width:100vw; height:100vh; overflow:hidden; margin:0; padding:0;">
-         <div style="position:absolute; top:-15%; left:0; width:100%; height:145%; overflow:hidden; z-index:-1;">
-            <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&rel=0&disablekb=1&fs=0&showinfo=0&start=151" 
-               frameborder="0" allowfullscreen
-               style="width:100vw; height:100vh; object-fit:cover;">
-            </iframe>
-         </div>
-         <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.1); z-index:1;"></div>
-         <div class="hero-text">
-            <h1 style="font-size:3rem;">Let the Journey Begin</h1>
-            <p style="font-size:1.2rem;">Inspired hospitality. Digital elevation.</p>
-         </div>
-      </section>
-      <style>
-         .hero-text {
-         position: relative;
-         z-index: 2;
-         text-align: center;
-         color: white;
-         top: 35%;
-         opacity: 0;
-         transform: translateY(30px);
-         animation: fadeSlideIn 1.6s ease-out forwards;
-         animation-delay: 0.3s;
-         }
-         @keyframes fadeSlideIn {
-         to {
-         opacity: 1;
-         transform: translateY(0);
-         }
-         }
-      </style>
-      <!-- video end -->
+     <!-- video -->
+<section style="position:relative; width:100vw; height:100vh; overflow:hidden; margin:0; padding:0;">
+  <div style="position:absolute; top:-25%; left:0; width:100%; height:170%; overflow:hidden; z-index:-1;">
+    <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&rel=0&disablekb=1&fs=0&showinfo=0&start=151" 
+      frameborder="0" allowfullscreen
+      style="width:100%; height:100%; object-fit:cover;">
+    </iframe>
+  </div>
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.1); z-index:1;"></div>
+  <div class="hero-text">
+    <h1 style="font-size:3rem;">Let the Journey Begin</h1>
+    <p style="font-size:1.2rem;">Inspired hospitality. Digital elevation.</p>
+  </div>
+</section>
+<style>
+  .hero-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    top: 35%;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeSlideIn 1.6s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+<!-- video end -->
+
       <div class="hamburger-wrapper">
          <button class="hamburger" onclick="toggleMenu()">
          <span></span>
@@ -948,6 +950,5 @@
     window.addEventListener('scroll', showNewsletterIfVisible);
   });
 </script>
-
 </body>
 </html>
