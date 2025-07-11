@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One Perfect Day in Tel Aviv</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f5f7fa;
+      color: #0d1b2a;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #0d1b2a;
+      color: #c39555;
+      padding: 2rem 1rem;
+      text-align: center;
+      animation: fadeIn 1s ease-in-out;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.2rem;
+      letter-spacing: 1px;
+    }
+    section {
+      max-width: 1000px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    h2 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: #0d1b2a;
+    }
+    p {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #374151;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.03);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.2rem;
+      color: #0d1b2a;
+    }
+    .card p {
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #c39555;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #777;
+      margin: 3rem auto;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>One Perfect Day in Tel Aviv</h1>
+  </header>
+
+  <section>
+    <img src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" 
+         alt="Tripadvisor" 
+         style="height: 38px; margin: 1rem auto; display: block;" />
+    <img src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png" 
+         alt="Viator by Tripadvisor" 
+         style="height: 138px; margin: 1rem auto; display: block;" />
+    <p style="font-size: 0.95rem; color: #555; text-align:center; margin-top: -10px;">
+      All tours below are bookable via <strong>Viator by Tripadvisor</strong> – a trusted platform used by millions of travelers.
+    </p>
+
+    <h2>✨ Top Things to Do in One Day</h2>
+    <p>Looking to spend an unforgettable day in Tel Aviv and beyond? Here are four handpicked experiences that combine food, culture, history, and nature – all designed to make your day inspiring and full of joy.</p>
+    
+    <div class="cards">
+      <div class="card">
+        <img src="https://dynamic-media.tacdn.com/media/photo-o/2f/7a/05/26/caption.jpg?w=1400&h=1000&s=1" alt="Carmel Market Tour">
+        <h3>🌮 Carmel Market Food Tour</h3>
+        <p>Discover Tel Aviv's most famous market through tastes, smells, and local stories from behind the scenes.</p>
+        <a href="https://www.viator.com/tours/Tel-Aviv/Tel-Aviv-Market-Food-Tasting-Tour-Shuk-HaCarmel-Tour/d920-15081P476?pid=P00259952&mcid=42383&medium=link&campaign=carmel-tasting" target="_blank">Book via Viator →</a>
+      </div>
+
+      <div class="card">
+        <img src="https://dynamic-media.tacdn.com/media/photo-o/2f/79/f8/e0/caption.jpg?w=700&h=500&s=1" alt="Jaffa Tour">
+        <h3>🏺 Jaffa Old City & Flea Market Tour</h3>
+        <p>Wander the magical alleyways of ancient Jaffa, visit the flea market, and enjoy skyline views of modern Tel Aviv.</p>
+        <a href="https://www.viator.com/tours/Tel-Aviv/Tel-Aviv-Yaffo-Flea-Market-Shuk-Hapishpishim-and-Tel-Aviv-Skyline/d920-15081P474?pid=P00259952&mcid=42383&medium=link&campaign=jaffa-tour" target="_blank">Book via Viator →</a>
+      </div>
+
+      <div class="card">
+        <img src="https://dynamic-media.tacdn.com/media/photo-o/2e/e9/76/65/caption.jpg?w=700&h=500&s=1" alt="Jerusalem Tour">
+        <h3>🕍 Jerusalem Day Tour</h3>
+        <p>Explore Jerusalem's highlights, from ancient spiritual sites to modern city life – all in one breathtaking day trip.</p>
+        <a href="https://www.viator.com/tours/Tel-Aviv/Old-and-New-Jerusalem-Day-Trip-from-Tel-Aviv/d920-5209TEL211?pid=P00259952&mcid=42383&medium=link&campaign=Jerusalem-day" target="_blank">Book via Viator →</a>
+      </div>
+
+      <div class="card">
+        <img src="https://dynamic-media.tacdn.com/media/photo-o/2e/e9/7a/6d/caption.jpg?w=700&h=500&s=1" alt="Masada and Dead Sea Tour">
+        <h3>🌄 Masada, Ein Gedi & Dead Sea</h3>
+        <p>Visit iconic Masada, hike through Ein Gedi oasis, and float in the magical waters of the Dead Sea. A desert adventure like no other.</p>
+        <a href="https://www.viator.com/tours/Tel-Aviv/Masada-Ein-Gedi-Dead-Sea-and-Jericho-Tour-from-Tel-Aviv/d920-26254P5?pid=P00259952&mcid=42383&medium=link&campaign=Masada-tlv" target="_blank">Book via Viator →</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 4rem; text-align: center;">
+      <div data-id="viator-banner" data-partner-id="P00259952" data-url="https://www.viator.com/" data-banner-width="728" data-banner-height="90" data-banner-language="en" data-banner-selection="banner1"></div>
+      <script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
+    </div>
+  </section>
+  <footer style="padding: 2rem; font-size: 0.9rem; text-align: center;">
+ <p style="max-width: 700px; margin: auto;">
+  <strong>Affiliate Disclosure</strong><br />
+  To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
+  <a href="https://www.booking.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Booking.com</a> and 
+  <a href="https://www.viator.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Viator</a> (via TripAdvisor).<br />
+  When you book through these links, we may earn a commission — at no extra cost to you.<br />
+  These partnerships allow us to continue curating and sharing travel recommendations with our community.
+</p>
+</footer>
+</body>
+</html>
