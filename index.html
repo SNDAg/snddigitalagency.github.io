@@ -873,9 +873,11 @@ style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;"><br/
 <br/><br/>
 <div id="whatsapp-data"></div>
 <script>
-  const message = "Hi👋 I’d love to hear more about working with SND Digital Agency.";
-  const url = "https://wa.me/972506986298?text=" + encodeURIComponent(message);
-  document.getElementById("whatsapp-data").setAttribute("data-whatsapp", url);
+  document.addEventListener("DOMContentLoaded", function() {
+    const message = "Hi👋 I’d love to hear more about working with SND Digital Agency.";
+    const url = "https://wa.me/972506986298?text=" + encodeURIComponent(message);
+    document.getElementById("whatsapp-data").setAttribute("data-whatsapp", url);
+  });
 </script>
 <script>
  function isInViewport(el) {
