@@ -10,13 +10,35 @@ from datetime import datetime
 from pathlib import Path
 from collections import defaultdict
 
-# ========== Configuration Defaults ==========
-DEFAULT_CITY = "La Fortuna"
+
+# ==========USER  Configurations  ========================================
+DEFAULT_CITY = "barcelona"
+
+#  API KEYS 
+
 # snd4digital@gmail.com:
 API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
 # snddigitalagency.com
 #API_KEY = "1595e8a64a4751f5888ddf7e9ac37695422c645bc4db9b816815b41bebbf5af1"
-PLACE_TYPES = ["hostel", "hotel", "apartment"]
+
+PLACE_TYPES = [ "hotel","hostel"]
+# PLACE_TYPES = ["hostel", "hotel", "apartment"]
+IS_RESTAURANTS = False
+
+## google queries
+TEMPLATES = [
+    '{place} {city} email',
+    'inurl:contact {place} {city},'
+    #'{place} {city} contact email',
+    # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
+    # '"contact" {place} {city} email',
+    # '{place} {city} email OR "contact"',
+]
+# ============================================================
+
+
+# ========== Configs  ========================================
+
 SEARCH_LOCALES = [
     {"hl": "en", "gl": "us", "location": "New York, United States"},
 ]
@@ -61,14 +83,6 @@ def extract_emails_from_text(text: str) -> set:
     return {normalize_email(r) for r in raw if is_valid_email(normalize_email(r))}
 
 def build_queries(city: str) -> list:
-    templates = [
-    # '{place} {city} "email"',
-    # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
-    # '"contact" {place} {city} email',
-     'intext:"contact" {place} "{city}"',
-    # '{place} {city} email OR "contact"',
-    ]
-
     EXCLUDE_SITES = [
         "booking.com",
         "hostels.com",
@@ -91,12 +105,12 @@ def build_queries(city: str) -> list:
     ]
     exclude_str = " ".join([f"-site:{site}" for site in EXCLUDE_SITES])
 
-    queries = [tpl.format(place=place, city=city) + " " + exclude_str for place in PLACE_TYPES for tpl in templates]
+    queries = [tpl.format(place=place, city=city) + " " + exclude_str for place in PLACE_TYPES for tpl in TEMPLATES]
   
-  ######## restaurant query 
-  
-   # restaurant_query = templates[0].format(place="restaurant", city=city) + " " + exclude_str
-    #queries.append(restaurant_query)
+  ######## restaurant query
+    if IS_RESTAURANTS:
+        restaurant_query = templates[0].format(place="restaurant", city=city) + " " + exclude_str
+        queries.append(restaurant_query)
 
     return list(dict.fromkeys(queries))
 
@@ -194,4 +208,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
