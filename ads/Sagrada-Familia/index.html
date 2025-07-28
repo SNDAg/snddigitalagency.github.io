@@ -71,22 +71,27 @@
     }
 
     a.booking-btn {
-      display: inline-block;
-      background: linear-gradient(90deg, #c39555, #a8803a);
+      background: linear-gradient(90deg, #d32f2f, #b71c1c);
       color: white;
-      font-weight: 600;
-      padding: 0.85rem 2.2rem;
-      border-radius: 30px;
+      font-weight: 700;
+      padding: 1.3rem 2.5rem;
+      border-radius: 40px;
       text-decoration: none;
-      font-size: 1.2rem;
-      box-shadow: 0 4px 14px rgba(195, 149, 85, 0.35);
-      transition: background 0.3s ease, transform 0.2s ease;
+      font-size: 1.4rem;
+      box-shadow: 0 8px 28px rgba(211, 47, 47, 0.6);
+      transition: background 0.3s ease, transform 0.25s ease, box-shadow 0.3s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: inline-block;
+      text-align: center;
     }
 
-    a.booking-btn:hover {
-      background: linear-gradient(90deg, #a8803a, #c39555);
-      transform: scale(1.05);
-      box-shadow: 0 6px 18px rgba(168, 138, 53, 0.5);
+    a.booking-btn:hover,
+    a.booking-btn:focus {
+      background: linear-gradient(90deg, #b71c1c, #d32f2f);
+      box-shadow: 0 10px 32px rgba(183, 28, 28, 0.8);
+      transform: scale(1.1);
+      outline: none;
     }
 
     footer {
@@ -130,9 +135,11 @@
         font-size: 1.05rem;
       }
       a.booking-btn {
-        font-size: 1.15rem;
         width: 100%;
-        padding: 0.9rem 0;
+        font-size: 1.4rem;
+        padding: 1.4rem 0;
+        border-radius: 40px;
+        box-shadow: 0 10px 32px rgba(211, 47, 47, 0.7);
       }
     }
   </style>
@@ -146,10 +153,10 @@
     <img src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" alt="TripAdvisor Logo" style="height: 28px; margin-bottom: 12px;">
     <h1>Sagrada Familia Skip-the-Line Ticket</h1>
     <p class="description">
-      Get fast-track mobile tickets to Barcelona’s #1 site. No lines. No printing. Just walk in.
+      Get your fast-track mobile ticket.<br /> No lines. No printing. Just walk in.
     </p>
     <p class="urgency">
-      Sold out today for 300+ visitors. Don’t risk missing it.
+     300+ Sold out today. Don’t miss it ⏳ 
     </p>
     <a 
       href="https://www.viator.com/tours/Barcelona/Skip-the-Line-Barcelona-Sagrada-Familia-Tour/d562-2140SAGRADA?pid=P00259952&mcid=42383&medium=link&campaign=Sagrada" 
@@ -158,7 +165,7 @@
       class="booking-btn"
       aria-label="Instant entry ticket to Sagrada Familia"
     >
-      Get My Ticket Now
+      Book Instant Ticket Now ➤
     </a>
   </div>
 
