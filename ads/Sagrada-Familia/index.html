@@ -2,9 +2,9 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sagrada Familia Tickets - SND Digital Agency</title>
-  <meta name="description" content="Skip the line and explore the iconic Sagrada Familia with priority entry.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Enter Sagrada Familia Without Waiting | Instant Ticket</title>
+  <meta name="description" content="Walk straight into Sagrada Familia – skip the lines with mobile entry. Book now, takes 30 seconds.">
   <meta name="robots" content="index, follow">
 
   <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
@@ -13,10 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
-    /* סגנון זהה לקודם, נשמר כמו שהוא... */
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Poppins', sans-serif;
@@ -26,7 +23,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      min-height: 100dvh;
       animation: fadeInPage 1s ease forwards;
       opacity: 0;
       background-image: url('background.png');
@@ -42,44 +39,35 @@
     }
 
     .container {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(5px);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(6px);
       max-width: 600px;
       padding: 2.5rem 2rem;
-      border-radius: 20px;
+      border-radius: 22px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.08);
       text-align: center;
       margin-bottom: 2rem;
     }
 
-    img.hotel-image {
-      width: 100%;
-      border-radius: 15px;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      object-fit: cover;
-      max-height: 320px;
-    }
-
     h1 {
       font-weight: 600;
       font-size: 2rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 1rem;
       color: #0d1b2a;
     }
 
-    .location {
-      font-weight: 400;
+    .description {
       font-size: 1.1rem;
-      color: #64748b;
+      line-height: 1.6;
+      color: #374151;
       margin-bottom: 1.5rem;
     }
 
-    p.description {
+    .urgency {
       font-size: 1rem;
-      line-height: 1.6;
-      color: #475569;
-      margin-bottom: 2rem;
+      font-weight: 500;
+      color: #be123c;
+      margin-bottom: 1.8rem;
     }
 
     a.booking-btn {
@@ -87,10 +75,10 @@
       background: linear-gradient(90deg, #c39555, #a8803a);
       color: white;
       font-weight: 600;
-      padding: 0.75rem 2rem;
+      padding: 0.85rem 2.2rem;
       border-radius: 30px;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       box-shadow: 0 4px 14px rgba(195, 149, 85, 0.35);
       transition: background 0.3s ease, transform 0.2s ease;
     }
@@ -102,27 +90,21 @@
     }
 
     footer {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(5px);
-      color: #0d1b2a;
-      padding: 2rem 1rem;
-      font-size: 0.8rem;
+      background: transparent;
+      color: #6b7280;
+      padding: 0.8rem 1rem;
+      font-size: 0.6rem;
       text-align: center;
-      margin-top: 2rem;
-      border-radius: 20px;
       max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
     }
 
     footer p {
       margin: 0;
-      line-height: 1.6;
+      line-height: 1.4;
     }
 
     footer a {
-      color: #c39555;
+      color: #a8803a;
       text-decoration: none;
     }
 
@@ -130,50 +112,61 @@
       text-decoration: underline;
     }
 
+    @media (max-width: 768px) {
+      body {
+        background-size: cover;
+        background-position: center top;
+      }
+    }
+
     @media (max-width: 480px) {
       .container {
-        padding: 2rem 1rem;
+        padding: 2rem 1.2rem;
       }
       h1 {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
+      }
+      .description, .urgency {
+        font-size: 1.05rem;
       }
       a.booking-btn {
-        font-size: 1rem;
-        padding: 0.65rem 1.5rem;
+        font-size: 1.15rem;
+        width: 100%;
+        padding: 0.9rem 0;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- preload -->
+  <!-- preload background -->
   <img src="background.png" alt="background" style="display:none;" loading="lazy" />
 
-  <div class="container" role="main" aria-label="Sagrada Familia attraction and booking">
+  <div class="container" role="main" aria-label="Book Sagrada Familia Ticket">
     <img src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" alt="TripAdvisor Logo" style="height: 28px; margin-bottom: 12px;">
-    <h1>Sagrada Familia </br> Skip the Line Ticket</h1>
+    <h1>Sagrada Familia Skip-the-Line Ticket</h1>
     <p class="description">
-      Secure your spot at Barcelona's iconic basilica. Instant mobile ticket with priority access – no waiting in line!
+      Get fast-track mobile tickets to Barcelona’s #1 site. No lines. No printing. Just walk in.
+    </p>
+    <p class="urgency">
+      Sold out today for 300+ visitors. Don’t risk missing it.
     </p>
     <a 
       href="https://www.viator.com/tours/Barcelona/Skip-the-Line-Barcelona-Sagrada-Familia-Tour/d562-2140SAGRADA?pid=P00259952&mcid=42383&medium=link&campaign=Sagrada" 
       target="_blank" 
       rel="noopener noreferrer" 
-      class="booking-btn" 
-      aria-label="Book your Sagrada Familia ticket now"
+      class="booking-btn"
+      aria-label="Instant entry ticket to Sagrada Familia"
     >
-      Book Your Ticket Now
+      Get My Ticket Now
     </a>
   </div>
 
   <footer>
     <p>
-      <strong>Affiliate Disclosure</strong><br />
-      To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
-      Booking.com and 
-      <a href="https://www.viator.com/" target="_blank" rel="nofollow noopener">Viator</a>.
-      These partnerships allow us to continue curating and sharing travel recommendations with our community.
+      Affiliate links may earn us a small commission. No added cost to you.
     </p>
   </footer>
+
 </body>
 </html>
