@@ -11,7 +11,7 @@ from pathlib import Path
 from collections import defaultdict
 
 # ========== Configuration Defaults ==========
-DEFAULT_CITY = "monteverde"
+DEFAULT_CITY = "La Fortuna"
 # snd4digital@gmail.com:
 API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
 # snddigitalagency.com
@@ -62,11 +62,11 @@ def extract_emails_from_text(text: str) -> set:
 
 def build_queries(city: str) -> list:
     templates = [
-    '{place} {city} "email"',
-    'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
-    '"contact" {place} {city} email',
-    'intext:"contact" {place} "{city}"',
-    '{place} {city} email OR "contact"',
+    # '{place} {city} "email"',
+    # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
+    # '"contact" {place} {city} email',
+     'intext:"contact" {place} "{city}"',
+    # '{place} {city} email OR "contact"',
     ]
 
     EXCLUDE_SITES = [
@@ -92,8 +92,11 @@ def build_queries(city: str) -> list:
     exclude_str = " ".join([f"-site:{site}" for site in EXCLUDE_SITES])
 
     queries = [tpl.format(place=place, city=city) + " " + exclude_str for place in PLACE_TYPES for tpl in templates]
-    restaurant_query = templates[0].format(place="restaurant", city=city) + " " + exclude_str
-    queries.append(restaurant_query)
+  
+  ######## restaurant query 
+  
+   # restaurant_query = templates[0].format(place="restaurant", city=city) + " " + exclude_str
+    #queries.append(restaurant_query)
 
     return list(dict.fromkeys(queries))
 
@@ -131,8 +134,8 @@ def process_and_save_emails(new_emails, collected, existing, email_file):
             for e in to_add:
                 f.write(e + "\n")
                 existing.add(e)
-                
-    print(f"[+] Saved {len(to_add)} new emails")
+    if len(to_add)>0:             
+        print(f"[+] Saved {len(to_add)} new emails")
     return bool(to_add)
 
 
@@ -186,8 +189,7 @@ def main():
 
     print("\n🎉 Done!")
     print(f"Total SERP requests : {total_search}")
-    print(f"Total page fetches  : {total_page}")
-    print(f"Emails on disk      : {len(existing)} → {len(collected)}")
+    print(f"New Emails: {len(collected)}")
 
 
 if __name__ == "__main__":
