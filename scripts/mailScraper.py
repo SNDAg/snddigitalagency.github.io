@@ -18,22 +18,34 @@ DEFAULT_CITY = "barcelona"
 
 # snd4digital@gmail.com:
 API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
+
+#shahaf579 + eden phone
+#API_KEY = "f5a61080d33b7a84baa9bdc55c9d12b493c7ad87f8f3890164f8d3644e20265f"
 # snddigitalagency.com
 #API_KEY = "1595e8a64a4751f5888ddf7e9ac37695422c645bc4db9b816815b41bebbf5af1"
 
-PLACE_TYPES = [ "hotel","hostel"]
-# PLACE_TYPES = ["hostel", "hotel", "apartment"]
+
+######################################################### NO -- I N F O !!!!!!!!!!!
+# PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
+PLACE_TYPES = ["hostel", "apartment","Guesthouse","Residencia","Backpacker"];
 IS_RESTAURANTS = False
 
 ## google queries
+# @gmail.com @yahoo.com @outlook.com @hotmail.com
 TEMPLATES = [
+     '{place} {city} "@outlook.com" OR "@hotmail.com"',
+     '{place} {city} "@gmail.com"',
+          '{place} {city} "@yahoo.com"',
+    #'inurl:contact {place} {city},'
     '{place} {city} email',
-    'inurl:contact {place} {city},'
-    #'{place} {city} contact email',
     # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
     # '"contact" {place} {city} email',
     # '{place} {city} email OR "contact"',
 ]
+
+BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
+#########################################################  I N F O !!!!!!!!!!!
+BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@","info@"]
 # ============================================================
 
 
@@ -57,9 +69,6 @@ USER_AGENTS = [
     "Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
     "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
 ]
-
-BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
-BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@"]
 # ============================================
 
 def normalize_email(email: str) -> str:
@@ -84,6 +93,7 @@ def extract_emails_from_text(text: str) -> set:
 
 def build_queries(city: str) -> list:
     EXCLUDE_SITES = [
+        "agoda.com",
         "booking.com",
         "hostels.com",
         "expedia.com",
@@ -128,6 +138,28 @@ def fetch_results(query: str, locale: dict) -> list:
 
 def process_and_save_emails(new_emails, collected, existing, email_file):
     from collections import defaultdict
+
+    domain_map = defaultdict(list)
+    for e in sorted(new_emails):
+        domain = e.split('@')[-1]
+        domain_map[domain].append(e)
+
+    to_add = []
+    for domain, emails in domain_map.items():
+        limited_emails = emails[:2]
+        for email in limited_emails:
+            if email not in existing:
+                to_add.append(email)
+                collected.add(email)  # עדכן פה ולא קודם
+
+    if to_add:
+        with email_file.open("a", encoding="utf-8") as f:
+            for e in to_add:
+                f.write(e + "\n")
+                existing.add(e)
+    if len(to_add) > 0:             
+        print(f"[+] Saved {len(to_add)} new emails")
+    return bool(to_add)
 
     collected.update(new_emails)
 
@@ -208,3 +240,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
