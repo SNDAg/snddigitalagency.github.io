@@ -207,8 +207,8 @@ def main():
             time.sleep(random.uniform(SLEEP_MIN, SLEEP_MAX))
 
     print("\n🎉 Done!")
-    print(f"Total SERP requests : {total_search}")
-    print(f"Existing Emails: {len(existing)}")
+    print(f"Used SERP requests: {total_search}")
+    print(f"Total Emails in file: {len(existing)}")
     print(f"New Emails: {len(existing) - initial_count}")
 
 
