@@ -12,7 +12,8 @@ from collections import defaultdict
 # ==========USER  Configurations  ========================================
 DEFAULT_CITY = "barcelona"
 
-PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
+#PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
+PLACE_TYPES = ["hotel"]
 
 ## google queries:
 TEMPLATES = [
@@ -145,30 +146,7 @@ def fetch_results(query: str, locale: dict) -> list:
 def process_and_save_emails(new_emails, collected, existing, email_file):
     from collections import defaultdict
 
-    domain_map = defaultdict(list)
-    for e in sorted(new_emails):
-        domain = e.split('@')[-1]
-        domain_map[domain].append(e)
-
-    to_add = []
-    for domain, emails in domain_map.items():
-        limited_emails = emails[:2]
-        for email in limited_emails:
-            if email not in existing:
-                to_add.append(email)
-                collected.add(email)  # עדכן פה ולא קודם
-
-    if to_add:
-        with email_file.open("a", encoding="utf-8") as f:
-            for e in to_add:
-                f.write(e + "\n")
-                existing.add(e)
-    if len(to_add) > 0:             
-        print(f"[+] Saved {len(to_add)} new emails")
-    return bool(to_add)
-
     collected.update(new_emails)
-
     domain_map = defaultdict(list)
     for e in sorted(collected):
         domain = e.split('@')[-1]
@@ -176,8 +154,7 @@ def process_and_save_emails(new_emails, collected, existing, email_file):
 
     to_add = []
     for domain, emails in domain_map.items():
-        limited_emails = emails[:2]
-        for email in limited_emails:
+        for email in emails:
             if email not in existing:
                 to_add.append(email)
 
@@ -186,9 +163,10 @@ def process_and_save_emails(new_emails, collected, existing, email_file):
             for e in to_add:
                 f.write(e + "\n")
                 existing.add(e)
-    if len(to_add)>0:             
         print(f"[+] Saved {len(to_add)} new emails")
-    return bool(to_add)
+        return True
+
+    return False
 
 
 def main():
@@ -206,7 +184,8 @@ def main():
     queries = build_queries(city)
     total_search = 0
     total_page = 0
-    collected = set(existing)
+    collected = set()
+    initial_count = len(existing) 
 
     for query in queries:
         for locale in SEARCH_LOCALES:
@@ -222,18 +201,6 @@ def main():
                     continue
 
                 text_block = snippet
-
-# removed because it brings bad mails from css like 5t@i.qy - can be return with a good filter
-                # if link:
-                #     try:
-                #         total_page += 1
-                #         headers = {"User-Agent": random.choice(USER_AGENTS)}
-                #         pr = requests.get(link, timeout=5, headers=headers)
-                #         if pr.status_code == 200:
-                #             text_block += " " + pr.text
-                #     except Exception as e:
-                #         print(f"[WARN] Couldn't fetch {link}: {e}")
-
                 new_emails = extract_emails_from_text(text_block)
                 process_and_save_emails(new_emails, collected, existing, email_file)
 
@@ -241,7 +208,8 @@ def main():
 
     print("\n🎉 Done!")
     print(f"Total SERP requests : {total_search}")
-    print(f"New Emails: {len(collected)}")
+    print(f"Existing Emails: {len(existing)}")
+    print(f"New Emails: {len(existing) - initial_count}")
 
 
 if __name__ == "__main__":
