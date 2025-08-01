@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# mail_scraper_improved_filtered.py
-
 import requests
 import time
 import random
@@ -14,7 +12,7 @@ from collections import defaultdict
 # ==========USER  Configurations  ========================================
 DEFAULT_CITY = "barcelona"
 
-#  API KEYS 
+#  API KEYS ========================================
 
 # snd4digital@gmail.com:
 API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
@@ -24,18 +22,17 @@ API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
 # snddigitalagency.com
 #API_KEY = "1595e8a64a4751f5888ddf7e9ac37695422c645bc4db9b816815b41bebbf5af1"
 
-
-######################################################### NO -- I N F O !!!!!!!!!!!
 # PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
-PLACE_TYPES = ["hostel", "apartment","Guesthouse","Residencia","Backpacker"];
+PLACE_TYPES = ["\"gift shop\"", "souvenir"];
 IS_RESTAURANTS = False
 
 ## google queries
 # @gmail.com @yahoo.com @outlook.com @hotmail.com
 TEMPLATES = [
-     '{place} {city} "@outlook.com" OR "@hotmail.com"',
-     '{place} {city} "@gmail.com"',
-          '{place} {city} "@yahoo.com"',
+'{place} near \"Sagrada Familia\" email',
+     # '{place} {city} "@outlook.com" OR "@hotmail.com"',
+     # '{place} {city} "@gmail.com"',
+     # '{place} {city} "@yahoo.com"',
     #'inurl:contact {place} {city},'
     '{place} {city} email',
     # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
@@ -44,8 +41,7 @@ TEMPLATES = [
 ]
 
 BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
-#########################################################  I N F O !!!!!!!!!!!
-BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@","info@"]
+BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@"]
 # ============================================================
 
 
