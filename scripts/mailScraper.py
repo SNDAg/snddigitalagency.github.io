@@ -12,45 +12,44 @@ from collections import defaultdict
 # ==========USER  Configurations  ========================================
 DEFAULT_CITY = "barcelona"
 
-#  API KEYS ========================================
+PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
 
-# snd4digital@gmail.com:
-API_KEY = "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6"
-
-#shahaf579 + eden phone
-#API_KEY = "f5a61080d33b7a84baa9bdc55c9d12b493c7ad87f8f3890164f8d3644e20265f"
-# snddigitalagency.com
-#API_KEY = "1595e8a64a4751f5888ddf7e9ac37695422c645bc4db9b816815b41bebbf5af1"
-
-# PLACE_TYPES = ["hotel", "hostel","Guesthouse","Residencia","Backpacker","apartment"]
-PLACE_TYPES = ["\"gift shop\"", "souvenir"];
-IS_RESTAURANTS = False
-
-## google queries
-# @gmail.com @yahoo.com @outlook.com @hotmail.com
+## google queries:
 TEMPLATES = [
-'{place} near \"Sagrada Familia\" email',
      # '{place} {city} "@outlook.com" OR "@hotmail.com"',
      # '{place} {city} "@gmail.com"',
      # '{place} {city} "@yahoo.com"',
-    #'inurl:contact {place} {city},'
+    'inurl:contact {place} {city},'
     '{place} {city} email',
     # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
     # '"contact" {place} {city} email',
     # '{place} {city} email OR "contact"',
 ]
 
-BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
-BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@"]
 # ============================================================
 
 
 # ========== Configs  ========================================
 
+API_KEYS = [
+    # snd4digital@gmail.com:
+    "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6",
+    # shahaf579 + eden phone
+    "f5a61080d33b7a84baa9bdc55c9d12b493c7ad87f8f3890164f8d3644e20265f", 
+    # snddigitalagency.com
+    "1595e8a64a4751f5888ddf7e9ac37695422c645bc4db9b816815b41bebbf5af1",  
+]
+
+BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
+BAD_PREFIXES = ["noreply@", "no-reply@", "donotreply@"]
+
 SEARCH_LOCALES = [
     {"hl": "en", "gl": "us", "location": "New York, United States"},
 ]
+
+#max number for the api is 100
 RESULTS_PER_QUERY = 100
+
 SLEEP_MIN, SLEEP_MAX = 1.2, 2.4
 DATA_DIR = Path("data")
 USER_AGENTS = [
@@ -65,6 +64,8 @@ USER_AGENTS = [
     "Mozilla/5.0 (Linux; Android 14; Pixel 8 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
     "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
 ]
+
+api_index = 0
 # ============================================
 
 def normalize_email(email: str) -> str:
@@ -112,24 +113,33 @@ def build_queries(city: str) -> list:
     exclude_str = " ".join([f"-site:{site}" for site in EXCLUDE_SITES])
 
     queries = [tpl.format(place=place, city=city) + " " + exclude_str for place in PLACE_TYPES for tpl in TEMPLATES]
-  
-  ######## restaurant query
-    if IS_RESTAURANTS:
-        restaurant_query = templates[0].format(place="restaurant", city=city) + " " + exclude_str
-        queries.append(restaurant_query)
 
     return list(dict.fromkeys(queries))
 
 
 def fetch_results(query: str, locale: dict) -> list:
-    params = {"engine": "google", "q": query, "api_key": API_KEY, "num": RESULTS_PER_QUERY, **locale}
-    headers = {"User-Agent": random.choice(USER_AGENTS)}
-    resp = requests.get("https://serpapi.com/search", params=params, headers=headers)
-    if resp.status_code == 429:
-        print("[ERROR] Rate limit hit (429). Exiting.")
-        sys.exit(1)
-    resp.raise_for_status()
-    return resp.json().get("organic_results", [])
+    global api_index
+    max_attempts = len(API_KEYS)
+    attempt = 0
+
+    while attempt < max_attempts:
+        api_key = API_KEYS[api_index]
+        params = {"engine": "google", "q": query, "api_key": api_key, "num": RESULTS_PER_QUERY, **locale}
+        headers = {"User-Agent": random.choice(USER_AGENTS)}
+        resp = requests.get("https://serpapi.com/search", params=params, headers=headers)
+
+        if resp.status_code == 429:
+            print(f"[WARN] API key {api_index + 1} got rate limited. Switching to next key...")
+            api_index = (api_index + 1) % len(API_KEYS)
+            attempt += 1
+            time.sleep(1)
+            continue
+
+        resp.raise_for_status()
+        return resp.json().get("organic_results", [])
+
+    print("[ERROR] All API keys were rate limited. Exiting.")
+    sys.exit(1)
 
 
 def process_and_save_emails(new_emails, collected, existing, email_file):
