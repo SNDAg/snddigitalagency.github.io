@@ -7,7 +7,6 @@
 <title>Top Things to Do in Salzburg — Tripadvisor &amp; Viator</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
-  <style>
 :root {
   --brand-green: #34a853;
   --brand-green-light: #34E0A1;
@@ -184,8 +183,8 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
   margin: 12px auto 0;
 }
 
-.logos img {
-  height: 50px; /* גודל אחיד ללוגואים */
+.logo-viator, .logo-trip {
+  height: 60px; /* גובה אחיד ללוגואים */
   object-fit: contain;
 }
 
@@ -197,27 +196,22 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
   align-items: center;
 }
 
+/* מובייל: כל פריט בשורה, גדלים מותאמים */
 @media(max-width:600px){
   .logos {
-    flex-direction: column; /* כל פריט בשורה */
-    gap: 8px;
+    flex-direction: column;
+    gap: 6px;
     align-items: center;
   }
-  .logos img, .by-text {
-    height: auto;
-    width: auto;
-  }
   .logo-viator, .logo-trip {
-    max-height: 40px; /* גודל מותאם למובייל */
+    max-height: 45px; /* גובה מותאם למובייל */
+    width: auto;
   }
   .by-text {
     font-size: 1rem;
     margin: 0;
   }
 }
-
-</style>
-
 </style>
 </head>
 <body>
