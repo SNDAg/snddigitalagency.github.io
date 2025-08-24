@@ -46,19 +46,6 @@ header p {
   opacity: .9;
 }
 
-.logos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-  margin: 12px auto 0;
-}
-
-.logos img {
-  height: 60px;
-  object-fit: contain;
-}
 
 /* Controls & Filters */
 .controls {
@@ -189,11 +176,46 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
   cursor: pointer;
   font-size: 1rem;
 }
-
-@media(max-width:600px) {
-  header .logos { flex-direction: column; gap: 10px; }
-  .card h3 { font-size: 1.2rem; }
+  .logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px auto 0;
 }
+
+.logos img {
+  height: 50px; /* גודל אחיד ללוגואים */
+  object-fit: contain;
+}
+
+.by-text {
+  font-size: 1rem;
+  color: #444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+@media(max-width:600px){
+  .logos {
+    flex-direction: column; /* כל פריט בשורה */
+    gap: 8px;
+    align-items: center;
+  }
+  .logos img, .by-text {
+    height: auto;
+    width: auto;
+  }
+  .logo-viator, .logo-trip {
+    max-height: 40px; /* גודל מותאם למובייל */
+  }
+  .by-text {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
+
 </style>
 
 </style>
@@ -202,13 +224,11 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <header>
 <h1>Discover Salzburg’s Top Experiences — Book Your Adventure Today!</h1>
 <p>Handpicked tours &amp; activities, trusted by millions. Secure your spot now!</p>
-  <div class="logos">
-    <div class="viator-wrapper">
-      <img alt="Viator" src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png"/>
-      <span><strong>by </strong></span>
-    <img alt="Tripadvisor" src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg"/>
-    </div>
-  </div>
+<div class="logos">
+  <img class="logo-viator" src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png" alt="Viator"/>
+  <span class="by-text">by</span>
+  <img class="logo-trip" src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" alt="Tripadvisor"/>
+</div>
 </header>
 <div class="controls">
 <div class="filters">
