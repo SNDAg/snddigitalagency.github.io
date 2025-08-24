@@ -7,85 +7,194 @@
 <title>Top Things to Do in Salzburg — Tripadvisor &amp; Viator</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <style>
-:root{
-  --brand-green:#34a853; /* Tripadvisor-style green */
-  --brand-green-light:#34E0A1;
-  --brand-green-dark:#2c7a3f;
-  --brand-orange:#f59e0b;
-  --text:#222;
-  --muted:#666;
+  <style>
+:root {
+  --brand-green: #34a853;
+  --brand-green-light: #34E0A1;
+  --brand-green-dark: #2c7a3f;
+  --brand-orange: #f59e0b;
+  --text: #222;
+  --muted: #666;
 }
-*{box-sizing:border-box}
-body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;margin:0;background:#f9fafb;color:var(--text)}
-header{background:#fff;color:var(--text);padding:28px 18px 22px;text-align:center;border-bottom:1px solid #e5e7eb}
-header h1{margin:0;font-size:2.1rem;color:#111}
-header p{max-width:900px;margin:10px auto 0;opacity:.9}
-.logos{margin:12px auto 0}
-.logos img{margin:6px 12px;height:44px;vertical-align:middle}
-.controls{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:16px auto;max-width:1150px}
-.filters{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff;cursor:pointer}
-.chip.active{background:#ecfdf5;border-color:#a7f3d0}
-.sort{display:flex;align-items:center;gap:8px}
-.sort select, .currency select{border:1px solid #e5e7eb;border-radius:10px;padding:6px 10px;background:#fff}
-.container{max-width:1150px;margin:0 auto;padding:0 16px 56px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-.card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.05);overflow:hidden;display:flex;flex-direction:column;transition:.25s;border:1px solid #f1f5f9}
-.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
-.card img{width:100%;height:180px;object-fit:cover}
-.ribbon{position:absolute;top:12px;left:-8px;background:var(--brand-green);color:#fff;padding:6px 14px;border-radius:0 999px 999px 0;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.12)}
-.card .wrap{position:relative}
-.card .body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:8px}
-.card h3{margin:0;font-size:1.05rem;line-height:1.35;color:#111}
-.meta{font-size:13px;color:#444;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.badge{background:#ecfdf5;color:#065f46;border-radius:999px;padding:2px 8px;font-weight:600}
-.reviews{opacity:.85}
-.desc{font-size:14px;color:#333;line-height:1.5}
-.price{font-size:14px;color:#065f46;background:#ecfdf5;display:inline-block;padding:4px 8px;border-radius:8px;font-weight:600}
-.urgency{color:var(--brand-orange);font-size:13px;font-weight:600;margin-top:2px}
-.cta{margin-top:auto}
-.cta a{display:inline-block;margin-top:10px;text-decoration:none;background:var(--brand-green);color:#fff;padding:11px 12px;border-radius:10px;font-weight:800}
-.cta a:hover{background:var(--brand-green-dark)}
-.trust{margin-top:12px;font-size:.92rem;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.trust .pill{background:#f3f4f6;border-radius:999px;padding:6px 10px}
-footer{padding:26px 20px;text-align:center;font-size:.8rem;color:#666;border-top:1px solid #e5e7eb}
-.stickybar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.1);padding:8px 12px;display:flex;gap:10px;align-items:center;z-index:50}
-.stickybar button{border:none;background:#f9fafb;border-radius:999px;padding:8px 12px;cursor:pointer}
-@media(min-width:900px){.stickybar{display:none}}
 
-header .logos img {
-  height: 60px; /* היה 44px */
-}
+* { box-sizing: border-box; }
 
 body {
-  background:#f3f4f6; /* היה #f9fafb */
+  font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, sans-serif;
+  margin: 0;
+  background: #f3f4f6;
+  color: var(--text);
 }
 
+header {
+  background: #fff;
+  color: var(--text);
+  padding: 28px 18px 22px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.1rem;
+  color: #111;
+}
+
+header p {
+  max-width: 900px;
+  margin: 10px auto 0;
+  opacity: .9;
+}
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin: 12px auto 0;
+}
+
+.logos img {
+  height: 60px;
+  object-fit: contain;
+}
+
+/* Controls & Filters */
+.controls {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 10px 12px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 16px auto;
+  max-width: 1150px;
+}
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.chip {
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: .9rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.chip.active { background: #ecfdf5; border-color: #a7f3d0; }
+
+.sort, .currency { display: flex; align-items: center; gap: 8px; }
+
+.sort select, .currency select {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 6px 10px;
+  background: #fff;
+}
+
+/* Grid & Cards */
+.container { max-width: 1150px; margin: 0 auto; padding: 0 16px 56px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 18px; }
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: .25s;
+  border: 1px solid #f1f5f9;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+
+.card img { width: 100%; height: 180px; object-fit: cover; }
+.ribbon {
+  position: absolute;
+  top: 12px;
+  left: -8px;
+  background: linear-gradient(90deg, #34a853, #34E0A1); /* שמרנו את הירוק הגרדייינט */
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 0 999px 999px 0;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0,0,0,.12);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+}
+
+
+.card .wrap { position: relative; }
+.card .body { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.card h3 { margin: 0; font-size: 1.05rem; line-height: 1.35; color: #111; }
+.meta { font-size: 13px; color: #444; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.badge { background: #ecfdf5; color: #065f46; border-radius: 999px; padding: 2px 8px; font-weight: 600; }
+.reviews { opacity: .85; }
+.desc { font-size: 14px; color: #333; line-height: 1.5; }
+.price { font-size: 14px; color: #065f46; background: #ecfdf5; display: inline-block; padding: 4px 8px; border-radius: 8px; font-weight: 600; }
+.urgency { color: var(--brand-orange); font-size: 13px; font-weight: 600; margin-top: 2px; }
+
+.cta { margin-top: auto; }
 .cta a {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
   background: linear-gradient(90deg, #34a853, #34E0A1);
+  color: #fff;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-weight: 800;
   font-size: 1rem;
-  padding: 13px 16px; /* יותר נוח למובייל */
 }
+.cta a:hover { background: var(--brand-green-dark); }
 
-.cta a:hover {
-  background: #2c7a3f;
+.trust { margin-top: 12px; font-size: .92rem; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.trust .pill { background: #f3f4f6; border-radius: 999px; padding: 6px 10px; }
+
+/* Footer */
+footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; border-top: 1px solid #e5e7eb; }
+
+/* Sticky bar */
+.stickybar {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.1);
+  padding: 8px 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 50;
 }
 
 .stickybar button {
+  border: none;
+  background: #f9fafb;
+  border-radius: 999px;
   padding: 14px 18px;
+  cursor: pointer;
   font-size: 1rem;
 }
 
-@media(max-width:600px){
-  header .logos {
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-  }
-  .card h3 {
-    font-size:1.2rem; /* קריא יותר במובייל */
-  }
+@media(max-width:600px) {
+  header .logos { flex-direction: column; gap: 10px; }
+  .card h3 { font-size: 1.2rem; }
 }
+</style>
 
 </style>
 </head>
@@ -93,10 +202,13 @@ body {
 <header>
 <h1>Discover Salzburg’s Top Experiences — Book Your Adventure Today!</h1>
 <p>Handpicked tours &amp; activities, trusted by millions. Secure your spot now!</p>
-<div class="logos">
-<img alt="Tripadvisor" src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg"/>
-<img alt="Viator" src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png"/>
-</div>
+  <div class="logos">
+    <div class="viator-wrapper">
+      <img alt="Viator" src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png"/>
+      <span><strong>by </strong></span>
+    <img alt="Tripadvisor" src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg"/>
+    </div>
+  </div>
 </header>
 <div class="controls">
 <div class="filters">
