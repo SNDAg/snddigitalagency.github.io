@@ -1,1 +1,402 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Top Things to Do in Salzburg — Tripadvisor & Viator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --brand-green:#34a853; /* Tripadvisor-style green */
+  --brand-green-light:#34E0A1;
+  --brand-green-dark:#2c7a3f;
+  --brand-orange:#f59e0b;
+  --text:#222;
+  --muted:#666;
+}
+*{box-sizing:border-box}
+body{font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif;margin:0;background:#f9fafb;color:var(--text)}
+header{background:#fff;color:var(--text);padding:28px 18px 22px;text-align:center;border-bottom:1px solid #e5e7eb}
+header h1{margin:0;font-size:2.1rem;color:#111}
+header p{max-width:900px;margin:10px auto 0;opacity:.9}
+.logos{margin:12px auto 0}
+.logos img{margin:6px 12px;height:44px;vertical-align:middle}
+.controls{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px 12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:16px auto;max-width:1150px}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:.9rem;background:#fff;cursor:pointer}
+.chip.active{background:#ecfdf5;border-color:#a7f3d0}
+.sort{display:flex;align-items:center;gap:8px}
+.sort select, .currency select{border:1px solid #e5e7eb;border-radius:10px;padding:6px 10px;background:#fff}
+.container{max-width:1150px;margin:0 auto;padding:0 16px 56px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.card{background:#fff;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.05);overflow:hidden;display:flex;flex-direction:column;transition:.25s;border:1px solid #f1f5f9}
+.card:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.card img{width:100%;height:180px;object-fit:cover}
+.ribbon{position:absolute;top:12px;left:-8px;background:var(--brand-green);color:#fff;padding:6px 14px;border-radius:0 999px 999px 0;font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.12)}
+.card .wrap{position:relative}
+.card .body{padding:14px 14px 16px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:1.05rem;line-height:1.35;color:#111}
+.meta{font-size:13px;color:#444;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.badge{background:#ecfdf5;color:#065f46;border-radius:999px;padding:2px 8px;font-weight:600}
+.reviews{opacity:.85}
+.desc{font-size:14px;color:#333;line-height:1.5}
+.price{font-size:14px;color:#065f46;background:#ecfdf5;display:inline-block;padding:4px 8px;border-radius:8px;font-weight:600}
+.urgency{color:var(--brand-orange);font-size:13px;font-weight:600;margin-top:2px}
+.cta{margin-top:auto}
+.cta a{display:inline-block;margin-top:10px;text-decoration:none;background:var(--brand-green);color:#fff;padding:11px 12px;border-radius:10px;font-weight:800}
+.cta a:hover{background:var(--brand-green-dark)}
+.trust{margin-top:12px;font-size:.92rem;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.trust .pill{background:#f3f4f6;border-radius:999px;padding:6px 10px}
+footer{padding:26px 20px;text-align:center;font-size:.8rem;color:#666;border-top:1px solid #e5e7eb}
+.stickybar{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);background:#fff;border:1px solid #e5e7eb;border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.1);padding:8px 12px;display:flex;gap:10px;align-items:center;z-index:50}
+.stickybar button{border:none;background:#f9fafb;border-radius:999px;padding:8px 12px;cursor:pointer}
+@media(min-width:900px){.stickybar{display:none}}
+
+header .logos img {
+  height: 60px; /* היה 44px */
+}
+
+body {
+  background:#f3f4f6; /* היה #f9fafb */
+}
+
+.cta a {
+  background: linear-gradient(90deg, #34a853, #34E0A1);
+  font-size: 1rem;
+  padding: 13px 16px; /* יותר נוח למובייל */
+}
+
+.cta a:hover {
+  background: #2c7a3f;
+}
+
+.stickybar button {
+  padding: 14px 18px;
+  font-size: 1rem;
+}
+
+@media(max-width:600px){
+  header .logos {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .card h3 {
+    font-size:1.2rem; /* קריא יותר במובייל */
+  }
+}
+
+</style>
+</head>
+<body>
+<header>
+  <h1>Discover Salzburg’s Top Experiences — Book Your Adventure Today!</h1>
+  <p>Handpicked tours & activities from <strong>Tripadvisor’s Viator</strong>,  trusted by millions. Secure your spot now</p>
+  <div class="logos">
+    <img src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" alt="Tripadvisor"/>
+    <img src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png" alt="Viator"/>
+  </div>
+</header>
+<div class="controls">
+  <div class="filters">
+    <button class="chip active" data-filter="all">All</button>
+    <button class="chip" data-filter="top">Top picks</button>
+    <button class="chip" data-filter="family">Family‑friendly</button>
+    <button class="chip" data-filter="outdoors">Outdoors</button>
+    <button class="chip" data-filter="history">History</button>
+    <button class="chip" data-filter="food">Food & Culture</button>
+    <button class="chip" data-filter="halfday">Half‑day</button>
+    <button class="chip" data-filter="fullday">Full‑day</button>
+    <button class="chip" data-filter="evening">Evening</button>
+  </div>
+  <div style="display:flex;gap:12px;align-items:center">
+    <div class="sort">
+      <label for="sortsel">Sort</label>
+      <select id="sortsel">
+        <option value="popular">Most popular</option>
+        <option value="rating">Top rated</option>
+        <option value="pricelow">Price (low to high)</option>
+        <option value="pricehigh">Price (high to low)</option>
+      </select>
+    </div>
+    <div class="currency">
+      <label for="currsel">Currency</label>
+      <select id="currsel">
+        <option value="USD" selected>USD</option>
+      </select>
+    </div>
+  </div>
+</div>
+<main class="container">
+<section id="grid" class="grid">
+
+<article class="card" data-tags="culture,family,halfday,history" data-rating="4.6" data-reviews="5615" data-price="">
+  <div class="wrap"><div class="ribbon">Most Popular</div><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/14/a8/3a/caption.jpg?w=700&h=500&s=1" alt="🎶 The Original Sound of Music Tour"/></div>
+  <div class="body">
+    <h3>🎶 The Original Sound of Music Tour</h3>
+    <div class="meta">
+      <span class="badge">4.6 ★</span>
+      <span class="reviews">5,615 reviews</span>
+    </div>
+    <p class="desc">Trace the footsteps of the Von Trapps on a joyful coach tour to filming locations like Mirabell Gardens, Leopoldskron Palace, and Mondsee Cathedral—complete with sing‑alongs.</p>
+    
+    <div class="urgency">⚡ Popular! Limited spots left for today</div>
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/The-Original-Sound-of-Music-Tour-in-Salzburg/d451-3595001A?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="family,food,indoor,short" data-rating="4.9" data-reviews="839" data-price="">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/0d/a7/50/caption.jpg?w=700&h=500&s=1" alt="🥧 Apple Strudel &amp; Salzburger Nockerl Class"/></div>
+  <div class="body">
+    <h3>🥧 Apple Strudel &amp; Salzburger Nockerl Class</h3>
+    <div class="meta">
+      <span class="badge">4.9 ★</span>
+      <span class="reviews">839 reviews</span>
+    </div>
+    <p class="desc">Hands‑on cooking class in a unique cave‑like kitchen. Master Austrian desserts and sit down for a hearty lunch.</p>
+    
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Apple-Strudel-and-Salzburger-Nockerl-Cooking-Class-including-Lunch-in-Salzburg/d451-31281P1?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="culture,evening,indoor" data-rating="4.7" data-reviews="395" data-price="50">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/10/69/d1/caption.jpg?w=700&h=500&s=1" alt="🎻 Mozart Concert in Mirabell Palace"/></div>
+  <div class="body">
+    <h3>🎻 Mozart Concert in Mirabell Palace</h3>
+    <div class="meta">
+      <span class="badge">4.7 ★</span>
+      <span class="reviews">395 reviews</span>
+    </div>
+    <p class="desc">An intimate evening of Mozart in the gilded Marble Hall where he once performed—renowned acoustics and world‑class soloists.</p>
+    <div class="price" data-usd="50">From just <strong>$50</strong></div>
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Classical-Concert-in-the-Marble-Hall-of-Mirabell-Palace/d451-14623P6?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="daytrip,fullday,outdoors,top" data-rating="4.6" data-reviews="2401" data-price="118">
+  <div class="wrap"><div class="ribbon">Most Popular</div><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/0f/bc/20/caption.jpg?w=700&h=500&s=1" alt="🏔️ Hallstatt &amp; 5 Fingers Day Trip"/></div>
+  <div class="body">
+    <h3>🏔️ Hallstatt &amp; 5 Fingers Day Trip</h3>
+    <div class="meta">
+      <span class="badge">4.6 ★</span>
+      <span class="reviews">2,401 reviews</span>
+    </div>
+    <p class="desc">Escape to postcard‑perfect Hallstatt and the Dachstein mountains. Wander charming streets and take in the panoramic 5 Fingers viewpoint.</p>
+    <div class="price" data-usd="118">From just <strong>$118</strong></div>
+    <div class="urgency">⏳ Few seats remaining this week</div>
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/A-Day-Trip-From-Salzburg-to-Hallstatt-Lakes-and-Mountains-5-Fingers/d451-362042P1?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="halfday,history,outdoors" data-rating="4.4" data-reviews="1126" data-price="">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/15/ad/85/caption.jpg?w=700&h=500&s=1" alt="🦅 Eagle’s Nest in Berchtesgaden" /></div>
+  <div class="body">
+    <h3>🦅 Eagle’s Nest in Berchtesgaden</h3>
+    <div class="meta">
+      <span class="badge">4.4 ★</span>
+      <span class="reviews">1,126 reviews</span>
+    </div>
+    <p class="desc">Ride high into the Bavarian Alps to the historic Kehlsteinhaus. Enjoy sweeping alpine views and learn the WWII history of this mountaintop retreat.</p>
+    
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Eagles-Nest-in-Berchtesgaden-Tour-from-Salzburg/d451-3595004?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+
+
+<article class="card" data-tags="halfday,history,outdoors" data-rating="4.4" data-reviews="501" data-price="89">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/14/8b/27/caption.jpg?w=700&h=500&s=1" alt="⛏️ Bavarian Mountains &amp; Salt Mines"/></div>
+  <div class="body">
+    <h3>⛏️ Bavarian Mountains &amp; Salt Mines</h3>
+    <div class="meta">
+      <span class="badge">4.4 ★</span>
+      <span class="reviews">501 reviews</span>
+    </div>
+    <p class="desc">Venture underground at the historic Berchtesgaden salt mine, ride the mine train and raft, and admire alpine scenery on the German Alpine Road.</p>
+    <div class="price" data-usd="89">From just <strong>$89</strong></div>
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Bavarian-Mountains-and-Salt-Mines-Tour-from-Salzburg/d451-3595003A?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+
+<article class="card" data-tags="culture,evening,top" data-rating="4.5" data-reviews="181" data-price="51">
+  <div class="wrap"><div class="ribbon">Most Popular</div><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/0c/ec/79/caption.jpg?w=700&h=500&s=1" alt="🏰 Best of Mozart at Salzburg Fortress"/></div>
+  <div class="body">
+    <h3>🏰 Best of Mozart at Salzburg Fortress</h3>
+    <div class="meta">
+      <span class="badge">4.5 ★</span>
+      <span class="reviews">181 reviews</span>
+    </div>
+    <p class="desc">Ride the funicular to Hohensalzburg Fortress and enjoy a rousing program of Mozart favorites high above the city.</p>
+    <div class="price" data-usd="51">From just <strong>$51</strong></div>
+    <div class="urgency">🎟️ High demand – book early to secure your seat</div>
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Best-of-Mozart-Concert-at-Salzburg-Fortress-in-Salzburg/d451-14981P1?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="culture,family,halfday,history" data-rating="4.8" data-reviews="198" data-price="">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/0d/92/76/caption.jpg?w=700&h=500&s=1" alt="👨‍👩‍👧 The Van Trapp Story Tour"/></div>
+  <div class="body">
+    <h3>👨‍👩‍👧 The Van Trapp Story Tour</h3>
+    <div class="meta">
+      <span class="badge">4.8 ★</span>
+      <span class="reviews">198 reviews</span>
+    </div>
+    <p class="desc">A deeper dive into the real Von Trapp family: visit meaningful sites, hear true stories, and separate film myth from history.</p>
+    
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/The-Van-Trapp-Story-Tour-from-Salzburg/d451-110520P2?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+
+<article class="card" data-tags="daytrip,fullday,history,outdoors" data-rating="4.7" data-reviews="8" data-price="">
+  <div class="wrap"><img loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/0d/11/8e/caption.jpg?w=700&h=500&s=1" alt="🌄 Hallstatt &amp; The Oldest Salt Mine"/></div>
+  <div class="body">
+    <h3>🌄 Hallstatt &amp; The Oldest Salt Mine</h3>
+    <div class="meta">
+      <span class="badge">4.7 ★</span>
+      <span class="reviews">8 reviews</span>
+    </div>
+    <p class="desc">Combine serene Hallstatt views with an ancient salt‑mining adventure—Europe’s oldest known salt mine.</p>
+    
+    
+    <div class="trust">
+      <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
+      <span class="pill">Secure checkout</span>
+      <span class="pill">Trusted by millions</span>
+    </div>
+    <div class="cta">
+      <a href="https://www.viator.com/tours/Salzburg/Hallstatt-Lakes-and-Mountains-District-The-Oldest-Salt-Mine-in-the-World/d451-362042P2?pid=P00259952&mcid=42383&medium=link&campaign=salzburg" target="_blank" rel="nofollow noopener">Book via Viator →</a>
+    </div>
+  </div>
+</article>
+
+</section>
+</main>
+
+<div class="stickybar">
+  <button onclick="document.querySelector('.filters .chip[data-filter=&quot;top&quot;]').click()">Top picks</button>
+  <button onclick="document.getElementById('sortsel').focus()">Sort</button>
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Top</button>
+</div>
+
+<footer>
+  <p><strong>Affiliate Disclosure</strong> — We may earn a commission if you book via our Viator or Expedia links, at no extra cost to you.</p>
+</footer>
+
+<script>
+const cards = Array.from(document.querySelectorAll('.card'));
+
+function applyFilter(filter){
+  const chips = document.querySelectorAll('.chip');
+  chips.forEach(c=>c.classList.toggle('active', c.dataset.filter===filter || (filter==='all' && c.dataset.filter==='all')));
+  cards.forEach(card=>{
+    const tags = (card.dataset.tags||'').split(',');
+    const show = (filter==='all') || tags.includes(filter);
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+function applySort(key){
+  const grid = document.getElementById('grid');
+  const items = Array.from(grid.children).filter(el=>el.classList.contains('card') && el.style.display!=='none');
+  items.sort((a,b)=>{
+    const ra = parseFloat(a.dataset.rating||'0'), rb = parseFloat(b.dataset.rating||'0');
+    const pa = parseFloat(a.dataset.price||Infinity), pb = parseFloat(b.dataset.price||Infinity);
+    const va = parseInt(a.dataset.reviews||'0'), vb = parseInt(b.dataset.reviews||'0');
+    if(key==='rating') return rb-ra || vb-va;
+    if(key==='pricelow') return pa-pb;
+    if(key==='pricehigh') return pb-pa;
+    /* popular */ return vb-va || rb-ra;
+  });
+  items.forEach(it=>grid.appendChild(it));
+}
+
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>applyFilter(chip.dataset.filter));
+});
+document.getElementById('sortsel').addEventListener('change',e=>applySort(e.target.value));
+
+// Currency toggle (approx ILS)
+document.getElementById('currsel').addEventListener('change',e=>{
+  const curr = e.target.value;
+  document.querySelectorAll('.price').forEach(el=>{
+    const usd = parseFloat(el.getAttribute('data-usd'));
+    if(!usd) return;
+      el.innerHTML = `From just <strong>$${usd}</strong>`;
+  });
+});
+
+// Defaults
+applyFilter('all');
+applySort('popular');
+</script>
