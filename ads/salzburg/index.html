@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -25,28 +24,63 @@ body {
   color: var(--text);
 }
 
+/* HEADER MOBILE CHANGES */
 header {
-  background: #fff;
-  color: var(--text);
-  padding: 28px 18px 22px;
+  background: #e6f9ee; /* ירוק בהיר בסגנון טריפאדוויזור */
+  padding: 20px 12px 18px;
   text-align: center;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 header h1 {
-  margin: 0;
-  font-size: 2.1rem;
+  font-size: 1.5rem; /* קטן יותר */
   color: #111;
+  line-height: 1.3;
+  margin-bottom: 8px;
 }
 
 header p {
-  max-width: 900px;
-  margin: 10px auto 0;
-  opacity: .9;
+  font-size: 0.9rem;
+  max-width: 280px;
+  margin: 6px auto 0;
+  opacity: 0.85;
 }
 
+/* LOGOS */
+.logos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 12px auto 0;
+}
 
-/* Controls & Filters */
+.logo-viator { height: 70px; object-fit: contain; }
+.logo-trip { height: 50px; object-fit: contain; }
+
+.by-text {
+  font-size: 1rem;
+  color: #444;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* MOBILE SPECIFIC */
+@media(max-width:600px){
+  .logos {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .logo-viator { height: 60px; }
+  .logo-trip { height: 40px; }
+  header h1 { font-size: 1.3rem; }
+  header p { font-size: 0.85rem; }
+
+  /* hide top picks button in sticky bar */
+  .stickybar button:first-child { display: none; }
+}
+
+/* שאר הקוד נשאר כפי שהיה */
 .controls {
   background: #fff;
   border: 1px solid #e5e7eb;
@@ -60,9 +94,7 @@ header p {
   margin: 16px auto;
   max-width: 1150px;
 }
-
 .filters { display: flex; flex-wrap: wrap; gap: 8px; }
-
 .chip {
   border: 1px solid #e5e7eb;
   border-radius: 999px;
@@ -71,57 +103,23 @@ header p {
   background: #fff;
   cursor: pointer;
 }
-
 .chip.active { background: #ecfdf5; border-color: #a7f3d0; }
-
 .sort, .currency { display: flex; align-items: center; gap: 8px; }
-
 .sort select, .currency select {
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   padding: 6px 10px;
   background: #fff;
 }
-
-/* Grid & Cards */
 .container { max-width: 1150px; margin: 0 auto; padding: 0 16px 56px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap: 18px; }
-
-.card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(0,0,0,.05);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: .25s;
-  border: 1px solid #f1f5f9;
-}
-
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,.08);
-}
-
+/* כרטיסים וכל הקוד של הכרטיסים נשמר בדיוק כמו שהיה */
+.card { background: #fff; border-radius: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.05); overflow: hidden; display: flex; flex-direction: column; transition: .25s; border: 1px solid #f1f5f9; }
+.card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.08); }
 .card img { width: 100%; height: 180px; object-fit: cover; }
-.ribbon {
-  position: absolute;
-  top: 12px;
-  left: -8px;
-  background: linear-gradient(90deg, #34a853, #34E0A1); /* שמרנו את הירוק הגרדייינט */
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 0 999px 999px 0;
-  font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0,0,0,.12);
-  font-size: 0.95rem;
-  text-transform: uppercase;
-}
-
-
+.ribbon { position: absolute; top: 12px; left: -8px; background: linear-gradient(90deg, #34a853, #34E0A1); color: #fff; padding: 6px 14px; border-radius: 0 999px 999px 0; font-weight: 700; box-shadow: 0 4px 10px rgba(0,0,0,.12); font-size: 0.95rem; text-transform: uppercase; }
 .card .wrap { position: relative; }
 .card .body { padding: 14px 14px 16px; display: flex; flex-direction: column; gap: 8px; }
-
 .card h3 { margin: 0; font-size: 1.05rem; line-height: 1.35; color: #111; }
 .meta { font-size: 13px; color: #444; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .badge { background: #ecfdf5; color: #065f46; border-radius: 999px; padding: 2px 8px; font-weight: 600; }
@@ -129,95 +127,20 @@ header p {
 .desc { font-size: 14px; color: #333; line-height: 1.5; }
 .price { font-size: 14px; color: #065f46; background: #ecfdf5; display: inline-block; padding: 4px 8px; border-radius: 8px; font-weight: 600; }
 .urgency { color: var(--brand-orange); font-size: 13px; font-weight: 600; margin-top: 2px; }
-
 .cta { margin-top: auto; }
-.cta a {
-  display: inline-block;
-  margin-top: 10px;
-  text-decoration: none;
-  background: linear-gradient(90deg, #34a853, #34E0A1);
-  color: #fff;
-  padding: 13px 16px;
-  border-radius: 10px;
-  font-weight: 800;
-  font-size: 1rem;
-}
+.cta a { display: inline-block; margin-top: 10px; text-decoration: none; background: linear-gradient(90deg, #34a853, #34E0A1); color: #fff; padding: 13px 16px; border-radius: 10px; font-weight: 800; font-size: 1rem; }
 .cta a:hover { background: var(--brand-green-dark); }
-
 .trust { margin-top: 12px; font-size: .92rem; color: var(--muted); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 .trust .pill { background: #f3f4f6; border-radius: 999px; padding: 6px 10px; }
-
-/* Footer */
 footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; border-top: 1px solid #e5e7eb; }
-
-/* Sticky bar */
-.stickybar {
-  position: fixed;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 999px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.1);
-  padding: 8px 12px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  z-index: 50;
-}
-
-.stickybar button {
-  border: none;
-  background: #f9fafb;
-  border-radius: 999px;
-  padding: 14px 18px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-  .logos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 12px auto 0;
-}
-
-.logo-viator, .logo-trip {
-  height: 60px; /* גובה אחיד ללוגואים */
-  object-fit: contain;
-}
-
-.by-text {
-  font-size: 1rem;
-  color: #444;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-}
-
-/* מובייל: כל פריט בשורה, גדלים מותאמים */
-@media(max-width:600px){
-  .logos {
-    flex-direction: column;
-    gap: 6px;
-    align-items: center;
-  }
-  .logo-viator, .logo-trip {
-    max-height: 45px; /* גובה מותאם למובייל */
-    width: auto;
-  }
-  .by-text {
-    font-size: 1rem;
-    margin: 0;
-  }
-}
+.stickybar { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); background: #fff; border: 1px solid #e5e7eb; border-radius: 999px; box-shadow: 0 6px 18px rgba(0,0,0,.1); padding: 8px 12px; display: flex; gap: 10px; align-items: center; z-index: 50; }
+.stickybar button { border: none; background: #f9fafb; border-radius: 999px; padding: 14px 18px; cursor: pointer; font-size: 1rem; }
 </style>
 </head>
 <body>
 <header>
 <h1>Discover Salzburg’s Top Experiences — Book Your Adventure Today!</h1>
-<p>Handpicked tours &amp; activities, trusted by millions. Secure your spot now!</p>
+<p>Top Rated Tours &amp; Activities by millions. Secure your spot now!</p>
 <div class="logos">
   <img class="logo-viator" src="https://res.cloudinary.com/awin/image/upload/v1707835590/merchants/viator.png" alt="Viator"/>
   <span class="by-text">by</span>
