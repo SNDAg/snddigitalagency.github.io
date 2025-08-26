@@ -201,7 +201,7 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <div class="currency">
 <label for="currsel">Currency</label>
 <select id="currsel">
-<option selected="" value="USD">USD</option>
+<option selected="" value="EUR">EUR</option>
 </select>
 </div>
 </div>
@@ -258,7 +258,7 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <span class="reviews">395 reviews</span>
 </div>
 <p class="desc">An intimate evening of Mozart in the gilded Marble Hall where he once performed—renowned acoustics and world‑class soloists.</p>
-<div class="price" data-usd="50">From just <strong>$50</strong></div>
+<div class="price" data-eur="43">From just <strong>43€</strong></div>
 <div class="trust">
 <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
 <span class="pill">Secure checkout</span>
@@ -278,7 +278,7 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <span class="reviews">2,401 reviews</span>
 </div>
 <p class="desc">Escape to postcard‑perfect Hallstatt and the Dachstein mountains. Wander charming streets and take in the panoramic 5 Fingers viewpoint.</p>
-<div class="price" data-usd="118">From just <strong>$118</strong></div>
+<div class="price" data-eur="99">From just <strong>99€</strong></div>
 <div class="urgency">⏳ Few seats remaining this week</div>
 <div class="trust">
 <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
@@ -318,7 +318,7 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <span class="reviews">501 reviews</span>
 </div>
 <p class="desc">Venture underground at the historic Berchtesgaden salt mine, ride the mine train and raft, and admire alpine scenery on the German Alpine Road.</p>
-<div class="price" data-usd="89">From just <strong>$89</strong></div>
+<div class="price" data-eur="76">From just <strong>76€</strong></div>
 <div class="trust">
 <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
 <span class="pill">Secure checkout</span>
@@ -338,7 +338,7 @@ footer { padding: 26px 20px; text-align: center; font-size: .8rem; color: #666; 
 <span class="reviews">181 reviews</span>
 </div>
 <p class="desc">Ride the funicular to Hohensalzburg Fortress and enjoy a rousing program of Mozart favorites high above the city.</p>
-<div class="price" data-usd="51">From just <strong>$51</strong></div>
+<div class="price" data-eur="43">From just <strong>43€</strong></div>
 <div class="urgency">🎟️ High demand – book early to secure your seat</div>
 <div class="trust">
 <span class="pill">Book on <strong>Viator</strong> (by Tripadvisor)</span>
@@ -446,9 +446,9 @@ document.getElementById('sortsel').addEventListener('change',e=>applySort(e.targ
 document.getElementById('currsel').addEventListener('change',e=>{
   const curr = e.target.value;
   document.querySelectorAll('.price').forEach(el=>{
-    const usd = parseFloat(el.getAttribute('data-usd'));
-    if(!usd) return;
-      el.innerHTML = `From just <strong>$${usd}</strong>`;
+    const eur = parseFloat(el.getAttribute('data-eur'));
+    if(!eur) return;
+      el.innerHTML = `From just <strong>$${eur}</strong>`;
   });
 });
 
