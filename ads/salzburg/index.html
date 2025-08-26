@@ -511,6 +511,73 @@ footer a:hover { text-decoration: underline; }
   </div>
 </section>
 
+<section class="extra-tips">
+  <h2>Extra Tips for Salzburg Visitors</h2>
+  
+  <div class="accordion">
+    <p>Discover the <a href="#attractions">best attractions in Salzburg</a>, including hidden gems and free things to do. Explore <a href="#winter-activities">things to do in Salzburg in winter</a>, enjoy romantic activities, or plan a 2 days itinerary for <a href="#family">family with kids</a>.</p>
+    
+    <button class="accordion-toggle">Read More</button>
+    <div class="accordion-content">
+      <p>Wondering <a href="#where-to-eat">where to eat</a>? Find local favorites, cozy cafés, and authentic restaurants. Whether you're looking for adventure, relaxation, or cultural experiences, Salzburg has something special for everyone.</p>
+      <p>Plan your visit wisely and make the most of your trip with these insider tips and recommended experiences.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+.extra-tips {
+  font-size: 14px;
+  color: #555;
+  max-width: 800px;
+  margin: 40px auto 0 auto;
+  line-height: 1.6;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.extra-tips h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #333;
+  text-align: center;
+}
+.accordion-toggle {
+  display: block;               /* ממקם את הכפתור בשורה נפרדת */
+  margin: 10px auto 0 auto;     /* ממרכז את הכפתור אופקית */
+  background-color: #333;       /* צבע מלא */
+  color: white;                 /* טקסט לבן */
+  border: 1px solid #000;       /* מסגרת שחורה */
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.accordion-toggle:hover {
+  background-color: #555;       /* כהה יותר בהובר */
+  border-color: #000;
+}
+
+.accordion-content {
+  display: none;
+  margin-top: 10px;
+}
+</style>
+
+<script>
+document.querySelectorAll('.accordion-toggle').forEach(button => {
+  button.addEventListener('click', () => {
+    const content = button.nextElementSibling;
+    content.style.display = content.style.display === 'block' ? 'none' : 'block';
+  });
+});
+</script>
+
+
+
 </main>
 <footer>
 <p><strong>Affiliate Disclosure</strong> — We may earn a commission if you book via our Viator or Tripadvisor links, at no extra cost to you. This helps us create more free travel guides.</p>
