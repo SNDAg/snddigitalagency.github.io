@@ -190,7 +190,6 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
           <option value="USD" selected>USD $</option>
           <option value="EUR">EUR €</option>
           <option value="MXN">MXN $</option>
-          <option value="ILS">ILS ₪</option>
         </select></div>
         <div class="control"><select id="sort">
           <option value="popular" selected>Sort: Most Popular</option>
@@ -497,8 +496,8 @@ const share=document.getElementById('share');
 const clearBtn=document.getElementById('clear');
 const altCurrency=document.getElementById('altCurrency');
 
-const rates={USD:1, EUR:0.92, MXN:18.0, ILS:3.6};
-const symbols={USD:'$', EUR:'€', MXN:'$MXN ', ILS:'₪'};
+const rates={USD:1, EUR:0.92, MXN:18.0};
+const symbols={USD:'$', EUR:'€', MXN:'$MXN '};
 
 function applyCurrency(){
   const cur=currency.value;
