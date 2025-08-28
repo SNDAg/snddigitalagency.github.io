@@ -140,19 +140,47 @@ a{color:inherit;text-decoration:none}
 .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
 .badge{background:#0a1226;border:1px solid #1f2b4a;color:#cde3ff;padding:6px 10px;border-radius:999px;font-size:12px;display:flex;align-items:center;gap:6px}
 .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:18px 0}
-.control{background:#0a1226;border:1px solid #1c2946;border-radius:12px;padding:10px 12px;color:#cde3ff}
+.control{
+  background: #0a1226;
+  border: 1px solid #1c2946;
+  border-radius: 10px;    /* תואם לכפתורים קטנים יותר */
+  padding: 6px 8px;       /* פחות "ניפוח" */
+  color: #cde3ff;
+  display: flex;
+  align-items: center;
+  min-height: 38px;       /* שומר גובה אחיד לנראות טובה */
+}
+
 .select,select{width:100%;background:transparent;border:none;color:#cde3ff;font-size:14px}
 .filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
 .filter{padding:8px 12px;border-radius:999px;border:1px solid #1f2b4a;background:#0f152a;color:#cde3ff;font-size:13px;cursor:pointer}
 .filter.active{background:linear-gradient(90deg,#0ea5e9,#22c55e);color:#001a16;font-weight:700;border:none}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media(max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.grid{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid #1c2946;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* רספונסיבי ו"מתכוונן" */
+  gap: 24px; /* ריווח גדול ונעים יותר בין כרטיסים */
+  align-items: stretch; /* כרטיסים יתמתחו לגובה שווה בשורה */
+}  
+.card{
+  background: var(--card);
+  border: 1px solid #1c2946;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* חשוב: מרחיב את הכרטיס למלא את רצועת הגריד */
+  min-height: 340px; /* אופציונלי — שומר מינימום גובה אחיד לכרטיסים */
+}
 .card .img{position:relative;height:190px;background:#0a0e1c}
 .card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05)}
 .tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px}
-.content{padding:14px}
+.content{
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto; 
+}
 .h3{font-size:18px;margin:4px 0 8px;font-weight:800}
 .meta{display:flex;gap:10px;align-items:center;color:#c7d7f4;font-size:12px;margin-bottom:8px}
 .meta .dot{width:4px;height:4px;background:#547;display:inline-block;border-radius:50%}
@@ -173,13 +201,17 @@ footer{margin:28px 0 60px;color:#a9bfe6}
 .seo h2{margin-top:0}
 hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 
-           /* dropdown */
+/* dropdown */
 .control select,
 .control input {
-  font-size: 16px;   /* קריא יותר */
-  padding: 12px 14px;
-  border-radius: 14px;
+  font-size: 14px;
+  padding: 6px 8px;       /* קטן יותר — תואם ל־.control */
+  border-radius: 8px;
+  background: transparent; /* כבר הגדרת צבע בקונטיינר */
+  border: none;            /* עיצוב פנימי ללא מסגרת */
+  height: 28px;            /* קובע גובה אחיד פנימי */
 }
+
 
 /* filters */
 .filter {
