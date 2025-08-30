@@ -207,154 +207,11 @@
 }
 
 </script>
-<style>
-:root{
-  --bg:#0b1020;--card:#0f1428;--muted:#9fb0cc;--text:#e9f1ff;
-  --accent:#10b981;--accent2:#06b6d4;--warn:#f59e0b;--danger:#ef4444;
-  --shadow:0 10px 30px rgba(0,0,0,.25);
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:linear-gradient(180deg,#071122,#0c1831 35%,#0b1020 100%);color:var(--text);}
-a{color:inherit;text-decoration:none}
-.container{max-width:1160px;margin:0 auto;padding:20px}
-.header{padding:36px 0 10px;text-align:center}
-.h1{font-size:32px;line-height:1.2;margin:0 0 8px;font-weight:800}
-.sub{color:var(--muted);font-size:16px}
-.badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-.badge{background:#0a1226;border:1px solid #1f2b4a;color:#cde3ff;padding:6px 10px;border-radius:999px;font-size:12px;display:flex;align-items:center;gap:6px}
-.controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:18px 0}
-.control{
-  background: #0a1226;
-  border: 1px solid #1c2946;
-  border-radius: 10px;    /* תואם לכפתורים קטנים יותר */
-  padding: 6px 8px;       /* פחות "ניפוח" */
-  color: #cde3ff;
-  display: flex;
-  align-items: center;
-  min-height: 38px;       /* שומר גובה אחיד לנראות טובה */
-}
-
-.select,select{width:100%;background:transparent;border:none;color:#cde3ff;font-size:14px}
-.filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px}
-.filter{padding:8px 12px;border-radius:999px;border:1px solid #1f2b4a;background:#0f152a;color:#cde3ff;font-size:13px;cursor:pointer}
-.filter.active{background:linear-gradient(90deg,#0ea5e9,#22c55e);color:#001a16;font-weight:700;border:none}
-.grid{
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* רספונסיבי ו"מתכוונן" */
-  gap: 24px; /* ריווח גדול ונעים יותר בין כרטיסים */
-  align-items: stretch; /* כרטיסים יתמתחו לגובה שווה בשורה */
-}  
-.card{
-  background: var(--card);
-  border: 1px solid #1c2946;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  height: 100%; /* חשוב: מרחיב את הכרטיס למלא את רצועת הגריד */
-  min-height: 340px; /* אופציונלי — שומר מינימום גובה אחיד לכרטיסים */
-}
-.card .img{position:relative;height:190px;background:#0a0e1c}
-.card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05)}
-.tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px}
-.content{
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto; 
-}
-.h3{font-size:18px;margin:4px 0 8px;font-weight:800}
-.meta{display:flex;gap:10px;align-items:center;color:#c7d7f4;font-size:12px;margin-bottom:8px}
-.meta .dot{width:4px;height:4px;background:#547;display:inline-block;border-radius:50%}
-.desc{color:#cfe4ff;font-size:14px;line-height:1.45}
-.card .foot{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:auto;padding:12px;border-top:1px solid #1c2946}
-.price{font-weight:900;font-size:18px}
-.btn{background:linear-gradient(90deg,#06b6d4,#22c55e);color:#001b16;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
-.btn.secondary{background:#0d1b35;color:#cfe4ff;border:1px solid #203055}
-.topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:16px 0 6px}
-.kpis{display:flex;gap:8px;flex-wrap:wrap}
-.kpi{background:#0a1226;border:1px solid #1f2b4a;padding:8px 10px;border-radius:10px;color:#cde3ff;font-size:12px}
-footer{margin:28px 0 60px;color:#a9bfe6}
-.small{font-size:12px;color:#98acd4}
-.sticky{position:sticky;bottom:10px;z-index:1000}
-.copy{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-.copy .mini{padding:8px 10px;border-radius:10px;border:1px solid #1f2b4a;background:#0a1226;color:#cfe4ff;font-size:12px}
-.seo{margin-top:28px;padding:16px;border:1px dashed #2d3b64;border-radius:14px;background:#0a1220}
-.seo h2{margin-top:0}
-hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
-.focus-visible: { outline: 3px solid rgba(6,182,212,0.9); outline-offset: 3px; border-radius:6px; }
-.btn:focus-visible { outline: 3px solid rgba(34,197,94,0.95); }
-
-
-/* dropdown */
-.control select,
-.control input {
-  font-size: 14px;
-  padding: 6px 8px;       /* קטן יותר — תואם ל־.control */
-  border-radius: 8px;
-  background: transparent; /* כבר הגדרת צבע בקונטיינר */
-  border: none;            /* עיצוב פנימי ללא מסגרת */
-  height: 28px;            /* קובע גובה אחיד פנימי */
-}
-
-
-/* filters */
-.filter {
-  font-size: 15px;
-  padding: 10px 16px;
-}
-.filter.active {
-  font-size: 15px;
-  font-weight: 800;
-}
-
-/* badges */
-.badge {
-  font-size: 14px;
-  padding: 8px 14px;
-  font-weight: 600;
-}
-    @media (max-width: 768px){
-      .grid { grid-template-columns: 1fr; gap:16px; }
-      .card { min-height: auto; display:flex; flex-direction:column; }
-      .card .img { height:150px; }
-      .card .foot { flex-wrap:wrap; gap:8px; align-items:center; }
-      .card .price { font-size:16px; }
-      .card .btn { width:100%; display:block; text-align:center; padding:12px 10px; }
-      .controls { grid-template-columns: 1fr; gap:10px; }
-      .control { min-height:44px; padding:10px; }
-      .tag { font-size:11px; padding:6px 8px; }
-      .desc { font-size:14px; }
-    }
-
-</style>
-<meta content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" name="robots"/></head>
+<style>:root{ --bg:#0b1020;--card:#0f1428;--muted:#9fb0cc;--text:#e9f1ff; --accent:#10b981;--accent2:#06b6d4;--warn:#f59e0b;--danger:#ef4444; --shadow:0 10px 30px rgba(0,0,0,.25); } *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;background:linear-gradient(180deg,#071122,#0c1831 35%,#0b1020 100%);color:var(--text);} a{color:inherit;text-decoration:none} .container{max-width:1160px;margin:0 auto;padding:20px} .header{padding:36px 0 10px;text-align:center} .h1{font-size:32px;line-height:1.2;margin:0 0 8px;font-weight:800} .sub{color:var(--muted);font-size:16px} .badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px} .badge{background:#0a1226;border:1px solid #1f2b4a;color:#cde3ff;padding:6px 10px;border-radius:999px;font-size:12px;display:flex;align-items:center;gap:6px} .controls{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin:18px 0} .control{ background: #0a1226; border: 1px solid #1c2946; border-radius: 10px; /* תואם לכפתורים קטנים יותר */ padding: 6px 8px; /* פחות "ניפוח" */ color: #cde3ff; display: flex; align-items: center; min-height: 38px; /* שומר גובה אחיד לנראות טובה */ } .select,select{width:100%;background:transparent;border:none;color:#cde3ff;font-size:14px} .filters{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px} .filter{padding:8px 12px;border-radius:999px;border:1px solid #1f2b4a;background:#0f152a;color:#cde3ff;font-size:13px;cursor:pointer} .filter.active{background:linear-gradient(90deg,#0ea5e9,#22c55e);color:#001a16;font-weight:700;border:none} .grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* רספונסיבי ו"מתכוונן" */ gap: 24px; /* ריווח גדול ונעים יותר בין כרטיסים */ align-items: stretch; /* כרטיסים יתמתחו לגובה שווה בשורה */ } .card{ background: var(--card); border: 1px solid #1c2946; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); display: flex; flex-direction: column; height: 100%; /* חשוב: מרחיב את הכרטיס למלא את רצועת הגריד */ min-height: 340px; /* אופציונלי — שומר מינימום גובה אחיד לכרטיסים */ } .card .img{position:relative;height:190px;background:#0a0e1c} .card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05)} .tag{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px} .content{ padding: 14px; display: flex; flex-direction: column; flex: 1 1 auto; } .h3{font-size:18px;margin:4px 0 8px;font-weight:800} .meta{display:flex;gap:10px;align-items:center;color:#c7d7f4;font-size:12px;margin-bottom:8px} .meta .dot{width:4px;height:4px;background:#547;display:inline-block;border-radius:50%} .desc{color:#cfe4ff;font-size:14px;line-height:1.45} .card .foot{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:auto;padding:12px;border-top:1px solid #1c2946} .price{font-weight:900;font-size:18px} .btn{background:linear-gradient(90deg,#06b6d4,#22c55e);color:#001b16;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer} .btn.secondary{background:#0d1b35;color:#cfe4ff;border:1px solid #203055} .topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:16px 0 6px} .kpis{display:flex;gap:8px;flex-wrap:wrap} .kpi{background:#0a1226;border:1px solid #1f2b4a;padding:8px 10px;border-radius:10px;color:#cde3ff;font-size:12px} footer{margin:28px 0 60px;color:#a9bfe6} .small{font-size:12px;color:#98acd4} .sticky{position:sticky;bottom:10px;z-index:1000} .copy{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:10px} .copy .mini{padding:8px 10px;border-radius:10px;border:1px solid #1f2b4a;background:#0a1226;color:#cfe4ff;font-size:12px} .seo{margin-top:28px;padding:16px;border:1px dashed #2d3b64;border-radius:14px;background:#0a1220} .seo h2{margin-top:0} hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0} .focus-visible: { outline: 3px solid rgba(6,182,212,0.9); outline-offset: 3px; border-radius:6px; } .btn:focus-visible { outline: 3px solid rgba(34,197,94,0.95); } /* dropdown */ .control select, .control input { font-size: 14px; padding: 6px 8px; /* קטן יותר — תואם ל־.control */ border-radius: 8px; background: transparent; /* כבר הגדרת צבע בקונטיינר */ border: none; /* עיצוב פנימי ללא מסגרת */ height: 28px; /* קובע גובה אחיד פנימי */ } /* filters */ .filter { font-size: 15px; padding: 10px 16px; } .filter.active { font-size: 15px; font-weight: 800; } /* badges */ .badge { font-size: 14px; padding: 8px 14px; font-weight: 600; } @media (max-width: 768px){ .grid { grid-template-columns: 1fr; gap:16px; } .card { min-height: auto; display:flex; flex-direction:column; } .card .img { height:150px; } .card .foot { flex-wrap:wrap; gap:8px; align-items:center; } .card .price { font-size:16px; } .card .btn { width:100%; display:block; text-align:center; padding:12px 10px; } .controls { grid-template-columns: 1fr; gap:10px; } .control { min-height:44px; padding:10px; } .tag { font-size:11px; padding:6px 8px; } .desc { font-size:14px; } }</style>
+<meta content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" name="robots"/><link as_="image" href="https://images.unsplash.com/photo-1607646624191-a4a15eee248d?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" rel="preload"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link crossorigin="" href="https://fonts.googleapis.com" rel="preconnect"/></head>
 <body>
 <a class="skip-link" href="#cards">Skip to tours</a>
-<style>
-.skip-link{
-  position: absolute;
-  left: -999px;
-  top: auto;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-.skip-link:focus{
-  left: 10px;
-  top: 10px;
-  width: auto;
-  height: auto;
-  padding: 10px 14px;
-  background: #fff;
-  color: #000;
-  z-index: 99999;
-  border-radius: 6px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}
-[aria-hidden="true"]{ display:none; }
-</style>
+<style>.skip-link{ position: absolute; left: -999px; top: auto; width: 1px; height: 1px; overflow: hidden; } .skip-link:focus{ left: 10px; top: 10px; width: auto; height: auto; padding: 10px 14px; background: #fff; color: #000; z-index: 99999; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.15); } [aria-hidden="true"]{ display:none; }</style>
 <div class="container">
 <header class="header">
 <h1 class="h1">🌴 Best Things to Do in Cancún — Book Top Tours &amp; Day Trips</h1>
@@ -402,7 +259,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="12" data-price="69" data-tags="culture">
 <div class="img">
 <span class="tag">Bestseller</span>
-<img alt="Chichén Itzá, Yucatán pyramid" fetchpriority="high" loading="lazy" src="https://images.unsplash.com/photo-1607646624191-a4a15eee248d?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"/>
+<img alt="Chichén Itzá, Yucatán pyramid" decoding="async" fetchpriority="high" loading="lazy" src="https://images.unsplash.com/photo-1607646624191-a4a15eee248d?q=80&amp;w=1170&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.1.0&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"/>
 </div>
 <div class="content">
 <h3 class="h3">🏛️ Chichén Itzá, Cenote &amp; Valladolid (All-Inclusive)</h3>
@@ -418,7 +275,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="8" data-price="59" data-tags="culture water">
 <div class="img">
 <span class="tag">Great for photos</span>
-<img alt="Tulum ruins on the sea cliffs" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/be/90/36/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Tulum ruins on the sea cliffs" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/be/90/36/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🏛️🌊 Tulum Ruins + Swim in a Cenote</h3>
@@ -434,7 +291,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="7" data-price="62" data-tags="islands water cruises">
 <div class="img">
 <span class="tag">Open Bar</span>
-<img alt="Catamaran sailing to Isla Mujeres" loading="lazy" src="https://dynamic-media.tacdn.com/media/attractions-splice-spp-674x446/15/0e/5f/84.jpg"/>
+<img alt="Catamaran sailing to Isla Mujeres" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/attractions-splice-spp-674x446/15/0e/5f/84.jpg"/>
 </div>
 <div class="content">
 <h3 class="h3">⛵ Isla Mujeres Catamaran + Snorkel + Beach Club</h3>
@@ -450,7 +307,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="3" data-price="45" data-tags="water wildlife">
 <div class="img">
 <span class="tag">Unique</span>
-<img alt="Underwater museum MUSA statues" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/26/ae/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Underwater museum MUSA statues" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/26/ae/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🤿 MUSA Underwater Museum + Reef &amp; Turtles</h3>
@@ -466,7 +323,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="2" data-price="45" data-tags="adventure water">
 <div class="img">
 <span class="tag">Signature Tour</span>
-<img alt="Speedboat in Nichupté Lagoon mangroves" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/3d/bd/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Speedboat in Nichupté Lagoon mangroves" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/3d/bd/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🚤 Jungle Tour: Drive Your Own Speedboat + Snorkel</h3>
@@ -482,7 +339,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="12" data-price="157" data-tags="parks culture">
 <div class="img">
 <span class="tag">Family Favorite</span>
-<img alt="Xcaret underground rivers and shows" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/b0/98/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Xcaret underground rivers and shows" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/b0/98/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🌴 Xcaret Park Day Trip + Night Show</h3>
@@ -498,7 +355,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="6" data-price="185" data-tags="adventure parks">
 <div class="img">
 <span class="tag">Night Adventure</span>
-<img alt="Xplor Fuego zip lines at night" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/be/a8/a5/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
+<img alt="Xplor Fuego zip lines at night" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/be/a8/a5/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🔥 Xplor Fuego — Nighttime Ziplines &amp; Underground Rivers</h3>
@@ -514,7 +371,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="4" data-price="69" data-tags="adventure">
 <div class="img">
 <span class="tag">Combo Deal</span>
-<img alt="ATV and zip lines in the jungle near Puerto Morelos" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/70/54/b7/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
+<img alt="ATV and zip lines in the jungle near Puerto Morelos" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2f/70/54/b7/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">⚡ ATV + Ziplines + Cenote (Puerto Morelos)</h3>
@@ -530,7 +387,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="5" data-price="155" data-tags="nightlife">
 <div class="img">
 <span class="tag">VIP</span>
-<img alt="Coco Bongo Cancun VIP show" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/ae/6c/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Coco Bongo Cancun VIP show" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/ae/6c/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🎉 Coco Bongo Gold Member — VIP Entry &amp; Open Bar</h3>
@@ -546,7 +403,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="7" data-price="169" data-tags="wildlife water">
 <div class="img">
 <span class="tag">Seasonal • May–Sep</span>
-<img alt="Swimming with whale sharks near Isla Mujeres/Holbox" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/ba/62/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Swimming with whale sharks near Isla Mujeres/Holbox" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/a9/ba/62/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🐋 Swim with Whale Sharks (Small-Group)</h3>
@@ -562,7 +419,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="2" data-price="109" data-tags="cruises nightlife">
 <div class="img">
 <span class="tag">Romantic</span>
-<img alt="Sunset galleon dinner cruise on Nichupté Lagoon" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/0b/74/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
+<img alt="Sunset galleon dinner cruise on Nichupté Lagoon" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/0b/74/caption.jpg?w=1100&amp;h=800&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🛥️ Sunset Lagoon Dinner Cruise (Adults-Only)</h3>
@@ -578,7 +435,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <article class="card" data-duration="10" data-price="139" data-tags="parks water">
 <div class="img">
 <span class="tag">Relax &amp; Snorkel</span>
-<img alt="Xel-Há inlet snorkeling and lazy rivers" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/15/65/caption.jpg?w=700&amp;h=500&amp;s=1"/>
+<img alt="Xel-Há inlet snorkeling and lazy rivers" decoding="async" loading="lazy" src="https://dynamic-media.tacdn.com/media/photo-o/2e/aa/15/65/caption.jpg?w=700&amp;h=500&amp;s=1"/>
 </div>
 <div class="content">
 <h3 class="h3">🌿 Xel-Há Natural Park — All-Inclusive Day</h3>
@@ -618,65 +475,7 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <li><strong>Plan at least one day trip</strong> (cenotes, ruins, or eco-parks).</li>
 </ol>
 </section>
-<style>
-.comparison-box {
-  margin: 2rem auto;
-  max-width: 850px;
-  padding: 1.5rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
-}
-
-.comparison-box h2 {
-  text-align: center;
-  margin-bottom: 1.2rem;
-  font-size: 1.6rem;
-  color: #006994;
-}
-
-.tour-table {
-  width: 100%;
-  border-collapse: collapse;
-  overflow: hidden;
-  border-radius: 12px;
-}
-
-.tour-table thead {
-  background: #006994;
-  color: #fff;
-}
-
-.tour-table th, 
-.tour-table td {
-  padding: 14px;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-.tour-table tbody tr:nth-child(even) {
-  background: #999999;
-}
-
-.tour-table tbody tr:hover {
-  background: #eef7fa;
-  transition: 0.3s;
-}
-
-.btn {
-  display: inline-block;
-  color: #fff !important;
-  padding: 8px 14px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: background 0.3s;
-}
-
-.btn:hover {
-  background: #e85c2a;
-}
-</style>
+<style>.comparison-box { margin: 2rem auto; max-width: 850px; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 14px rgba(0,0,0,0.1); } .comparison-box h2 { text-align: center; margin-bottom: 1.2rem; font-size: 1.6rem; color: #006994; } .tour-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 12px; } .tour-table thead { background: #006994; color: #fff; } .tour-table th, .tour-table td { padding: 14px; text-align: left; font-size: 0.95rem; } .tour-table tbody tr:nth-child(even) { background: #999999; } .tour-table tbody tr:hover { background: #eef7fa; transition: 0.3s; } .btn { display: inline-block; color: #fff !important; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: background 0.3s; } .btn:hover { background: #e85c2a; }</style>
 <section class="comparison-box">
 <h2>Top 4 Cancún Tours — Quick Comparison</h2>
 <table class="tour-table">
@@ -799,7 +598,6 @@ hr.sep{border:0;border-top:1px solid #1c2946;margin:18px 0}
 <li>✔ Direct partnerships with <strong>Viator</strong> and <strong>Tripadvisor</strong></li>
 </ul>
 </section>
-
 <ul class="small">
 <li><strong>Tags:</strong> Things to do in Cancún, Cancún tours, Chichen Itza tour from Cancún, Tulum cenote tour, Isla Mujeres catamaran, Cancún snorkeling, Cancún nightlife Coco Bongo, Xcaret tickets, Xplor Fuego, Jungle tour speedboat.</li>
 <li><h3>Popular related searches:</h3></li>
@@ -911,29 +709,6 @@ document.querySelectorAll('a.viator-link').forEach(a=>{
 <div class="sticky-cta">
 <a href="#cards">🎟️ View Top Cancún Tours — Book Instantly</a>
 </div>
-<style>
-.sticky-cta { display: none; }
-@media(max-width:768px){
-  .sticky-cta {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #ff5722;
-    text-align: center;
-    padding: calc(env(safe-area-inset-bottom, 12px) + 12px) 15px  ; /* safe area */
-    z-index: 9999;
-    box-shadow: 0 -6px 18px rgba(0,0,0,0.15);
-  }
-  .sticky-cta a {
-    color: #fff;
-    font-weight: 700;
-    text-decoration: none;
-    font-size: 16px;
-    display:inline-block;
-    min-height:44px; /* נגיעה נוחה באצבע */
-  }
-}
-</style>
+<style>.sticky-cta { display: none; } @media(max-width:768px){ .sticky-cta { position: fixed; bottom: 0; left: 0; width: 100%; background: #ff5722; text-align: center; padding: calc(env(safe-area-inset-bottom, 12px) + 12px) 15px ; /* safe area */ z-index: 9999; box-shadow: 0 -6px 18px rgba(0,0,0,0.15); } .sticky-cta a { color: #fff; font-weight: 700; text-decoration: none; font-size: 16px; display:inline-block; min-height:44px; /* נגיעה נוחה באצבע */ } }</style>
 </body>
 </html>
