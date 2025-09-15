@@ -1,63 +1,167 @@
-
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="utf-8"/>
-      <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-      <link href="https://fonts.googleapis.com/css2?family=Poppins&amp;display=swap" rel="stylesheet"/>
-      <style>
-         body { background: #f5f7fa; color: #0d1b2a; font-family: 'Poppins', sans-serif; margin: 0; padding: 0; }
-         header { background-color: #0d1b2a; color: #c39555; padding: 2rem 1rem; text-align: center; animation: fadeIn 1s ease-in-out; }
-         header h1 { margin: 0; font-size: 1.1rem; letter-spacing: 1px; }
-         section { max-width: 1000px; margin: 3rem auto; padding: 0 1rem; }
-         h2 { text-align: center; font-size: 1.3rem; color: #0d1b2a; }
-         p { text-align: center; font-size: 1.1rem; color: #374151; max-width: 700px; margin: 0 auto 2rem; }
-         .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
-         .card { background: white; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); padding: 1rem; transition: transform 0.3s ease; }
-         .card:hover { transform: scale(1.03); }
-         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; }
-         .card h3 { margin: 0 0 10px; font-size: 1.2rem; color: #0d1b2a; }
-         .rating { color: #f5a623; font-weight: bold; margin-bottom: 6px; }
-         .card p { font-size: 0.95rem; color: #555; }
-         .card a { display: inline-block; margin-top: 10px; color: #c39555; font-weight: bold; text-decoration: none; }
-         footer { text-align: center; font-size: 0.9rem; color: #777; margin: 3rem auto; }
-         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      </style>
-   </head>
-   <body>
-      <header>
-         <h1>Booking via SND Digital</h1>
-      </header>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  <style>
+    body { 
+      background: #f5f7fa; 
+      color: #0d1b2a; 
+      font-family: 'Poppins', sans-serif; 
+      margin: 0; 
+      padding: 0; 
+    }
+    header { 
+      background-color: #0d1b2a; 
+      color: #c39555; 
+      padding: 2rem 1rem; 
+      text-align: center; 
+      animation: fadeIn 1s ease-in-out; 
+    }
+    header h1 { 
+      margin: 0; 
+      font-size: 1.3rem; 
+      letter-spacing: 1px; 
+    }
+
+    section {
+      max-width: 1000px; 
+      margin: 3rem auto; 
+      padding: 0 1rem;
+    }
+
+    h2 { 
+      text-align: center; 
+      font-size: 1.5rem; 
+      color: #0d1b2a; 
+      margin-bottom: 2rem;
+    }
+
+    /* Grid for all affiliate links */
 
 
+  .affiliate-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    padding: 1rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
 
-<!--<div style="margin-top:4rem; text-align:center;">-->
-<!--<a href="https://www.kqzyfj.com/click-101474270-15686844" target="_top">-->
-<!--<img src="https://www.awltovhc.com/image-101474270-15686844" width="200" height="200" alt="" border="0"/></a>-->
-<!--</div>-->
-<div style="margin-top:4rem; text-align:center;">
-  <a href="https://www.jdoqocy.com/click-101474270-15048849" target="_top">
-<img src="https://www.ftjcfx.com/image-101474270-15048849" width="300" height="250" alt="" border="0"/></a>
+  .affiliate-card img {
+    width: 100%;
+    aspect-ratio: 4/3; /* שומר יחס צדדים אחיד */
+    object-fit: contain; /* לא חותך את התמונה */
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: #f5f7fa;
+  }
+
+
+  .affiliate-card a span {
+    display: inline-block;
+    margin-top: 10px;
+    color: #c39555;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+
+    .affiliate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      justify-items: center;
+    }
+
+    .affiliate-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    .affiliate-card a {
+      display: inline-block;
+      margin-top: 10px;
+      color: #c39555;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #777;
+      margin: 3rem auto;
+      padding: 2rem 1rem;
+    }
+
+    @keyframes fadeIn { 
+      from { opacity: 0; } 
+      to { opacity: 1; } 
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Booking via SND Digital</h1>
+  </header>
+
+  <section>
+    <h2>Check Out These Travel Offers!</h2>
+    <div class="affiliate-grid">
+      <!-- Affiliate Card 1 -->
+      <div class="affiliate-card">
+        <a href="https://www.jdoqocy.com/click-101474270-15048849" target="_top">
+          <img src="https://www.ftjcfx.com/image-101474270-15048849" alt="Offer 1"/>
+          <span>Expedia - Flights, hotels and more</span>
+        </a>
+      </div>
+
+
+<!-- Affiliate Card 2 (Viator Banner) -->
+<div class="affiliate-card tripadvisor-card">
+  <div style="width:100%; max-width:300px; margin:0 auto;">
+    <div 
+      data-banner-height="250" 
+      data-banner-language="en" 
+      data-banner-selection="banner1" 
+      data-banner-width="300" 
+      data-id="viator-banner" 
+      data-partner-id="P00259952" 
+      data-url="https://www.viator.com/">
+    </div>
+  </div>
+  <a href="https://www.viator.com/" target="_blank"><span>Viator by Tripadvisor - Book a trip</span></a>
 </div>
 
-<div style="margin-top:4rem; text-align:center;">
-  <div data-banner-height="90" data-banner-language="en" data-banner-selection="banner1" data-banner-width="728" data-id="viator-banner" data-partner-id="P00259952" data-url="https://www.viator.com/"></div>
-  <script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
-  
-  </br>
+
+<script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
+
+
+      <!-- Affiliate Card 3 -->
+      <div class="affiliate-card">
         <a href="https://www.dpbolvw.net/click-101474270-17113814" target="_top">
-<img src="https://www.awltovhc.com/image-101474270-17113814" width="300" height="250" alt="" border="0"/></a>
-</div></br>
+          <img src="https://www.awltovhc.com/image-101474270-17113814" alt="Offer 3"/>
+          <span>Hotels.com (By expedia)</span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-
-
-      <footer style="padding:2rem;font-size:0.7rem;text-align:center;">
-         <p style="max-width:700px;margin:auto;font-size:0.7rem">
-            <strong>Affiliate Disclosure</strong><br/>
-            To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like
-            <strong>Expedia</strong> and
-            <a href="https://www.viator.com/" rel="nofollow noopener" style="color:#c39555;" target="_blank">Viator</a>.
-         </p>
-      </footer>
-   </body>
+  <footer>
+    <p>
+      <strong>Affiliate Disclosure</strong><br/>
+      To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
+      <strong>Expedia</strong> and 
+      <a href="https://www.viator.com/" rel="nofollow noopener" style="color:#c39555;" target="_blank">Viator</a>.
+    </p>
+  </footer>
+</body>
 </html>
