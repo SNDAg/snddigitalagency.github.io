@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <link rel="stylesheet" href="/AI/style.css">
+        <link href="/icons/goldBluefavicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+         <link href="/icons/favicon-48x48.png" rel="icon" sizes="48x48" type="image/png"/>
+         <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
     <meta charset="UTF-8">
     <title>Contact - SND Digital Agency</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,20 +13,7 @@
         /* (Same CSS as homepage) */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; }
-        .container { width: 90%; max-width: 1200px; margin: auto; }
-        header { background-color: #fff; border-bottom: 1px solid #ddd; padding: 20px 0; }
-        header .inner { display: flex; justify-content: space-between; align-items: center; }
-        .logo-branding img { height: 50px; width: 50px; object-fit: cover; border-radius: 50%; }
-        .branding h2 { font-size: 1.5em; margin: 0 0 5px 10px; color: #333; }
-        .branding p { font-style: italic; color: #555; margin: 0 0 0 10px; }
-        nav ul { list-style: none; display: flex; }
-        nav ul li { margin: 0 15px; }
-        nav ul li a { color: #333; text-decoration: none; font-weight: bold; }
-        nav ul li a:hover { color: #2C7BD0; }
         section { padding: 40px 0; }
-        .section-header { text-align: center; margin-bottom: 40px; }
-        .section-header h2 { font-size: 2em; margin-bottom: 10px; }
-        .section-header p { color: #555; }
         input, textarea { 
             display: block; 
             width: 100%; 
@@ -34,10 +25,6 @@
         }
         button { padding: 10px 20px; background-color: #2C7BD0; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #235a97; }
-        footer { background-color: #fff; text-align: center; padding: 20px 0; margin-top: 40px; border-top: 1px solid #ddd; }
-        footer p { font-size: 0.9em; color: #555; }
-        footer a { color: #2C7BD0; text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -71,18 +58,25 @@
         <h2>Contact Us</h2>
         <p>We'd love to hear from you! Send us a message with any questions or feedback.</p>
     </div>
-    <form 
-      id="contactForm"
-      action="https://formspree.io/f/mdkzvpay"
-      method="POST">
-        <input type="text" name="name" placeholder="Your name" required>
-        <input type="email" name="email" placeholder="Your email" required>
-        <textarea name="message" placeholder="Your message" rows="5" required></textarea>
-        <button type="submit" id="submitButton">Send</button>
-        <p id="formStatus" style="font-size: 0.9rem; margin-top: 1rem;"></p>
-    </form>
-    <p>You can also reach us via email: <a href="mailto:info@snddigitalagency.com">info@snddigitalagency.com</a></p>
+
+    <div style="max-width: 600px; margin: auto; text-align: left;">
+        <form 
+          id="contactForm"
+          action="https://formspree.io/f/mdkzvpay"
+          method="POST">
+            <input type="text" name="name" placeholder="Your name" required>
+            <input type="email" name="email" placeholder="Your email" required>
+            <textarea name="message" placeholder="Your message" rows="5" required></textarea>
+            <button style="display: block; margin: 10px 0 0 0;" type="submit" id="submitButton">Send</button>
+            <p id="formStatus" style="font-size: 0.9rem; margin-top: 1rem;"></p>
+        </form>
+    </br>
+        <p style="margin-top: 10px;">
+            You can also reach us via email: <a href="mailto:info@snddigitalagency.com">info@snddigitalagency.com</a>
+        </p>
+    </div>
 </section>
+
 
 <footer>
     <p>&copy; 2025 SND Digital Agency. All rights reserved.</p>
