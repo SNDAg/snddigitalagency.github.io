@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Phi Phi Island Day Trip - SND Digital Agency</title>
+  <meta name="description" content="Explore Phi Phi Island from Phuket – stunning beaches, snorkeling, and adventure.">
+  <meta name="robots" content="index, follow">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/goldBluefavicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin:0;
+      padding:0;
+    }
+
+   body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url('https://dynamic-media.tacdn.com/media/photo-o/2e/f4/67/8a/caption.jpg?w=1400&h=1000&s=1');
+  background-size: cover;
+  /* מזיזים את התמונה כלפי מעלה כדי "לחתוך" 30% מהחלק העליון */
+  background-position: center -30%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #111827;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  animation: fadeInPage 1s ease forwards;
+  opacity: 0;
+}
+
+
+    @keyframes fadeInPage {
+      to { opacity: 1; }
+    }
+
+    .container {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      max-width: 480px;
+      width: 100%;
+      padding: 2rem 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    img.hotel-image {
+      width: 100%;
+      border-radius: 15px;
+      margin-bottom: 1.5rem;
+      object-fit: cover;
+      max-height: 280px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #0d1b2a;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+
+    p.description {
+      font-size: 1rem;
+      color: #475569;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .discount {
+      font-weight: 700;
+      color: #c39555;
+      font-size: 1.15rem;
+      margin-bottom: 1.5rem;
+    }
+
+    a.booking-btn {
+      display: block;
+      background: linear-gradient(90deg, #c39555, #a8803a);
+      color: white;
+      font-weight: 700;
+      font-size: 1.2rem;
+      padding: 0.9rem 0;
+      border-radius: 35px;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(195, 149, 85, 0.45);
+      transition: all 0.3s ease;
+      margin: 0 auto 1rem auto;
+    }
+
+    a.booking-btn:hover {
+      background: linear-gradient(90deg, #a8803a, #c39555);
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(168, 138, 53, 0.55);
+    }
+
+    footer {
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(6px);
+      color: #475569;
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 1.5rem 1rem;
+      border-radius: 20px;
+      max-width: 480px;
+      margin: 1rem auto 2rem auto;
+      line-height: 1.4;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    }
+
+    footer a {
+      color: #c39555;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 1.6rem; }
+      p.description { font-size: 0.95rem; }
+      .discount { font-size: 1rem; }
+      a.booking-btn { font-size: 1.1rem; padding: 0.85rem 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" role="main" aria-label="Phi Phi Island Day Trip description and booking">
+    <img src="https://static.tacdn.com/img2/brand_refresh_2025/logos/wordmark.svg" alt="TripAdvisor Logo" style="height:28px; margin-bottom: 12px;">
+    <h1>Phi Phi Island Day Trip</h1>
+    <p class="description">
+      Explore Phi Phi Island from Phuket – stunning beaches, snorkeling, and adventure. Book via TripAdvisor and get your mobile ticket instantly.
+    </p>
+    <p class="discount">Get your 20% off now!</p>
+    <a 
+      href="https://www.viator.com/tours/Phuket/Phi-Phi-Day-Trip-with-Seaview-Lunch/d349-160694P9?pid=P00259952&mcid=42383&medium=link&campaign=Phi-Phi-Day" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="booking-btn" 
+      aria-label="Book Phi Phi Island Day Trip"
+    >
+      Book Your Ticket Now
+    </a>
+  </div>
+
+  <footer>
+    <strong>Affiliate Disclosure:</strong> We may earn a commission from links to Booking.com and Viator at no extra cost to you.
+  </footer>
+
+</body>
+</html>
