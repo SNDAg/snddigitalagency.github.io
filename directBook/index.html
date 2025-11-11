@@ -71,9 +71,7 @@
     .affiliate-card img {
       width: 100%;
       aspect-ratio: 4/3;
-      /* שומר יחס צדדים אחיד */
       object-fit: contain;
-      /* לא חותך את התמונה */
       border-radius: 8px;
       margin-bottom: 12px;
       background: #f5f7fa;
@@ -88,18 +86,31 @@
       text-decoration: none;
     }
 
-
     .affiliate-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       justify-items: center;
+      align-items: stretch;/
     }
 
-    .affiliate-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    .affiliate-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      width: 100%;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      /* כל כרטיס ימלא את כל הגובה שנקבע בגריד */
+      box-sizing: border-box;
     }
+
 
     .affiliate-card a {
       display: inline-block;
@@ -151,7 +162,7 @@
   <section>
     <h2>Check Out These Travel Offers!</h2>
     <div class="affiliate-grid">
-      <!-- Affiliate Card 1 -->
+      <!-- Expedia -->
       <div class="affiliate-card">
         <a href="https://www.jdoqocy.com/click-101474270-15048849" target="_top">
           <img src="https://www.ftjcfx.com/image-101474270-15048849" alt="Offer 1" />
@@ -160,26 +171,7 @@
       </div>
 
 
-<!-- Affiliate Card (12GO) -->
-<div class="affiliate-card expedia-card">
-  <div style="width:100%; max-width:300px; margin:0 auto;">
-    <a href="https://www.jdoqocy.com/click-101474270-17115154" target="_top">
-      <img 
-        src="https://www.lduhtrp.net/image-101474270-17115154" 
-        width="300" 
-        height="250" 
-        alt="Hotels.com by Expedia - Find your stay" 
-        style="border:0; width:100%; height:auto;"
-      />
-    </a>
-  </div>
-  <a href="https://www.jdoqocy.com/click-101474270-17115154" target="_top">
-    <span>12GO</span>
-  </a>
-</div>
-
-
-      <!-- Affiliate Card 2 (Viator Banner) -->
+      <!-- viator -->
       <div class="affiliate-card tripadvisor-card">
         <div style="width:100%; max-width:300px; margin:0 auto;">
           <div data-banner-height="250" data-banner-language="en" data-banner-selection="banner1"
@@ -190,22 +182,45 @@
         <a href="https://www.viator.com/" target="_blank"><span>Viator by Tripadvisor - Book a trip</span></a>
       </div>
 
-
-      <script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
-
-
-      <!-- Affiliate Card 3 -->
+      <!-- Hotels.com -->
       <div class="affiliate-card">
         <a href="https://www.dpbolvw.net/click-101474270-17113814" target="_top">
           <img src="https://www.awltovhc.com/image-101474270-17113814" alt="Offer 3" />
           <span>Hotels.com (By expedia)</span>
         </a>
       </div>
-    </div>
-    
-    
-  </section>
 
+      <!-- 12GO -->
+      <div class="affiliate-card expedia-card">
+        <div style="width:100%; max-width:300px; margin:0 auto;">
+          <a href="https://www.jdoqocy.com/click-101474270-17115154" target="_top">
+            <img src="https://www.lduhtrp.net/image-101474270-17115154" width="300" height="250"
+              alt="Hotels.com by Expedia - Find your stay" style="border:0; width:100%; height:auto;" />
+          </a>
+        </div>
+        <a href="https://www.jdoqocy.com/click-101474270-17115154" target="_top">
+          <span>12GO - Buses, Ferries, Transfers, Flights in Asia</span>
+        </a>
+      </div>
+
+      <!-- Affiliate Card (Vueling via CJ) -->
+      <div class="affiliate-card vueling-card">
+        <div style="width:100%; max-width:300px; margin:0 auto;">
+          <a href="https://www.tkqlhce.com/click-101474270-15733900" target="_top" rel="nofollow sponsored noopener">
+            <img
+              src="https://static.wikia.nocookie.net/logopedia/images/d/d7/Vueling_icon.jpg/revision/latest?cb=20170915170037"
+              alt="Vueling Airlines – Book flights easily"
+              style="border:0; width:60%; height:auto; background:#fff; padding:20px; border-radius:8px; display:block; margin:0 auto;" />
+          </a>
+        </div>
+        <a href="https://www.tkqlhce.com/click-101474270-15733900" target="_top" rel="nofollow sponsored noopener">
+          <span>Vueling Airlines – Low-cost flights in Europe</span>
+        </a>
+      </div>
+
+    </div>
+  </section>
+  <script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
   <footer>
     <p>
       <strong>Affiliate Disclosure</strong><br />
