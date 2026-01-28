@@ -18,7 +18,6 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      /* מאפשר כפתור מוחזק למטה */
     }
 
     .overlay {
@@ -31,7 +30,6 @@
       padding: 20px;
       box-sizing: border-box;
       flex-direction: column;
-      /* מסדר את הכרטיס והכפתור למעלה-למטה */
     }
 
     .card {
@@ -44,7 +42,6 @@
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
       text-align: center;
       margin-bottom: 80px;
-      /* רווח לכפתור הכללי בתחתית */
     }
 
     button:active {
@@ -65,7 +62,6 @@
         opacity: 0;
         transform: translateY(12px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -130,11 +126,9 @@
       color: #475569;
     }
 
-    /* כפתור 12GO קטן בתחתית */
     .general-link {
       position: fixed;
       bottom: 50px;
-      /* מרחק מהתחתית בשולחן עבודה */
       width: 100%;
       text-align: center;
       z-index: 10;
@@ -143,13 +137,10 @@
     .general-link a {
       display: inline-block;
       background: #4DB84D;
-      /* ירוק 12GO */
       color: white;
       text-decoration: none;
       padding: 10px 16px;
-      /* קטן יותר */
       border-radius: 12px;
-      /* פחות עגול */
       font-size: 14px;
       font-weight: 600;
       transition: all 0.2s ease;
@@ -157,22 +148,17 @@
 
     .general-link a:hover {
       background: #3ca638;
-      /* ירוק כהה יותר בעת hover */
       transform: translateY(-1px);
     }
 
-    /* התאמה למובייל */
     @media (max-width: 480px) {
       .general-link {
         bottom: 20px;
-        /* קרוב יותר לתחתית */
       }
 
       .general-link a {
         padding: 8px 14px;
-        /* קטן יותר למסכים קטנים */
         font-size: 13px;
-        /* פונט קטן יותר */
       }
     }
   </style>
@@ -188,10 +174,10 @@
       <div id="step-from" class="step">
         <h1>מאיפה יוצאים?</h1>
         <div class="options">
-          <button onclick="selectFrom('קוסמוי')">קוסמוי</button>
-          <button onclick="selectFrom('קופנגן')">קופנגן</button>
-          <button onclick="selectFrom('קוטאו')">קוטאו</button>
-          <button onclick="selectFrom('פוקט')">פוקט</button>
+          <button onclick="selectFrom('koh-samui')">קוסמוי</button>
+          <button onclick="selectFrom('koh-phangan')">קופנגן</button>
+          <button onclick="selectFrom('koh-tao')">קוטאו</button>
+          <button onclick="selectFrom('phuket')">פוקט</button>
         </div>
       </div>
 
@@ -199,10 +185,10 @@
       <div id="step-to" class="step hidden">
         <h1>לאן נוסעים?</h1>
         <div class="options">
-          <button data-place="קוסמוי" onclick="selectTo('קוסמוי')">קוסמוי</button>
-          <button data-place="קופנגן" onclick="selectTo('קופנגן')">קופנגן</button>
-          <button data-place="קוטאו" onclick="selectTo('קוטאו')">קוטאו</button>
-          <button data-place="פוקט" onclick="selectTo('פוקט')">פוקט</button>
+          <button data-place="koh-samui" onclick="selectTo('koh-samui')">קוסמוי</button>
+          <button data-place="koh-phangan" onclick="selectTo('koh-phangan')">קופנגן</button>
+          <button data-place="koh-tao" onclick="selectTo('koh-tao')">קוטאו</button>
+          <button data-place="phuket" onclick="selectTo('phuket')">פוקט</button>
         </div>
       </div>
 
@@ -222,8 +208,8 @@
       <div id="step-date" class="step hidden">
         <h1>מתי?</h1>
         <div class="options">
-          <button onclick="selectDate('היום')">להיום</button>
-          <button onclick="selectDate('מחר')">למחר</button>
+          <button onclick="selectDate('today')">להיום</button>
+          <button onclick="selectDate('tomorrow')">למחר</button>
         </div>
       </div>
 
@@ -243,14 +229,17 @@
   <div class="general-link">
     <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
       לאתר 12GO
-    </a>
+    </a> 
   </div>
 
   <script>
+    // משתנים גלובליים
     let from = '';
     let to = '';
     let people = 1;
     let date = '';
+
+    const affiliateBase = "https://www.dpbolvw.net/click-101474270-17138047?url=";
 
     function transition(fromId, toId) {
       document.getElementById(fromId).classList.add('hidden');
@@ -283,12 +272,32 @@
       date = value;
       transition('step-date', 'step-summary');
       document.getElementById('summaryText').innerText =
-        `מעבורת מ־${from} ל־${to} | ${people} אנשים | ${date}`;
+        `מעבורת מ־${from} ל־${to} | ${people} אנשים | ${value === 'today' ? 'היום' : 'מחר'}`;
+    }
+
+    // המרת today/tomorrow ל-YYYY-MM-DD
+    function getFormattedDate(option) {
+      const today = new Date();
+      let d;
+      if (option === 'today') d = today;
+      else if (option === 'tomorrow') {
+        d = new Date(today);
+        d.setDate(today.getDate() + 1);
+      }
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const dd = String(d.getDate()).padStart(2, '0');
+      return `${yyyy}-${mm}-${dd}`;
     }
 
     function goToBooking() {
-      // 🔗 הכנסי כאן את לינק ה-affiliate האמיתי שלך
-      window.location.href = "https://example.com/your-ferry-link";
+      const formattedDate = getFormattedDate(date);
+      const baseUrl = `https://12go.asia/en/travel/${from}/${to}?date=${formattedDate}&people=${people}&direction=forward`;
+      const fullLink = affiliateBase + encodeURIComponent(baseUrl);
+     //refer to link
+       window.location.href = fullLink;
+       //for debug: print link
+    alert(fullLink);
     }
   </script>
 
