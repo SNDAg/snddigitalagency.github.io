@@ -9,24 +9,52 @@ from pathlib import Path
 from collections import defaultdict
 
 
-# ==========USER  Configurations  ========================================
-DEFAULT_CITY = "hanoi"
+# =========================================================================
+# ========== USER  Configurations  ========================================
+# =========================================================================
 
-PLACE_TYPES = ["hostel","apartment","small hotel","\"small hotel\""]
+
+DEFAULT_CITY = "tel aviv"
+
+PLACE_TYPES = ["hotel","hostel","apartments"]
 
 
 ## google queries:
 TEMPLATES = [
-     # '{place} {city} "@outlook.com" OR "@hotmail.com"',
-           'hotel {city} @gmail.com',
-                 'hotel {city} @yahoo.com',
+
+    '{place} {city} @gmail.com',
+    '{place} {city} @yahoo.com',
+    ' {city} {place} email',
+    # ' {place} {city} email',
+      'inurl:contact {place} {city}',
+     # '{place} {city} contact email',
       # '{place} {city} @gmail.com',
       # '{place} {city} @yahoo.com',
     #'inurl:contact {place} {city},'
-    '{place} {city} email',
     # 'inurl:contact {place} {city} ("@gmail.com" OR "@hotmail.com" OR "@yahoo.com")',
-    # '{place} {city} contact email',
     # '{place} {city} email OR "contact"',
+]
+
+EXCLUDE_SITES = [
+    "agoda.com",
+    "booking.com",
+    "hostels.com",
+    "expedia.com",
+    "tripadvisor.com",
+    "airbnb.com",
+    "agoda.com",
+    "hotels.com",
+    "trivago.com",
+    "kayak.com",
+    "orbitz.com",
+    "priceline.com",
+    "travelocity.com",
+    "trip.com",
+    "hotelplanner.com",
+    "bookingholdings.com",
+    "pdfcoffee.com",         
+    "multipard.com",         
+    "arabus.com"
 ]
 
 # ============================================================
@@ -72,7 +100,9 @@ USER_AGENTS = [
     "Mozilla/5.0 (Linux; Android 14; SM-S928B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36",
 ]
 
+
 api_index = 0
+swiched_api_key = 0
 # ============================================
 
 def normalize_email(email: str) -> str:
@@ -96,31 +126,8 @@ def extract_emails_from_text(text: str) -> set:
     return {normalize_email(r) for r in raw if is_valid_email(normalize_email(r))}
 
 def build_queries(city: str) -> list:
-    EXCLUDE_SITES = [
-        "agoda.com",
-        "booking.com",
-        "hostels.com",
-        "expedia.com",
-        "tripadvisor.com",
-        "airbnb.com",
-        "agoda.com",
-        "hotels.com",
-        "trivago.com",
-        "kayak.com",
-        "orbitz.com",
-        "priceline.com",
-        "travelocity.com",
-        "trip.com",
-        "hotelplanner.com",
-        "bookingholdings.com",
-        "pdfcoffee.com",         
-        "multipard.com",         
-        "arabus.com"
-    ]
     exclude_str = " ".join([f"-site:{site}" for site in EXCLUDE_SITES])
-
     queries = [tpl.format(place=place, city=city) + " " + exclude_str for place in PLACE_TYPES for tpl in TEMPLATES]
-
     return list(dict.fromkeys(queries))
 
 
@@ -137,6 +144,7 @@ def fetch_results(query: str, locale: dict) -> list:
 
         if resp.status_code == 429:
             print(f"[WARN] API key {api_index + 1} got rate limited. Switching to next key...")
+            swiched_api_key +=1
             api_index = (api_index + 1) % len(API_KEYS)
             attempt += 1
             time.sleep(1)
@@ -214,8 +222,11 @@ def main():
 
     print("\n🎉 Done!")
     print(f"Used SERP requests: {total_search}")
-    print(f"Total Emails in file: {len(existing)}")
+    if swiched_api_key > 0:
+            print(f"{swiched_api_key} API-key swiches")
     print(f"New Emails: {len(existing) - initial_count}")
+    print(f"Total Emails in file: {len(existing)}")
+    
 
 
 if __name__ == "__main__":
