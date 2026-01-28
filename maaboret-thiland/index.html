@@ -188,8 +188,8 @@
          transform: translateY(-3px) scale(1.02);
          }
          .note {
-         margin-top: 10px;
-         font-size: 14px;
+         margin-top: 18px;
+         font-size: 15px;
          color: #475569;
          }
          .general-link {
@@ -308,13 +308,14 @@
                <div class="options">
                   <button onclick="selectDate('today')">להיום</button>
                   <button onclick="selectDate('tomorrow')">למחר</button>
+                  <button onclick="selectDate('tomorrow2')">למחרתיים</button>
                </div>
             </div>
             <!-- סיכום -->
             <div id="step-summary" class="step hidden">
                <h1>יאללה, יוצאים לדרך 🚤</h1>
                <div class="summary" id="summaryText"></div>
-               <button class="cta" onclick="goToBooking()">לבחירת מעבורת →</button>
+               <button class="cta" onclick="goToBooking()">לבחירת מעבורת ← </button>
                <div class="trust">
                   </br>
                   <div>✔️ מעל 100,000 הזמנות בתאילנד</div>
@@ -388,6 +389,10 @@
            else if (option === 'tomorrow') {
              d = new Date(today);
              d.setDate(today.getDate() + 1);
+           }
+            else if (option === 'tomorrow2') {
+             d = new Date(today);
+             d.setDate(today.getDate() + 2);
            }
            const yyyy = d.getFullYear();
            const mm = String(d.getMonth() + 1).padStart(2, '0');
