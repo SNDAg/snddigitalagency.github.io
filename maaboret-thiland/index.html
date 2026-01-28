@@ -310,7 +310,8 @@
                <div class="options">
                   <button onclick="selectDate('today')">להיום</button>
                   <button onclick="selectDate('tomorrow')">למחר</button>
-                  <button onclick="selectDate('tomorrow2')">למחרתיים</button>
+                  <button onclick="selectDate('dayAfterTomorrow')">למחרתיים</button>
+                  <button onclick="selectDate('noDate')">אחר</button>
                </div>
             </div>
             <!-- סיכום -->
@@ -376,14 +377,23 @@
            transition('step-people', 'step-date');
          }
          
-         function selectDate(value) {
-         date = value;
+         
+         
+               function selectDate(value) {
+                            date = value;
+         
          transition('step-date', 'step-summary');
+         const dateText = {
+         today: 'היום',
+         tomorrow: 'מחר',
+         dayAfterTomorrow: 'מחרתיים',
+         noDate: ''
+         };
+         
          document.getElementById('summaryText').innerText =
-         `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]} ${value === 'today' ? 'היום' : 'מחר'}`;
+         `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]}${dateText[value] ? ' ' + dateText[value] : ''}`;
          }
          
-         // המרת today/tomorrow ל-YYYY-MM-DD
          function getFormattedDate(option) {
            const today = new Date();
            let d;
@@ -392,9 +402,13 @@
              d = new Date(today);
              d.setDate(today.getDate() + 1);
            }
-            else if (option === 'tomorrow2') {
+            else if (option === 'dayAfterTomorrow') {
              d = new Date(today);
              d.setDate(today.getDate() + 2);
+           }
+            else if (option === 'noDate') {
+             d = new Date(today);
+             d.setDate(today.getDate() + 3);
            }
            const yyyy = d.getFullYear();
            const mm = String(d.getMonth() + 1).padStart(2, '0');
