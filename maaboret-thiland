@@ -28,17 +28,20 @@
       padding: 20px;
     }
 
-    .card {
-      background: rgba(255, 255, 255, 0.96);
-      color: #1f2937;
-      border-radius: 26px;
-      padding: 34px;
-      width: 100%;
-      max-width: 440px;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
-      text-align: center;
-      overflow: hidden;
-    }
+  .card {
+    background: rgba(248, 250, 252, 0.92);
+    color: #1f2937;
+    border-radius: 26px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    text-align: center;
+  }
+
+  button:active {
+    transform: scale(0.97);
+  }
 
     h1 {
       font-size: 26px;
