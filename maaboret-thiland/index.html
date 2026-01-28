@@ -112,7 +112,7 @@
          flex-direction: column;
          }
          .card {
-         background: rgba(248, 250, 252, 0.92);
+         background: rgba(248, 250, 252, 0.98);
          color: #1f2937;
          border-radius: 26px;
          padding: 28px;
@@ -121,6 +121,7 @@
          box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
          text-align: center;
          margin-bottom: 80px;
+         backdrop-filter: blur(8px);
          }
          button:active {
          transform: scale(0.97);
@@ -222,6 +223,21 @@
          padding: 8px 14px;
          font-size: 13px;
          }
+         .options {
+           grid-template-columns: 1fr;
+           gap: 12px;
+         }
+         button {
+           padding: 20px 12px;
+           font-size: 20px;
+         }
+         }
+
+         .affiliate-footer {
+           font-size: 10px;
+           color: grey;
+           position: absolute;
+           bottom: 13px;
          }
       </style>
    </head>
@@ -256,41 +272,6 @@
                   <button data-place="koh-lanta" onclick="selectTo('koh-lanta')">קו לנטה</button>
                </div>
             </div>
-            <script>
-               let fromPlace = '';
-               
-               // מפת חיבורים לפי תחבורה
-               const connections = {
-                 'koh-samui': ['koh-phangan', 'koh-tao', 'phuket','surat-thani'],
-                 'koh-phangan': ['koh-samui', 'koh-tao','phuket','surat-thani'],
-                 'koh-tao': ['koh-samui', 'koh-phangan','phuket','surat-thani'],
-                 'surat-thani': ['koh-samui', 'phuket', 'koh-lanta','koh-phangan'],
-                 'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'surat-thani'],
-                 'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta'],
-                 'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
-                 'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
-               };
-               
-               function selectFrom(value) {
-                 from = value; // שמירת המוצא
-               
-                 const toButtons = document.querySelectorAll('#step-to button');
-                 toButtons.forEach(btn => {
-                   const target = btn.dataset.place;
-               
-                   // הצגה רק אם יש חיבור במפה
-                   if (connections[from] && connections[from].includes(target)) {
-                     btn.style.display = 'inline-block';
-                   } else {
-                     btn.style.display = 'none';
-                   }
-                 });
-               
-                 // מעבר לשלב היעד
-                 transition('step-from', 'step-to');
-               }
-               
-            </script>
             <!-- שלב 3 -->
             <div id="step-people" class="step hidden">
                <h1>כמה אנשים?</h1>
@@ -332,12 +313,17 @@
          <!-- סיום card -->
       </div>
       <!-- סיום overlay -->
+
+      <div class="affiliate-footer"> 
+To support our work and keep this platform free, we use affiliate links with trusted brands like 12go</div>
+
       <!-- כפתור 12GO קטן בתחתית הדף -->
       <div class="general-link">
          <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
          לאתר 12GO
          </a> 
       </div>
+
       <script>
          // משתנים גלובליים
          let from = '';
@@ -367,6 +353,34 @@
          }
          
          
+         function selectFrom(value) {
+           from = value; // שמירת המוצא
+         
+           const toButtons = document.querySelectorAll('#step-to button');
+           // מפת חיבורים לפי תחבורה
+           const connections = {
+             'koh-samui': ['koh-phangan', 'koh-tao', 'phuket','surat-thani'],
+             'koh-phangan': ['koh-samui', 'koh-tao','phuket','surat-thani'],
+             'koh-tao': ['koh-samui', 'koh-phangan','phuket','surat-thani'],
+             'surat-thani': ['koh-samui', 'phuket', 'koh-lanta','koh-phangan'],
+             'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'surat-thani'],
+             'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta'],
+             'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
+             'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
+           };
+         
+           toButtons.forEach(btn => {
+             const target = btn.dataset.place;
+             if (connections[from] && connections[from].includes(target)) {
+               btn.style.display = 'inline-block';
+             } else {
+               btn.style.display = 'none';
+             }
+           });
+         
+           transition('step-from', 'step-to');
+         }
+
          function selectTo(value) {
            to = value;
            transition('step-to', 'step-people');
@@ -377,21 +391,18 @@
            transition('step-people', 'step-date');
          }
          
+         function selectDate(value) {
+           date = value;
+           transition('step-date', 'step-summary');
+           const dateText = {
+             today: 'היום',
+             tomorrow: 'מחר',
+             dayAfterTomorrow: 'מחרתיים',
+             noDate: ''
+           };
          
-         
-               function selectDate(value) {
-                            date = value;
-         
-         transition('step-date', 'step-summary');
-         const dateText = {
-         today: 'היום',
-         tomorrow: 'מחר',
-         dayAfterTomorrow: 'מחרתיים',
-         noDate: ''
-         };
-         
-         document.getElementById('summaryText').innerText =
-         `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]}${dateText[value] ? ' ' + dateText[value] : ''}`;
+           document.getElementById('summaryText').innerText =
+           `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]}${dateText[value] ? ' ' + dateText[value] : ''}`;
          }
          
          function getFormattedDate(option) {
@@ -402,11 +413,11 @@
              d = new Date(today);
              d.setDate(today.getDate() + 1);
            }
-            else if (option === 'dayAfterTomorrow') {
+           else if (option === 'dayAfterTomorrow') {
              d = new Date(today);
              d.setDate(today.getDate() + 2);
            }
-            else if (option === 'noDate') {
+           else if (option === 'noDate') {
              d = new Date(today);
              d.setDate(today.getDate() + 3);
            }
@@ -420,8 +431,9 @@
            const formattedDate = getFormattedDate(date);
            const baseUrl = `https://12go.asia/en/travel/${from}/${to}?date=${formattedDate}&people=${people}&direction=forward`;
            const fullLink = affiliateBase + encodeURIComponent(baseUrl);
-          //refer to link
-            window.location.href = fullLink;
+         
+            //refer to link
+           window.location.href = fullLink;
          //for debug: print link
          //alert(fullLink);
          }
