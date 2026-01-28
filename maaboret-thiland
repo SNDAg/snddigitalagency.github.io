@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
   <meta charset="UTF-8">
   <title>מעבורות בתאילנד – הזמנה מהירה</title>
@@ -16,6 +17,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      /* מאפשר כפתור מוחזק למטה */
     }
 
     .overlay {
@@ -26,22 +29,27 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      box-sizing: border-box;
+      flex-direction: column;
+      /* מסדר את הכרטיס והכפתור למעלה-למטה */
     }
 
-  .card {
-    background: rgba(248, 250, 252, 0.92);
-    color: #1f2937;
-    border-radius: 26px;
-    padding: 28px;
-    width: 100%;
-    max-width: 420px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-    text-align: center;
-  }
+    .card {
+      background: rgba(248, 250, 252, 0.92);
+      color: #1f2937;
+      border-radius: 26px;
+      padding: 28px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+      text-align: center;
+      margin-bottom: 80px;
+      /* רווח לכפתור הכללי בתחתית */
+    }
 
-  button:active {
-    transform: scale(0.97);
-  }
+    button:active {
+      transform: scale(0.97);
+    }
 
     h1 {
       font-size: 26px;
@@ -57,6 +65,7 @@
         opacity: 0;
         transform: translateY(12px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -120,116 +129,169 @@
       font-size: 14px;
       color: #475569;
     }
+
+    /* כפתור 12GO קטן בתחתית */
+    .general-link {
+      position: fixed;
+      bottom: 50px;
+      /* מרחק מהתחתית בשולחן עבודה */
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .general-link a {
+      display: inline-block;
+      background: #4DB84D;
+      /* ירוק 12GO */
+      color: white;
+      text-decoration: none;
+      padding: 10px 16px;
+      /* קטן יותר */
+      border-radius: 12px;
+      /* פחות עגול */
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .general-link a:hover {
+      background: #3ca638;
+      /* ירוק כהה יותר בעת hover */
+      transform: translateY(-1px);
+    }
+
+    /* התאמה למובייל */
+    @media (max-width: 480px) {
+      .general-link {
+        bottom: 20px;
+        /* קרוב יותר לתחתית */
+      }
+
+      .general-link a {
+        padding: 8px 14px;
+        /* קטן יותר למסכים קטנים */
+        font-size: 13px;
+        /* פונט קטן יותר */
+      }
+    }
   </style>
 </head>
+
 <body>
 
-<div class="overlay">
-  <div class="card">
+  <div class="overlay">
 
-    <!-- שלב 1 -->
-    <div id="step-from" class="step">
-      <h1>מאיפה יוצאים?</h1>
-      <div class="options">
-        <button onclick="selectFrom('קוסמוי')">קוסמוי</button>
-        <button onclick="selectFrom('קופנגן')">קופנגן</button>
-        <button onclick="selectFrom('קוטאו')">קוטאו</button>
-        <button onclick="selectFrom('פוקט')">פוקט</button>
+    <div class="card">
+
+      <!-- שלב 1 -->
+      <div id="step-from" class="step">
+        <h1>מאיפה יוצאים?</h1>
+        <div class="options">
+          <button onclick="selectFrom('קוסמוי')">קוסמוי</button>
+          <button onclick="selectFrom('קופנגן')">קופנגן</button>
+          <button onclick="selectFrom('קוטאו')">קוטאו</button>
+          <button onclick="selectFrom('פוקט')">פוקט</button>
+        </div>
       </div>
-    </div>
 
-    <!-- שלב 2 -->
-    <div id="step-to" class="step hidden">
-      <h1>לאן נוסעים?</h1>
-      <div class="options">
-        <button data-place="קוסמוי" onclick="selectTo('קוסמוי')">קוסמוי</button>
-        <button data-place="קופנגן" onclick="selectTo('קופנגן')">קופנגן</button>
-        <button data-place="קוטאו" onclick="selectTo('קוטאו')">קוטאו</button>
-        <button data-place="פוקט" onclick="selectTo('פוקט')">פוקט</button>
+      <!-- שלב 2 -->
+      <div id="step-to" class="step hidden">
+        <h1>לאן נוסעים?</h1>
+        <div class="options">
+          <button data-place="קוסמוי" onclick="selectTo('קוסמוי')">קוסמוי</button>
+          <button data-place="קופנגן" onclick="selectTo('קופנגן')">קופנגן</button>
+          <button data-place="קוטאו" onclick="selectTo('קוטאו')">קוטאו</button>
+          <button data-place="פוקט" onclick="selectTo('פוקט')">פוקט</button>
+        </div>
       </div>
-    </div>
 
-    <!-- שלב 3 -->
-    <div id="step-people" class="step hidden">
-      <h1>כמה אנשים?</h1>
-      <div class="options">
-        <button onclick="selectPeople(1)">1</button>
-        <button onclick="selectPeople(2)">2</button>
-        <button onclick="selectPeople(3)">3</button>
-        <button onclick="selectPeople(4)">4</button>
-        <button onclick="selectPeople(5)">5</button>
+      <!-- שלב 3 -->
+      <div id="step-people" class="step hidden">
+        <h1>כמה אנשים?</h1>
+        <div class="options">
+          <button onclick="selectPeople(1)">1</button>
+          <button onclick="selectPeople(2)">2</button>
+          <button onclick="selectPeople(3)">3</button>
+          <button onclick="selectPeople(4)">4</button>
+          <button onclick="selectPeople(5)">5</button>
+        </div>
       </div>
-    </div>
 
-    <!-- שלב 4 -->
-    <div id="step-date" class="step hidden">
-      <h1>מתי?</h1>
-      <div class="options">
-        <button onclick="selectDate('היום')">להיום</button>
-        <button onclick="selectDate('מחר')">למחר</button>
+      <!-- שלב 4 -->
+      <div id="step-date" class="step hidden">
+        <h1>מתי?</h1>
+        <div class="options">
+          <button onclick="selectDate('היום')">להיום</button>
+          <button onclick="selectDate('מחר')">למחר</button>
+        </div>
       </div>
-    </div>
 
-    <!-- סיכום -->
-    <div id="step-summary" class="step hidden">
-      <h1>יאללה, יוצאים לדרך 🚤</h1>
-      <div class="summary" id="summaryText"></div>
-      <button class="cta" onclick="goToBooking()">לבחירת מעבורת →</button>
-      <div class="note">מעבר לאתר הרשמי של 12GO לבחירת שעה ותשלום</div>
-    </div>
+      <!-- סיכום -->
+      <div id="step-summary" class="step hidden">
+        <h1>יאללה, יוצאים לדרך 🚤</h1>
+        <div class="summary" id="summaryText"></div>
+        <button class="cta" onclick="goToBooking()">לבחירת מעבורת →</button>
+        <div class="note">מעבר לאתר הרשמי של 12GO לבחירת שעה ותשלום</div>
+      </div>
 
+    </div> <!-- סיום card -->
+
+  </div> <!-- סיום overlay -->
+
+  <!-- כפתור 12GO קטן בתחתית הדף -->
+  <div class="general-link">
+    <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
+      לאתר 12GO
+    </a>
   </div>
-</div>
 
-<script>
-  let from = '';
-  let to = '';
-  let people = 1;
-  let date = '';
+  <script>
+    let from = '';
+    let to = '';
+    let people = 1;
+    let date = '';
 
-  function transition(fromId, toId) {
-    document.getElementById(fromId).classList.add('hidden');
-    const next = document.getElementById(toId);
-    next.classList.remove('hidden');
-    next.classList.remove('step');
-    void next.offsetWidth; // reset animation
-    next.classList.add('step');
-  }
+    function transition(fromId, toId) {
+      document.getElementById(fromId).classList.add('hidden');
+      const next = document.getElementById(toId);
+      next.classList.remove('hidden');
+      next.classList.remove('step');
+      void next.offsetWidth; // reset animation
+      next.classList.add('step');
+    }
 
-  function selectFrom(value) {
-    from = value;
+    function selectFrom(value) {
+      from = value;
+      document.querySelectorAll('#step-to button').forEach(btn => {
+        btn.style.display = btn.dataset.place === value ? 'none' : 'block';
+      });
+      transition('step-from', 'step-to');
+    }
 
-    // הסתרת היעד הזהה למוצא
-    document.querySelectorAll('#step-to button').forEach(btn => {
-      btn.style.display = btn.dataset.place === value ? 'none' : 'block';
-    });
+    function selectTo(value) {
+      to = value;
+      transition('step-to', 'step-people');
+    }
 
-    transition('step-from', 'step-to');
-  }
+    function selectPeople(value) {
+      people = value;
+      transition('step-people', 'step-date');
+    }
 
-  function selectTo(value) {
-    to = value;
-    transition('step-to', 'step-people');
-  }
+    function selectDate(value) {
+      date = value;
+      transition('step-date', 'step-summary');
+      document.getElementById('summaryText').innerText =
+        `מעבורת מ־${from} ל־${to} | ${people} אנשים | ${date}`;
+    }
 
-  function selectPeople(value) {
-    people = value;
-    transition('step-people', 'step-date');
-  }
-
-  function selectDate(value) {
-    date = value;
-    transition('step-date', 'step-summary');
-
-    document.getElementById('summaryText').innerText =
-      `מעבורת מ־${from} ל־${to} | ${people} אנשים | ${date}`;
-  }
-
-  function goToBooking() {
-    // 🔗 כאן שמים לינק affiliate אמיתי
-    window.location.href = "https://example.com/your-ferry-link";
-  }
-</script>
+    function goToBooking() {
+      // 🔗 הכנסי כאן את לינק ה-affiliate האמיתי שלך
+      window.location.href = "https://example.com/your-ferry-link";
+    }
+  </script>
 
 </body>
+
 </html>
