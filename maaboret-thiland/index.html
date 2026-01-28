@@ -87,159 +87,194 @@
            ]
          }
       </script>
-      <style>
-         body {
-         margin: 0;
-         min-height: 100vh;
-         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-         background-image: url("https://images.unsplash.com/photo-1507525428034-b723cf961d3e");
-         background-size: cover;
-         background-position: center;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         position: relative;
-         }
-         .overlay {
-         background: rgba(0, 0, 0, 0.55);
-         width: 100%;
-         min-height: 100vh;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         padding: 20px;
-         box-sizing: border-box;
-         flex-direction: column;
-         }
-         .card {
-         background: rgba(248, 250, 252, 0.98);
-         color: #1f2937;
-         border-radius: 26px;
-         padding: 28px;
-         width: 100%;
-         max-width: 420px;
-         box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-         text-align: center;
-         margin-bottom: 80px;
-         backdrop-filter: blur(8px);
-         }
-         button:active {
-         transform: scale(0.97);
-         }
-         h1 {
-         font-size: 26px;
-         margin-bottom: 24px;
-         }
-         .step {
-         animation: stepIn 0.45s ease;
-         }
-         @keyframes stepIn {
-         from {
-         opacity: 0;
-         transform: translateY(12px);
-         }
-         to {
-         opacity: 1;
-         transform: translateY(0);
-         }
-         }
-         .options {
-         display: grid;
-         grid-template-columns: repeat(2, 1fr);
-         gap: 14px;
-         }
-         button {
-         background: linear-gradient(135deg, #14b8a6, #0ea5e9);
-         color: white;
-         border: none;
-         border-radius: 18px;
-         padding: 18px 10px;
-         font-size: 18px;
-         font-weight: 600;
-         cursor: pointer;
-         transition: all 0.25s ease;
-         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-         }
-         button:hover {
-         transform: translateY(-4px) scale(1.03);
-         background: linear-gradient(135deg, #0ea5e9, #0284c7);
-         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-         }
-         .hidden {
-         display: none;
-         }
-         .summary {
-         font-size: 18px;
-         margin-bottom: 18px;
-         line-height: 1.4;
-         }
-         .cta {
-         background: linear-gradient(135deg, #f97316, #fb923c);
-         color: white;
-         font-size: 21px;
-         font-weight: 700;
-         padding: 20px;
-         border-radius: 22px;
-         margin-top: 18px;
-         width: 100%;
-         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-         }
-         .cta:hover {
-         background: linear-gradient(135deg, #ea580c, #f97316);
-         transform: translateY(-3px) scale(1.02);
-         }
-         .note {
-         margin-top: 18px;
-         font-size: 15px;
-         color: #475569;
-         }
-         .general-link {
-         position: fixed;
-         bottom: 50px;
-         width: 100%;
-         text-align: center;
-         z-index: 10;
-         }
-         .general-link a {
-         display: inline-block;
-         background: #4DB84D;
-         color: white;
-         text-decoration: none;
-         padding: 10px 16px;
-         border-radius: 12px;
-         font-size: 14px;
-         font-weight: 600;
-         transition: all 0.2s ease;
-         }
-         .general-link a:hover {
-         background: #3ca638;
-         transform: translateY(-1px);
-         }
-         @media (max-width: 480px) {
-         .general-link {
-         bottom: 20px;
-         }
-         .general-link a {
-         padding: 8px 14px;
-         font-size: 13px;
-         }
-         .options {
-           grid-template-columns: 1fr;
-           gap: 12px;
-         }
-         button {
-           padding: 20px 12px;
-           font-size: 20px;
-         }
-         }
 
-         .affiliate-footer {
-           font-size: 10px;
-           color: grey;
-           position: absolute;
-           bottom: 13px;
-         }
-      </style>
+
+<style>
+/* ====== רקע חדש ====== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* רקע חדש סירה בתאילנד */
+    background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ====== overlay שקוף + טשטוש ====== */
+.overlay {
+    background: rgba(0, 0, 0, 0.45); /* שקיפות מתונה */
+    backdrop-filter: blur(6px);       /* טשטוש הרקע מאחורי הכרטיס */
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-direction: column;
+}
+
+/* ====== כרטיס ====== */
+.card {
+    background: rgba(248, 250, 252, 0.98);
+    color: #1f2937;
+    border-radius: 26px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    text-align: center;
+    margin-bottom: 80px;
+    backdrop-filter: blur(8px);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 24px;
+}
+
+.step {
+    animation: stepIn 0.45s ease;
+}
+
+@keyframes stepIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ====== אפשרויות בכפתורים ====== */
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* שני טורים גם במובייל */
+    gap: 12px;
+}
+
+/* ====== כפתורים ====== */
+button {
+    background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    padding: 18px 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+    transform: translateY(-4px) scale(1.03);
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.hidden { display: none; }
+
+.summary {
+    font-size: 18px;
+    margin-bottom: 18px;
+    line-height: 1.4;
+}
+
+.cta {
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: white;
+    font-size: 21px;
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 22px;
+    margin-top: 18px;
+    width: 100%;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cta:hover {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.note {
+    margin-top: 18px;
+    font-size: 15px;
+    color: #475569;
+}
+
+/* ====== כפתור קטן בתחתית ====== */
+.general-link {
+    position: fixed;
+    bottom: 50px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.general-link a {
+    display: inline-block;
+    background: #4DB84D;
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.general-link a:hover {
+    background: #3ca638;
+    transform: translateY(-1px);
+}
+
+/* ====== גרסת מובייל ====== */
+@media (max-width: 480px) {
+    body {
+        background-position: center top; /* מיקום האובייקט המרכזי במובייל */
+    }
+    .card {
+        padding: 24px;
+        border-radius: 20px;
+        max-width: 90%;
+    }
+    /* שני טורים גם במובייל */
+    .options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    button {
+        padding: 18px 12px;
+        font-size: 18px;
+    }
+    .general-link {
+        bottom: 20px;
+    }
+    .general-link a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+}
+
+/* ====== משפט כסתח / Footer קטן ====== */
+.affiliate-footer {
+    font-size: 10px;
+    color: grey;
+    position: absolute;
+    bottom: 13px;
+}
+</style>
+
    </head>
    <body>
       <div class="overlay">
