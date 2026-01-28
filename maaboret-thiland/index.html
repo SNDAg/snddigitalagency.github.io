@@ -266,10 +266,17 @@
       <div id="step-from" class="step">
         <h1>מאיפה יוצאים?</h1>
         <div class="options">
-          <button onclick="selectFrom('koh-samui')">קוסמוי</button>
-          <button onclick="selectFrom('koh-phangan')">קופנגן</button>
-          <button onclick="selectFrom('koh-tao')">קוטאו</button>
-          <button onclick="selectFrom('phuket')">פוקט</button>
+<button onclick="selectFrom('koh-samui')">קוסמוי</button>
+<button onclick="selectFrom('koh-phangan')">קופנגן</button>
+<button onclick="selectFrom('koh-tao')">קוטאו</button>
+<button onclick="selectFrom('phuket')">פוקט</button>
+<button onclick="selectFrom('surat-thani')">סוראט תאני</button>
+
+<!-- Andaman side -->
+<button onclick="selectFrom('krabi')">קראבי</button>
+<button onclick="selectFrom('koh-phi-phi')">קופיפי</button>
+<button onclick="selectFrom('koh-lanta')">קו לנטה</button>
+
         </div>
       </div>
 
@@ -331,12 +338,17 @@
     let to = '';
     let people = 1;
     let date = '';
-    const placeNames = {
+const placeNames = {
   'koh-samui': 'קוסמוי',
   'koh-phangan': 'קופנגן',
   'koh-tao': 'קוטאו',
-  'phuket': 'פוקט'
+  'phuket': 'פוקט',
+  'surat-thani': 'סוראט תאני',
+  'krabi': 'קראבי',
+  'koh-phi-phi': 'קופיפי',
+  'koh-lanta': 'קו לנטה'
 };
+
 
     const affiliateBase = "https://www.kqzyfj.com/click-101474270-17138047?url=";
     function transition(fromId, toId) {
