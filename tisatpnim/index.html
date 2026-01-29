@@ -554,24 +554,23 @@ const connections = {
            const dd = String(d.getDate()).padStart(2, '0');
            return `${yyyy}-${mm}-${dd}`;
          }
-         
-function goToBooking() {
+         function goToBooking() {
     const formatted = getFormattedDate(date); // מחזיר yyyy-mm-dd
     const [year, month, day] = formatted.split('-');
     const departure = `${month}/${day}/${year}`;
 
+    // מפת נמלי תעופה עם קודים
     const airports = {
         'bangkok': 'Bangkok (BKK-Suvarnabhumi Intl.)',
-        'koh-samui': 'Samui Intl. Airport',
-        'phuket': 'Phuket Intl. Airport',
-        'krabi': 'Krabi Intl. Airport',
-        'chiang-mai': 'Chiang Mai Intl. Airport'
+        'koh-samui': 'Samui Intl. Airport (USM)',
+        'phuket': 'Phuket Intl. Airport (HKT)',
+        'krabi': 'Krabi Intl. Airport (KBV)',
+        'chiang-mai': 'Chiang Mai Intl. Airport (CNX)'
     };
 
     // קביעה אוטומטית של fromType/toType לפי סוג השדה
     let fromType = 'M';
     let toType = 'U';
-    // רשימת שדות ספציפיים (U)
     const airportOnly = ['koh-samui', 'phuket', 'krabi', 'chiang-mai'];
 
     if (airportOnly.includes(from) && !airportOnly.includes(to)) {
@@ -585,14 +584,17 @@ function goToBooking() {
         toType = 'M';
     } // אחרת נשאר M → U
 
+    // בניית URL של Expedia
     const baseUrl = `https://www.expedia.com/Flights-Search?leg1=from:${encodeURIComponent(airports[from])},to:${encodeURIComponent(airports[to])},departure:${departure}TANYT,fromType:${fromType},toType:${toType}&mode=search&options=carrier:,cabinclass:,maxhops:1,nopenalty:N&pageId=0&passengers=adults:${people},children:0,infantinlap:N&trip=oneway`;
 
-    const fullLink = affiliateBase + encodeURIComponent(baseUrl);
+    // double encodeURIComponent → זה מה שהאפיליאייט מצפה
+    const fullLink = affiliateBase + encodeURIComponent(encodeURIComponent(baseUrl));
 
-    //DEBUG: להצגה בלבד
-    //window.location.href = fullLink;
-    alert(fullLink);
+    //DEBUG: להצגה 
+    window.location.href = fullLink; 
+   // alert(fullLink);
 }
+
 
 
 
