@@ -338,6 +338,39 @@ button:hover {
   }
 }
 
+.reset-button {
+    position: fixed;
+    bottom: 680px; /* מעל הכפתור הכללי */
+    background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    z-index: 1000;
+}
+
+.reset-button:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+}
+
+@media (max-width: 480px) {
+    .reset-button {
+        bottom: 60px; /* מעל הכפתור הכללי במובייל */
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+
 </style>
 
    </head>
@@ -414,8 +447,13 @@ button:hover {
       </div>
       <!-- סיום overlay -->
 
+
       <div class="affiliate-footer"> 
 To support our work and keep this platform free, we use affiliate links with trusted brands like 12go</div>
+
+<button id="resetButton" title="מההתחלה" class="reset-button" style="display:none;">
+    🔄 מההתחלה 
+</button>
 
       <!-- כפתור 12GO קטן בתחתית הדף -->
       <div class="general-link">
@@ -441,7 +479,7 @@ To support our work and keep this platform free, we use affiliate links with tru
          'koh-lanta': 'קו לנטה'
          };
          
-         
+         const resetBtn = document.getElementById('resetButton');
          const affiliateBase = "https://www.kqzyfj.com/click-101474270-17138047?url=";
          function transition(fromId, toId) {
            document.getElementById(fromId).classList.add('hidden');
@@ -479,6 +517,7 @@ To support our work and keep this platform free, we use affiliate links with tru
            });
          
            transition('step-from', 'step-to');
+        resetBtn.style.display = 'inline-block';
          }
 
          function selectTo(value) {
@@ -537,6 +576,9 @@ To support our work and keep this platform free, we use affiliate links with tru
          //for debug: print link
          //alert(fullLink);
          }
+         document.getElementById('resetButton').addEventListener('click', () => {
+    location.reload(); // מרענן את כל הדף
+});
       </script>
       
 
