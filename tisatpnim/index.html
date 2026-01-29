@@ -383,7 +383,6 @@ button:hover {
                <div class="options" id="from-options">
                   <button onclick="selectFrom('bangkok')">בנגקוק</button>
                   <button onclick="selectFrom('koh-samui')">קוסמוי</button>
-                  <button onclick="selectFrom('koh-phangan')">קופנגן</button>
                   <button onclick="selectFrom('phuket')">פוקט</button>
                   <button onclick="selectFrom('krabi')">קראבי</button>
                   <button onclick="selectFrom('chiang-mai')">צ'אנג מאי</button>
@@ -393,12 +392,11 @@ button:hover {
             <div id="step-to" class="step hidden">
                <h1>לאן נוסעים?</h1>
                <div class="options" id="to-options">
-<button onclick="selectFrom('bangkok')" data-place="bangkok">בנגקוק</button>
-<button onclick="selectFrom('koh-samui')" data-place="koh-samui">קוסמוי</button>
-<button onclick="selectFrom('koh-phangan')" data-place="koh-phangan">קופנגן</button>
-<button onclick="selectFrom('phuket')" data-place="phuket">פוקט</button>
-<button onclick="selectFrom('krabi')" data-place="krabi">קראבי</button>
-<button onclick="selectFrom('chiang-mai')" data-place="chiang-mai">צ'אנג מאי</button>
+<button onclick="selectTo('bangkok')" data-place="bangkok">בנגקוק</button>
+<button onclick="selectTo('koh-samui')" data-place="koh-samui">קוסמוי</button>
+<button onclick="selectTo('phuket')" data-place="phuket">פוקט</button>
+<button onclick="selectTo('krabi')" data-place="krabi">קראבי</button>
+<button onclick="selectTo('chiang-mai')" data-place="chiang-mai">צ'אנג מאי</button>
                </div>
             </div>
             <!-- שלב 3 -->
@@ -454,7 +452,7 @@ To support our work and keep this platform free, we use affiliate links with tru
       <!-- כפתור expedia קטן בתחתית הדף -->
       <div class="general-link">
          <a href="https://www.jdoqocy.com/click-101474270-15048849" target="_top" rel="nofollow sponsored">
-         לחיפוש חופשי באתר www.expedia.com
+         לחיפוש חופשי באתר Expedia 
          </a> 
       </div>
 
@@ -465,9 +463,8 @@ To support our work and keep this platform free, we use affiliate links with tru
          let people = 1;
          let date = '';
          const placeNames = {
-'wat-bangkok': 'בנגקוק',
+'bangkok': 'בנגקוק',
 'koh-samui': 'קוסמוי',
-'koh-phangan': 'קופנגן',
 'phuket': 'פוקט',
 'krabi': 'קראבי',
 'chiang-mai': 'צ\'אנג מאי'
@@ -490,16 +487,14 @@ To support our work and keep this platform free, we use affiliate links with tru
          
            const toButtons = document.querySelectorAll('#step-to button');
            // מפת חיבורים לפי תחבורה
-           const connections = {
-             'koh-samui': ['koh-phangan', 'koh-tao', 'phuket','surat-thani'],
-             'koh-phangan': ['koh-samui', 'koh-tao','phuket','surat-thani'],
-             'koh-tao': ['koh-samui', 'koh-phangan','phuket','surat-thani'],
-             'surat-thani': ['koh-samui', 'phuket', 'koh-lanta','koh-phangan'],
-             'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui','koh-phangan', 'surat-thani'],
-             'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'koh-samui','koh-phangan'],
-             'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
-             'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
-           };
+const connections = {
+  'bangkok': ['koh-samui', 'phuket', 'krabi', 'chiang-mai'],
+  'koh-samui': ['bangkok', 'phuket', 'krabi', 'chiang-mai'],
+  'phuket': ['bangkok', 'koh-samui', 'krabi', 'chiang-mai'],
+  'krabi': ['bangkok', 'koh-samui', 'phuket', 'chiang-mai'],
+  'chiang-mai': ['bangkok', 'koh-samui', 'phuket', 'krabi']
+};
+
          
            toButtons.forEach(btn => {
              const target = btn.dataset.place;
@@ -563,7 +558,9 @@ To support our work and keep this platform free, we use affiliate links with tru
          function goToBooking() {
            const formattedDate = getFormattedDate(date);
            const baseUrl = `https://www.expedia.com/Flights-Search?leg1=from/${from}/${to}?date=${formattedDate}&people=${people}&direction=forward`;
-           ## actual link to fix url base:: https%3A%2F%2Fwww.expedia.com%2FFlights-Search%3Fleg1%3Dfrom%253ABangkok%2520%2528BKK-Suvarnabhumi%2520Intl.%2529%252Cto%253ASamui%2520Intl.%2520Airport%2520%2528USM%2529%252Cdeparture%253A1%252F30%252F2026TANYT%252CfromType%253AM%252CtoType%253AU%26mode%3Dsearch%26options%3Dcarrier%253A%252Ccabinclass%253A%252Cmaxhops%253A1%252Cnopenalty%253AN%26pageId%3D0%26passengers%3Dadults%253A2%252Cchildren%253A0%252Cinfantinlap%253AN%26trip%3Doneway
+// actual link to fix url base:: https%3A%2F%2Fwww.expedia.com%2FFlights-Search%3Fleg1%3Dfrom%253ABangkok%2520%2528BKK-Suvarnabhumi%2520Intl.%2529%252Cto%253ASamui%2520Intl.%2520Airport%2520%2528USM%2529%252Cdeparture%253A1%252F30%252F2026TANYT%252CfromType%253AM%252CtoType%253AU%26mode%3Dsearch%26options%3Dcarrier%253A%252Ccabinclass%253A%252Cmaxhops%253A1%252Cnopenalty%253AN%26pageId%3D0%26passengers%3Dadults%253A2%252Cchildren%253A0%252Cinfantinlap%253AN%26trip%3Doneway
+
+
            const fullLink = affiliateBase + encodeURIComponent(baseUrl);
          
             //refer to link
