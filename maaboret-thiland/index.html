@@ -313,16 +313,28 @@ button:hover {
 }
    /* ====== כפתור וואטסאפ למובייל ====== */
 @media (max-width: 480px) {
+
+  /* וואטסאפ מתחת לכפתור "לחיפוש חופשי" */
   .whatsapp-button {
     width: 36px;         
     height: 36px;
-    bottom: 130px;       
+    bottom: 20px;      
     left: 20px;         
   }
 
   .whatsapp-button img {
-    width: 20px;           /* קטן יותר מהאייקון המקורי */
+    width: 20px;
     height: 20px;
+  }
+   
+  .general-link {
+     /* רווח מעל וואטסאפ */
+    bottom: 70px;     
+  }
+
+  .general-link a {
+    padding: 8px 14px;
+    font-size: 13px;
   }
 }
 
