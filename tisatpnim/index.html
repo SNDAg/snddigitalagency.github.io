@@ -555,19 +555,47 @@ const connections = {
            return `${yyyy}-${mm}-${dd}`;
          }
          
-         function goToBooking() {
-           const formattedDate = getFormattedDate(date);
-           const baseUrl = `https://www.expedia.com/Flights-Search?leg1=from/${from}/${to}?date=${formattedDate}&people=${people}&direction=forward`;
-// actual link to fix url base:: https%3A%2F%2Fwww.expedia.com%2FFlights-Search%3Fleg1%3Dfrom%253ABangkok%2520%2528BKK-Suvarnabhumi%2520Intl.%2529%252Cto%253ASamui%2520Intl.%2520Airport%2520%2528USM%2529%252Cdeparture%253A1%252F30%252F2026TANYT%252CfromType%253AM%252CtoType%253AU%26mode%3Dsearch%26options%3Dcarrier%253A%252Ccabinclass%253A%252Cmaxhops%253A1%252Cnopenalty%253AN%26pageId%3D0%26passengers%3Dadults%253A2%252Cchildren%253A0%252Cinfantinlap%253AN%26trip%3Doneway
+function goToBooking() {
+    const formatted = getFormattedDate(date); // מחזיר yyyy-mm-dd
+    const [year, month, day] = formatted.split('-');
+    const departure = `${month}/${day}/${year}`;
+
+    const airports = {
+        'bangkok': 'Bangkok (BKK-Suvarnabhumi Intl.)',
+        'koh-samui': 'Samui Intl. Airport',
+        'phuket': 'Phuket Intl. Airport',
+        'krabi': 'Krabi Intl. Airport',
+        'chiang-mai': 'Chiang Mai Intl. Airport'
+    };
+
+    // קביעה אוטומטית של fromType/toType לפי סוג השדה
+    let fromType = 'M';
+    let toType = 'U';
+    // רשימת שדות ספציפיים (U)
+    const airportOnly = ['koh-samui', 'phuket', 'krabi', 'chiang-mai'];
+
+    if (airportOnly.includes(from) && !airportOnly.includes(to)) {
+        fromType = 'U';
+        toType = 'M';
+    } else if (airportOnly.includes(from) && airportOnly.includes(to)) {
+        fromType = 'U';
+        toType = 'U';
+    } else if (!airportOnly.includes(from) && !airportOnly.includes(to)) {
+        fromType = 'M';
+        toType = 'M';
+    } // אחרת נשאר M → U
+
+    const baseUrl = `https://www.expedia.com/Flights-Search?leg1=from:${encodeURIComponent(airports[from])},to:${encodeURIComponent(airports[to])},departure:${departure}TANYT,fromType:${fromType},toType:${toType}&mode=search&options=carrier:,cabinclass:,maxhops:1,nopenalty:N&pageId=0&passengers=adults:${people},children:0,infantinlap:N&trip=oneway`;
+
+    const fullLink = affiliateBase + encodeURIComponent(baseUrl);
+
+    //DEBUG: להצגה בלבד
+    //window.location.href = fullLink;
+    alert(fullLink);
+}
 
 
-           const fullLink = affiliateBase + encodeURIComponent(baseUrl);
-         
-            //refer to link
-           window.location.href = fullLink;
-         //for debug: print link
-         //alert(fullLink);
-         }
+
          document.getElementById('resetButton').addEventListener('click', () => {
     location.reload(); // מרענן את כל הדף
 });
