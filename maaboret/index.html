@@ -554,23 +554,28 @@ function copyCoupon() {
            transition('step-date', 'step-dep-time');
          }
          
-         function selectDepTime(value) {
-         if (value === 'early') depTime = 1;
-         else if (value === 'late') depTime = 2;
-         else depTime = ''; // תראה הכל
-         
-         transition('step-dep-time', 'step-summary');
-         
-         const dateText = {
-         today: 'היום',
-         tomorrow: 'מחר',
-         dayAfterTomorrow: 'מחרתיים',
-         noDate: ''
-         };
-         
-         document.getElementById('summaryText').innerText =
-         `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]}${dateText[date] ? ' ' + dateText[date] : ''}`;
-         }
+function selectDepTime(value) {
+    if (value === 'early') depTime = 1;
+    else if (value === 'late') depTime = 2;
+    else depTime = ''; // תראה הכל
+
+    transition('step-dep-time', 'step-summary');
+
+    const dateText = {
+        today: 'היום',
+        tomorrow: 'מחר',
+        dayAfterTomorrow: 'מחרתיים',
+        noDate: ''
+    };
+
+    document.getElementById('summaryText').innerText =
+        `מעבורת ל-${people} אנשים מ${placeNames[from]} ל${placeNames[to]}${dateText[date] ? ' ' + dateText[date] : ''}`;
+
+    // 🔹 הסתרת הכפתור של "לחיפוש חופשי באתר 12GO"
+    const generalLink = document.querySelector('.general-link');
+    if (generalLink) generalLink.style.display = 'none';
+}
+
          
          
          
