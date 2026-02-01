@@ -334,6 +334,34 @@
          font-size: 12px;
          }
          }
+         .coupon-box {
+  margin-top: 14px;
+  padding: 12px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.coupon-btn {
+  margin-top: 8px;
+  background: #e5e7eb;
+  color: #111;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.coupon-btn:hover {
+  background: #d1d5db;
+}
+
+.coupon-copied {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #059669;
+}
+
       </style>
    </head>
    <body>
@@ -413,6 +441,19 @@
                <div class="note">
                   מעבר לאתר הרשמי של 12GO לתשלום מאובטח
                </div>
+               <div class="coupon-box">
+<div class="coupon-text" id="couponText">
+  🎁 קוד קופון לישראלים: <span id="couponCode"></span></br>
+  הזינו אותו בשלב התשלום לקבלת 5% הנחה!
+</div>
+  <button class="coupon-btn" onclick="copyCoupon()">
+    📋 העתקת קוד קופון
+  </button>
+  <div id="couponCopied" class="coupon-copied hidden">
+    ✔️ הקוד הועתק – אפשר להדביק בעמוד הבא
+  </div>
+</div>
+
             </div>
          </div>
          <!-- סיום card -->
@@ -447,6 +488,15 @@
          'koh-phi-phi': 'קופיפי',
          'koh-lanta': 'קו לנטה'
          };
+
+         const couponCode = "CJ12GO";
+
+function copyCoupon() {
+  navigator.clipboard.writeText(couponCode).then(() => {
+    document.getElementById('couponCopied').classList.remove('hidden');
+  });
+}
+
          
          const resetBtn = document.getElementById('resetButton');
          const affiliateBase = "https://www.kqzyfj.com/click-101474270-17138047?url=";
@@ -562,6 +612,7 @@
          document.getElementById('resetButton').addEventListener('click', () => {
          location.reload(); // מרענן את כל הדף
          });
+         document.getElementById('couponCode').innerText = couponCode;
       </script>
       <a href="https://wa.me/?text=בדקתי ומצאתי אתר ממש נוח להזמנת מעבורות בתאילנד 🚢%0Ahttps://snddigitalagency.com/maaboret" 
          class="whatsapp-button" target="_blank">
@@ -570,5 +621,7 @@
       <div style="display:none">
          MAABORET – אתר להזמנת מעבורות בתאילנד
       </div>
+
+
    </body>
 </html>
