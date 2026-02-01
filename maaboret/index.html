@@ -97,274 +97,295 @@
          }
       </script>
       <style>
-         /* ====== רקע חדש ====== */
-         body {
-         margin: 0;
-         min-height: 100vh;
-         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-         /* רקע חדש סירה בתאילנד */
-         background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
-         background-size: cover;
-         background-position: center center;
-         background-repeat: no-repeat;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         position: relative;
-         }
-         /* ====== overlay שקוף + טשטוש ====== */
-         .overlay {
-         background: rgba(0, 0, 0, 0.25); /* שקיפות מתונה */
-         backdrop-filter: blur(6px);       /* טשטוש הרקע מאחורי הכרטיס */
-         width: 100%;
-         min-height: 100vh;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         padding: 20px;
-         box-sizing: border-box;
-         flex-direction: column;
-         }
-         /* ====== כרטיס ====== */
-         .card {
-         background: rgba(248, 250, 252, 0.92);
-         color: #1f2937;
-         border-radius: 26px;
-         padding: 28px;
-         width: 100%;
-         max-width: 420px;
-         box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-         text-align: center;
-         margin-bottom: 80px;
-         backdrop-filter: blur(8px);
-         }
-         button:active {
-         transform: scale(0.97);
-         }
-         h1 {
-         font-size: 26px;
-         margin-bottom: 24px;
-         }
-         .step {
-         animation: stepIn 0.45s ease;
-         }
-         @keyframes stepIn {
-         from { opacity: 0; transform: translateY(12px); }
-         to { opacity: 1; transform: translateY(0); }
-         }
-         /* ====== אפשרויות בכפתורים ====== */
-         .options {
-         display: grid;
-         grid-template-columns: repeat(2, 1fr); /* שני טורים גם במובייל */
-         gap: 12px;
-         }
-         /* ====== כפתורים ====== */
-         button {
-         background: linear-gradient(135deg, #14b8a6, #0ea5e9);
-         color: white;
-         border: none;
-         border-radius: 18px;
-         padding: 18px 12px;
-         font-size: 18px;
-         font-weight: 600;
-         cursor: pointer;
-         transition: all 0.25s ease;
-         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-         }
-         button:hover {
-         transform: translateY(-4px) scale(1.03);
-         background: linear-gradient(135deg, #0ea5e9, #0284c7);
-         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-         }
-         .hidden { display: none; }
-         .summary {
-         font-size: 18px;
-         margin-bottom: 18px;
-         line-height: 1.4;
-         }
-         .cta {
-         background: linear-gradient(135deg, #f97316, #fb923c);
-         color: white;
-         font-size: 21px;
-         font-weight: 700;
-         padding: 20px;
-         border-radius: 22px;
-         margin-top: 18px;
-         width: 100%;
-         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-         }
-         .cta:hover {
-         background: linear-gradient(135deg, #ea580c, #f97316);
-         transform: translateY(-3px) scale(1.02);
-         }
-         .note {
-         margin-top: 18px;
-         font-size: 15px;
-         color: #475569;
-         }
-         /* ====== כפתור קטן בתחתית ====== */
-         .general-link {
-         position: fixed;
-         bottom: 110px;
-         width: 100%;
-         text-align: center;
-         z-index: 10;
-         }
-         .general-link a {
-         display: inline-block;
-         background: #4DB84D;
-         color: white;
-         text-decoration: none;
-         padding: 10px 16px;
-         border-radius: 12px;
-         font-size: 16px;
-         font-weight: 600;
-         transition: all 0.2s ease;
-         }
-         .general-link a:hover {
-         background: #3ca638;
-         transform: translateY(-1px);
-         }
-         /* ====== גרסת מובייל ====== */
-         @media (max-width: 480px) {
-         body {
-         background-position: center top; /* מיקום האובייקט המרכזי במובייל */
-         }
-         .card {
-         padding: 24px;
-         border-radius: 20px;
-         max-width: 90%;
-         }
-         /* שני טורים גם במובייל */
-         .options {
-         grid-template-columns: repeat(2, 1fr);
-         gap: 10px;
-         }
-         button {
-         padding: 18px 12px;
-         font-size: 18px;
-         }
-         .general-link {
-         bottom: 20px;
-         }
-         .general-link a {
-         padding: 8px 14px;
-         font-size: 13px;
-         }
-         }
-         /* ====== משפט כסתח / Footer קטן ====== */
-         .affiliate-footer {
-         font-size: 10px;
-         color: grey;
-         position: absolute;
-         bottom: 13px;
-         }
-         .whatsapp-button {
-         position: fixed;
-         bottom: 18px;
-         left: 20px; /* אפשר לשנות ל-right:20px אם רוצים בצד ימין */
-         width: 50px;
-         height: 50px;
-         background: #fff;
-         border-radius: 50%;
-         box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         z-index: 9999;
-         text-decoration: none;
-         transition: transform 0.2s;
-         }
-         .whatsapp-button:hover {
-         transform: scale(1.1);
-         }
-         .whatsapp-button img {
-         width: 28px;
-         height: 28px;
-         }
-         /* ====== כפתור וואטסאפ למובייל ====== */
-         @media (max-width: 480px) {
-         /* וואטסאפ מתחת לכפתור "לחיפוש חופשי" */
-         .whatsapp-button {
-         width: 36px;         
-         height: 36px;
-         bottom: 20px;      
-         left: 20px;         
-         }
-         .whatsapp-button img {
-         width: 20px;
-         height: 20px;
-         }
-         .general-link {
-         bottom: 57px;     
-         }
-         .general-link a {
-         padding: 8px 14px;
-         font-size: 13px;
-         }
-         }
+/* ================== בסיס ================== */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* רקע סירה בתאילנד */
+    background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* ================== overlay שקוף + טשטוש ================== */
+.overlay {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* ================== כרטיס ================== */
+.card {
+    background: rgba(248, 250, 252, 0.92);
+    color: #1f2937;
+    border-radius: 26px;
+    padding: 28px;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    margin-bottom: 80px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(8px);
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 24px;
+}
+
+.step {
+    animation: stepIn 0.45s ease;
+}
+
+@keyframes stepIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================== כפתורים ואפשרויות ================== */
+.options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+button {
+    background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+    color: white;
+    border: none;
+    border-radius: 18px;
+    padding: 18px 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+button:hover {
+    transform: translateY(-4px) scale(1.03);
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+.hidden {
+    display: none;
+}
+
+/* ================== summary ו-CTA ================== */
+.summary {
+    font-size: 18px;
+    margin-bottom: 18px;
+    line-height: 1.4;
+}
+
+.cta {
+    background: linear-gradient(135deg, #f97316, #fb923c);
+    color: white;
+    font-size: 21px;
+    font-weight: 700;
+    padding: 20px;
+    border-radius: 22px;
+    margin-top: 18px;
+    width: 100%;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cta:hover {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.note {
+    margin-top: 18px;
+    font-size: 15px;
+    color: #475569;
+}
+
+/* ================== כפתור כללי ================== */
+.general-link {
+    position: fixed;
+    bottom: 110px;
+    width: 100%;
+    text-align: center;
+    z-index: 10;
+}
+
+.general-link a {
+    display: inline-block;
+    background: #4DB84D;
+    color: white;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.general-link a:hover {
+    background: #3ca638;
+    transform: translateY(-1px);
+}
+
+/* ================== Footer קטן ================== */
+.affiliate-footer {
+    font-size: 10px;
+    color: grey;
+    position: absolute;
+    bottom: 13px;
+}
+
+/* ================== וואטסאפ ================== */
+.whatsapp-button {
+    position: fixed;
+    bottom: 18px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.whatsapp-button img {
+    width: 28px;
+    height: 28px;
+}
+
+.whatsapp-button:hover {
+    transform: scale(1.1);
+}
+
+/* ================== כפתור Reset ================== */
 .reset-button {
-  position: fixed;
-  bottom: 20px;  
-  left: 50%;          /* מרכז אופקי */
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #0ea5e9, #14b8a6);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.25s ease;
-  z-index: 1000;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    transition: all 0.25s ease;
+    z-index: 1000;
 }
 
 .reset-button:hover {
-  transform: translateX(-50%) translateY(-3px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-  background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+    transform: translateX(-50%) translateY(-3px) scale(1.05);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #14b8a6, #0ea5e9);
 }
 
-
-         @media (max-width: 480px) {
-         .reset-button {
-         bottom: 594px;
-         padding: 10px 14px;
-         font-size: 12px;
-         }
-         }
-
-         .coupon-box {
-  margin-top: 14px;
-  padding: 12px;
-  background: rgba(0,0,0,0.04);
-  border-radius: 12px;
-  font-size: 13px; 
+/* ================== קופונים ================== */
+.coupon-box {
+    margin-top: 14px;
+    padding: 12px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 12px;
+    font-size: 13px;
 }
 
 .coupon-btn {
-  margin-top: 8px;
-  background: #e5e7eb;
-  color: #111;
-  font-size: 11px; 
-  padding: 6px 10px; 
-  border-radius: 10px;
-  box-shadow: none;
+    margin-top: 8px;
+    background: #e5e7eb;
+    color: #111;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    box-shadow: none;
 }
 
 .coupon-copied {
-  margin-top: 6px;
-  font-size: 11px; 
-  color: #059669;
+    margin-top: 6px;
+    font-size: 11px;
+    color: #059669;
 }
 
 .coupon-btn:hover {
-  background: #d1d5db;
+    background: #d1d5db;
+}
+
+/* ================== גרסת מובייל ================== */
+@media (max-width: 480px) {
+    body {
+        background-position: center top;
+    }
+
+    .card {
+        padding: 24px;
+        border-radius: 20px;
+        max-width: 90%;
+    }
+
+    .options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    button {
+        padding: 18px 12px;
+        font-size: 18px;
+    }
+
+    .general-link {
+        bottom: 57px;
+    }
+
+    .general-link a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .whatsapp-button {
+        width: 36px;
+        height: 36px;
+        bottom: 20px;
+    }
+
+    .whatsapp-button img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .reset-button {
+        bottom: 594px;
+        padding: 10px 14px;
+        font-size: 12px;
+    }
 }
 
       </style>
@@ -441,7 +462,8 @@
                <div class="trust">
                   </br>
                   <div>✔️ מעל 8,000 הזמנות בתאילנד</div>
-                  <div>✔️  ללא עמלות או תוספת מחיר </div>
+                  <div>✔️ ללא עמלות או תוספות, המחיר הכי זול בתאילנד  </div>
+                  <div>✔️ תשלום מאובטח</div>
                </div>
                <div class="note">
                   מעבר לאתר הרשמי של 12GO לתשלום מאובטח
