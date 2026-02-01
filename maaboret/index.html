@@ -334,32 +334,33 @@
          font-size: 12px;
          }
          }
+
          .coupon-box {
   margin-top: 14px;
   padding: 12px;
   background: rgba(0,0,0,0.04);
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 13px; 
 }
 
 .coupon-btn {
   margin-top: 8px;
   background: #e5e7eb;
   color: #111;
-  font-size: 14px;
-  padding: 8px 12px;
+  font-size: 11px; 
+  padding: 6px 10px; 
   border-radius: 10px;
   box-shadow: none;
 }
 
-.coupon-btn:hover {
-  background: #d1d5db;
-}
-
 .coupon-copied {
   margin-top: 6px;
-  font-size: 13px;
+  font-size: 11px; 
   color: #059669;
+}
+
+.coupon-btn:hover {
+  background: #d1d5db;
 }
 
       </style>
@@ -443,14 +444,13 @@
                </div>
                <div class="coupon-box">
 <div class="coupon-text" id="couponText">
-  🎁 קוד קופון לישראלים: <span id="couponCode"></span></br>
-  הזינו אותו בשלב התשלום לקבלת 5% הנחה!
+  🎁 קוד קופון 5% הנחה לישראלים: <span id="couponCode"></span></br>
 </div>
   <button class="coupon-btn" onclick="copyCoupon()">
-    📋 העתקת קוד קופון
+    📋 להעתקת  הקוד
   </button>
   <div id="couponCopied" class="coupon-copied hidden">
-    ✔️ הקוד הועתק 
+    ✅ הקוד הועתק 
   </div>
 </div>
 
