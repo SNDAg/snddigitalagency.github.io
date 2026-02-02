@@ -340,7 +340,7 @@
         }
 
         /* ================== RESET BUTTON ================== */
-        .reset-button {
+        /* .reset-button {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -357,10 +357,9 @@
             box-shadow: var(--shadow-sm);
             transition: all 0.25s ease;
             z-index: 1000;
-        }
+        } */
 
         .reset-button:hover {
-            transform: translateX(-50%) translateY(-3px) scale(1.05);
             box-shadow: var(--shadow-lg);
         }
 
@@ -419,6 +418,27 @@
             stroke-width: 2;
         }
 
+        /* ================== NAV BUTTONS ================== */
+        #navButtons {
+            position: fixed;
+            bottom: 20px;
+            /* הכפתורים בתחתית */
+            left: 50%;
+            /* במרכז המסך */
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            /* רווח בין הכפתורים */
+            z-index: 1000;
+        }
+
+        .reset-button {
+            position: relative;
+            /* יחסית לדיב, לא fixed */
+            z-index: auto;
+        }
+
+
         /* ================== MOBILE ================== */
         @media (max-width: 480px) {
             body {
@@ -459,8 +479,12 @@
                 overflow-y: auto;
             }
 
-            .reset-button {
+            #navButtons {
                 bottom: 610px;
+                gap: 6px;
+            }
+
+            .reset-button {
                 padding: 10px 14px;
                 font-size: 12px;
             }
@@ -584,9 +608,17 @@
     <div class="affiliate-footer">
         To support our work and keep this platform free, we use affiliate links with trusted brands like 12go
     </div>
-    <button id="resetButton" title="מהתחלה" class="reset-button" style="display:none;">
-        🔄 מהתחלה
-    </button>
+    <div id="navButtons">
+        <button id="backButton" title="אחורה" class="reset-button">
+            → אחורה
+        </button>
+
+        <button id="resetButton" title="מהתחלה" class="reset-button">
+            🔄 מהתחלה
+        </button>
+    </div>
+
+
     <!-- כפתור 12GO קטן בתחתית הדף -->
     <div class="general-link">
         <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
@@ -597,6 +629,8 @@
         /* =========================
            STATE
         ========================= */
+        const stepHistory = [];
+
         const state = {
             from: '',
             to: '',
@@ -651,15 +685,21 @@
            HELPERS
         ========================= */
         function transition(fromId, toId) {
+
+            stepHistory.push(fromId);
+
             document.getElementById(fromId).classList.add('hidden');
             const next = document.getElementById(toId);
 
             next.classList.remove('hidden', 'step');
-            void next.offsetWidth; // reset animation
+            void next.offsetWidth;
             next.classList.add('step');
+
+            document.getElementById('navButtons').style.display = 'flex';
 
             centerLastVisibleButtons();
         }
+
 
         function getFormattedDate(option) {
             const base = new Date();
@@ -753,6 +793,23 @@
                 }, 2000);
             });
         }
+        function goBackStep() {
+
+            if (stepHistory.length === 0) return;
+
+            const prev = stepHistory.pop();
+
+            document.querySelectorAll('.step').forEach(s => {
+                s.classList.add('hidden');
+            });
+
+            document.getElementById(prev).classList.remove('hidden');
+
+            if (stepHistory.length === 0) {
+                document.getElementById('navButtons').style.display = 'none';
+            }
+        }
+
 
         /* =========================
            INIT
@@ -760,6 +817,10 @@
         couponCodeEl.innerText = couponCode;
         centerLastVisibleButtons();
         resetBtn.addEventListener('click', () => location.reload());
+        document
+            .getElementById('backButton')
+            .addEventListener('click', goBackStep);
+
     </script>
 
     <a href="https://wa.me/?text=בדקתי ומצאתי אתר ממש נוח להזמנת מעבורות בתאילנד 🚢%0Ahttps://snddigitalagency.com/maaboret"
