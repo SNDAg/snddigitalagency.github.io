@@ -438,10 +438,6 @@
         }
 
 
-        .share-item .copy-icon {
-            width: 48px;
-            height: 48px;
-        }
 
 
         .share-main-btn {
@@ -475,6 +471,17 @@
         }
 
         .share-menu .share-item {
+
+
+            padding: 6px 8px;
+            /* קטן יותר */
+            border-radius: 8px;
+            /* קטן יותר */
+            font-size: 13px;
+            /* טקסט קטן יותר */
+            gap: 4px;
+            /* רווח קטן יותר בין האייקון לטקסט */
+
             background: transparent !important;
             color: var(--gray-2) !important;
             box-shadow: none !important;
@@ -482,10 +489,7 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            font-size: 14px;
+
             text-decoration: none;
         }
 
@@ -498,20 +502,29 @@
 
         .share-menu {
             position: absolute;
-            bottom: 60px;
+            bottom: 50px;
+            /* מרחק קטן יותר מהכפתור הראשי */
             left: 0;
             background: white;
-            border-radius: 14px;
-            padding: 8px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            /* קטן יותר */
+            padding: 6px;
+            /* קטן יותר */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            /* צל עדין */
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+            /* רווח קטן יותר בין הכפתורים */
+            min-width: 32px;
+            /* רוחב מינימלי */
         }
 
         .share-item .copy-icon {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            /* קטן יותר */
+            height: 20px;
+            /* קטן יותר */
         }
 
         .share-item .copy-icon rect {
