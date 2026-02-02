@@ -437,9 +437,6 @@
             gap: 6px;
         }
 
-
-
-
         .share-main-btn {
 
             width: 38px;
@@ -470,33 +467,15 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
         }
 
-        .share-menu .share-item {
-
-
-            padding: 6px 8px;
-            /* קטן יותר */
-            border-radius: 8px;
-            /* קטן יותר */
-            font-size: 13px;
-            /* טקסט קטן יותר */
-            gap: 4px;
-            /* רווח קטן יותר בין האייקון לטקסט */
-
-            background: transparent !important;
-            color: var(--gray-2) !important;
-            box-shadow: none !important;
-            border: none !important;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-
-            text-decoration: none;
-        }
-
         .share-menu .share-item:hover {
-            background: rgba(0, 0, 0, 0.06) !important;
-            color: var(--gray-2) !important;
-            transform: none !important;
+            background: #b0b0b0 !important;
+            /* רקע כחול בהיר */
+            color: white !important;
+            /* צבע האייקון לבן */
+            transform: scale(1.1);
+            /* הגדלה עדינה */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            /* צל עדין */
         }
 
 
@@ -541,6 +520,47 @@
         #shareMenu:not(.hidden) {
             display: flex;
         }
+
+        /* =======================================
+   Share Menu - Circle Buttons
+   ======================================= */
+        .share-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0;
+            background: transparent;
+        }
+
+        .share-item {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .share-item:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .share-item img,
+        .share-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
 
         /* ================== TOAST COPY ================== */
         .copy-toast {
