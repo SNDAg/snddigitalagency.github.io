@@ -330,15 +330,6 @@
             transition: transform 0.2s;
         }
 
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-        }
-
-        .whatsapp-button img {
-            width: 28px;
-            height: 28px;
-        }
-
         /* ================== RESET BUTTON ================== */
         /* .reset-button {
             position: fixed;
@@ -358,10 +349,6 @@
             transition: all 0.25s ease;
             z-index: 1000;
         } */
-
-        .reset-button:hover {
-            box-shadow: var(--shadow-lg);
-        }
 
         /* ================== COUPON ================== */
         .coupon-box {
@@ -432,9 +419,9 @@
         }
 
         #navButtons button {
-            width: 50px;
-            height: 50px;
-            font-size: 24px;
+            width: 38px;
+            height: 38px;
+            font-size: 17px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -454,6 +441,97 @@
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         }
 
+        .share-wrapper {
+            position: fixed;
+            bottom: 18px;
+            left: 20px;
+            z-index: 9999;
+        }
+
+        .share-main-btn {
+
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .share-main-btn svg {
+            width: 26px;
+            height: 26px;
+            fill: none;
+            stroke: #1f2937;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .share-main-btn:hover {
+            background: white !important;
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+        }
+
+        .share-menu .share-item {
+            background: transparent !important;
+            color: var(--gray-2) !important;
+            box-shadow: none !important;
+            border: none !important;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .share-menu .share-item:hover {
+            background: rgba(0, 0, 0, 0.06) !important;
+            color: var(--gray-2) !important;
+            transform: none !important;
+        }
+
+
+        .share-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            background: white;
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .share-item .copy-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .share-item .copy-icon rect {
+            fill: none;
+            stroke: #1f2937;
+            stroke-width: 2;
+        }
+
+
+        #shareMenu {
+            display: none;
+        }
+
+        #shareMenu:not(.hidden) {
+            display: flex;
+        }
 
 
         /* ================== MOBILE ================== */
@@ -475,17 +553,6 @@
             .general-link a {
                 padding: 8px 14px;
                 font-size: 13px;
-            }
-
-            .whatsapp-button {
-                width: 36px;
-                height: 36px;
-                bottom: 20px;
-            }
-
-            .whatsapp-button img {
-                width: 20px;
-                height: 20px;
             }
 
             .card {
@@ -830,6 +897,25 @@
                 document.getElementById('navButtons').style.display = 'none';
             }
         }
+        function toggleShareMenu() {
+            const menu = document.getElementById('shareMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function copySiteUrl() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert('הקישור הועתק');
+                document.getElementById('shareMenu').classList.add('hidden');
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            const wrapper = document.querySelector('.share-wrapper');
+            if (!wrapper.contains(e.target)) {
+                document.getElementById('shareMenu')?.classList.add('hidden');
+            }
+        });
+
 
 
         /* =========================
@@ -844,10 +930,35 @@
 
     </script>
 
-    <a href="https://wa.me/?text=בדקתי ומצאתי אתר ממש נוח להזמנת מעבורות בתאילנד 🚢%0Ahttps://snddigitalagency.com/maaboret"
-        class="whatsapp-button" target="_blank">
-        <img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" />
-    </a>
+    <div class="share-wrapper">
+        <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
+            <svg viewBox="0 0 24 24">
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.5" y1="11" x2="15.5" y2="6.5"></line>
+                <line x1="8.5" y1="13" x2="15.5" y2="17.5"></line>
+            </svg>
+        </button>
+
+        <div class="share-menu hidden" id="shareMenu">
+            <a class="share-item" target="_blank"
+                href="https://wa.me/?text=בדקתי ומצאתי אתר ממש נוח להזמנת מעבורות בתאילנד 🚢%0Ahttps://snddigitalagency.com/maaboret">
+                <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="">
+                וואטסאפ
+            </a>
+
+            <button class="share-item" onclick="copySiteUrl()">
+                <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="8" y="7" width="12" height="14" rx="3"></rect>
+                    <rect x="4" y="3" width="12" height="14" rx="3"></rect>
+                </svg>
+                העתקת קישור
+            </button>
+
+        </div>
+    </div>
+
     <div style="display:none">
         MAABORET – אתר להזמנת מעבורות בתאילנד
     </div>
