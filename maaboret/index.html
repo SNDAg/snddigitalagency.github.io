@@ -438,6 +438,50 @@
             z-index: auto;
         }
 
+        
+.icon-button {
+    font-size: 24px;
+    width: 50px;       /* גודל רוחב קבוע */
+    height: 50px;      /* גובה שווה לרוחב → עיגול מושלם */
+    display: flex;     /* מרכז את האייקון */
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.85);
+    border: none;
+    border-radius: 50%; /* עיגול */
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+    color: var(--gray-2);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+
+.icon-button:hover {
+    transform: translateY(-2px) scale(1.2);
+    opacity: 1;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+}
+
+
+
+/* הכפתורים נשארים גבוהים, כמו בשלב הראשון */
+#navButtons {
+    position: fixed;
+    bottom: 800px; /* המקום המועדף שלך */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    z-index: 1000;
+}
+
+/* הכפתורים הפנימיים תמיד בתוך ה-fixed ולא נופלים */
+.reset-button {
+    position: static; /* relative לא צריך */
+}
+
+
+
 
         /* ================== MOBILE ================== */
         @media (max-width: 480px) {
@@ -608,15 +652,11 @@
     <div class="affiliate-footer">
         To support our work and keep this platform free, we use affiliate links with trusted brands like 12go
     </div>
-    <div id="navButtons">
-        <button id="backButton" title="אחורה" class="reset-button">
-            → אחורה
-        </button>
+<div id="navButtons">
+    <button id="backButton" title="אחורה" class="icon-button">🡆</button>
+    <button id="resetButton" title="מהתחלה" class="icon-button">↻</button>
+</div>
 
-        <button id="resetButton" title="מהתחלה" class="reset-button">
-            🔄 מהתחלה
-        </button>
-    </div>
 
 
     <!-- כפתור 12GO קטן בתחתית הדף -->
