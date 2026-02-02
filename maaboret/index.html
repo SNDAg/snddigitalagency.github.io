@@ -392,7 +392,7 @@
             /* גובה רצוי שלך */
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
+            display: none;
             gap: 14px;
             /* רווח בין הכפתורים */
             z-index: 1000;
@@ -676,7 +676,7 @@
                 <h1>יאללה, יוצאים לדרך 🚤</h1>
                 <div class="summary" id="summaryText"></div>
                 <button class="cta" onclick="goToBooking()" class="cta">
-                לבחירת שעה ותשלום
+                    לבחירת שעה ותשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
@@ -816,8 +816,6 @@
             void next.offsetWidth;
             next.classList.add('step');
 
-            document.getElementById('navButtons').style.display = 'flex';
-
             centerLastVisibleButtons();
         }
 
@@ -859,7 +857,7 @@
                     ? 'inline-block'
                     : 'none';
             });
-
+            document.getElementById('navButtons').style.display = 'flex';
             transition('step-from', 'step-to');
         }
 
