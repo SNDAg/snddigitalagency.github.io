@@ -104,13 +104,32 @@
          }
       </script>
     <style>
-        /* ================== בסיס ================== */
+        /* ================== CSS VARIABLES ================== */
+        :root {
+            --blue-1: #0ea5e9;
+            --blue-2: #14b8a6;
+            --blue-3: #0284c7;
+
+            --orange-1: #f97316;
+            --orange-2: #fb923c;
+            --orange-3: #ea580c;
+
+            --green-1: #10b981;
+            --green-2: #059669;
+
+            --gray-1: #475569;
+            --gray-2: #1f2937;
+
+            --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
+            --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ================== BASE ================== */
         body {
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
-            /* רקע סירה בתאילנד */
             background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
             background-size: cover;
             background-position: center center;
@@ -122,24 +141,30 @@
             position: relative;
         }
 
-        /* ================== overlay שקוף + טשטוש ================== */
+        .hidden {
+            display: none;
+        }
+
+        /* ================== OVERLAY ================== */
         .overlay {
             background: rgba(0, 0, 0, 0.25);
             backdrop-filter: blur(6px);
             width: 100%;
             min-height: 100vh;
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+
             padding: 20px;
             box-sizing: border-box;
         }
 
-        /* ================== כרטיס ================== */
+        /* ================== CARD ================== */
         .card {
             background: rgba(248, 250, 252, 0.92);
-            color: #1f2937;
+            color: var(--gray-2);
             border-radius: 26px;
             padding: 28px;
             width: 100%;
@@ -155,6 +180,7 @@
             margin-bottom: 24px;
         }
 
+        /* ================== STEP ANIMATION ================== */
         .step {
             animation: stepIn 0.45s ease;
         }
@@ -171,11 +197,9 @@
             }
         }
 
-
-        /* ================== כפתורים ואפשרויות ================== */
-
+        /* ================== BUTTON BASE ================== */
         button {
-            background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+            background: linear-gradient(135deg, var(--blue-2), var(--blue-1));
             color: white;
             border: none;
             border-radius: 18px;
@@ -184,54 +208,70 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s ease;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            box-shadow: var(--shadow-sm);
         }
 
         button:hover {
             transform: translateY(-4px) scale(1.03);
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
+            box-shadow: var(--shadow-lg);
         }
 
         button:active {
             transform: scale(0.97);
         }
 
-        .hidden {
-            display: none;
+        /* ================== OPTIONS ================== */
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: flex-start;
         }
 
-        /* ================== summary ו-CTA ================== */
+        .options button {
+            flex: 1 1 calc(50% - 6px);
+            min-width: 100px;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
             margin-bottom: 18px;
             line-height: 1.4;
         }
 
+        /* ================== CTA ================== */
         .cta {
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 20px;
             font-size: 21px;
             font-weight: 700;
-            padding: 20px;
             border-radius: 22px;
-            margin-top: 18px;
-            width: 100%;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+            background: linear-gradient(135deg, var(--orange-1), var(--orange-2));
+            box-shadow: var(--shadow-lg);
+            transition: all 0.25s ease;
         }
 
         .cta:hover {
-            background: linear-gradient(135deg, #ea580c, #f97316);
+            background: linear-gradient(135deg, var(--orange-3), var(--orange-1));
             transform: translateY(-3px) scale(1.02);
         }
 
+        /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
             font-size: 15px;
-            color: #475569;
+            color: var(--gray-1);
         }
 
-        /* ================== כפתור כללי ================== */
+        /* ================== GENERAL LINK ================== */
         .general-link {
             position: fixed;
             bottom: 110px;
@@ -257,27 +297,22 @@
             transform: translateY(-1px);
         }
 
-        /* ================== Footer קטן ================== */
+        /* ================== FOOTER ================== */
         .affiliate-footer {
             position: absolute;
-            /* תמיד בתחתית הכרטיס */
             bottom: 13px;
             width: 100%;
             text-align: center;
             font-size: 10px;
             color: grey;
             word-break: break-word;
-            /* שובר מילים ארוכות */
             padding: 0 8px;
-            /* מרווח מצדדים */
             box-sizing: border-box;
             line-height: 1.3;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             z-index: 1;
-            /* לוודא שהוא מתחת לכל כפתור צף */
         }
 
-        /* ================== וואטסאפ ================== */
+        /* ================== WHATSAPP ================== */
         .whatsapp-button {
             position: fixed;
             bottom: 18px;
@@ -295,44 +330,41 @@
             transition: transform 0.2s;
         }
 
+        .whatsapp-button:hover {
+            transform: scale(1.1);
+        }
+
         .whatsapp-button img {
             width: 28px;
             height: 28px;
         }
 
-        .whatsapp-button:hover {
-            transform: scale(1.1);
-        }
-
-        /* ================== כפתור Reset ================== */
+        /* ================== RESET BUTTON ================== */
         .reset-button {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, #0ea5e9, #14b8a6);
+            background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
             color: white;
-            border: none;
             border-radius: 50px;
             padding: 12px 16px;
             font-size: 14px;
             font-weight: 600;
-            cursor: pointer;
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+            box-shadow: var(--shadow-sm);
             transition: all 0.25s ease;
             z-index: 1000;
         }
 
         .reset-button:hover {
             transform: translateX(-50%) translateY(-3px) scale(1.05);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-            background: linear-gradient(135deg, #14b8a6, #0ea5e9);
+            box-shadow: var(--shadow-lg);
         }
 
-        /* ================== קופונים ================== */
+        /* ================== COUPON ================== */
         .coupon-box {
             margin-top: 14px;
             padding: 12px;
@@ -342,115 +374,52 @@
 
             display: flex;
             align-items: center;
-            /* יישור אנכי */
             justify-content: space-between;
-            /* טקסט + כפתור בקצה */
             flex-wrap: wrap;
-            /* אם המסך צר – הטקסט עובר שורה */
             gap: 8px;
         }
 
         .coupon-text {
             flex: 1;
-            /* תופס את כל המקום הפנוי */
             min-width: 0;
-            /* מונע overflow במובייל */
-            font-size: 13px;
         }
 
         .coupon-btn {
-            margin-top: 8px;
-            background: #10b981;
-            /* ירוק בולט יותר */
+            background: var(--green-1);
             color: white;
             font-size: 13px;
-            /* קצת יותר גדול למובייל */
             padding: 10px 14px;
-            /* יותר קל ללחיצה באצבע */
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transition: all 0.2s ease;
         }
 
         .coupon-btn:hover {
-            background: #059669;
+            background: var(--green-2);
             transform: translateY(-2px) scale(1.05);
-        }
-
-
-        .copy-icon {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linejoin: round;
-            stroke-linecap: round;
-            opacity: 0.9;
         }
 
         .coupon-btn.icon-only {
             background: #c4c4c4;
-            /* אפור כהה יותר מהרקע והמסגרת */
-            color: #1f2937;
-            /* אייקון כהה לקריאות */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
+            color: var(--gray-2);
         }
 
         .coupon-btn.icon-only:hover {
             background: #b0b0b0;
-            /* מעט כהה יותר להובר */
-            transform: translateY(-2px) scale(1.05);
         }
 
-
-
-
-        .options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: flex-start;
+        .coupon-btn.icon-only svg {
+            width: 18px;
+            height: 18px;
         }
 
-        .options button:last-child:nth-child(odd) {
-            margin-left: auto;
-            margin-right: auto;
+        .coupon-btn.icon-only svg rect {
+            fill: none;
+            stroke: #1f2937;
+            stroke-width: 2;
         }
 
-        .options button {
-            flex: 1 1 calc(50% - 6px);
-            min-width: 100px;
-            max-width: 200px;
-            text-align: center;
-        }
-
-        .cta {
-            display: inline-flex;
-            align-items: center;
-            /* יישור אנכי של הטקסט והחץ */
-            justify-content: center;
-            /* אם רוצים שהכפתור ימלא רוחב */
-            gap: 8px;
-            /* רווח בין הטקסט לחץ */
-            background: linear-gradient(135deg, #f97316, #fb923c);
-            color: white;
-            font-size: 21px;
-            font-weight: 700;
-            padding: 20px;
-            border-radius: 22px;
-            width: 100%;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-            transition: all 0.25s ease;
-        }
-
-        .cta:hover {
-            background: linear-gradient(135deg, #ea580c, #f97316);
-            transform: translateY(-3px) scale(1.02);
-        }
-
-        /* ================== גרסת מובייל ================== */
+        /* ================== MOBILE ================== */
         @media (max-width: 480px) {
             body {
                 background-position: center top;
@@ -458,18 +427,8 @@
 
             .affiliate-footer {
                 font-size: 9px;
-                /* קטן יותר במובייל */
                 padding: 0 6px;
-                /* פחות מרווח מצדדים */
                 line-height: 1.4;
-            }
-            .options button {
-                flex: 1 1 calc(50% - 6px);
-                max-width: 48%;
-            }
-            button {
-                padding: 18px 12px;
-                font-size: 18px;
             }
 
             .general-link {
@@ -497,13 +456,11 @@
                 border-radius: 20px;
                 max-width: 95%;
                 max-height: 90vh;
-                /* הגבלת גובה למובייל */
                 overflow-y: auto;
-                /* מאפשר גלילה בתוך הכרטיס */
             }
 
             .reset-button {
-                bottom: 594px;
+                bottom: 610px;
                 padding: 10px 14px;
                 font-size: 12px;
             }
@@ -635,12 +592,23 @@
         </a>
     </div>
     <script>
-        // משתנים גלובליים
-        let depTime = ''; // 1 = מוקדם, 2 = מאוחר, '' = הכל
-        let from = '';
-        let to = '';
-        let people = 1;
-        let date = '';
+        /* =========================
+           STATE
+        ========================= */
+        const state = {
+            from: '',
+            to: '',
+            people: 1,
+            date: '',
+            depTime: '' // 1 = מוקדם, 2 = מאוחר, '' = הכל
+        };
+
+        /* =========================
+           CONSTANTS / CONFIG
+        ========================= */
+        const couponCode = 'CJ12GO';
+        const affiliateBase = 'https://www.kqzyfj.com/click-101474270-17138047?url=';
+
         const placeNames = {
             'koh-samui': 'קוסמוי',
             'koh-phangan': 'קופנגן',
@@ -652,57 +620,81 @@
             'koh-lanta': 'קו לנטה'
         };
 
-        const couponCode = "CJ12GO";
+        const connections = {
+            'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
+            'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
+            'koh-tao': ['koh-samui', 'koh-phangan', 'phuket', 'surat-thani'],
+            'surat-thani': ['koh-samui', 'phuket', 'koh-lanta', 'koh-phangan'],
+            'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan', 'surat-thani'],
+            'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan'],
+            'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
+            'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
+        };
 
-        function copyCoupon() {
-            navigator.clipboard.writeText(couponCode).then(() => {
-                const copiedEl = document.getElementById('couponCopied');
-                copiedEl.classList.remove('hidden');
-                copiedEl.style.opacity = '1';
-                setTimeout(() => {
-                    copiedEl.style.opacity = '0';
-                    setTimeout(() => copiedEl.classList.add('hidden'), 300);
-                }, 2000); // מוצג 2 שניות
-            });
-        }
+        const dateText = {
+            today: 'היום',
+            tomorrow: 'מחר',
+            dayAfterTomorrow: 'מחרתיים',
+            noDate: ''
+        };
 
-
-
+        /* =========================
+           DOM CACHE
+        ========================= */
         const resetBtn = document.getElementById('resetButton');
-        const affiliateBase = "https://www.kqzyfj.com/click-101474270-17138047?url=";
+        const summaryText = document.getElementById('summaryText');
+        const couponCodeEl = document.getElementById('couponCode');
+
+        /* =========================
+           HELPERS
+        ========================= */
         function transition(fromId, toId) {
             document.getElementById(fromId).classList.add('hidden');
             const next = document.getElementById(toId);
-            next.classList.remove('hidden');
-            next.classList.remove('step');
+
+            next.classList.remove('hidden', 'step');
             void next.offsetWidth; // reset animation
             next.classList.add('step');
+
+            centerLastVisibleButtons();
         }
 
-
-        function selectFrom(value) {
-            from = value; // שמירת המוצא
-
-            const toButtons = document.querySelectorAll('#step-to button');
-            // מפת חיבורים לפי תחבורה
-            const connections = {
-                'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
-                'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
-                'koh-tao': ['koh-samui', 'koh-phangan', 'phuket', 'surat-thani'],
-                'surat-thani': ['koh-samui', 'phuket', 'koh-lanta', 'koh-phangan'],
-                'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan', 'surat-thani'],
-                'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan'],
-                'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
-                'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
+        function getFormattedDate(option) {
+            const base = new Date();
+            const offsets = {
+                today: 0,
+                tomorrow: 1,
+                dayAfterTomorrow: 2,
+                noDate: 3
             };
+            base.setDate(base.getDate() + (offsets[option] ?? 0));
 
-            toButtons.forEach(btn => {
-                const target = btn.dataset.place;
-                if (connections[from] && connections[from].includes(target)) {
-                    btn.style.display = 'inline-block';
-                } else {
-                    btn.style.display = 'none';
+            return `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
+        }
+
+        function centerLastVisibleButtons() {
+            document.querySelectorAll('.options').forEach(container => {
+                const visible = [...container.children].filter(b => b.offsetParent !== null);
+                visible.forEach(b => b.style.margin = '');
+
+                if (visible.length % 2 === 1 && visible.length > 1) {
+                    const last = visible.at(-1);
+                    last.style.marginLeft = 'auto';
+                    last.style.marginRight = 'auto';
                 }
+            });
+        }
+
+        /* =========================
+           ACTIONS
+        ========================= */
+        function selectFrom(value) {
+            state.from = value;
+
+            document.querySelectorAll('#step-to button').forEach(btn => {
+                btn.style.display = connections[value]?.includes(btn.dataset.place)
+                    ? 'inline-block'
+                    : 'none';
             });
 
             transition('step-from', 'step-to');
@@ -710,114 +702,64 @@
         }
 
         function selectTo(value) {
-            to = value;
+            state.to = value;
             transition('step-to', 'step-people');
         }
 
         function selectPeople(value) {
-            people = value;
+            state.people = value;
             transition('step-people', 'step-date');
         }
 
         function selectDate(value) {
-            date = value;
+            state.date = value;
             transition('step-date', 'step-dep-time');
         }
 
         function selectDepTime(value) {
-            if (value === 'early') depTime = 1;
-            else if (value === 'late') depTime = 2;
-            else depTime = ''; // תראה הכל
+            state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
 
+            const target =
+                `ל${placeNames[state.to]}${dateText[state.date] ? ' ' + dateText[state.date] : ''}`;
+
+            summaryText.innerHTML =
+                `מעבורת ל-${state.people} אנשים מ${placeNames[state.from]}<br>${target}`;
+
+            document.querySelector('.general-link')?.style.setProperty('display', 'none');
             transition('step-dep-time', 'step-summary');
-
-            const dateText = {
-                today: 'היום',
-                tomorrow: 'מחר',
-                dayAfterTomorrow: 'מחרתיים',
-                noDate: ''
-            };
-            const targetText = `ל${placeNames[to]}${dateText[date] ? ' ' + dateText[date] : ''}`;
-            document.getElementById('summaryText').innerHTML =
-                `מעבורת ל-${people} אנשים מ${placeNames[from]}<br>${targetText}`;
-
-
-
-            // 🔹 הסתרת הכפתור של "לחיפוש חופשי באתר 12GO"
-            const generalLink = document.querySelector('.general-link');
-            if (generalLink) generalLink.style.display = 'none';
-        }
-
-
-
-
-        function getFormattedDate(option) {
-            const today = new Date();
-            let d;
-            if (option === 'today') d = today;
-            else if (option === 'tomorrow') {
-                d = new Date(today);
-                d.setDate(today.getDate() + 1);
-            }
-            else if (option === 'dayAfterTomorrow') {
-                d = new Date(today);
-                d.setDate(today.getDate() + 2);
-            }
-            else if (option === 'noDate') {
-                d = new Date(today);
-                d.setDate(today.getDate() + 3);
-            }
-            const yyyy = d.getFullYear();
-            const mm = String(d.getMonth() + 1).padStart(2, '0');
-            const dd = String(d.getDate()).padStart(2, '0');
-            return `${yyyy}-${mm}-${dd}`;
         }
 
         function goToBooking() {
-            const formattedDate = getFormattedDate(date);
+            let url =
+                `https://12go.asia/en/travel/${state.from}/${state.to}` +
+                `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
 
-            let baseUrl = `https://12go.asia/en/travel/${from}/${to}?date=${formattedDate}&people=${people}&direction=forward`;
+            if (state.depTime) url += `&dep_time=${state.depTime}`;
 
-            if (depTime) {
-                baseUrl += `&dep_time=${depTime}`;
-            }
-
-            const fullLink = affiliateBase + encodeURIComponent(baseUrl);
-            window.location.href = fullLink;
+            window.location.href = affiliateBase + encodeURIComponent(url);
         }
 
-        document.getElementById('resetButton').addEventListener('click', () => {
-            location.reload(); // מרענן את כל הדף
-        });
-        document.getElementById('couponCode').innerText = couponCode;
-        function centerLastVisibleButtons() {
-            const allOptionsContainers = document.querySelectorAll('.options');
-            allOptionsContainers.forEach(container => {
-                const buttons = Array.from(container.children).filter(btn => btn.offsetParent !== null);
-                buttons.forEach(btn => btn.style.margin = ''); // איפוס מרג'ין קודם
-                if (buttons.length % 2 === 1 && buttons.length > 1) {
-                    buttons[buttons.length - 1].style.marginLeft = 'auto';
-                    buttons[buttons.length - 1].style.marginRight = 'auto';
-                }
+        function copyCoupon() {
+            navigator.clipboard.writeText(couponCode).then(() => {
+                const el = document.getElementById('couponCopied');
+                el.classList.remove('hidden');
+                el.style.opacity = '1';
+
+                setTimeout(() => {
+                    el.style.opacity = '0';
+                    setTimeout(() => el.classList.add('hidden'), 300);
+                }, 2000);
             });
         }
 
-        // קריאה ראשונית
+        /* =========================
+           INIT
+        ========================= */
+        couponCodeEl.innerText = couponCode;
         centerLastVisibleButtons();
-
-        // קריאה אחרי כל מעבר של שלב או שינוי אפשרויות
-        function transition(fromId, toId) {
-            document.getElementById(fromId).classList.add('hidden');
-            const next = document.getElementById(toId);
-            next.classList.remove('hidden');
-            next.classList.remove('step');
-            void next.offsetWidth;
-            next.classList.add('step');
-
-            centerLastVisibleButtons();
-        }
-
+        resetBtn.addEventListener('click', () => location.reload());
     </script>
+
     <a href="https://wa.me/?text=בדקתי ומצאתי אתר ממש נוח להזמנת מעבורות בתאילנד 🚢%0Ahttps://snddigitalagency.com/maaboret"
         class="whatsapp-button" target="_blank">
         <img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" />
