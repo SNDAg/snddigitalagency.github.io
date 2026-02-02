@@ -587,9 +587,9 @@
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
                     <button onclick="selectFrom('koh-tao')">קוטאו</button>
                     <button onclick="selectFrom('phuket')">פוקט</button>
-                    <button onclick="selectFrom('surat-thani')">סוראט תאני</button>
                     <button onclick="selectFrom('krabi')">קראבי</button>
                     <button onclick="selectFrom('koh-phi-phi')">קופיפי</button>
+                    <button onclick="selectFrom('surat-thani')">סוראט תאני</button>
                     <button onclick="selectFrom('koh-lanta')">קו לנטה</button>
                 </div>
             </div>
@@ -601,9 +601,9 @@
                     <button data-place="koh-phangan" onclick="selectTo('koh-phangan')">קופנגן</button>
                     <button data-place="koh-tao" onclick="selectTo('koh-tao')">קוטאו</button>
                     <button data-place="phuket" onclick="selectTo('phuket')">פוקט</button>
-                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">סוראט תאני</button>
                     <button data-place="krabi" onclick="selectTo('krabi')">קראבי</button>
                     <button data-place="koh-phi-phi" onclick="selectTo('koh-phi-phi')">קופיפי</button>
+                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">סוראט תאני</button>
                     <button data-place="koh-lanta" onclick="selectTo('koh-lanta')">קו לנטה</button>
                 </div>
             </div>
@@ -752,11 +752,11 @@
             'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
             'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
             'koh-tao': ['koh-samui', 'koh-phangan', 'phuket', 'surat-thani'],
-            'surat-thani': ['koh-samui', 'phuket', 'koh-lanta', 'koh-phangan'],
-            'phuket': ['krabi', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan', 'surat-thani'],
-            'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'koh-samui', 'koh-phangan'],
-            'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta'],
-            'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi']
+            'surat-thani': ['phuket','koh-samui', 'koh-lanta', 'koh-phangan'],
+            'phuket': [ 'koh-phi-phi', 'krabi','koh-lanta','koh-samui', 'koh-phangan', 'surat-thani'],
+            'krabi': ['phuket', 'koh-phi-phi',  'koh-samui', 'koh-lanta','koh-phangan'],
+            'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta', 'koh-samui'],
+            'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi', 'koh-samui']
         };
 
         const dateText = {
