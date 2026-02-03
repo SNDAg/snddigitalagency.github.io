@@ -155,10 +155,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+
 
             padding: 20px;
             box-sizing: border-box;
+
+            justify-content: flex-start;
+            padding-top: 90px;
+
+
         }
 
         /* ================== CARD ================== */
@@ -388,15 +393,14 @@
         /* ================== NAV BUTTONS  ================== */
         #navButtons {
             position: fixed;
-            bottom: 800px;
-            /* גובה רצוי שלך */
+            top: 16px;
             left: 50%;
             transform: translateX(-50%);
             display: none;
-            gap: 14px;
-            /* רווח בין הכפתורים */
+            gap: 8px;
             z-index: 1000;
         }
+
 
         #navButtons button {
             width: 38px;
@@ -588,9 +592,9 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 16px;
-            /* רווח מתחת לכרטיס */
+            margin-bottom: 24px;
         }
+
 
         .progress-dots .dot {
             width: 14px;
@@ -612,39 +616,39 @@
         /* ================================================================================================================= */
         /* ================== MOBILE ================== */
 
-@media (max-width: 480px) {
-    body {
-        background-position: center top;
-    }
+        @media (max-width: 480px) {
+            body {
+                background-position: center top;
+            }
 
-    .affiliate-footer {
-        font-size: 9px;
-        padding: 0 6px;
-        line-height: 1.4;
-    }
+            .affiliate-footer {
+                font-size: 9px;
+                padding: 0 6px;
+                line-height: 1.4;
+            }
 
-    .general-link {
-        bottom: 57px;
-    }
+            .general-link {
+                bottom: 57px;
+            }
 
-    .general-link a {
-        padding: 8px 14px;
-        font-size: 13px;
-    }
+            .general-link a {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
 
-    .card {
-        padding: 20px;
-        border-radius: 20px;
-        max-width: 95%;
-        max-height: 90vh;
-        overflow-y: auto;
-    }
+            .card {
+                padding: 20px;
+                border-radius: 20px;
+                max-width: 95%;
+                max-height: 90vh;
+                overflow-y: auto;
 
-    #navButtons {
-        bottom: 604px;
-        gap: 6px;
-    }
-}
+            }
+
+            #navButtons {
+                gap: 6px;
+            }
+        }
     </style>
 </head>
 
@@ -745,7 +749,7 @@
                     </br>
                     <div>✔️ תשלום מאובטח</div>
                     <div>✔️ מעל 8,000 הזמנות בתאילנד</div>
-                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול! </div>
+                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול </div>
                 </div>
                 <div class="coupon-box">
                     <div class="coupon-text" id="couponText">
@@ -932,16 +936,28 @@
 
         function selectDepTime(value) {
             state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
-
+            let timeText = '';
+            if (value === 'early') timeText = 'מוקדמת';
+            if (value === 'late') timeText = 'מאוחרת';
+            const dayText = dateText[state.date] || '';
+            const isSpecialDay =
+                dayText === 'היום' ||
+                dayText === 'מחר' ||
+                dayText === 'מחרתיים';
+            let startText = 'מעבורת';
+            if (timeText && isSpecialDay) {
+                startText += ` ${timeText} ${dayText}`;
+            }
             const target =
-                `ל${placeNames[state.to]}${dateText[state.date] ? ' ' + dateText[state.date] : ''}`;
-
+                `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
             summaryText.innerHTML =
-                `מעבורת ל-${state.people} אנשים מ${placeNames[state.from]}<br>${target}`;
-
-            document.querySelector('.general-link')?.style.setProperty('display', 'none');
+                `${startText} ל${state.people} אנשים ${target}`;
+            document
+                .querySelector('.general-link')
+                ?.style.setProperty('display', 'none');
             transition('step-dep-time', 'step-summary');
         }
+
 
         function goToBooking() {
             let url =
