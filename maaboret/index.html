@@ -204,7 +204,7 @@
 
         /* ================== BUTTON BASE ================== */
         button {
-            background: linear-gradient(135deg, var(--blue-2), var(--blue-1));
+            background: linear-gradient(270deg, var(--blue-2), var(--blue-1));
             color: white;
             border: none;
             border-radius: 18px;
@@ -216,14 +216,22 @@
             box-shadow: var(--shadow-sm);
         }
 
-        button:hover {
-            transform: translateY(-4px) scale(1.03);
-            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
-            box-shadow: var(--shadow-lg);
+        .options button:nth-child(even) {
+            background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
         }
 
         button:active {
             transform: scale(0.97);
+        }
+
+        button:hover {
+            transform: translateY(-4px) scale(1.03);
+            background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
+            box-shadow: var(--shadow-lg);
+        }
+
+        .options button:nth-child(even):hover {
+            background: linear-gradient(90deg, var(--blue-1), var(--blue-3));
         }
 
         /* ================== OPTIONS ================== */
