@@ -142,7 +142,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         /* ================== OVERLAY ================== */
@@ -392,7 +392,7 @@
             /* גובה רצוי שלך */
             left: 50%;
             transform: translateX(-50%);
-            display: flex;
+            display: none;
             gap: 14px;
             /* רווח בין הכפתורים */
             z-index: 1000;
@@ -429,21 +429,6 @@
         }
 
 
-        .share-item {
-            font-weight: 500;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-
-        .share-item .copy-icon {
-            width: 48px;
-            height: 48px;
-        }
-
-
         .share-main-btn {
 
             width: 38px;
@@ -474,44 +459,42 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
         }
 
-        .share-menu .share-item {
-            background: transparent !important;
-            color: var(--gray-2) !important;
-            box-shadow: none !important;
-            border: none !important;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
-            border-radius: 10px;
-            font-size: 14px;
-            text-decoration: none;
-        }
-
         .share-menu .share-item:hover {
-            background: rgba(0, 0, 0, 0.06) !important;
-            color: var(--gray-2) !important;
-            transform: none !important;
+            background: #d8d5d5 !important;
+            /* רקע כחול בהיר */
+            color: white !important;
+            /* צבע האייקון לבן */
+            transform: scale(1.1);
+            /* הגדלה עדינה */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            /* צל עדין */
         }
-
 
         .share-menu {
             position: absolute;
-            bottom: 60px;
+            bottom: 50px;
+            /* מרחק קטן יותר מהכפתור הראשי */
             left: 0;
             background: white;
-            border-radius: 14px;
-            padding: 8px;
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            /* קטן יותר */
+            padding: 6px;
+            /* קטן יותר */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+            /* צל עדין */
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+            /* רווח קטן יותר בין הכפתורים */
+            min-width: 32px;
+            /* רוחב מינימלי */
         }
 
         .share-item .copy-icon {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            /* קטן יותר */
+            height: 20px;
+            /* קטן יותר */
         }
 
         .share-item .copy-icon rect {
@@ -528,6 +511,52 @@
         #shareMenu:not(.hidden) {
             display: flex;
         }
+
+        /* =======================================
+   Share Menu - Circle Buttons
+   ======================================= */
+        .share-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0;
+            background: transparent;
+        }
+
+        .share-item {
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .share-item:hover {
+            transform: translateY(-4px) scale(1.1);
+            box-shadow: 0 4px 10px rgba(211, 219, 223, 0.25);
+        }
+
+        .share-item img,
+        .share-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
 
         /* ================== TOAST COPY ================== */
         .copy-toast {
@@ -554,46 +583,83 @@
         }
 
 
-        /* ================== MOBILE ================== */
-        @media (max-width: 480px) {
-            body {
-                background-position: center top;
-            }
-
-            .affiliate-footer {
-                font-size: 9px;
-                padding: 0 6px;
-                line-height: 1.4;
-            }
-
-            .general-link {
-                bottom: 57px;
-            }
-
-            .general-link a {
-                padding: 8px 14px;
-                font-size: 13px;
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 20px;
-                max-width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            #navButtons {
-                bottom: 604px;
-                gap: 6px;
-            }
+        /* ================== PROGRESS DOTS ================== */
+        .progress-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            /* רווח מתחת לכרטיס */
         }
+
+        .progress-dots .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #c4c4c4;
+            /* אפור */
+            transition: background-color 0.25s;
+            /* שינוי כאן */
+        }
+
+        .progress-dots .dot.active {
+            background-color: var(--green-1);
+            /* ירוק */
+        }
+
+
+        /* ================================================================================================================= */
+        /* ================================================================================================================= */
+        /* ================== MOBILE ================== */
+
+@media (max-width: 480px) {
+    body {
+        background-position: center top;
+    }
+
+    .affiliate-footer {
+        font-size: 9px;
+        padding: 0 6px;
+        line-height: 1.4;
+    }
+
+    .general-link {
+        bottom: 57px;
+    }
+
+    .general-link a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .card {
+        padding: 20px;
+        border-radius: 20px;
+        max-width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    #navButtons {
+        bottom: 604px;
+        gap: 6px;
+    }
+}
     </style>
 </head>
 
 <body>
     <h1 style="display:none">MAABORET – הזמנת מעבורת בתאילנד</h1>
     <div class="overlay">
+        <div id="progressDots" class="progress-dots hidden">
+            <div class="dot" data-step="1"></div>
+            <div class="dot" data-step="2"></div>
+            <div class="dot" data-step="3"></div>
+            <div class="dot" data-step="4"></div>
+            <div class="dot" data-step="5"></div>
+            <div class="dot" data-step="6"></div>
+        </div>
+
         <div class="card">
             <!-- שלב 1 -->
             <div id="step-from" class="step">
@@ -663,7 +729,7 @@
                 <h1>יאללה, יוצאים לדרך 🚤</h1>
                 <div class="summary" id="summaryText"></div>
                 <button class="cta" onclick="goToBooking()" class="cta">
-                    לבחירת שעה למעבורת
+                    לבחירת שעה ותשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
@@ -803,9 +869,8 @@
             void next.offsetWidth;
             next.classList.add('step');
 
-            document.getElementById('navButtons').style.display = 'flex';
-
             centerLastVisibleButtons();
+            updateProgressDots(toId);
         }
 
 
@@ -846,7 +911,7 @@
                     ? 'inline-block'
                     : 'none';
             });
-
+            document.getElementById('navButtons').style.display = 'flex';
             transition('step-from', 'step-to');
         }
 
@@ -900,6 +965,7 @@
                 }, 2000);
             });
         }
+
         function goBackStep() {
 
             if (stepHistory.length === 0) return;
@@ -915,7 +981,9 @@
             if (stepHistory.length === 0) {
                 document.getElementById('navButtons').style.display = 'none';
             }
+            updateProgressDots(prev);
         }
+
         function toggleShareMenu() {
             const menu = document.getElementById('shareMenu');
             menu.classList.toggle('hidden');
@@ -944,7 +1012,34 @@
             }
         });
 
+        const progressDots = document.getElementById('progressDots');
+        const stepToDotMap = {
+            'step-from': '1',
+            'step-to': '2',
+            'step-people': '3',
+            'step-date': '4',
+            'step-dep-time': '5',
+            'step-summary': '6'
+        };
 
+        function updateProgressDots(currentStep) {
+
+            // אם זה שלב ראשון → להסתיר
+            if (currentStep === 'step-from') {
+                progressDots.classList.add('hidden');
+                return;
+            }
+            // בכל שלב אחר → להציג
+            progressDots.classList.remove('hidden');
+            const activeStep = stepToDotMap[currentStep];
+            document.querySelectorAll('.dot').forEach(dot => {
+                if (dot.dataset.step === activeStep) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
 
         /* =========================
            INIT
