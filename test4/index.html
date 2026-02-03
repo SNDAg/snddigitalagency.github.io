@@ -388,7 +388,7 @@
         /* ================== NAV BUTTONS  ================== */
         #navButtons {
             /* WEB */
-            bottom: 585px;
+            bottom: 602px;
             gap: 6px;
             /* WEB end */
             
@@ -665,7 +665,7 @@
             <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <h1>מאיפה יוצאים?</h1>
-                <h2>טסט. 585</h2>
+                <h2>טסט. 602</h2>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
@@ -932,18 +932,30 @@
             transition('step-date', 'step-dep-time');
         }
 
-        function selectDepTime(value) {
-            state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
+function selectDepTime(value) {
+    state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
+    let timeText = '';
+    if (value === 'early') timeText = 'מוקדמת';
+    if (value === 'late') timeText = 'מאוחרת';
+    const dayText = dateText[state.date] || '';
+    const isSpecialDay =
+        dayText === 'היום' ||
+        dayText === 'מחר' ||
+        dayText === 'מחרתיים';
+    let startText = 'מעבורת';
+    if (timeText && isSpecialDay) {
+        startText += ` ${timeText} ${dayText}`;
+    }
+    const target =
+        `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
+    summaryText.innerHTML =
+        `${startText} ל${state.people} אנשים ${target}`;
+    document
+        .querySelector('.general-link')
+        ?.style.setProperty('display', 'none');
+    transition('step-dep-time', 'step-summary');
+}
 
-            const target =
-                `ל${placeNames[state.to]}${dateText[state.date] ? ' ' + dateText[state.date] : ''}`;
-
-            summaryText.innerHTML =
-                `מעבורת ל-${state.people} אנשים מ${placeNames[state.from]}<br>${target}`;
-
-            document.querySelector('.general-link')?.style.setProperty('display', 'none');
-            transition('step-dep-time', 'step-summary');
-        }
 
         function goToBooking() {
             let url =
