@@ -120,8 +120,8 @@
             --gray-1: #475569;
             --gray-2: #1f2937;
 
-            --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.25);
-            --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.35);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         /* ================== BASE ================== */
@@ -204,7 +204,7 @@
 
         /* ================== BUTTON BASE ================== */
         button {
-            background: linear-gradient(135deg, var(--blue-2), var(--blue-1));
+            background: linear-gradient(270deg, var(--blue-2), var(--blue-1));
             color: white;
             border: none;
             border-radius: 18px;
@@ -216,14 +216,22 @@
             box-shadow: var(--shadow-sm);
         }
 
-        button:hover {
-            transform: translateY(-4px) scale(1.03);
-            background: linear-gradient(135deg, var(--blue-1), var(--blue-3));
-            box-shadow: var(--shadow-lg);
+        .options button:nth-child(even) {
+            background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
         }
 
         button:active {
             transform: scale(0.97);
+        }
+
+        button:hover {
+            transform: translateY(-4px) scale(1.03);
+            background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
+            box-shadow: var(--shadow-lg);
+        }
+
+        .options button:nth-child(even):hover {
+            background: linear-gradient(90deg, var(--blue-1), var(--blue-3));
         }
 
         /* ================== OPTIONS ================== */
@@ -611,6 +619,62 @@
             /* ירוק */
         }
 
+        /* ================== LOGO HEADER ================== */
+
+        .card {
+            background: rgba(255, 255, 255, 0.98);
+            /* לבן כמעט מלא למראה נקי */
+            border-radius: 30px;
+            padding: 40px 25px 30px 25px;
+            /* יותר ריפוד למעלה בשביל הלוגו */
+            width: 92%;
+            max-width: 400px;
+            margin-bottom: 120px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        /* ================== LOGO HEADER ================== */
+
+
+        .logo-header img:hover {
+            transform: scale(1.03);
+        }
+
+        /* ================== LOGO HEADER ================== */
+
+
+        .logo-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 26px;
+            margin-top: -30px;
+            /* מרים קצת למעלה */
+            z-index: 2;
+            transform: translateY(-15px);
+        }
+
+        .logo-header img {
+            max-width: 260px;
+            width: 100%;
+            height: auto;
+            border-radius: 26px;
+            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
+            transition: transform 0.25s ease;
+            background: transparent;
+            /* ביטול הרקע הלבן המיותר */
+
+            box-shadow: none;
+            /* ביטול הצל הכפול */
+        }
+
+        .logo-header img:hover {
+            transform: scale(1.03);
+        }
+
+
 
         /* ================================================================================================================= */
         /* ================================================================================================================= */
@@ -655,6 +719,11 @@
 <body>
     <h1 style="display:none">MAABORET – הזמנת מעבורת בתאילנד</h1>
     <div class="overlay">
+        <!-- Logo Header -->
+        <div class="logo-header">
+            <img src="../image/MAABORET-LOGO.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
+        </div>
+
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
             <div class="dot" data-step="2"></div>
@@ -668,7 +737,7 @@
             <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <h1>מאיפה יוצאים?</h1>
-                <h6>version4</h6>
+                <h6>version5</h6>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
@@ -750,7 +819,7 @@
                     </br>
                     <div>✔️ תשלום מאובטח</div>
                     <div>✔️ מעל 8,000 הזמנות בתאילנד</div>
-                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול </div>
+                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול! </div>
                 </div>
                 <div class="coupon-box">
                     <div class="coupon-text" id="couponText">
@@ -873,7 +942,6 @@
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
-
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
