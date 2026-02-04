@@ -620,7 +620,30 @@
         }
 
         /* ================== LOGO HEADER ================== */
+        /* 1. הלוגו - הופך להיות נקי ופשוט */
+        .logo-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            /* מורידים אותו למטה, שלא יצוף באוויר */
+            margin-bottom: -20px;
+            /* יוצר חפיפה עדינה לתוך הכרטיסייה */
+            z-index: 5;
+        }
 
+        .logo-header img {
+            max-width: 220px;
+            /* קצת יותר קטן ומדויק */
+            background: transparent;
+            /* ביטול הרקע הלבן המיותר */
+            border-radius: 0;
+            box-shadow: none;
+            /* ביטול הצל הכפול */
+            filter: none;
+        }
+
+        /* 2. הכרטיסייה - המכל שמכיל הכל */
         .card {
             background: rgba(255, 255, 255, 0.98);
             /* לבן כמעט מלא למראה נקי */
@@ -642,18 +665,15 @@
         }
 
         /* ================== LOGO HEADER ================== */
-
-
         .logo-header {
             width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             margin-bottom: 26px;
-            margin-top: -30px;
+            margin-top: -20px;
             /* מרים קצת למעלה */
             z-index: 2;
-            transform: translateY(-15px);
         }
 
         .logo-header img {
@@ -663,11 +683,6 @@
             border-radius: 26px;
             filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
             transition: transform 0.25s ease;
-            background: transparent;
-            /* ביטול הרקע הלבן המיותר */
-
-            box-shadow: none;
-            /* ביטול הצל הכפול */
         }
 
         .logo-header img:hover {
@@ -713,6 +728,79 @@
                 gap: 6px;
             }
         }
+
+        /* ================== REDIRECT SCREEN ================== */
+        .redirect-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .redirect-card {
+            background: white;
+            border-radius: 26px;
+            padding: 30px 22px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+            animation: fadeInScale 0.4s ease;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .loader-bar {
+            width: 100%;
+            height: 10px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .loader-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--blue-1), var(--blue-2));
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .redirect-text {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--gray-2);
+            margin-bottom: 8px;
+        }
+
+        .redirect-subtext {
+            font-size: 14px;
+            color: var(--gray-1);
+            line-height: 1.4;
+            margin-bottom: 16px;
+        }
+
+        .redirect-brand {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue-3);
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 
@@ -737,7 +825,6 @@
             <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <h1>מאיפה יוצאים?</h1>
-                <h6>version5</h6>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
@@ -774,7 +861,7 @@
                     <button onclick="selectPeople(5)">5</button>
                     <button onclick="selectPeople(6)">6</button>
                     <button onclick="selectPeople(7)">7</button>
-                    <button onclick="selectPeople(8)">8</button>
+                    <button onclick="selectPeople(otherAmountOfpeople)">אחר</button>
                 </div>
             </div>
             <!-- שלב 4 -->
@@ -892,6 +979,7 @@
         ========================= */
         const couponCode = 'CJ12GO';
         const affiliateBase = 'https://www.kqzyfj.com/click-101474270-17138047?url=';
+        const otherAmountOfpeople = 8;
 
         const placeNames = {
             'koh-samui': 'קוסמוי',
@@ -942,6 +1030,7 @@
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
+
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
@@ -1004,38 +1093,74 @@
         }
 
         function selectDepTime(value) {
-            state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
-            let timeText = '';
-            if (value === 'early') timeText = 'מוקדמת';
-            if (value === 'late') timeText = 'מאוחרת';
-            const dayText = dateText[state.date] || '';
-            const isSpecialDay =
-                dayText === 'היום' ||
-                dayText === 'מחר' ||
-                dayText === 'מחרתיים';
-            let startText = 'מעבורת';
-            if (timeText && isSpecialDay) {
-                startText += ` ${timeText} ${dayText}`;
-            }
-            const target =
-                `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
-            summaryText.innerHTML =
-                `${startText} ל${state.people} אנשים ${target}`;
-            document
-                .querySelector('.general-link')
-                ?.style.setProperty('display', 'none');
-            transition('step-dep-time', 'step-summary');
-        }
+    state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
+
+    let timeText = '';
+    if (value === 'early') timeText = 'מוקדמת';
+    if (value === 'late') timeText = 'מאוחרת';
+
+    const dayText = dateText[state.date] || '';
+    const isSpecialDay =
+        dayText === 'היום' ||
+        dayText === 'מחר' ||
+        dayText === 'מחרתיים';
+
+    let startText = 'מעבורת';
+    if (timeText && isSpecialDay) {
+        startText += ` ${timeText} ${dayText}`;
+    }
+
+    const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
+
+    // 👇 החלק החדש
+    const peopleText = state.people === otherAmountOfpeople ? '' : ` ל${state.people} אנשים`;
+
+    summaryText.innerHTML =
+        `${startText}${peopleText} ${target}`;
+
+    document
+        .querySelector('.general-link')
+        ?.style.setProperty('display', 'none');
+
+    transition('step-dep-time', 'step-summary');
+}
+
 
 
         function goToBooking() {
+
+            // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
                 `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
 
             if (state.depTime) url += `&dep_time=${state.depTime}`;
 
-            window.location.href = affiliateBase + encodeURIComponent(url);
+            const finalUrl = affiliateBase + encodeURIComponent(url);
+
+            // Show redirect screen
+            const screen = document.getElementById('redirectScreen');
+            const bar = document.getElementById('loaderProgress');
+
+            screen.classList.remove('hidden');
+
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 6; // natural feel
+
+                if (progress >= 100) {
+                    progress = 100;
+                    bar.style.width = progress + '%';
+                    clearInterval(interval);
+
+                    setTimeout(() => {
+                        window.location.href = finalUrl;
+                    }, 400);
+                } else {
+                    bar.style.width = progress + '%';
+                }
+            }, 220);
         }
 
         function copyCoupon() {
@@ -1170,6 +1295,25 @@
     </div>
     <div id="copyToast" class="copy-toast">
         ✅ הקישור הועתק
+    </div>
+
+
+    <!-- Loading Redirect Screen -->
+    <div id="redirectScreen" class="redirect-screen hidden">
+        <div class="redirect-card">
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="redirect-text">
+                ⏳ מעבירים אתכם עכשיו לאתר 12GO לבחירת השעה ולתשלום...
+            </div>
+            <div class="redirect-subtext">
+                סיננו עבורכם את כל האפשרויות – מוצגות לכם רק המעבורות שמתאימות לכם.
+            </div>
+            <div class="redirect-brand">
+                MAABORET ✕ 12GO
+            </div>
+        </div>
     </div>
 
 </body>
