@@ -624,27 +624,7 @@
 
         /* ================== LOGO HEADER ================== */
         /* 1. הלוגו - הופך להיות נקי ופשוט */
-        .logo-header {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-            /* מורידים אותו למטה, שלא יצוף באוויר */
-            margin-bottom: -20px;
-            /* יוצר חפיפה עדינה לתוך הכרטיסייה */
-            z-index: 5;
-        }
 
-        .logo-header img {
-            max-width: 220px;
-            /* קצת יותר קטן ומדויק */
-            background: transparent;
-            /* ביטול הרקע הלבן המיותר */
-            border-radius: 0;
-            box-shadow: none;
-            /* ביטול הצל הכפול */
-            filter: none;
-        }
 
         /* 2. הכרטיסייה - המכל שמכיל הכל */
         .card {
@@ -668,6 +648,7 @@
         }
 
         /* ================== LOGO HEADER ================== */
+
         .logo-header {
             width: 100%;
             display: flex;
@@ -675,12 +656,13 @@
             align-items: center;
             margin-bottom: 26px;
             margin-top: -20px;
-            /* מרים קצת למעלה */
             z-index: 2;
         }
 
         .logo-header img {
-            max-width: 260px;
+            background: transparent;
+            box-shadow: none;
+            max-width: 220px;
             width: 100%;
             height: auto;
             border-radius: 26px;
@@ -818,7 +800,7 @@
     <div class="overlay">
         <!-- Logo Header -->
         <div class="logo-header">
-            <img src="../image/MAABORET-LOGO.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
+            <img src="../image/MAABORET-LOGO3.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
 
         <div id="progressDots" class="progress-dots hidden">
