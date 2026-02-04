@@ -288,12 +288,14 @@
         }
 
         /* ================== GENERAL LINK ================== */
+
+
         .general-link {
             position: fixed;
-            bottom: 110px;
+            bottom: 20px;
             width: 100%;
             text-align: center;
-            z-index: 10;
+            z-index: 9;
         }
 
         .general-link a {
@@ -301,9 +303,9 @@
             background: #4DB84D;
             color: white;
             text-decoration: none;
-            padding: 10px 16px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
             transition: all 0.2s ease;
         }
@@ -680,6 +682,37 @@
         }
 
 
+        /* ================== ANIMATED BRAND LOGO ================== */
+        .brand-logo-animated {
+            margin: 18px auto 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .brand-logo-animated img {
+            width: 56px;
+            height: auto;
+            animation: floatBoat 2.6s ease-in-out infinite;
+            filter: none;
+            background: transparent;
+        }
+
+
+        /* אנימציית ציפה עדינה */
+        @keyframes floatBoat {
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
+        }
 
 
         /* ================================================================================================================= */
@@ -698,12 +731,15 @@
             }
 
             .general-link {
-                bottom: 57px;
+                bottom: 14px;
+                z-index: 9;
             }
 
             .general-link a {
-                padding: 8px 14px;
-                font-size: 13px;
+                padding: 6px 12px;
+                font-size: 12px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
             }
 
             .card {
@@ -1103,8 +1139,14 @@
 
             const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
 
-            // 👇 החלק החדש
-            const peopleText = state.people === otherAmountOfpeople ? '' : ` ל${state.people} אנשים`;
+            let peopleText = '';
+
+            if (state.people === 1) {
+                peopleText = ' לאדם אחד';
+            } else if (state.people !== otherAmountOfpeople) {
+                peopleText = ` ל${state.people} אנשים`;
+            }
+
 
             summaryText.innerHTML =
                 `${startText}${peopleText} ${target}`;
@@ -1310,6 +1352,10 @@
             <div class="redirect-subtext">
                 סיננו עבורכם את כל האפשרויות – מוצגות לכם רק המעבורות שמתאימות לכם.
             </div>
+            <div class="brand-logo-animated">
+                <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
+            </div>
+
             <div class="redirect-brand">
                 MAABORET ✕ 12GO
             </div>
