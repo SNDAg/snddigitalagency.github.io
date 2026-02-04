@@ -689,6 +689,12 @@
             transform: scale(1.03);
         }
 
+        /* Focus mode – hide logo on final step */
+        .focus-final-step .logo-header {
+            display: none !important;
+        }
+
+
 
 
         /* ================================================================================================================= */
@@ -1093,37 +1099,41 @@
         }
 
         function selectDepTime(value) {
-    state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
+            state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
 
-    let timeText = '';
-    if (value === 'early') timeText = 'מוקדמת';
-    if (value === 'late') timeText = 'מאוחרת';
+            let timeText = '';
+            if (value === 'early') timeText = 'מוקדמת';
+            if (value === 'late') timeText = 'מאוחרת';
 
-    const dayText = dateText[state.date] || '';
-    const isSpecialDay =
-        dayText === 'היום' ||
-        dayText === 'מחר' ||
-        dayText === 'מחרתיים';
+            const dayText = dateText[state.date] || '';
+            const isSpecialDay =
+                dayText === 'היום' ||
+                dayText === 'מחר' ||
+                dayText === 'מחרתיים';
 
-    let startText = 'מעבורת';
-    if (timeText && isSpecialDay) {
-        startText += ` ${timeText} ${dayText}`;
-    }
+            let startText = 'מעבורת';
+            if (timeText && isSpecialDay) {
+                startText += ` ${timeText} ${dayText}`;
+            }
 
-    const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
+            const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
 
-    // 👇 החלק החדש
-    const peopleText = state.people === otherAmountOfpeople ? '' : ` ל${state.people} אנשים`;
+            // 👇 החלק החדש
+            const peopleText = state.people === otherAmountOfpeople ? '' : ` ל${state.people} אנשים`;
 
-    summaryText.innerHTML =
-        `${startText}${peopleText} ${target}`;
+            summaryText.innerHTML =
+                `${startText}${peopleText} ${target}`;
 
-    document
-        .querySelector('.general-link')
-        ?.style.setProperty('display', 'none');
+            document
+                .querySelector('.general-link')
+                ?.style.setProperty('display', 'none');
 
-    transition('step-dep-time', 'step-summary');
-}
+            transition('step-dep-time', 'step-summary');
+
+            // Focus mode – hide logo on final step
+            document.body.classList.add('focus-final-step');
+
+        }
 
 
 
@@ -1192,6 +1202,11 @@
                 document.getElementById('navButtons').style.display = 'none';
             }
             updateProgressDots(prev);
+            // Remove focus mode when leaving summary
+            if (prev !== 'step-summary') {
+                document.body.classList.remove('focus-final-step');
+            }
+
         }
 
         function toggleShareMenu() {
