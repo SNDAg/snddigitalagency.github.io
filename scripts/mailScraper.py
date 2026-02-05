@@ -14,9 +14,21 @@ from collections import defaultdict
 # =========================================================================
 
 
-DEFAULT_CITY = "tel aviv"
+DEFAULT_CITY = "krabi"
 
-PLACE_TYPES = ["hotel","hostel","apartments"]
+PLACE_TYPES = [
+    'חומוס',
+    'שקשוקה',
+    'מסעדה',
+    'חבד',
+    'חב"ד',
+    'ישראלי',
+    'ישראלית',
+    'כשר',
+    'חלבי',
+    'בשרי',
+    'chabad'
+]
 
 
 ## google queries:
@@ -63,8 +75,7 @@ EXCLUDE_SITES = [
 # ========== Configs  ========================================
 
 API_KEYS = [
-    # snd4digital@gmail.com + mom 
-    "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6",
+
     # shahaf579@gmail.com + eden 
     "f5a61080d33b7a84baa9bdc55c9d12b493c7ad87f8f3890164f8d3644e20265f", 
     # snddigitalagency.com + my 
@@ -73,6 +84,8 @@ API_KEYS = [
     "95c859ae890d7f67b5f8023c46b276b4939f6ae834d7a7bc501365ec67a09d4c",
     # shahaf579+2@gmail.com + dad 
     "ee440ae17faf070ce94b561e78f60acf2b5f47f3cab7d4521aa91e6dc30b6dbc",  
+        # snd4digital@gmail.com + mom 
+    "5735b8307d6f5a7a6b26d245539d6dd28c26d476d204c956176fd5db669004f6",
 ]
 
 BAD_SUFFIXES = [".png", ".jpg", ".jpeg", ".gif", ".pdf"]
@@ -132,7 +145,7 @@ def build_queries(city: str) -> list:
 
 
 def fetch_results(query: str, locale: dict) -> list:
-    global api_index
+    global api_index, swiched_api_key 
     max_attempts = len(API_KEYS)
     attempt = 0
 
@@ -142,12 +155,12 @@ def fetch_results(query: str, locale: dict) -> list:
         headers = {"User-Agent": random.choice(USER_AGENTS)}
         resp = requests.get("https://serpapi.com/search", params=params, headers=headers)
 
-        if resp.status_code == 429:
-            print(f"[WARN] API key {api_index + 1} got rate limited. Switching to next key...")
-            swiched_api_key +=1
+        if resp.status_code in (429, 500, 502, 503):
+            print(f"[WARN] Server error {resp.status_code}. Switching key / retrying...")
+            swiched_api_key += 1
             api_index = (api_index + 1) % len(API_KEYS)
             attempt += 1
-            time.sleep(1)
+            time.sleep(2)
             continue
 
         resp.raise_for_status()
