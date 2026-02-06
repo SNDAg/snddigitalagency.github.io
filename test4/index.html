@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
     <!-- old Favicon -->
     <!-- <link href="/icons/ship-favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
@@ -153,7 +152,6 @@ function closePortModal(){
             --logo-blue: #1c445e;
             /* <-- כאן הוספנו את הצבע החדש */
         }
-
         /* ================== BASE ================== */
         body {
             margin: 0;
@@ -168,11 +166,9 @@ function closePortModal(){
             justify-content: center;
             position: relative;
         }
-
         .hidden {
             display: none !important;
         }
-
         /* ================== OVERLAY ================== */
         .overlay {
             background: rgba(0, 0, 0, 0.25);
@@ -187,31 +183,26 @@ function closePortModal(){
             justify-content: flex-start;
             padding-top: 90px;
         }
-
         h1 {
             margin-bottom: 24px;
             color: var(--logo-blue);
             font-size: 24px;
             font-weight: 700;
         }
-
         /* ================== STEP ANIMATION ================== */
         .step {
             animation: stepIn 0.45s ease;
         }
-
         @keyframes stepIn {
             from {
                 opacity: 0;
                 transform: translateY(12px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
         /* ================== BUTTON BASE ================== */
         button {
             background: linear-gradient(270deg, var(--blue-2), var(--blue-1));
@@ -225,25 +216,20 @@ function closePortModal(){
             transition: all 0.25s ease;
             box-shadow: var(--shadow-sm);
         }
-
         .options button:nth-child(even) {
             background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
         }
-
         button:active {
             transform: scale(0.97);
         }
-
         button:hover {
             transform: translateY(-4px) scale(1.03);
             background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
             box-shadow: var(--shadow-lg);
         }
-
         .options button:nth-child(even):hover {
             background: linear-gradient(90deg, var(--blue-1), var(--blue-3));
         }
-
         /* ================== OPTIONS ================== */
         .options {
             display: flex;
@@ -251,14 +237,12 @@ function closePortModal(){
             gap: 12px;
             justify-content: flex-start;
         }
-
         .options button {
             flex: 1 1 calc(50% - 6px);
             min-width: 100px;
             max-width: 200px;
             text-align: center;
         }
-
         /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
@@ -266,7 +250,6 @@ function closePortModal(){
             line-height: 1.45;
             margin-bottom: 18px;
         }
-
         /* ================== CTA ================== */
         .cta {
             display: inline-flex;
@@ -282,12 +265,10 @@ function closePortModal(){
             box-shadow: var(--shadow-lg);
             transition: all 0.25s ease;
         }
-
         .cta:hover {
             background: linear-gradient(135deg, var(--orange-3), var(--orange-1));
             transform: translateY(-3px) scale(1.02);
         }
-
         /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
@@ -295,13 +276,11 @@ function closePortModal(){
             color: var(--gray-1);
             margin-bottom: 12px;
         }
-
         .routeNote {
             color: #b45309;
             margin-bottom: 12px;
             font-size: 12px;
         }
-
         /* ================== GENERAL LINK ================== */
         .general-link {
             position: fixed;
@@ -310,7 +289,6 @@ function closePortModal(){
             text-align: center;
             z-index: 9;
         }
-
         .general-link a {
             display: inline-block;
             background: #4DB84D;
@@ -322,12 +300,10 @@ function closePortModal(){
             font-weight: 600;
             transition: all 0.2s ease;
         }
-
         .general-link a:hover {
             background: #3ca638;
             transform: translateY(-1px);
         }
-
         /* ================== FOOTER ================== */
         .affiliate-footer {
             position: absolute;
@@ -342,7 +318,6 @@ function closePortModal(){
             line-height: 1.3;
             z-index: 1;
         }
-
         /* ================== WHATSAPP ================== */
         .whatsapp-button {
             position: fixed;
@@ -360,27 +335,39 @@ function closePortModal(){
             text-decoration: none;
             transition: transform 0.2s;
         }
-
         /* ================== COUPON ================== */
         .coupon-box {
+            background: #f8fafc;
+            border: 1px dashed rgba(2, 132, 199, 0.35);
+            border-radius: 16px;
+            padding: 12px 14px;
             font-size: 12.5px;
             font-weight: 400;
             margin-top: 4px;
-            padding: 6px 10px;
-            background: rgba(0, 0, 0, 0.04);
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 6px;
         }
-
         .coupon-text {
             flex: 1;
             min-width: 0;
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.4;
         }
-
+        .coupon-code {
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 1.2px;
+            color: #0284c7;
+            background: white;
+            border-radius: 10px;
+            padding: 6px 12px;
+            display: inline-block;
+            margin-top: 6px;
+        }
         .coupon-btn {
             background: var(--green-1);
             color: white;
@@ -390,32 +377,36 @@ function closePortModal(){
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transition: all 0.2s ease;
         }
-
         .coupon-btn:hover {
             background: var(--green-2);
             transform: translateY(-2px) scale(1.05);
         }
-
         .coupon-btn.icon-only {
-            background: #c4c4c4;
-            color: var(--gray-2);
+            width: 30px;
+            /* היה ~34 */
+            height: 30px;
+            padding: 0;
+            border-radius: 8px;
+            opacity: 0.75;
+            background: #e5e7eb;
+            color: #334155;
+            box-shadow: none;
+            transition: background 0.15s ease;
         }
-
         .coupon-btn.icon-only:hover {
-            background: #b0b0b0;
+            opacity: 1;
+            background: #d1d5db;
+            transform: none;
         }
-
         .coupon-btn.icon-only svg {
-            width: 18px;
-            height: 18px;
+            width: 13px;
+            height: 13px;
         }
-
         .coupon-btn.icon-only svg rect {
             fill: none;
-            stroke: #1f2937;
-            stroke-width: 2;
+            stroke-width: 1.6;
+            stroke: #0284c7;
         }
-
         /* ================== NAV BUTTONS  ================== */
         #navButtons {
             position: fixed;
@@ -426,7 +417,6 @@ function closePortModal(){
             gap: 8px;
             z-index: 1000;
         }
-
         #navButtons button {
             width: 38px;
             height: 38px;
@@ -443,20 +433,17 @@ function closePortModal(){
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
         }
-
         #navButtons button:hover {
             transform: translateY(-2px) scale(1.2);
             opacity: 1;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         }
-
         .share-wrapper {
             position: fixed;
             bottom: 8px;
             left: 20px;
             z-index: 9999;
         }
-
         .share-main-btn {
             width: 38px;
             height: 38px;
@@ -469,25 +456,21 @@ function closePortModal(){
             align-items: center;
             justify-content: center;
         }
-
         .summary-helper {
             font-size: 14px;
             font-weight: 400;
             color: var(--gray-1);
             margin-bottom: 14px;
         }
-
         .trust {
             margin: 12px 0 18px 0;
         }
-
         .trust div {
             font-size: 12px;
             font-weight: 500;
             color: var(--gray-1);
             line-height: 1.5;
         }
-
         .share-main-btn svg {
             width: 26px;
             height: 26px;
@@ -497,24 +480,18 @@ function closePortModal(){
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-
         .share-main-btn:hover {
             background: white !important;
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
         }
-
         .share-menu .share-item:hover {
             background: #d8d5d5 !important;
-            /* רקע כחול בהיר */
             color: white !important;
-            /* צבע האייקון לבן */
             transform: scale(1.1);
-            /* הגדלה עדינה */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-            /* צל עדין */
-        }
 
+        }
         .share-menu {
             position: absolute;
             bottom: 50px;
@@ -534,28 +511,23 @@ function closePortModal(){
             min-width: 32px;
             /* רוחב מינימלי */
         }
-
         .share-item .copy-icon {
             width: 20px;
             /* קטן יותר */
             height: 20px;
             /* קטן יותר */
         }
-
         .share-item .copy-icon rect {
             fill: none;
             stroke: #1f2937;
             stroke-width: 2;
         }
-
         #shareMenu {
             display: none;
         }
-
         #shareMenu:not(.hidden) {
             display: flex;
         }
-
         /* =======================================
    Share Menu - the group of Circle Buttons coming out of the main share button
    ======================================= */
@@ -570,7 +542,6 @@ function closePortModal(){
             padding: 0;
             background: transparent;
         }
-
         .share-item {
             font-weight: 500;
             font-size: 14px;
@@ -589,18 +560,15 @@ function closePortModal(){
             text-decoration: none;
             color: inherit;
         }
-
         .share-item:hover {
             transform: translateY(-4px) scale(1.1);
             box-shadow: 0 4px 10px rgba(211, 219, 223, 0.25);
         }
-
         .share-item img,
         .share-item svg {
             width: 20px;
             height: 20px;
         }
-
         /* ================== TOAST COPY ================== */
         .copy-toast {
             position: fixed;
@@ -619,12 +587,10 @@ function closePortModal(){
             transition: all 0.35s ease;
             z-index: 99999;
         }
-
         .copy-toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
         /* ================== PROGRESS DOTS ================== */
         .progress-dots {
             display: flex;
@@ -632,7 +598,6 @@ function closePortModal(){
             gap: 10px;
             margin-bottom: 24px;
         }
-
         .progress-dots .dot {
             width: 14px;
             height: 14px;
@@ -640,11 +605,9 @@ function closePortModal(){
             background-color: #c4c4c4;
             transition: background-color 0.25s;
         }
-
         .progress-dots .dot.active {
             background-color: var(--green-1);
         }
-
         /* ================== CARD ================== */
         .card {
             color: var(--gray-2);
@@ -659,12 +622,10 @@ function closePortModal(){
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             position: relative;
         }
-
         /* ================== LOGO HEADER ================== */
         .logo-header img:hover {
             transform: scale(1.03);
         }
-
         /* ================== LOGO HEADER ================== */
         .logo-header {
             width: 100%;
@@ -675,7 +636,6 @@ function closePortModal(){
             margin-top: -30px;
             z-index: 2;
         }
-
         .logo-header img {
             background: transparent;
             box-shadow: none;
@@ -686,16 +646,13 @@ function closePortModal(){
             filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
             transition: transform 0.25s ease;
         }
-
         .logo-header img:hover {
             transform: scale(1.03);
         }
-
         /* Focus mode – hide logo on final step */
         .focus-final-step .logo-header {
             display: none !important;
         }
-
         /* ================== ANIMATED BRAND LOGO ================== */
         .brand-logo-animated {
             margin: 18px auto 10px;
@@ -703,7 +660,6 @@ function closePortModal(){
             justify-content: center;
             align-items: center;
         }
-
         .brand-logo-animated img {
             width: 56px;
             height: auto;
@@ -711,22 +667,18 @@ function closePortModal(){
             filter: none;
             background: transparent;
         }
-
         /* אנימציית ציפה עדינה */
         @keyframes floatBoat {
             0% {
                 transform: translateY(0);
             }
-
             50% {
                 transform: translateY(-6px);
             }
-
             100% {
                 transform: translateY(0);
             }
         }
-
         /* ================== REDIRECT SCREEN ================== */
         .redirect-screen {
             position: fixed;
@@ -738,7 +690,6 @@ function closePortModal(){
             align-items: center;
             justify-content: center;
         }
-
         .redirect-card {
             background: white;
             border-radius: 26px;
@@ -749,19 +700,16 @@ function closePortModal(){
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
             animation: fadeInScale 0.4s ease;
         }
-
         @keyframes fadeInScale {
             from {
                 opacity: 0;
                 transform: scale(0.9);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-
         .loader-bar {
             width: 100%;
             height: 10px;
@@ -770,7 +718,6 @@ function closePortModal(){
             overflow: hidden;
             margin-bottom: 20px;
         }
-
         .loader-progress {
             height: 100%;
             width: 0%;
@@ -778,14 +725,12 @@ function closePortModal(){
             border-radius: 20px;
             transition: width 0.3s ease;
         }
-
         .redirect-text {
             font-size: 17px;
             font-weight: 600;
             color: var(--gray-2);
             margin-bottom: 8px;
         }
-
         .redirect-subtext {
             font-size: 13px;
             font-weight: 470;
@@ -793,14 +738,12 @@ function closePortModal(){
             line-height: 1.4;
             margin-bottom: 16px;
         }
-
         .redirect-brand {
             font-size: 13px;
             font-weight: 600;
             color: var(--blue-3);
             letter-spacing: 0.5px;
         }
-
         /* ===== PORT MODAL ===== */
         .port-modal {
             position: fixed;
@@ -813,7 +756,6 @@ function closePortModal(){
             justify-content: center;
             padding: 20px;
         }
-
         .port-card {
             background: white;
             border-radius: 26px;
@@ -830,13 +772,11 @@ function closePortModal(){
             flex-direction: column;
             justify-content: center;
         }
-
         .port-title {
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 10px
         }
-
         .port-name {
             font-size: 26px;
             font-weight: 600;
@@ -848,12 +788,10 @@ function closePortModal(){
             margin: 14px 0;
             letter-spacing: 0.5px;
         }
-
         .port-hint {
             font-size: 15px;
             color: #475569
         }
-
         .close-port {
             position: absolute;
             top: 10px;
@@ -872,7 +810,6 @@ function closePortModal(){
             line-height: 1;
             padding: 0;
         }
-
         .show-port-btn {
             margin: 14px 0 6px 0;
             background: transparent;
@@ -888,7 +825,6 @@ function closePortModal(){
             box-shadow: none;
             opacity: .85;
         }
-
         .show-port-btn:hover {
             background: rgba(14, 165, 233, 0.06);
             border-style: solid;
@@ -896,14 +832,37 @@ function closePortModal(){
             color: #0369a1;
             opacity: 1;
         }
-
         .show-port-btn:hover {
             background: rgba(14, 165, 233, 0.12);
             border-color: rgba(14, 165, 233, 0.4);
             color: #0284c7;
             transform: translateY(-1px);
         }
-
+        /* FINAL STEP – layout fix */
+        .focus-final-step #navButtons {
+            top: 6px;
+            /* נשאר קבוע */
+        }
+        .focus-final-step #progressDots {
+            position: fixed;
+            top: 54px;
+            /* תמיד מתחת לכפתורים */
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+        }
+        .focus-final-step .overlay {
+            padding-top: 90px;
+        }
+        .focus-final-step #progressDots {
+            margin-bottom: 10px;
+        }
+        .focus-final-step .card {
+            margin-bottom: 60px;
+        }
+        .focus-final-step .coupon-box {
+            margin-top: 10px;
+        }
         /* ================================================================================================================= */
         /* ================================================================================================================= */
         /* ================== MOBILE ================== */
@@ -911,25 +870,21 @@ function closePortModal(){
             body {
                 background-position: center top;
             }
-
             .affiliate-footer {
                 font-size: 9px;
                 padding: 0 6px;
                 line-height: 1.4;
             }
-
             .general-link {
                 bottom: 8px;
                 z-index: 9;
             }
-
             .general-link a {
                 padding: 6px 12px;
                 font-size: 12px;
                 border-radius: 10px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
             }
-
             .card {
                 padding: 20px;
                 border-radius: 20px;
@@ -937,26 +892,21 @@ function closePortModal(){
                 max-height: 90vh;
                 overflow-y: auto;
             }
-
             #navButtons {
                 gap: 6px;
             }
-
             .port-card {
                 max-width: 95%;
                 min-height: 70vh;
                 padding: 40px 20px;
                 border-radius: 20px;
             }
-
             .port-name {
                 font-size: 24px;
             }
-
             .port-title {
                 font-size: 20px;
             }
-
             .show-port-btn {
                 font-size: 14px;
                 font-weight: 500;
@@ -964,14 +914,12 @@ function closePortModal(){
                 margin: 16px 0 15px 0;
                 opacity: .75;
             }
-
             h1 {
                 font-size: 22px;
             }
         }
     </style>
 </head>
-
 <body>
     <h1 style="display:none">MAABORET – הזמנת מעבורת בתאילנד</h1>
     <div class="overlay">
@@ -1081,15 +1029,18 @@ function closePortModal(){
                     💡 מידע על נמל היציאה – להציג למונית
                 </button>
                 <div class="coupon-box">
-                    <div class="coupon-text" id="couponText">
-                        🎁 קוד קופון 5% הנחה למשתמשים חדשים: <span id="couponCode"></span></br>
+                    <div class="coupon-text">
+                        🎁 קוד 5% הנחה למשתמשים חדשים
                     </div>
-                    <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
-                        <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="8" y="7" width="12" height="14" rx="3"></rect>
-                            <rect x="4" y="3" width="12" height="14" rx="3"></rect>
-                        </svg>
-                    </button>
+                    <div class="coupon-action">
+                        <div class="coupon-code" id="couponCode">CJ12GO</div>
+                        <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
+                            <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="8" y="7" width="12" height="14" rx="3"></rect>
+                                <rect x="4" y="3" width="12" height="14" rx="3"></rect>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
             <div id="couponCopied" class="coupon-copied hidden">
@@ -1311,6 +1262,15 @@ function closePortModal(){
             transition('step-dep-time', 'step-summary');
             // Focus mode – hide logo on final step
             document.body.classList.add('focus-final-step');
+            setTimeout(() => {
+                const card = document.querySelector('.card');
+                if (card) {
+                    card.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
         }
         function goToBooking() {
             // Build booking URL
@@ -1497,5 +1457,4 @@ function closePortModal(){
         </div>
     </div>
 </body>
-
 </html>
