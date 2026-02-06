@@ -852,7 +852,6 @@
             <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <h1>מאיפה יוצאים?</h1>
-                <h12>V9</h12>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
@@ -1037,6 +1036,46 @@
             dayAfterTomorrow: 'מחרתיים',
             noDate: ''
         };
+
+        portsBySource = {
+            "Koh Samui": {
+                "Koh Phangan": "Bangrak Pier / Nathon Pier",
+                "Koh Tao": "Mae Haad Pier",
+                "Surat Thani": "Donsak Pier"
+            },
+            "Koh Phangan": {
+                "Koh Samui": "Thongsala Pier",
+                "Koh Tao": "Haad Rin / Thong Sala Pier"
+            },
+            "Koh Tao": {
+                "Koh Samui": "Mae Haad Pier",
+                "Koh Phangan": "Mae Haad Pier"
+            },
+            "Phuket": {
+                "Phi Phi": "Rassada Pier",
+                "Koh Lanta": "Rassada Pier",
+                "Krabi": "Rassada Pier"
+            },
+            "Krabi": {
+                "Phuket": "Klong Jilad Pier",
+                "Koh Lanta": "Klong Jilad Pier",
+                "Phi Phi": "Klong Jilad Pier"
+            },
+            "Koh Lanta": {
+                "Phuket": "Saladan Pier",
+                "Krabi": "Saladan Pier",
+                "Phi Phi": "Saladan Pier"
+            },
+            "Phi Phi": {
+                "Phuket": "Tonsai Pier",
+                "Krabi": "Tonsai Pier",
+                "Koh Lanta": "Tonsai Pier"
+            },
+            "Surat Thani": {
+                "Koh Samui": "Donsak Pier"
+            }
+        }
+
 
         /* =========================
            DOM CACHE
