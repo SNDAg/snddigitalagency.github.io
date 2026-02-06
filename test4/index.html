@@ -475,7 +475,7 @@ function closePortModal(){
         }
 
         .trust div {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 500;
             color: var(--gray-1);
             line-height: 1.5;
@@ -719,73 +719,6 @@ function closePortModal(){
                 transform: translateY(0);
             }
         }
-
-        /* ================================================================================================================= */
-        /* ================================================================================================================= */
-        /* ================== MOBILE ================== */
-        @media (max-width: 480px) {
-            body {
-                background-position: center top;
-            }
-
-            .affiliate-footer {
-                font-size: 9px;
-                padding: 0 6px;
-                line-height: 1.4;
-            }
-
-            .general-link {
-                bottom: 8px;
-                z-index: 9;
-            }
-
-            .general-link a {
-                padding: 6px 12px;
-                font-size: 12px;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 20px;
-                max-width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            #navButtons {
-                gap: 6px;
-            }
-
-            .port-card {
-                max-width: 95%;
-                min-height: 70vh;
-                padding: 40px 20px;
-                border-radius: 20px;
-            }
-
-            .port-name {
-                font-size: 24px;
-            }
-
-            .port-title {
-                font-size: 20px;
-            }
-
-            .show-port-btn {
-                font-size: 14px;
-                font-weight: 500;
-                padding: 7px 6px;
-                margin: 6px 0 24px 0;
-                opacity: .75;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-        }
-
         /* ================== REDIRECT SCREEN ================== */
         .redirect-screen {
             position: fixed;
@@ -847,7 +780,7 @@ function closePortModal(){
 
         .redirect-subtext {
             font-size: 13px;
-            font-weight: 400;
+            font-weight: 470;
             color: var(--gray-1);
             line-height: 1.4;
             margin-bottom: 16px;
@@ -971,6 +904,72 @@ function closePortModal(){
             color: #0284c7;
             transform: translateY(-1px);
         }
+        
+        /* ================================================================================================================= */
+        /* ================================================================================================================= */
+        /* ================== MOBILE ================== */
+        @media (max-width: 480px) {
+            body {
+                background-position: center top;
+            }
+
+            .affiliate-footer {
+                font-size: 9px;
+                padding: 0 6px;
+                line-height: 1.4;
+            }
+
+            .general-link {
+                bottom: 8px;
+                z-index: 9;
+            }
+
+            .general-link a {
+                padding: 6px 12px;
+                font-size: 12px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 20px;
+                max-width: 95%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            #navButtons {
+                gap: 6px;
+            }
+
+            .port-card {
+                max-width: 95%;
+                min-height: 70vh;
+                padding: 40px 20px;
+                border-radius: 20px;
+            }
+
+            .port-name {
+                font-size: 24px;
+            }
+
+            .port-title {
+                font-size: 20px;
+            }
+
+            .show-port-btn {
+                font-size: 14px;
+                font-weight: 500;
+                padding: 7px 6px;
+                margin: 6px 0 24px 0;
+                opacity: .75;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 
@@ -1059,7 +1058,7 @@ function closePortModal(){
                 </div>
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
-                    כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
+                    כל האפשרויות כבר סוננו עבורך – נשאר רק לבחור שעה
                 </div>
                 <div class="trust">
                     <div>✔️ מעל 8,000 הזמנות מאומתות</div>
@@ -1074,6 +1073,9 @@ function closePortModal(){
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
+                <div class="note">
+                    🔒 מעבר לאתר הרשמי של 12GO לתשלום מאובטח
+                </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע על נמל היציאה – להציג למונית
                 </button>
@@ -1494,4 +1496,5 @@ function closePortModal(){
         </div>
     </div>
 </body>
+
 </html>
