@@ -969,7 +969,7 @@ function closePortModal(){
                     <div>✔️ אותו מחיר כמו באתר הרשמי – ללא עמלות</div>
                 </div>
                 <button class="cta" onclick="goToBooking()" class="cta">
-                    בחירת שעה והשלמת תשלום
+                    לבחירת שעה ותשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
@@ -977,7 +977,7 @@ function closePortModal(){
                     </svg>
                 </button>
                 <button class="show-port-btn" onclick="openPortModal()">
-                    💡 מידע מדויק על נמל היציאה – להצגה לנהג מונית
+                    💡 מידע על נמל היציאה – להציג למונית
                 </button>
                 <div class="coupon-box">
                     <div class="coupon-text" id="couponText">
@@ -1201,7 +1201,7 @@ function closePortModal(){
             const routeNote = document.getElementById('routeNote');
             if (state.from && state.to) {
                 routeNote.innerHTML = `
-            ⚠️ בעונה הזו יש עומס בקו ${placeNames[state.from]} ⇦ ${placeNames[state.to]}<br>
+            ⚠️ עומס בעונה הזו בקו ${placeNames[state.from]} ⇦ ${placeNames[state.to]}<br>
             מומלץ להזמין מראש כדי להבטיח מקום
         `;
             } else {
