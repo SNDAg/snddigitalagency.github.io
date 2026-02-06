@@ -210,24 +210,11 @@ function closePortModal(){
 
         }
 
-        /* ================== CARD ================== */
-        .card {
-            background: rgba(248, 250, 252, 0.92);
-            color: var(--gray-2);
-            border-radius: 26px;
-            padding: 28px;
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            margin-bottom: 80px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
-        }
-
         h1 {
-            font-size: 26px;
             margin-bottom: 24px;
             color: var(--logo-blue);
+            font-size: 24px;
+            font-weight: 700;
         }
 
         /* ================== STEP ANIMATION ================== */
@@ -297,8 +284,9 @@ function closePortModal(){
         /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
+            font-weight: 600;
+            line-height: 1.45;
             margin-bottom: 18px;
-            line-height: 1.4;
         }
 
         /* ================== CTA ================== */
@@ -325,7 +313,7 @@ function closePortModal(){
         /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--gray-1);
         }
 
@@ -392,11 +380,15 @@ function closePortModal(){
 
         /* ================== COUPON ================== */
         .coupon-box {
+
+            font-size: 12.5px;
+            font-weight: 400;
+
+
             margin-top: 14px;
             padding: 12px;
             background: rgba(0, 0, 0, 0.04);
             border-radius: 12px;
-            font-size: 13px;
 
             display: flex;
             align-items: center;
@@ -502,6 +494,26 @@ function closePortModal(){
             justify-content: center;
         }
 
+        .summary-helper {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--gray-1);
+            margin-bottom: 14px;
+        }
+
+        .trust {
+            margin: 12px 0 18px 0;
+        }
+
+        .trust div {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-1);
+            line-height: 1.5;
+        }
+
+
+
         .share-main-btn svg {
             width: 26px;
             height: 26px;
@@ -562,7 +574,6 @@ function closePortModal(){
             stroke-width: 2;
         }
 
-
         #shareMenu {
             display: none;
         }
@@ -616,7 +627,6 @@ function closePortModal(){
             height: 20px;
         }
 
-
         /* ================== TOAST COPY ================== */
         .copy-toast {
             position: fixed;
@@ -641,7 +651,6 @@ function closePortModal(){
             transform: translateX(-50%) translateY(0);
         }
 
-
         /* ================== PROGRESS DOTS ================== */
         .progress-dots {
             display: flex;
@@ -650,33 +659,26 @@ function closePortModal(){
             margin-bottom: 24px;
         }
 
-
         .progress-dots .dot {
             width: 14px;
             height: 14px;
             border-radius: 50%;
             background-color: #c4c4c4;
-            /* אפור */
             transition: background-color 0.25s;
-            /* שינוי כאן */
         }
 
         .progress-dots .dot.active {
             background-color: var(--green-1);
-            /* ירוק */
         }
 
-        /* ================== LOGO HEADER ================== */
-        /* 1. הלוגו - הופך להיות נקי ופשוט */
-
-
-        /* 2. הכרטיסייה - המכל שמכיל הכל */
+        /* ================== CARD ================== */
         .card {
+            color: var(--gray-2);
+            text-align: center;
+            backdrop-filter: blur(8px);
             background: rgba(255, 255, 255, 0.98);
-            /* לבן כמעט מלא למראה נקי */
             border-radius: 30px;
             padding: 40px 25px 30px 25px;
-            /* יותר ריפוד למעלה בשביל הלוגו */
             width: 92%;
             max-width: 400px;
             margin-bottom: 120px;
@@ -686,13 +688,11 @@ function closePortModal(){
 
         /* ================== LOGO HEADER ================== */
 
-
         .logo-header img:hover {
             transform: scale(1.03);
         }
 
         /* ================== LOGO HEADER ================== */
-
         .logo-header {
             width: 100%;
             display: flex;
@@ -796,6 +796,38 @@ function closePortModal(){
             #navButtons {
                 gap: 6px;
             }
+
+            .port-card {
+                max-width: 95%;
+                min-height: 70vh;
+                padding: 40px 20px;
+                border-radius: 20px;
+            }
+
+            .port-name {
+                font-size: 24px;
+            }
+
+            .port-title {
+                font-size: 20px;
+            }
+
+            .show-port-btn {
+
+                font-size: 14px;
+                font-weight: 500;
+
+
+
+                padding: 7px 6px;
+                margin: 6px 0 24px 0;
+                opacity: .75;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
         }
 
         /* ================== REDIRECT SCREEN ================== */
@@ -858,7 +890,8 @@ function closePortModal(){
         }
 
         .redirect-subtext {
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 400;
             color: var(--gray-1);
             line-height: 1.4;
             margin-bottom: 16px;
@@ -870,64 +903,142 @@ function closePortModal(){
             color: var(--blue-3);
             letter-spacing: 0.5px;
         }
-    
-/* ===== PORT MODAL ===== */
-.port-modal{
- position:fixed;
- inset:0;
- background:rgba(15,23,42,.8);
- backdrop-filter:blur(6px);
- z-index:999999;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:20px;
-}
 
-.port-card{
- background:white;
- border-radius:26px;
- padding:28px 22px;
- max-width:360px;
- width:100%;
- text-align:center;
- box-shadow:0 20px 50px rgba(0,0,0,.4);
- position:relative;
-}
+        /* ===== PORT MODAL ===== */
+        .port-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .8);
+            backdrop-filter: blur(6px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-.port-title{font-size:22px;font-weight:700;margin-bottom:10px}
-.port-name{font-size:26px;font-weight:800;color:#0ea5e9;margin:12px 0}
-.port-hint{font-size:15px;color:#475569}
+        .port-card {
+            background: white;
+            border-radius: 26px;
+            padding: 36px 28px;
 
-.close-port{
- position:absolute;
- top:10px;
- left:10px;
- width:34px;
- height:34px;
- border:none;
- border-radius:50%;
- background:#e5e7eb;
- font-size:18px;
- cursor:pointer;
-}
+            width: 100%;
+            max-width: 700px;
+            /* היה ~360 → עכשיו כפול */
 
-.show-port-btn{
- margin-top:14px;
- background:#10b981;
- color:white;
- border:none;
- border-radius:16px;
- padding:14px 10px;
- font-size:16px;
- font-weight:600;
- cursor:pointer;
- width:100%;
-}
+            min-height: 260px;
+            /* נותן “נוכחות” */
 
-.show-port-btn:hover{background:#059669}
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+            position: relative;
 
-</style>
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+
+        .port-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px
+        }
+
+        .port-name {
+            font-size: 26px;
+            font-weight: 600;
+            color: #000;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 10px 8px;
+            margin: 14px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .port-hint {
+            font-size: 15px;
+            color: #475569
+        }
+
+        .close-port {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+
+            width: 34px;
+            height: 34px;
+
+            border: none;
+            border-radius: 50%;
+            background: #e5e7eb;
+
+            font-size: 18px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            display: flex;
+            /* חדש */
+            align-items: center;
+            /* חדש */
+            justify-content: center;
+            /* חדש */
+
+            line-height: 1;
+            /* חדש */
+            padding: 0;
+            /* חדש */
+        }
+
+
+        .show-port-btn {
+            margin: 8px 0 26px 0;
+
+            background: transparent;
+            /* כמעט נעלם */
+            color: #0284c7;
+
+            border: 1px dashed rgba(14, 165, 233, 0.35);
+            /* קו עדין */
+
+            border-radius: 10px;
+
+            padding: 8px 6px;
+
+            font-size: 13.5px;
+            font-weight: 500;
+
+            cursor: pointer;
+            width: 100%;
+
+            transition: all .2s ease;
+
+            box-shadow: none;
+            opacity: .85;
+            /* טיפה שקוף */
+        }
+
+
+
+        .show-port-btn:hover {
+            background: rgba(14, 165, 233, 0.06);
+            border-style: solid;
+            border-color: rgba(14, 165, 233, 0.5);
+            color: #0369a1;
+            opacity: 1;
+        }
+
+
+        .show-port-btn:hover {
+            background: rgba(14, 165, 233, 0.12);
+            /* כחול רך */
+            border-color: rgba(14, 165, 233, 0.4);
+            color: #0284c7;
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 
 <body>
@@ -1014,9 +1125,24 @@ function closePortModal(){
 
             <div id="step-summary" class="step hidden">
                 <h1>יאללה, יוצאים לדרך 🚤</h1>
+
+                <div class="note" id="routeNote" style="color:#b45309; margin-bottom:12px;">
+                    <!-- הודעה על עומס אם יש-->
+                </div>
+
                 <div class="summary" id="summaryText"></div>
+                <div class="note summary-helper">
+                    כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
+                </div>
+
+                <div class="trust">
+                    <div>✔️ מעל 8,000 הזמנות מאומתות</div>
+                    <div>✔️ ספק התחבורה הגדול בתאילנד</div>
+                    <div>✔️ אותו מחיר כמו באתר הרשמי – ללא עמלות</div>
+                </div>
+
                 <button class="cta" onclick="goToBooking()" class="cta">
-                    לבחירת שעה ותשלום
+                    בחירת שעה והשלמת תשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
@@ -1024,20 +1150,10 @@ function closePortModal(){
                     </svg>
                 </button>
 
-<button class="show-port-btn" onclick="openPortModal()">
-📍 מאיפה המעבורת תצא – להראות לנהג מונית
-</button>
 
-
-                <div class="trust">
-                    <div class="note">
-                        מעבר לאתר הרשמי של 12GO לתשלום מאובטח
-                    </div>
-                    </br>
-                    <div>✔️ תשלום מאובטח</div>
-                    <div>✔️ מעל 8,000 הזמנות בתאילנד</div>
-                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול! </div>
-                </div>
+                <button class="show-port-btn" onclick="openPortModal()">
+                    💡 מידע מדויק על נמל היציאה – להצגה לנהג מונית
+                </button>
                 <div class="coupon-box">
                     <div class="coupon-text" id="couponText">
                         🎁 קוד קופון 5% הנחה למשתמשים חדשים: <span id="couponCode"></span></br>
@@ -1139,51 +1255,51 @@ function closePortModal(){
             dayAfterTomorrow: 'מחרתיים',
             noDate: ''
         };
-const portsBySource = {
-  "koh-samui": {
-    "koh-phangan": "Bangrak Pier / Nathon Pier",
-    "koh-tao": "Mae Haad Pier",
-    "surat-thani": "Donsak Pier"
-  },
+        const portsBySource = {
+            "koh-samui": {
+                "koh-phangan": "Bangrak Pier / Nathon Pier",
+                "koh-tao": "Mae Haad Pier",
+                "surat-thani": "Donsak Pier"
+            },
 
-  "koh-phangan": {
-    "koh-samui": "Thongsala Pier",
-    "koh-tao": "Haad Rin / Thong Sala Pier"
-  },
+            "koh-phangan": {
+                "koh-samui": "Thongsala Pier",
+                "koh-tao": "Haad Rin / Thong Sala Pier"
+            },
 
-  "koh-tao": {
-    "koh-samui": "Mae Haad Pier",
-    "koh-phangan": "Mae Haad Pier"
-  },
+            "koh-tao": {
+                "koh-samui": "Mae Haad Pier",
+                "koh-phangan": "Mae Haad Pier"
+            },
 
-  "phuket": {
-    "koh-phi-phi": "Rassada Pier",
-    "koh-lanta": "Rassada Pier",
-    "krabi": "Rassada Pier"
-  },
+            "phuket": {
+                "koh-phi-phi": "Rassada Pier",
+                "koh-lanta": "Rassada Pier",
+                "krabi": "Rassada Pier"
+            },
 
-  "krabi": {
-    "phuket": "Klong Jilad Pier",
-    "koh-lanta": "Klong Jilad Pier",
-    "koh-phi-phi": "Klong Jilad Pier"
-  },
+            "krabi": {
+                "phuket": "Klong Jilad Pier",
+                "koh-lanta": "Klong Jilad Pier",
+                "koh-phi-phi": "Klong Jilad Pier"
+            },
 
-  "koh-lanta": {
-    "phuket": "Saladan Pier",
-    "krabi": "Saladan Pier",
-    "koh-phi-phi": "Saladan Pier"
-  },
+            "koh-lanta": {
+                "phuket": "Saladan Pier",
+                "krabi": "Saladan Pier",
+                "koh-phi-phi": "Saladan Pier"
+            },
 
-  "koh-phi-phi": {
-    "phuket": "Tonsai Pier",
-    "krabi": "Tonsai Pier",
-    "koh-lanta": "Tonsai Pier"
-  },
+            "koh-phi-phi": {
+                "phuket": "Tonsai Pier",
+                "krabi": "Tonsai Pier",
+                "koh-lanta": "Tonsai Pier"
+            },
 
-  "surat-thani": {
-    "koh-samui": "Donsak Pier"
-  }
-};
+            "surat-thani": {
+                "koh-samui": "Donsak Pier"
+            }
+        };
 
 
 
@@ -1304,6 +1420,16 @@ const portsBySource = {
             document
                 .querySelector('.general-link')
                 ?.style.setProperty('display', 'none');
+            // --- עדכון הודעת routeNote מלאה ---
+            const routeNote = document.getElementById('routeNote');
+            if (state.from && state.to) {
+                routeNote.innerHTML = `
+            ⚠️ בעונה הזו יש עומס בקו ${placeNames[state.from]} ⇦ ${placeNames[state.to]}<br>
+            מומלץ להזמין מראש כדי להבטיח מקום
+        `;
+            } else {
+                routeNote.innerHTML = '';
+            }
 
             transition('step-dep-time', 'step-summary');
 
@@ -1453,29 +1579,30 @@ const portsBySource = {
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
 
-    
-/* ===== PORT MODAL ===== */
-function openPortModal(){
 
-  const from = state.from;
-  const to   = state.to;
+        /* ===== PORT MODAL ===== */
+        function openPortModal() {
 
-  let port = 'לא נמצא מידע על הנמל';
+            const from = state.from;
+            const to = state.to;
 
-  if (portsBySource[from] && portsBySource[from][to]) {
-    port = portsBySource[from][to];
-  }
+            if (!portsBySource[from] || !portsBySource[from][to]) {
+                alert('⚠️ אין כרגע מידע מדויק על נמל היציאה בקו הזה');
+                return;
+            }
 
-  document.getElementById('portName').innerText = port;
-  document.getElementById('portModal').classList.remove('hidden');
-}
+            const port = portsBySource[from][to];
+
+            document.getElementById('portName').innerText = port;
+            document.getElementById('portModal').classList.remove('hidden');
+        }
 
 
-function closePortModal(){
-  document.getElementById('portModal').classList.add('hidden');
-}
+        function closePortModal() {
+            document.getElementById('portModal').classList.add('hidden');
+        }
 
-</script>
+    </script>
 
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
@@ -1522,7 +1649,7 @@ function closePortModal(){
                 ⏳ מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
             </div>
             <div class="redirect-subtext">
-                סיננו עבורכם את כל האפשרויות – מוצגות לכם רק המעבורות שמתאימות לכם.
+                כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
@@ -1535,15 +1662,15 @@ function closePortModal(){
     </div>
 
 
-<!-- PORT MODAL -->
-<div id="portModal" class="port-modal hidden">
-  <div class="port-card">
-    <button class="close-port" onclick="closePortModal()">✕</button>
-    <div class="port-title">📸 אפשר לצלם מסך ולהראות לנהג</div>
-    <div class="port-name" id="portName"></div>
-    <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
-  </div>
-</div>
+    <!-- PORT MODAL -->
+    <div id="portModal" class="port-modal hidden">
+        <div class="port-card">
+            <button class="close-port" onclick="closePortModal()">✕</button>
+            <div class="port-title">📸 אפשר לצלם מסך ולהראות לנהג</div>
+            <div class="port-name" id="portName"></div>
+            <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
+        </div>
+    </div>
 
 </body>
 
