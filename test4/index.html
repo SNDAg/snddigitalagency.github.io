@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
     <!-- old Favicon -->
     <!-- <link href="/icons/ship-favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
@@ -81,27 +80,22 @@
            },
            "aggregateRating": {"@type": "AggregateRating","ratingValue": "4.8","reviewCount": "132"}
          }
-      
 /* ===== PORT MODAL ===== */
 function openPortModal(){
   const fromName = placeNames[state.from];
   const toName = placeNames[state.to];
   let port = '';
-
   if(portsBySource[fromName] && portsBySource[fromName][toName]){
     port = portsBySource[fromName][toName];
   } else {
     port = 'לא נמצא מידע על הנמל';
   }
-
   document.getElementById('portName').innerText = port;
   document.getElementById('portModal').classList.remove('hidden');
 }
-
 function closePortModal(){
   document.getElementById('portModal').classList.add('hidden');
 }
-
 </script>
     <!-- BreadcrumbList תקין -->
     <script type="application/ld+json">
@@ -123,27 +117,22 @@ function closePortModal(){
              }
            ]
          }
-      
 /* ===== PORT MODAL ===== */
 function openPortModal(){
   const fromName = placeNames[state.from];
   const toName = placeNames[state.to];
   let port = '';
-
   if(portsBySource[fromName] && portsBySource[fromName][toName]){
     port = portsBySource[fromName][toName];
   } else {
     port = 'לא נמצא מידע על הנמל';
   }
-
   document.getElementById('portName').innerText = port;
   document.getElementById('portModal').classList.remove('hidden');
 }
-
 function closePortModal(){
   document.getElementById('portModal').classList.add('hidden');
 }
-
 </script>
     <style>
         /* ================== CSS VARIABLES ================== */
@@ -151,89 +140,69 @@ function closePortModal(){
             --blue-1: #0ea5e9;
             --blue-2: #14b8a6;
             --blue-3: #0284c7;
-
             --orange-1: #f97316;
             --orange-2: #fb923c;
             --orange-3: #ea580c;
-
             --green-1: #10b981;
             --green-2: #059669;
-
             --gray-1: #475569;
             --gray-2: #1f2937;
-
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
             --logo-blue: #1c445e;
             /* <-- כאן הוספנו את הצבע החדש */
         }
-
         /* ================== BASE ================== */
         body {
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
             background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
         }
-
         .hidden {
             display: none !important;
         }
-
         /* ================== OVERLAY ================== */
         .overlay {
             background: rgba(0, 0, 0, 0.25);
             backdrop-filter: blur(6px);
             width: 100%;
             min-height: 100vh;
-
             display: flex;
             flex-direction: column;
             align-items: center;
-
-
             padding: 20px;
             box-sizing: border-box;
-
             justify-content: flex-start;
             padding-top: 90px;
-
-
         }
-
         h1 {
             margin-bottom: 24px;
             color: var(--logo-blue);
             font-size: 24px;
             font-weight: 700;
         }
-
         /* ================== STEP ANIMATION ================== */
         .step {
             animation: stepIn 0.45s ease;
         }
-
         @keyframes stepIn {
             from {
                 opacity: 0;
                 transform: translateY(12px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
-
         /* ================== BUTTON BASE ================== */
         button {
             background: linear-gradient(270deg, var(--blue-2), var(--blue-1));
@@ -247,25 +216,20 @@ function closePortModal(){
             transition: all 0.25s ease;
             box-shadow: var(--shadow-sm);
         }
-
         .options button:nth-child(even) {
             background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
         }
-
         button:active {
             transform: scale(0.97);
         }
-
         button:hover {
             transform: translateY(-4px) scale(1.03);
             background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
             box-shadow: var(--shadow-lg);
         }
-
         .options button:nth-child(even):hover {
             background: linear-gradient(90deg, var(--blue-1), var(--blue-3));
         }
-
         /* ================== OPTIONS ================== */
         .options {
             display: flex;
@@ -273,14 +237,12 @@ function closePortModal(){
             gap: 12px;
             justify-content: flex-start;
         }
-
         .options button {
             flex: 1 1 calc(50% - 6px);
             min-width: 100px;
             max-width: 200px;
             text-align: center;
         }
-
         /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
@@ -288,7 +250,6 @@ function closePortModal(){
             line-height: 1.45;
             margin-bottom: 18px;
         }
-
         /* ================== CTA ================== */
         .cta {
             display: inline-flex;
@@ -304,22 +265,17 @@ function closePortModal(){
             box-shadow: var(--shadow-lg);
             transition: all 0.25s ease;
         }
-
         .cta:hover {
             background: linear-gradient(135deg, var(--orange-3), var(--orange-1));
             transform: translateY(-3px) scale(1.02);
         }
-
         /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
             font-size: 14px;
             color: var(--gray-1);
         }
-
         /* ================== GENERAL LINK ================== */
-
-
         .general-link {
             position: fixed;
             bottom: 20px;
@@ -327,7 +283,6 @@ function closePortModal(){
             text-align: center;
             z-index: 9;
         }
-
         .general-link a {
             display: inline-block;
             background: #4DB84D;
@@ -339,12 +294,10 @@ function closePortModal(){
             font-weight: 600;
             transition: all 0.2s ease;
         }
-
         .general-link a:hover {
             background: #3ca638;
             transform: translateY(-1px);
         }
-
         /* ================== FOOTER ================== */
         .affiliate-footer {
             position: absolute;
@@ -359,7 +312,6 @@ function closePortModal(){
             line-height: 1.3;
             z-index: 1;
         }
-
         /* ================== WHATSAPP ================== */
         .whatsapp-button {
             position: fixed;
@@ -377,31 +329,24 @@ function closePortModal(){
             text-decoration: none;
             transition: transform 0.2s;
         }
-
         /* ================== COUPON ================== */
         .coupon-box {
-
             font-size: 12.5px;
             font-weight: 400;
-
-
             margin-top: 14px;
             padding: 12px;
             background: rgba(0, 0, 0, 0.04);
             border-radius: 12px;
-
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 8px;
         }
-
         .coupon-text {
             flex: 1;
             min-width: 0;
         }
-
         .coupon-btn {
             background: var(--green-1);
             color: white;
@@ -411,32 +356,26 @@ function closePortModal(){
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transition: all 0.2s ease;
         }
-
         .coupon-btn:hover {
             background: var(--green-2);
             transform: translateY(-2px) scale(1.05);
         }
-
         .coupon-btn.icon-only {
             background: #c4c4c4;
             color: var(--gray-2);
         }
-
         .coupon-btn.icon-only:hover {
             background: #b0b0b0;
         }
-
         .coupon-btn.icon-only svg {
             width: 18px;
             height: 18px;
         }
-
         .coupon-btn.icon-only svg rect {
             fill: none;
             stroke: #1f2937;
             stroke-width: 2;
         }
-
         /* ================== NAV BUTTONS  ================== */
         #navButtons {
             position: fixed;
@@ -447,8 +386,6 @@ function closePortModal(){
             gap: 8px;
             z-index: 1000;
         }
-
-
         #navButtons button {
             width: 38px;
             height: 38px;
@@ -465,23 +402,18 @@ function closePortModal(){
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
         }
-
         #navButtons button:hover {
             transform: translateY(-2px) scale(1.2);
             opacity: 1;
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
         }
-
         .share-wrapper {
             position: fixed;
             bottom: 8px;
             left: 20px;
             z-index: 9999;
         }
-
-
         .share-main-btn {
-
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -493,27 +425,21 @@ function closePortModal(){
             align-items: center;
             justify-content: center;
         }
-
         .summary-helper {
             font-size: 14px;
             font-weight: 400;
             color: var(--gray-1);
             margin-bottom: 14px;
         }
-
         .trust {
             margin: 12px 0 18px 0;
         }
-
         .trust div {
             font-size: 14px;
             font-weight: 500;
             color: var(--gray-1);
             line-height: 1.5;
         }
-
-
-
         .share-main-btn svg {
             width: 26px;
             height: 26px;
@@ -523,13 +449,11 @@ function closePortModal(){
             stroke-linecap: round;
             stroke-linejoin: round;
         }
-
         .share-main-btn:hover {
             background: white !important;
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
         }
-
         .share-menu .share-item:hover {
             background: #d8d5d5 !important;
             /* רקע כחול בהיר */
@@ -540,7 +464,6 @@ function closePortModal(){
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
             /* צל עדין */
         }
-
         .share-menu {
             position: absolute;
             bottom: 50px;
@@ -560,28 +483,23 @@ function closePortModal(){
             min-width: 32px;
             /* רוחב מינימלי */
         }
-
         .share-item .copy-icon {
             width: 20px;
             /* קטן יותר */
             height: 20px;
             /* קטן יותר */
         }
-
         .share-item .copy-icon rect {
             fill: none;
             stroke: #1f2937;
             stroke-width: 2;
         }
-
         #shareMenu {
             display: none;
         }
-
         #shareMenu:not(.hidden) {
             display: flex;
         }
-
         /* =======================================
    Share Menu - the group of Circle Buttons coming out of the main share button
    ======================================= */
@@ -596,7 +514,6 @@ function closePortModal(){
             padding: 0;
             background: transparent;
         }
-
         .share-item {
             font-weight: 500;
             font-size: 14px;
@@ -615,18 +532,15 @@ function closePortModal(){
             text-decoration: none;
             color: inherit;
         }
-
         .share-item:hover {
             transform: translateY(-4px) scale(1.1);
             box-shadow: 0 4px 10px rgba(211, 219, 223, 0.25);
         }
-
         .share-item img,
         .share-item svg {
             width: 20px;
             height: 20px;
         }
-
         /* ================== TOAST COPY ================== */
         .copy-toast {
             position: fixed;
@@ -645,12 +559,10 @@ function closePortModal(){
             transition: all 0.35s ease;
             z-index: 99999;
         }
-
         .copy-toast.show {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
         /* ================== PROGRESS DOTS ================== */
         .progress-dots {
             display: flex;
@@ -658,7 +570,6 @@ function closePortModal(){
             gap: 10px;
             margin-bottom: 24px;
         }
-
         .progress-dots .dot {
             width: 14px;
             height: 14px;
@@ -666,11 +577,9 @@ function closePortModal(){
             background-color: #c4c4c4;
             transition: background-color 0.25s;
         }
-
         .progress-dots .dot.active {
             background-color: var(--green-1);
         }
-
         /* ================== CARD ================== */
         .card {
             color: var(--gray-2);
@@ -685,13 +594,10 @@ function closePortModal(){
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
             position: relative;
         }
-
         /* ================== LOGO HEADER ================== */
-
         .logo-header img:hover {
             transform: scale(1.03);
         }
-
         /* ================== LOGO HEADER ================== */
         .logo-header {
             width: 100%;
@@ -702,7 +608,6 @@ function closePortModal(){
             margin-top: -30px;
             z-index: 2;
         }
-
         .logo-header img {
             background: transparent;
             box-shadow: none;
@@ -713,17 +618,13 @@ function closePortModal(){
             filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
             transition: transform 0.25s ease;
         }
-
         .logo-header img:hover {
             transform: scale(1.03);
         }
-
         /* Focus mode – hide logo on final step */
         .focus-final-step .logo-header {
             display: none !important;
         }
-
-
         /* ================== ANIMATED BRAND LOGO ================== */
         .brand-logo-animated {
             margin: 18px auto 10px;
@@ -731,7 +632,6 @@ function closePortModal(){
             justify-content: center;
             align-items: center;
         }
-
         .brand-logo-animated img {
             width: 56px;
             height: auto;
@@ -739,97 +639,73 @@ function closePortModal(){
             filter: none;
             background: transparent;
         }
-
-
         /* אנימציית ציפה עדינה */
         @keyframes floatBoat {
             0% {
                 transform: translateY(0);
             }
-
             50% {
                 transform: translateY(-6px);
             }
-
             100% {
                 transform: translateY(0);
             }
         }
-
-
         /* ================================================================================================================= */
         /* ================================================================================================================= */
         /* ================== MOBILE ================== */
-
         @media (max-width: 480px) {
             body {
                 background-position: center top;
             }
-
             .affiliate-footer {
                 font-size: 9px;
                 padding: 0 6px;
                 line-height: 1.4;
             }
-
             .general-link {
                 bottom: 8px;
                 z-index: 9;
             }
-
             .general-link a {
                 padding: 6px 12px;
                 font-size: 12px;
                 border-radius: 10px;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
             }
-
             .card {
                 padding: 20px;
                 border-radius: 20px;
                 max-width: 95%;
                 max-height: 90vh;
                 overflow-y: auto;
-
             }
-
             #navButtons {
                 gap: 6px;
             }
-
             .port-card {
                 max-width: 95%;
                 min-height: 70vh;
                 padding: 40px 20px;
                 border-radius: 20px;
             }
-
             .port-name {
                 font-size: 24px;
             }
-
             .port-title {
                 font-size: 20px;
             }
-
             .show-port-btn {
-
                 font-size: 14px;
                 font-weight: 500;
-
-
-
                 padding: 7px 6px;
                 margin: 6px 0 24px 0;
                 opacity: .75;
             }
-
             h1 {
                 font-size: 22px;
             }
-
         }
-
         /* ================== REDIRECT SCREEN ================== */
         .redirect-screen {
             position: fixed;
@@ -841,7 +717,6 @@ function closePortModal(){
             align-items: center;
             justify-content: center;
         }
-
         .redirect-card {
             background: white;
             border-radius: 26px;
@@ -852,19 +727,16 @@ function closePortModal(){
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
             animation: fadeInScale 0.4s ease;
         }
-
         @keyframes fadeInScale {
             from {
                 opacity: 0;
                 transform: scale(0.9);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-
         .loader-bar {
             width: 100%;
             height: 10px;
@@ -873,7 +745,6 @@ function closePortModal(){
             overflow: hidden;
             margin-bottom: 20px;
         }
-
         .loader-progress {
             height: 100%;
             width: 0%;
@@ -881,14 +752,12 @@ function closePortModal(){
             border-radius: 20px;
             transition: width 0.3s ease;
         }
-
         .redirect-text {
             font-size: 17px;
             font-weight: 600;
             color: var(--gray-2);
             margin-bottom: 8px;
         }
-
         .redirect-subtext {
             font-size: 13px;
             font-weight: 400;
@@ -896,14 +765,12 @@ function closePortModal(){
             line-height: 1.4;
             margin-bottom: 16px;
         }
-
         .redirect-brand {
             font-size: 13px;
             font-weight: 600;
             color: var(--blue-3);
             letter-spacing: 0.5px;
         }
-
         /* ===== PORT MODAL ===== */
         .port-modal {
             position: fixed;
@@ -916,35 +783,27 @@ function closePortModal(){
             justify-content: center;
             padding: 20px;
         }
-
         .port-card {
             background: white;
             border-radius: 26px;
             padding: 36px 28px;
-
             width: 100%;
             max-width: 700px;
             /* היה ~360 → עכשיו כפול */
-
             min-height: 260px;
             /* נותן “נוכחות” */
-
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
             position: relative;
-
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
-
-
         .port-title {
             font-size: 22px;
             font-weight: 700;
             margin-bottom: 10px
         }
-
         .port-name {
             font-size: 26px;
             font-weight: 600;
@@ -956,72 +815,51 @@ function closePortModal(){
             margin: 14px 0;
             letter-spacing: 0.5px;
         }
-
         .port-hint {
             font-size: 15px;
             color: #475569
         }
-
         .close-port {
             position: absolute;
             top: 10px;
             left: 10px;
-
             width: 34px;
             height: 34px;
-
             border: none;
             border-radius: 50%;
             background: #e5e7eb;
-
             font-size: 18px;
             font-weight: 600;
-
             cursor: pointer;
-
             display: flex;
             /* חדש */
             align-items: center;
             /* חדש */
             justify-content: center;
             /* חדש */
-
             line-height: 1;
             /* חדש */
             padding: 0;
             /* חדש */
         }
-
-
         .show-port-btn {
             margin: 8px 0 26px 0;
-
             background: transparent;
             /* כמעט נעלם */
             color: #0284c7;
-
             border: 1px dashed rgba(14, 165, 233, 0.35);
             /* קו עדין */
-
             border-radius: 10px;
-
             padding: 8px 6px;
-
             font-size: 13.5px;
             font-weight: 500;
-
             cursor: pointer;
             width: 100%;
-
             transition: all .2s ease;
-
             box-shadow: none;
             opacity: .85;
             /* טיפה שקוף */
         }
-
-
-
         .show-port-btn:hover {
             background: rgba(14, 165, 233, 0.06);
             border-style: solid;
@@ -1029,8 +867,6 @@ function closePortModal(){
             color: #0369a1;
             opacity: 1;
         }
-
-
         .show-port-btn:hover {
             background: rgba(14, 165, 233, 0.12);
             /* כחול רך */
@@ -1040,7 +876,6 @@ function closePortModal(){
         }
     </style>
 </head>
-
 <body>
     <h1 style="display:none">MAABORET – הזמנת מעבורת בתאילנד</h1>
     <div class="overlay">
@@ -1048,7 +883,6 @@ function closePortModal(){
         <div class="logo-header">
             <img src="../image/MAABORET-LOGO3.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
-
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
             <div class="dot" data-step="2"></div>
@@ -1057,7 +891,6 @@ function closePortModal(){
             <div class="dot" data-step="5"></div>
             <div class="dot" data-step="6"></div>
         </div>
-
         <div class="card">
             <!-- שלב 1 -->
             <div id="step-from" class="step">
@@ -1121,26 +954,20 @@ function closePortModal(){
                 </div>
             </div>
             <!-- סיכום -->
-
-
             <div id="step-summary" class="step hidden">
                 <h1>יאללה, יוצאים לדרך 🚤</h1>
-
                 <div class="note" id="routeNote" style="color:#b45309; margin-bottom:12px;">
                     <!-- הודעה על עומס אם יש-->
                 </div>
-
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
                     כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
                 </div>
-
                 <div class="trust">
                     <div>✔️ מעל 8,000 הזמנות מאומתות</div>
                     <div>✔️ ספק התחבורה הגדול בתאילנד</div>
                     <div>✔️ אותו מחיר כמו באתר הרשמי – ללא עמלות</div>
                 </div>
-
                 <button class="cta" onclick="goToBooking()" class="cta">
                     בחירת שעה והשלמת תשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
@@ -1149,8 +976,6 @@ function closePortModal(){
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-
-
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע מדויק על נמל היציאה – להצגה לנהג מונית
                 </button>
@@ -1165,8 +990,6 @@ function closePortModal(){
                         </svg>
                     </button>
                 </div>
-
-
             </div>
             <div id="couponCopied" class="coupon-copied hidden">
                 הקוד הועתק
@@ -1185,7 +1008,6 @@ function closePortModal(){
                 <polyline points="9 6 15 12 9 18" />
             </svg>
         </button>
-
         <button id="resetButton" title="מהתחלה" class="icon-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -1193,13 +1015,8 @@ function closePortModal(){
                 <polyline points="23 4 23 10 17 10" />
                 <path d="M20.49 15a9 9 0 1 1-1.49-9" />
             </svg>
-
         </button>
-
     </div>
-
-
-
     <!-- כפתור 12GO קטן בתחתית הדף -->
     <div class="general-link">
         <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
@@ -1211,7 +1028,6 @@ function closePortModal(){
            STATE
         ========================= */
         const stepHistory = [];
-
         const state = {
             from: '',
             to: '',
@@ -1219,14 +1035,12 @@ function closePortModal(){
             date: '',
             depTime: '' // 1 = מוקדם, 2 = מאוחר, '' = הכל
         };
-
         /* =========================
            CONSTANTS / CONFIG
         ========================= */
         const couponCode = 'CJ12GO';
         const affiliateBase = 'https://www.kqzyfj.com/click-101474270-17138047?url=';
         const otherAmountOfpeople = 8;
-
         const placeNames = {
             'koh-samui': 'קוסמוי',
             'koh-phangan': 'קופנגן',
@@ -1237,7 +1051,6 @@ function closePortModal(){
             'koh-phi-phi': 'קופיפי',
             'koh-lanta': 'קו לנטה'
         };
-
         const connections = {
             'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
             'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
@@ -1248,7 +1061,6 @@ function closePortModal(){
             'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta', 'koh-samui'],
             'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi', 'koh-samui']
         };
-
         const dateText = {
             today: 'היום',
             tomorrow: 'מחר',
@@ -1261,74 +1073,57 @@ function closePortModal(){
                 "koh-tao": "Mae Haad Pier",
                 "surat-thani": "Donsak Pier"
             },
-
             "koh-phangan": {
                 "koh-samui": "Thongsala Pier",
                 "koh-tao": "Haad Rin / Thong Sala Pier"
             },
-
             "koh-tao": {
                 "koh-samui": "Mae Haad Pier",
                 "koh-phangan": "Mae Haad Pier"
             },
-
             "phuket": {
                 "koh-phi-phi": "Rassada Pier",
                 "koh-lanta": "Rassada Pier",
                 "krabi": "Rassada Pier"
             },
-
             "krabi": {
                 "phuket": "Klong Jilad Pier",
                 "koh-lanta": "Klong Jilad Pier",
                 "koh-phi-phi": "Klong Jilad Pier"
             },
-
             "koh-lanta": {
                 "phuket": "Saladan Pier",
                 "krabi": "Saladan Pier",
                 "koh-phi-phi": "Saladan Pier"
             },
-
             "koh-phi-phi": {
                 "phuket": "Tonsai Pier",
                 "krabi": "Tonsai Pier",
                 "koh-lanta": "Tonsai Pier"
             },
-
             "surat-thani": {
                 "koh-samui": "Donsak Pier"
             }
         };
-
-
-
         /* =========================
            DOM CACHE
         ========================= */
         const resetBtn = document.getElementById('resetButton');
         const summaryText = document.getElementById('summaryText');
         const couponCodeEl = document.getElementById('couponCode');
-
         /* =========================
            HELPERS
         ========================= */
         function transition(fromId, toId) {
-
             stepHistory.push(fromId);
-
             document.getElementById(fromId).classList.add('hidden');
             const next = document.getElementById(toId);
-
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
-
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
-
-
         function getFormattedDate(option) {
             const base = new Date();
             const offsets = {
@@ -1338,15 +1133,12 @@ function closePortModal(){
                 noDate: 3
             };
             base.setDate(base.getDate() + (offsets[option] ?? 0));
-
             return `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
         }
-
         function centerLastVisibleButtons() {
             document.querySelectorAll('.options').forEach(container => {
                 const visible = [...container.children].filter(b => b.offsetParent !== null);
                 visible.forEach(b => b.style.margin = '');
-
                 if (visible.length % 2 === 1 && visible.length > 1) {
                     const last = visible.at(-1);
                     last.style.marginLeft = 'auto';
@@ -1354,13 +1146,11 @@ function closePortModal(){
                 }
             });
         }
-
         /* =========================
            ACTIONS
         ========================= */
         function selectFrom(value) {
             state.from = value;
-
             document.querySelectorAll('#step-to button').forEach(btn => {
                 btn.style.display = connections[value]?.includes(btn.dataset.place)
                     ? 'inline-block'
@@ -1369,54 +1159,41 @@ function closePortModal(){
             document.getElementById('navButtons').style.display = 'flex';
             transition('step-from', 'step-to');
         }
-
         function selectTo(value) {
             state.to = value;
             transition('step-to', 'step-people');
         }
-
         function selectPeople(value) {
             state.people = value;
             transition('step-people', 'step-date');
         }
-
         function selectDate(value) {
             state.date = value;
             transition('step-date', 'step-dep-time');
         }
-
         function selectDepTime(value) {
             state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
-
             let timeText = '';
             if (value === 'early') timeText = 'מוקדמת';
             if (value === 'late') timeText = 'מאוחרת';
-
             const dayText = dateText[state.date] || '';
             const isSpecialDay =
                 dayText === 'היום' ||
                 dayText === 'מחר' ||
                 dayText === 'מחרתיים';
-
             let startText = 'מעבורת';
             if (timeText && isSpecialDay) {
                 startText += ` ${timeText} ${dayText}`;
             }
-
             const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
-
             let peopleText = '';
-
             if (state.people === 1) {
                 peopleText = ' לאדם אחד';
             } else if (state.people !== otherAmountOfpeople) {
                 peopleText = ` ל${state.people} אנשים`;
             }
-
-
             summaryText.innerHTML =
                 `${startText}${peopleText} ${target}`;
-
             document
                 .querySelector('.general-link')
                 ?.style.setProperty('display', 'none');
@@ -1430,43 +1207,28 @@ function closePortModal(){
             } else {
                 routeNote.innerHTML = '';
             }
-
             transition('step-dep-time', 'step-summary');
-
             // Focus mode – hide logo on final step
             document.body.classList.add('focus-final-step');
-
         }
-
-
-
         function goToBooking() {
-
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
                 `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
-
             if (state.depTime) url += `&dep_time=${state.depTime}`;
-
             const finalUrl = affiliateBase + encodeURIComponent(url);
-
             // Show redirect screen
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
-
             screen.classList.remove('hidden');
-
             let progress = 0;
-
             const interval = setInterval(() => {
                 progress += Math.random() * 8 + 6; // natural feel
-
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = progress + '%';
                     clearInterval(interval);
-
                     setTimeout(() => {
                         window.location.href = finalUrl;
                     }, 400);
@@ -1475,32 +1237,24 @@ function closePortModal(){
                 }
             }, 220);
         }
-
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
                 el.classList.remove('hidden');
                 el.style.opacity = '1';
-
                 setTimeout(() => {
                     el.style.opacity = '0';
                     setTimeout(() => el.classList.add('hidden'), 300);
                 }, 2000);
             });
         }
-
         function goBackStep() {
-
             if (stepHistory.length === 0) return;
-
             const prev = stepHistory.pop();
-
             document.querySelectorAll('.step').forEach(s => {
                 s.classList.add('hidden');
             });
-
             document.getElementById(prev).classList.remove('hidden');
-
             if (stepHistory.length === 0) {
                 document.getElementById('navButtons').style.display = 'none';
             }
@@ -1509,37 +1263,27 @@ function closePortModal(){
             if (prev !== 'step-summary') {
                 document.body.classList.remove('focus-final-step');
             }
-
         }
-
         function toggleShareMenu() {
             const menu = document.getElementById('shareMenu');
             menu.classList.toggle('hidden');
         }
-
         function copySiteUrl() {
             navigator.clipboard.writeText(window.location.href).then(() => {
-
                 const toast = document.getElementById('copyToast');
-
                 toast.classList.add('show');
-
                 setTimeout(() => {
                     toast.classList.remove('show');
                 }, 900);
-
                 document.getElementById('shareMenu').classList.add('hidden');
             });
         }
-
-
         document.addEventListener('click', (e) => {
             const wrapper = document.querySelector('.share-wrapper');
             if (!wrapper.contains(e.target)) {
                 document.getElementById('shareMenu')?.classList.add('hidden');
             }
         });
-
         const progressDots = document.getElementById('progressDots');
         const stepToDotMap = {
             'step-from': '1',
@@ -1549,9 +1293,7 @@ function closePortModal(){
             'step-dep-time': '5',
             'step-summary': '6'
         };
-
         function updateProgressDots(currentStep) {
-
             // אם זה שלב ראשון → להסתיר
             if (currentStep === 'step-from') {
                 progressDots.classList.add('hidden');
@@ -1568,7 +1310,6 @@ function closePortModal(){
                 }
             });
         }
-
         /* =========================
            INIT
         ========================= */
@@ -1578,32 +1319,22 @@ function closePortModal(){
         document
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
-
-
         /* ===== PORT MODAL ===== */
         function openPortModal() {
-
             const from = state.from;
             const to = state.to;
-
             if (!portsBySource[from] || !portsBySource[from][to]) {
                 alert('⚠️ אין כרגע מידע מדויק על נמל היציאה בקו הזה');
                 return;
             }
-
             const port = portsBySource[from][to];
-
             document.getElementById('portName').innerText = port;
             document.getElementById('portModal').classList.remove('hidden');
         }
-
-
         function closePortModal() {
             document.getElementById('portModal').classList.add('hidden');
         }
-
     </script>
-
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
             <svg viewBox="0 0 24 24">
@@ -1617,7 +1348,6 @@ function closePortModal(){
         <div class="share-menu hidden" id="shareMenu">
             <a class="share-item" target="_blank"
                 href="https://wa.me/?text=%D7%91%D7%93%D7%A7%D7%AA%D7%99%20%D7%95%D7%9E%D7%A6%D7%90%D7%AA%D7%99%20%D7%90%D7%AA%D7%A8%20%D7%9E%D7%9E%D7%A9%20%D7%A0%D7%95%D7%97%20%D7%9C%D7%94%D7%96%D7%9E%D7%A0%D7%AA%20%D7%9E%D7%A2%D7%91%D7%95%D7%A8%D7%95%D7%AA%20%D7%91%D7%AA%D7%90%D7%99%D7%9C%D7%A0%D7%93%20%F0%9F%9A%A2%0Ahttps%3A%2F%2Fsnddigitalagency.com%2Fmaaboret">
-
                 <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="">
                 <!-- וואטסאפ -->
             </a>
@@ -1630,15 +1360,12 @@ function closePortModal(){
             </button>
         </div>
     </div>
-
     <div style="display:none">
         MAABORET – אתר להזמנת מעבורות בתאילנד
     </div>
     <div id="copyToast" class="copy-toast">
         ✅ הקישור הועתק
     </div>
-
-
     <!-- Loading Redirect Screen -->
     <div id="redirectScreen" class="redirect-screen hidden">
         <div class="redirect-card">
@@ -1654,14 +1381,11 @@ function closePortModal(){
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
             </div>
-
             <div class="redirect-brand">
                 MAABORET ✕ 12GO
             </div>
         </div>
     </div>
-
-
     <!-- PORT MODAL -->
     <div id="portModal" class="port-modal hidden">
         <div class="port-card">
@@ -1671,7 +1395,5 @@ function closePortModal(){
             <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
         </div>
     </div>
-
 </body>
-
 </html>
