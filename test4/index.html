@@ -81,7 +81,28 @@
            },
            "aggregateRating": {"@type": "AggregateRating","ratingValue": "4.8","reviewCount": "132"}
          }
-      </script>
+      
+/* ===== PORT MODAL ===== */
+function openPortModal(){
+  const fromName = placeNames[state.from];
+  const toName = placeNames[state.to];
+  let port = '';
+
+  if(portsBySource[fromName] && portsBySource[fromName][toName]){
+    port = portsBySource[fromName][toName];
+  } else {
+    port = 'לא נמצא מידע על הנמל';
+  }
+
+  document.getElementById('portName').innerText = port;
+  document.getElementById('portModal').classList.remove('hidden');
+}
+
+function closePortModal(){
+  document.getElementById('portModal').classList.add('hidden');
+}
+
+</script>
     <!-- BreadcrumbList תקין -->
     <script type="application/ld+json">
          {
@@ -102,7 +123,28 @@
              }
            ]
          }
-      </script>
+      
+/* ===== PORT MODAL ===== */
+function openPortModal(){
+  const fromName = placeNames[state.from];
+  const toName = placeNames[state.to];
+  let port = '';
+
+  if(portsBySource[fromName] && portsBySource[fromName][toName]){
+    port = portsBySource[fromName][toName];
+  } else {
+    port = 'לא נמצא מידע על הנמל';
+  }
+
+  document.getElementById('portName').innerText = port;
+  document.getElementById('portModal').classList.remove('hidden');
+}
+
+function closePortModal(){
+  document.getElementById('portModal').classList.add('hidden');
+}
+
+</script>
     <style>
         /* ================== CSS VARIABLES ================== */
         :root {
@@ -828,7 +870,64 @@
             color: var(--blue-3);
             letter-spacing: 0.5px;
         }
-    </style>
+    
+/* ===== PORT MODAL ===== */
+.port-modal{
+ position:fixed;
+ inset:0;
+ background:rgba(15,23,42,.8);
+ backdrop-filter:blur(6px);
+ z-index:999999;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.port-card{
+ background:white;
+ border-radius:26px;
+ padding:28px 22px;
+ max-width:360px;
+ width:100%;
+ text-align:center;
+ box-shadow:0 20px 50px rgba(0,0,0,.4);
+ position:relative;
+}
+
+.port-title{font-size:22px;font-weight:700;margin-bottom:10px}
+.port-name{font-size:26px;font-weight:800;color:#0ea5e9;margin:12px 0}
+.port-hint{font-size:15px;color:#475569}
+
+.close-port{
+ position:absolute;
+ top:10px;
+ left:10px;
+ width:34px;
+ height:34px;
+ border:none;
+ border-radius:50%;
+ background:#e5e7eb;
+ font-size:18px;
+ cursor:pointer;
+}
+
+.show-port-btn{
+ margin-top:14px;
+ background:#10b981;
+ color:white;
+ border:none;
+ border-radius:16px;
+ padding:14px 10px;
+ font-size:16px;
+ font-weight:600;
+ cursor:pointer;
+ width:100%;
+}
+
+.show-port-btn:hover{background:#059669}
+
+</style>
 </head>
 
 <body>
@@ -924,6 +1023,10 @@
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
+
+<button class="show-port-btn" onclick="openPortModal()">
+📍 מאיפה המעבורת תצא – להראות לנהג מונית
+</button>
 
 
                 <div class="trust">
@@ -1036,45 +1139,52 @@
             dayAfterTomorrow: 'מחרתיים',
             noDate: ''
         };
+const portsBySource = {
+  "koh-samui": {
+    "koh-phangan": "Bangrak Pier / Nathon Pier",
+    "koh-tao": "Mae Haad Pier",
+    "surat-thani": "Donsak Pier"
+  },
 
-        portsBySource = {
-            "Koh Samui": {
-                "Koh Phangan": "Bangrak Pier / Nathon Pier",
-                "Koh Tao": "Mae Haad Pier",
-                "Surat Thani": "Donsak Pier"
-            },
-            "Koh Phangan": {
-                "Koh Samui": "Thongsala Pier",
-                "Koh Tao": "Haad Rin / Thong Sala Pier"
-            },
-            "Koh Tao": {
-                "Koh Samui": "Mae Haad Pier",
-                "Koh Phangan": "Mae Haad Pier"
-            },
-            "Phuket": {
-                "Phi Phi": "Rassada Pier",
-                "Koh Lanta": "Rassada Pier",
-                "Krabi": "Rassada Pier"
-            },
-            "Krabi": {
-                "Phuket": "Klong Jilad Pier",
-                "Koh Lanta": "Klong Jilad Pier",
-                "Phi Phi": "Klong Jilad Pier"
-            },
-            "Koh Lanta": {
-                "Phuket": "Saladan Pier",
-                "Krabi": "Saladan Pier",
-                "Phi Phi": "Saladan Pier"
-            },
-            "Phi Phi": {
-                "Phuket": "Tonsai Pier",
-                "Krabi": "Tonsai Pier",
-                "Koh Lanta": "Tonsai Pier"
-            },
-            "Surat Thani": {
-                "Koh Samui": "Donsak Pier"
-            }
-        }
+  "koh-phangan": {
+    "koh-samui": "Thongsala Pier",
+    "koh-tao": "Haad Rin / Thong Sala Pier"
+  },
+
+  "koh-tao": {
+    "koh-samui": "Mae Haad Pier",
+    "koh-phangan": "Mae Haad Pier"
+  },
+
+  "phuket": {
+    "koh-phi-phi": "Rassada Pier",
+    "koh-lanta": "Rassada Pier",
+    "krabi": "Rassada Pier"
+  },
+
+  "krabi": {
+    "phuket": "Klong Jilad Pier",
+    "koh-lanta": "Klong Jilad Pier",
+    "koh-phi-phi": "Klong Jilad Pier"
+  },
+
+  "koh-lanta": {
+    "phuket": "Saladan Pier",
+    "krabi": "Saladan Pier",
+    "koh-phi-phi": "Saladan Pier"
+  },
+
+  "koh-phi-phi": {
+    "phuket": "Tonsai Pier",
+    "krabi": "Tonsai Pier",
+    "koh-lanta": "Tonsai Pier"
+  },
+
+  "surat-thani": {
+    "koh-samui": "Donsak Pier"
+  }
+};
+
 
 
         /* =========================
@@ -1343,7 +1453,29 @@
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
 
-    </script>
+    
+/* ===== PORT MODAL ===== */
+function openPortModal(){
+
+  const from = state.from;
+  const to   = state.to;
+
+  let port = 'לא נמצא מידע על הנמל';
+
+  if (portsBySource[from] && portsBySource[from][to]) {
+    port = portsBySource[from][to];
+  }
+
+  document.getElementById('portName').innerText = port;
+  document.getElementById('portModal').classList.remove('hidden');
+}
+
+
+function closePortModal(){
+  document.getElementById('portModal').classList.add('hidden');
+}
+
+</script>
 
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
@@ -1401,6 +1533,17 @@
             </div>
         </div>
     </div>
+
+
+<!-- PORT MODAL -->
+<div id="portModal" class="port-modal hidden">
+  <div class="port-card">
+    <button class="close-port" onclick="closePortModal()">✕</button>
+    <div class="port-title">📸 אפשר לצלם מסך ולהראות לנהג</div>
+    <div class="port-name" id="portName"></div>
+    <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
+  </div>
+</div>
 
 </body>
 
