@@ -81,7 +81,23 @@
            },
            "aggregateRating": {"@type": "AggregateRating","ratingValue": "4.8","reviewCount": "132"}
          }
-      </script>
+/* ===== PORT MODAL ===== */
+function openPortModal(){
+  const fromName = placeNames[state.from];
+  const toName = placeNames[state.to];
+  let port = '';
+  if(portsBySource[fromName] && portsBySource[fromName][toName]){
+    port = portsBySource[fromName][toName];
+  } else {
+    port = 'לא נמצא מידע על הנמל';
+  }
+  document.getElementById('portName').innerText = port;
+  document.getElementById('portModal').classList.remove('hidden');
+}
+function closePortModal(){
+  document.getElementById('portModal').classList.add('hidden');
+}
+</script>
     <!-- BreadcrumbList תקין -->
     <script type="application/ld+json">
          {
@@ -102,24 +118,36 @@
              }
            ]
          }
-      </script>
+/* ===== PORT MODAL ===== */
+function openPortModal(){
+  const fromName = placeNames[state.from];
+  const toName = placeNames[state.to];
+  let port = '';
+  if(portsBySource[fromName] && portsBySource[fromName][toName]){
+    port = portsBySource[fromName][toName];
+  } else {
+    port = 'לא נמצא מידע על הנמל';
+  }
+  document.getElementById('portName').innerText = port;
+  document.getElementById('portModal').classList.remove('hidden');
+}
+function closePortModal(){
+  document.getElementById('portModal').classList.add('hidden');
+}
+</script>
     <style>
         /* ================== CSS VARIABLES ================== */
         :root {
             --blue-1: #0ea5e9;
             --blue-2: #14b8a6;
             --blue-3: #0284c7;
-
             --orange-1: #f97316;
             --orange-2: #fb923c;
             --orange-3: #ea580c;
-
             --green-1: #10b981;
             --green-2: #059669;
-
             --gray-1: #475569;
             --gray-2: #1f2937;
-
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
             --logo-blue: #1c445e;
@@ -131,12 +159,10 @@
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-
             background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
-
             display: flex;
             align-items: center;
             justify-content: center;
@@ -153,39 +179,20 @@
             backdrop-filter: blur(6px);
             width: 100%;
             min-height: 100vh;
-
             display: flex;
             flex-direction: column;
             align-items: center;
-
-
             padding: 20px;
             box-sizing: border-box;
-
             justify-content: flex-start;
             padding-top: 90px;
-
-
-        }
-
-        /* ================== CARD ================== */
-        .card {
-            background: rgba(248, 250, 252, 0.92);
-            color: var(--gray-2);
-            border-radius: 26px;
-            padding: 28px;
-            width: 100%;
-            max-width: 420px;
-            text-align: center;
-            margin-bottom: 80px;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
-            backdrop-filter: blur(8px);
         }
 
         h1 {
-            font-size: 26px;
             margin-bottom: 24px;
             color: var(--logo-blue);
+            font-size: 24px;
+            font-weight: 700;
         }
 
         /* ================== STEP ANIMATION ================== */
@@ -255,8 +262,9 @@
         /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
+            font-weight: 600;
+            line-height: 1.45;
             margin-bottom: 18px;
-            line-height: 1.4;
         }
 
         /* ================== CTA ================== */
@@ -283,13 +291,18 @@
         /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
-            font-size: 15px;
+            font-size: 14px;
             color: var(--gray-1);
+            margin-bottom: 12px;
+        }
+
+        .routeNote {
+            color: #b45309;
+            margin-bottom: 12px;
+            font-size: 12px;
         }
 
         /* ================== GENERAL LINK ================== */
-
-
         .general-link {
             position: fixed;
             bottom: 20px;
@@ -350,22 +363,38 @@
 
         /* ================== COUPON ================== */
         .coupon-box {
-            margin-top: 14px;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.04);
-            border-radius: 12px;
-            font-size: 13px;
-
+            background: #f8fafc;
+            border: 1px dashed rgba(2, 132, 199, 0.35);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-size: 12.5px;
+            font-weight: 400;
+            margin-top: 4px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .coupon-text {
             flex: 1;
             min-width: 0;
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        .coupon-code {
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 1.2px;
+            color: #0284c7;
+            background: white;
+            border-radius: 10px;
+            padding: 6px 12px;
+            display: inline-block;
+            margin-top: 6px;
         }
 
         .coupon-btn {
@@ -384,23 +413,46 @@
         }
 
         .coupon-btn.icon-only {
-            background: #c4c4c4;
-            color: var(--gray-2);
+            width: 30px;
+            /* היה ~34 */
+            height: 30px;
+            padding: 0;
+            border-radius: 8px;
+            opacity: 0.75;
+            background: #e5e7eb;
+            color: #334155;
+            box-shadow: none;
+            transition: background 0.15s ease;
         }
 
         .coupon-btn.icon-only:hover {
-            background: #b0b0b0;
+            opacity: 1;
+            background: #d1d5db;
+            transform: none;
         }
 
         .coupon-btn.icon-only svg {
-            width: 18px;
-            height: 18px;
+            width: 13px;
+            height: 13px;
         }
 
         .coupon-btn.icon-only svg rect {
             fill: none;
-            stroke: #1f2937;
-            stroke-width: 2;
+            stroke-width: 1.6;
+            stroke: #0284c7;
+        }
+
+        .coupon-copied {
+            font-size: 12px;
+            color: #0284c7;
+            /* אותו כחול של הקוד */
+            background: #eff6ff;
+            /* כחול מאוד בהיר */
+            padding: 4px 8px;
+            border-radius: 8px;
+            margin-top: 6px;
+            text-align: center;
+            opacity: 0.9;
         }
 
         /* ================== NAV BUTTONS  ================== */
@@ -413,7 +465,6 @@
             gap: 8px;
             z-index: 1000;
         }
-
 
         #navButtons button {
             width: 38px;
@@ -445,9 +496,7 @@
             z-index: 9999;
         }
 
-
         .share-main-btn {
-
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -458,6 +507,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .summary-helper {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--gray-1);
+            margin-bottom: 14px;
+        }
+
+        .trust {
+            margin: 12px 0 18px 0;
+        }
+
+        .trust div {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-1);
+            line-height: 1.5;
         }
 
         .share-main-btn svg {
@@ -478,13 +545,10 @@
 
         .share-menu .share-item:hover {
             background: #d8d5d5 !important;
-            /* רקע כחול בהיר */
             color: white !important;
-            /* צבע האייקון לבן */
             transform: scale(1.1);
-            /* הגדלה עדינה */
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-            /* צל עדין */
+
         }
 
         .share-menu {
@@ -519,7 +583,6 @@
             stroke: #1f2937;
             stroke-width: 2;
         }
-
 
         #shareMenu {
             display: none;
@@ -574,7 +637,6 @@
             height: 20px;
         }
 
-
         /* ================== TOAST COPY ================== */
         .copy-toast {
             position: fixed;
@@ -599,7 +661,6 @@
             transform: translateX(-50%) translateY(0);
         }
 
-
         /* ================== PROGRESS DOTS ================== */
         .progress-dots {
             display: flex;
@@ -608,33 +669,26 @@
             margin-bottom: 24px;
         }
 
-
         .progress-dots .dot {
             width: 14px;
             height: 14px;
             border-radius: 50%;
             background-color: #c4c4c4;
-            /* אפור */
             transition: background-color 0.25s;
-            /* שינוי כאן */
         }
 
         .progress-dots .dot.active {
             background-color: var(--green-1);
-            /* ירוק */
         }
 
-        /* ================== LOGO HEADER ================== */
-        /* 1. הלוגו - הופך להיות נקי ופשוט */
-
-
-        /* 2. הכרטיסייה - המכל שמכיל הכל */
+        /* ================== CARD ================== */
         .card {
+            color: var(--gray-2);
+            text-align: center;
+            backdrop-filter: blur(8px);
             background: rgba(255, 255, 255, 0.98);
-            /* לבן כמעט מלא למראה נקי */
             border-radius: 30px;
             padding: 40px 25px 30px 25px;
-            /* יותר ריפוד למעלה בשביל הלוגו */
             width: 92%;
             max-width: 400px;
             margin-bottom: 120px;
@@ -643,14 +697,11 @@
         }
 
         /* ================== LOGO HEADER ================== */
-
-
         .logo-header img:hover {
             transform: scale(1.03);
         }
 
         /* ================== LOGO HEADER ================== */
-
         .logo-header {
             width: 100%;
             display: flex;
@@ -681,7 +732,6 @@
             display: none !important;
         }
 
-
         /* ================== ANIMATED BRAND LOGO ================== */
         .brand-logo-animated {
             margin: 18px auto 10px;
@@ -698,7 +748,6 @@
             background: transparent;
         }
 
-
         /* אנימציית ציפה עדינה */
         @keyframes floatBoat {
             0% {
@@ -711,48 +760,6 @@
 
             100% {
                 transform: translateY(0);
-            }
-        }
-
-
-        /* ================================================================================================================= */
-        /* ================================================================================================================= */
-        /* ================== MOBILE ================== */
-
-        @media (max-width: 480px) {
-            body {
-                background-position: center top;
-            }
-
-            .affiliate-footer {
-                font-size: 9px;
-                padding: 0 6px;
-                line-height: 1.4;
-            }
-
-            .general-link {
-                bottom: 8px;
-                z-index: 9;
-            }
-
-            .general-link a {
-                padding: 6px 12px;
-                font-size: 12px;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 20px;
-                max-width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-
-            }
-
-            #navButtons {
-                gap: 6px;
             }
         }
 
@@ -816,7 +823,8 @@
         }
 
         .redirect-subtext {
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 470;
             color: var(--gray-1);
             line-height: 1.4;
             margin-bottom: 16px;
@@ -828,6 +836,199 @@
             color: var(--blue-3);
             letter-spacing: 0.5px;
         }
+
+        /* ===== PORT MODAL ===== */
+        .port-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .8);
+            backdrop-filter: blur(6px);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .port-card {
+            background: white;
+            border-radius: 26px;
+            padding: 36px 28px;
+            width: 100%;
+            max-width: 700px;
+            /* היה ~360 → עכשיו כפול */
+            min-height: 260px;
+            /* נותן “נוכחות” */
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .port-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px
+        }
+
+        .port-name {
+            font-size: 26px;
+            font-weight: 600;
+            color: #000;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 12px;
+            padding: 10px 8px;
+            margin: 14px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .port-hint {
+            font-size: 15px;
+            color: #475569
+        }
+
+        .close-port {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: #e5e7eb;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .show-port-btn {
+            margin: 14px 0 6px 0;
+            background: transparent;
+            color: #0284c7;
+            border: 1px dashed rgba(14, 165, 233, 0.35);
+            border-radius: 10px;
+            padding: 8px 6px;
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: all .2s ease;
+            box-shadow: none;
+            opacity: .85;
+        }
+
+        .show-port-btn:hover {
+            background: rgba(14, 165, 233, 0.06);
+            border-style: solid;
+            border-color: rgba(14, 165, 233, 0.5);
+            color: #0369a1;
+            opacity: 1;
+        }
+
+        .show-port-btn:hover {
+            background: rgba(14, 165, 233, 0.12);
+            border-color: rgba(14, 165, 233, 0.4);
+            color: #0284c7;
+            transform: translateY(-1px);
+        }
+
+        .focus-final-step #navButtons {
+            top: 6px;
+        }
+
+        .focus-final-step #progressDots {
+            position: fixed;
+            top: 54px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        .focus-final-step .overlay {
+            padding-top: 83px;
+        }
+
+        .focus-final-step .card {
+            margin-bottom: 60px;
+        }
+
+        .focus-final-step .coupon-box {
+            margin-top: 10px;
+        }
+
+        /* ===================  MOBILE   =========================================================== */
+
+        @media (max-width: 480px) {
+            body {
+                background-position: center top;
+            }
+
+            .affiliate-footer {
+                font-size: 9px;
+                padding: 0 6px;
+                line-height: 1.4;
+            }
+
+            .general-link {
+                bottom: 8px;
+                z-index: 9;
+            }
+
+            .general-link a {
+                padding: 6px 12px;
+                font-size: 12px;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            }
+
+            .card {
+                padding: 20px;
+                border-radius: 20px;
+                max-width: 95%;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+
+            #navButtons {
+                gap: 6px;
+            }
+
+            .port-card {
+                max-width: 95%;
+                min-height: 70vh;
+                padding: 40px 20px;
+                border-radius: 20px;
+            }
+
+            .port-name {
+                font-size: 24px;
+            }
+
+            .port-title {
+                font-size: 20px;
+            }
+
+            .show-port-btn {
+                font-size: 14px;
+                font-weight: 500;
+                padding: 7px 6px;
+                margin: 15px 0 13px 0;
+                opacity: .75;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+        }
     </style>
 </head>
 
@@ -838,7 +1039,6 @@
         <div class="logo-header">
             <img src="../image/MAABORET-LOGO3.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
-
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
             <div class="dot" data-step="2"></div>
@@ -847,7 +1047,6 @@
             <div class="dot" data-step="5"></div>
             <div class="dot" data-step="6"></div>
         </div>
-
         <div class="card">
             <!-- שלב 1 -->
             <div id="step-from" class="step">
@@ -911,11 +1110,21 @@
                 </div>
             </div>
             <!-- סיכום -->
-
-
             <div id="step-summary" class="step hidden">
                 <h1>יאללה, יוצאים לדרך 🚤</h1>
+                <div class="routeNote" id="routeNote">
+                    <!-- הודעה על עומס אם יש-->
+                </div>
                 <div class="summary" id="summaryText"></div>
+                <div class="note summary-helper">
+                    כל האפשרויות כבר סוננו עבורך – נשאר
+                    </br> רק לבחור שעה
+                </div>
+                <div class="trust">
+                    <div>✔️ מעל 8,000 הזמנות מאומתות</div>
+                    <div>✔️ ספק התחבורה הגדול בתאילנד</div>
+                    <div>✔️ אותו מחיר כמו באתר הרשמי – ללא עמלות</div>
+                </div>
                 <button class="cta" onclick="goToBooking()" class="cta">
                     לבחירת שעה ותשלום
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
@@ -924,30 +1133,26 @@
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-
-
-                <div class="trust">
-                    <div class="note">
-                        מעבר לאתר הרשמי של 12GO לתשלום מאובטח
-                    </div>
-                    </br>
-                    <div>✔️ תשלום מאובטח</div>
-                    <div>✔️ מעל 8,000 הזמנות בתאילנד</div>
-                    <div>✔️ ללא עמלות או תוספות, המחיר הכי זול! </div>
+                <div class="note">
+                    מעבר לאתר הרשמי של 12GO לתשלום מאובטח🔒
                 </div>
+                <button class="show-port-btn" onclick="openPortModal()">
+                    💡 מידע על נמל היציאה – להציג למונית
+                </button>
                 <div class="coupon-box">
-                    <div class="coupon-text" id="couponText">
-                        🎁 קוד קופון 5% הנחה למשתמשים חדשים: <span id="couponCode"></span></br>
+                    <div class="coupon-text">
+                        🎁 קוד 5% הנחה למשתמשים חדשים
                     </div>
-                    <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
-                        <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
-                            <rect x="8" y="7" width="12" height="14" rx="3"></rect>
-                            <rect x="4" y="3" width="12" height="14" rx="3"></rect>
-                        </svg>
-                    </button>
+                    <div class="coupon-action">
+                        <div class="coupon-code" id="couponCode">CJ12GO</div>
+                        <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
+                            <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="8" y="7" width="12" height="14" rx="3"></rect>
+                                <rect x="4" y="3" width="12" height="14" rx="3"></rect>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-
-
             </div>
             <div id="couponCopied" class="coupon-copied hidden">
                 הקוד הועתק
@@ -966,7 +1171,6 @@
                 <polyline points="9 6 15 12 9 18" />
             </svg>
         </button>
-
         <button id="resetButton" title="מהתחלה" class="icon-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
@@ -974,13 +1178,8 @@
                 <polyline points="23 4 23 10 17 10" />
                 <path d="M20.49 15a9 9 0 1 1-1.49-9" />
             </svg>
-
         </button>
-
     </div>
-
-
-
     <!-- כפתור 12GO קטן בתחתית הדף -->
     <div class="general-link">
         <a href="https://www.anrdoezrs.net/click-101474270-17115154" target="_top" rel="nofollow sponsored">
@@ -992,7 +1191,6 @@
            STATE
         ========================= */
         const stepHistory = [];
-
         const state = {
             from: '',
             to: '',
@@ -1000,14 +1198,12 @@
             date: '',
             depTime: '' // 1 = מוקדם, 2 = מאוחר, '' = הכל
         };
-
         /* =========================
            CONSTANTS / CONFIG
         ========================= */
         const couponCode = 'CJ12GO';
         const affiliateBase = 'https://www.kqzyfj.com/click-101474270-17138047?url=';
         const otherAmountOfpeople = 8;
-
         const placeNames = {
             'koh-samui': 'קוסמוי',
             'koh-phangan': 'קופנגן',
@@ -1018,7 +1214,6 @@
             'koh-phi-phi': 'קופיפי',
             'koh-lanta': 'קו לנטה'
         };
-
         const connections = {
             'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
             'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
@@ -1029,40 +1224,69 @@
             'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta', 'koh-samui'],
             'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi', 'koh-samui']
         };
-
         const dateText = {
             today: 'היום',
             tomorrow: 'מחר',
             dayAfterTomorrow: 'מחרתיים',
             noDate: ''
         };
-
+        const portsBySource = {
+            "koh-samui": {
+                "koh-phangan": "Bangrak Pier / Nathon Pier",
+                "koh-tao": "Mae Haad Pier",
+                "surat-thani": "Donsak Pier"
+            },
+            "koh-phangan": {
+                "koh-samui": "Thongsala Pier",
+                "koh-tao": "Haad Rin / Thong Sala Pier"
+            },
+            "koh-tao": {
+                "koh-samui": "Mae Haad Pier",
+                "koh-phangan": "Mae Haad Pier"
+            },
+            "phuket": {
+                "koh-phi-phi": "Rassada Pier",
+                "koh-lanta": "Rassada Pier",
+                "krabi": "Rassada Pier"
+            },
+            "krabi": {
+                "phuket": "Klong Jilad Pier",
+                "koh-lanta": "Klong Jilad Pier",
+                "koh-phi-phi": "Klong Jilad Pier"
+            },
+            "koh-lanta": {
+                "phuket": "Saladan Pier",
+                "krabi": "Saladan Pier",
+                "koh-phi-phi": "Saladan Pier"
+            },
+            "koh-phi-phi": {
+                "phuket": "Tonsai Pier",
+                "krabi": "Tonsai Pier",
+                "koh-lanta": "Tonsai Pier"
+            },
+            "surat-thani": {
+                "koh-samui": "Donsak Pier"
+            }
+        };
         /* =========================
            DOM CACHE
         ========================= */
         const resetBtn = document.getElementById('resetButton');
         const summaryText = document.getElementById('summaryText');
         const couponCodeEl = document.getElementById('couponCode');
-
         /* =========================
            HELPERS
         ========================= */
         function transition(fromId, toId) {
-
             stepHistory.push(fromId);
-
             document.getElementById(fromId).classList.add('hidden');
             const next = document.getElementById(toId);
-
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
-
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
-
-
         function getFormattedDate(option) {
             const base = new Date();
             const offsets = {
@@ -1072,15 +1296,12 @@
                 noDate: 3
             };
             base.setDate(base.getDate() + (offsets[option] ?? 0));
-
             return `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
         }
-
         function centerLastVisibleButtons() {
             document.querySelectorAll('.options').forEach(container => {
                 const visible = [...container.children].filter(b => b.offsetParent !== null);
                 visible.forEach(b => b.style.margin = '');
-
                 if (visible.length % 2 === 1 && visible.length > 1) {
                     const last = visible.at(-1);
                     last.style.marginLeft = 'auto';
@@ -1088,13 +1309,11 @@
                 }
             });
         }
-
         /* =========================
            ACTIONS
         ========================= */
         function selectFrom(value) {
             state.from = value;
-
             document.querySelectorAll('#step-to button').forEach(btn => {
                 btn.style.display = connections[value]?.includes(btn.dataset.place)
                     ? 'inline-block'
@@ -1103,94 +1322,85 @@
             document.getElementById('navButtons').style.display = 'flex';
             transition('step-from', 'step-to');
         }
-
         function selectTo(value) {
             state.to = value;
             transition('step-to', 'step-people');
         }
-
         function selectPeople(value) {
             state.people = value;
             transition('step-people', 'step-date');
         }
-
         function selectDate(value) {
             state.date = value;
             transition('step-date', 'step-dep-time');
         }
-
         function selectDepTime(value) {
             state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
-
             let timeText = '';
             if (value === 'early') timeText = 'מוקדמת';
             if (value === 'late') timeText = 'מאוחרת';
-
             const dayText = dateText[state.date] || '';
             const isSpecialDay =
                 dayText === 'היום' ||
                 dayText === 'מחר' ||
                 dayText === 'מחרתיים';
-
             let startText = 'מעבורת';
             if (timeText && isSpecialDay) {
                 startText += ` ${timeText} ${dayText}`;
             }
-
             const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
-
             let peopleText = '';
-
             if (state.people === 1) {
                 peopleText = ' לאדם אחד';
             } else if (state.people !== otherAmountOfpeople) {
                 peopleText = ` ל${state.people} אנשים`;
             }
-
-
             summaryText.innerHTML =
                 `${startText}${peopleText} ${target}`;
-
             document
                 .querySelector('.general-link')
                 ?.style.setProperty('display', 'none');
-
+            // --- עדכון הודעת routeNote מלאה ---
+            const routeNote = document.getElementById('routeNote');
+            if (state.from && state.to) {
+                routeNote.innerHTML = `
+           ⚠️  עומס גבוה במסלול ${placeNames[state.from]} ← ${placeNames[state.to]} בעונה זו!<br>
+            מומלץ להזמין מקומות מראש 
+        `;
+            } else {
+                routeNote.innerHTML = '';
+            }
             transition('step-dep-time', 'step-summary');
-
             // Focus mode – hide logo on final step
             document.body.classList.add('focus-final-step');
-
+            setTimeout(() => {
+                const card = document.querySelector('.card');
+                if (card) {
+                    card.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 50);
         }
-
-
-
         function goToBooking() {
-
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
                 `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
-
             if (state.depTime) url += `&dep_time=${state.depTime}`;
-
             const finalUrl = affiliateBase + encodeURIComponent(url);
-
             // Show redirect screen
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
-
             screen.classList.remove('hidden');
-
             let progress = 0;
-
             const interval = setInterval(() => {
                 progress += Math.random() * 8 + 6; // natural feel
-
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = progress + '%';
                     clearInterval(interval);
-
                     setTimeout(() => {
                         window.location.href = finalUrl;
                     }, 400);
@@ -1199,32 +1409,24 @@
                 }
             }, 220);
         }
-
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
                 el.classList.remove('hidden');
                 el.style.opacity = '1';
-
                 setTimeout(() => {
                     el.style.opacity = '0';
                     setTimeout(() => el.classList.add('hidden'), 300);
                 }, 2000);
             });
         }
-
         function goBackStep() {
-
             if (stepHistory.length === 0) return;
-
             const prev = stepHistory.pop();
-
             document.querySelectorAll('.step').forEach(s => {
                 s.classList.add('hidden');
             });
-
             document.getElementById(prev).classList.remove('hidden');
-
             if (stepHistory.length === 0) {
                 document.getElementById('navButtons').style.display = 'none';
             }
@@ -1233,37 +1435,27 @@
             if (prev !== 'step-summary') {
                 document.body.classList.remove('focus-final-step');
             }
-
         }
-
         function toggleShareMenu() {
             const menu = document.getElementById('shareMenu');
             menu.classList.toggle('hidden');
         }
-
         function copySiteUrl() {
             navigator.clipboard.writeText(window.location.href).then(() => {
-
                 const toast = document.getElementById('copyToast');
-
                 toast.classList.add('show');
-
                 setTimeout(() => {
                     toast.classList.remove('show');
                 }, 900);
-
                 document.getElementById('shareMenu').classList.add('hidden');
             });
         }
-
-
         document.addEventListener('click', (e) => {
             const wrapper = document.querySelector('.share-wrapper');
             if (!wrapper.contains(e.target)) {
                 document.getElementById('shareMenu')?.classList.add('hidden');
             }
         });
-
         const progressDots = document.getElementById('progressDots');
         const stepToDotMap = {
             'step-from': '1',
@@ -1273,9 +1465,7 @@
             'step-dep-time': '5',
             'step-summary': '6'
         };
-
         function updateProgressDots(currentStep) {
-
             // אם זה שלב ראשון → להסתיר
             if (currentStep === 'step-from') {
                 progressDots.classList.add('hidden');
@@ -1292,7 +1482,6 @@
                 }
             });
         }
-
         /* =========================
            INIT
         ========================= */
@@ -1302,9 +1491,22 @@
         document
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
-
+        /* ===== PORT MODAL ===== */
+        function openPortModal() {
+            const from = state.from;
+            const to = state.to;
+            if (!portsBySource[from] || !portsBySource[from][to]) {
+                alert('⚠️ אין כרגע מידע מדויק על נמל היציאה בקו הזה');
+                return;
+            }
+            const port = portsBySource[from][to];
+            document.getElementById('portName').innerText = port;
+            document.getElementById('portModal').classList.remove('hidden');
+        }
+        function closePortModal() {
+            document.getElementById('portModal').classList.add('hidden');
+        }
     </script>
-
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
             <svg viewBox="0 0 24 24">
@@ -1318,7 +1520,6 @@
         <div class="share-menu hidden" id="shareMenu">
             <a class="share-item" target="_blank"
                 href="https://wa.me/?text=%D7%91%D7%93%D7%A7%D7%AA%D7%99%20%D7%95%D7%9E%D7%A6%D7%90%D7%AA%D7%99%20%D7%90%D7%AA%D7%A8%20%D7%9E%D7%9E%D7%A9%20%D7%A0%D7%95%D7%97%20%D7%9C%D7%94%D7%96%D7%9E%D7%A0%D7%AA%20%D7%9E%D7%A2%D7%91%D7%95%D7%A8%D7%95%D7%AA%20%D7%91%D7%AA%D7%90%D7%99%D7%9C%D7%A0%D7%93%20%F0%9F%9A%A2%0Ahttps%3A%2F%2Fsnddigitalagency.com%2Fmaaboret">
-
                 <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="">
                 <!-- וואטסאפ -->
             </a>
@@ -1331,15 +1532,12 @@
             </button>
         </div>
     </div>
-
     <div style="display:none">
         MAABORET – אתר להזמנת מעבורות בתאילנד
     </div>
     <div id="copyToast" class="copy-toast">
         ✅ הקישור הועתק
     </div>
-
-
     <!-- Loading Redirect Screen -->
     <div id="redirectScreen" class="redirect-screen hidden">
         <div class="redirect-card">
@@ -1350,18 +1548,25 @@
                 ⏳ מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
             </div>
             <div class="redirect-subtext">
-                סיננו עבורכם את כל האפשרויות – מוצגות לכם רק המעבורות שמתאימות לכם.
+                כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
             </div>
-
             <div class="redirect-brand">
                 MAABORET ✕ 12GO
             </div>
         </div>
     </div>
-
+    <!-- PORT MODAL -->
+    <div id="portModal" class="port-modal hidden">
+        <div class="port-card">
+            <button class="close-port" onclick="closePortModal()">✕</button>
+            <div class="port-title">📷 אפשר לצלם מסך ולהראות לנהג</div>
+            <div class="port-name" id="portName"></div>
+            <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
+        </div>
+    </div>
 </body>
 
 </html>
