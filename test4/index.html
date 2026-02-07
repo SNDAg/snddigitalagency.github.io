@@ -361,73 +361,66 @@ function closePortModal(){
             transition: transform 0.2s;
         }
 
-        /* ================== COUPON ================== */
+        /* ================== COUPON (OPTIMIZED) ================== */
         .coupon-box {
-            background: #f8fafc;
-            border: 1px dashed rgba(2, 132, 199, 0.35);
+            background: #FFF7ED;
+            /* יותר חמים */
+            border: 1.5px dashed #FB923C;
+            /* כתום מותגי */
             border-radius: 16px;
-            padding: 12px 14px;
+            padding: 14px 16px;
             font-size: 12.5px;
             font-weight: 400;
-            margin-top: 4px;
+            margin-top: 6px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 8px;
         }
 
         .coupon-text {
             flex: 1;
             min-width: 0;
             font-size: 13.5px;
-            color: #334155;
-            line-height: 1.4;
+            color: #1f2933;
+            /* כהה יותר */
+            line-height: 1.45;
         }
 
+        /* הקוד = כוכב */
         .coupon-code {
-            font-weight: 600;
+            font-weight: 700;
             font-size: 15px;
-            letter-spacing: 1.2px;
-            color: #0284c7;
-            background: white;
+            letter-spacing: 1.3px;
+            color: #EA580C;
+            /* כתום כהה */
+            background: #FFEDD5;
+            /* כתום בהיר */
+            border: 1px solid #FB923C;
             border-radius: 10px;
-            padding: 6px 12px;
+            padding: 6px 14px;
             display: inline-block;
             margin-top: 6px;
         }
 
-        .coupon-btn {
-            background: var(--green-1);
-            color: white;
-            font-size: 13px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .coupon-btn:hover {
-            background: var(--green-2);
-            transform: translateY(-2px) scale(1.05);
-        }
-
+        /* כפתור העתקה - רגוע */
         .coupon-btn.icon-only {
-            width: 30px;
-            /* היה ~34 */
-            height: 30px;
+            width: 28px;
+            height: 28px;
             padding: 0;
             border-radius: 8px;
-            opacity: 0.75;
-            background: #e5e7eb;
-            color: #334155;
+            opacity: 0.7;
+            background: #FFF7ED;
+            color: #9A3412;
             box-shadow: none;
-            transition: background 0.15s ease;
+            border: 1px solid #FED7AA;
+            transition: all 0.15s ease;
         }
 
         .coupon-btn.icon-only:hover {
             opacity: 1;
-            background: #d1d5db;
+            background: #FFEDD5;
             transform: none;
         }
 
@@ -439,20 +432,20 @@ function closePortModal(){
         .coupon-btn.icon-only svg rect {
             fill: none;
             stroke-width: 1.6;
-            stroke: #0284c7;
+            stroke: #EA580C;
         }
 
+        /* הודעת העתקה */
         .coupon-copied {
             font-size: 12px;
-            color: #0284c7;
-            /* אותו כחול של הקוד */
-            background: #eff6ff;
-            /* כחול מאוד בהיר */
-            padding: 4px 8px;
+            color: #9A3412;
+            background: #FFEDD5;
+            padding: 5px 10px;
             border-radius: 8px;
             margin-top: 6px;
             text-align: center;
-            opacity: 0.9;
+            opacity: 0.95;
+            font-weight: 500;
         }
 
         /* ================== NAV BUTTONS  ================== */
@@ -898,7 +891,7 @@ function closePortModal(){
             height: 34px;
             border: none;
             border-radius: 50%;
-            background: #e5e7eb;
+            background: #b0b2b4;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
@@ -1121,9 +1114,9 @@ function closePortModal(){
                     </br> רק לבחור שעה
                 </div>
                 <div class="trust">
+                    <div>✔️ ללא עמלות, המחיר הכי זול!</div>
                     <div>✔️ מעל 8,000 הזמנות מאומתות</div>
                     <div>✔️ ספק התחבורה הגדול בתאילנד</div>
-                    <div>✔️ אותו מחיר כמו באתר הרשמי – ללא עמלות</div>
                 </div>
                 <button class="cta" onclick="goToBooking()" class="cta">
                     לבחירת שעה ותשלום
@@ -1141,7 +1134,8 @@ function closePortModal(){
                 </button>
                 <div class="coupon-box">
                     <div class="coupon-text">
-                        🎁 קוד 5% הנחה למשתמשים חדשים
+                        <span style="font-size:1.25em; margin-left:4px; vertical-align:-2px;">🎁</span>
+                        קוד 5% הנחה למשתמשים חדשים
                     </div>
                     <div class="coupon-action">
                         <div class="coupon-code" id="couponCode">CJ12GO</div>
