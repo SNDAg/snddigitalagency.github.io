@@ -41,13 +41,18 @@
         content="הדרך הכי נוחה, מהירה ומשתלמת להזמין מעבורות בתאילנד – קוסמוי, קופנגן, קוטאו ופוקט. השוואת מחירים והזמנה חכמה ב־2 דקות.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://snddigitalagency.com/maaboret">
-    <meta property="og:image"
-        content="https://images.unsplash.com/photo-1564835099575-3a09829cbee8?q=80&w=1400&auto=format&fit=crop">
+
+<!-- old ferry photo -->
+    <!-- <meta property="og:image"
+        content="https://images.unsplash.com/photo-1564835099575-3a09829cbee8?q=80&w=1400&auto=format&fit=crop"> -->
+        <meta property="og:image"
+        content="https://images.unsplash.com/photo-1613589118187-25096300fb74?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+    
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <!-- Twitter Card -->
-    <meta name="twitter:image"
-        content="https://images.unsplash.com/photo-1564835099575-3a09829cbee8?q=80&w=1400&auto=format&fit=crop">
+   <meta property="og:image"
+        content="https://images.unsplash.com/photo-1613589118187-25096300fb74?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🚢 הזמנת מעבורות בתאילנד – קוסמוי, קופנגן, פוקט, קופיפי ועוד">
     <meta name="twitter:description"
@@ -361,66 +366,73 @@ function closePortModal(){
             transition: transform 0.2s;
         }
 
-        /* ================== COUPON (OPTIMIZED) ================== */
+        /* ================== COUPON ================== */
         .coupon-box {
-            background: #FFF7ED;
-            /* יותר חמים */
-            border: 1.5px dashed #FB923C;
-            /* כתום מותגי */
+            background: #f8fafc;
+            border: 1px dashed rgba(2, 132, 199, 0.35);
             border-radius: 16px;
-            padding: 14px 16px;
+            padding: 7px 9px;
             font-size: 12.5px;
             font-weight: 400;
-            margin-top: 6px;
+            margin-top: 4px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .coupon-text {
             flex: 1;
             min-width: 0;
             font-size: 13.5px;
-            color: #1f2933;
-            /* כהה יותר */
-            line-height: 1.45;
+            color: #334155;
+            line-height: 1.4;
         }
 
-        /* הקוד = כוכב */
         .coupon-code {
-            font-weight: 700;
+            font-weight: 600;
             font-size: 15px;
-            letter-spacing: 1.3px;
-            color: #EA580C;
-            /* כתום כהה */
-            background: #FFEDD5;
-            /* כתום בהיר */
-            border: 1px solid #FB923C;
+            letter-spacing: 1.2px;
+            color: #0284c7;
+            background: white;
             border-radius: 10px;
-            padding: 6px 14px;
+            padding: 6px 12px;
             display: inline-block;
             margin-top: 6px;
         }
 
-        /* כפתור העתקה - רגוע */
+        .coupon-btn {
+            background: var(--green-1);
+            color: white;
+            font-size: 13px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .coupon-btn:hover {
+            background: var(--green-2);
+            transform: translateY(-2px) scale(1.05);
+        }
+
         .coupon-btn.icon-only {
-            width: 28px;
-            height: 28px;
+            width: 30px;
+            /* היה ~34 */
+            height: 30px;
             padding: 0;
             border-radius: 8px;
-            opacity: 0.7;
-            background: #FFF7ED;
-            color: #9A3412;
+            opacity: 0.75;
+            background: #e5e7eb;
+            color: #334155;
             box-shadow: none;
-            border: 1px solid #FED7AA;
-            transition: all 0.15s ease;
+            transition: background 0.15s ease;
         }
 
         .coupon-btn.icon-only:hover {
             opacity: 1;
-            background: #FFEDD5;
+            background: #d1d5db;
             transform: none;
         }
 
@@ -432,20 +444,20 @@ function closePortModal(){
         .coupon-btn.icon-only svg rect {
             fill: none;
             stroke-width: 1.6;
-            stroke: #EA580C;
+            stroke: #0284c7;
         }
 
-        /* הודעת העתקה */
         .coupon-copied {
             font-size: 12px;
-            color: #9A3412;
-            background: #FFEDD5;
-            padding: 5px 10px;
+            color: #0284c7;
+            /* אותו כחול של הקוד */
+            background: #eff6ff;
+            /* כחול מאוד בהיר */
+            padding: 4px 8px;
             border-radius: 8px;
             margin-top: 6px;
             text-align: center;
-            opacity: 0.95;
-            font-weight: 500;
+            opacity: 0.9;
         }
 
         /* ================== NAV BUTTONS  ================== */
@@ -891,7 +903,7 @@ function closePortModal(){
             height: 34px;
             border: none;
             border-radius: 50%;
-            background: #b0b2b4;
+            background: #e5e7eb;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
@@ -1110,8 +1122,8 @@ function closePortModal(){
                 </div>
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
-                    כל האפשרויות כבר סוננו עבורך – ממשיכים
-                    </br>לבחירת שעה מדוייקת 
+                    כל האפשרויות כבר סוננו עבורך – נשאר
+                    </br> רק לבחור שעה
                 </div>
                 <div class="trust">
                     <div>✔️ ללא עמלות, המחיר הכי זול!</div>
@@ -1134,8 +1146,7 @@ function closePortModal(){
                 </button>
                 <div class="coupon-box">
                     <div class="coupon-text">
-                        <span style="font-size:1.25em; margin-left:4px; vertical-align:-2px;">🎁</span>
-                        קוד 5% הנחה למשתמשים חדשים
+                        🎁 קוד 5% הנחה למשתמשים חדשים
                     </div>
                     <div class="coupon-action">
                         <div class="coupon-code" id="couponCode">CJ12GO</div>
