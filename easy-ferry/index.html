@@ -18,13 +18,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ========== SEO  ========== -->
-<title>EasyFerry – Thailand Ferry Booking | Koh Samui, Koh Phangan, Phuket, Krabi & More</title>
+    <title>EasyFerry – Thailand Ferry Booking | Koh Samui, Koh Phangan, Phuket, Krabi & More</title>
 
-<meta name="description"
-    content="EasyFerry – Israel’s trusted website for booking ferries in Thailand. Koh Samui, Koh Phangan, Phuket, Koh Phi Phi – fast and secure reservations.">
-<meta name="keywords"
-    content="Koh Samui Koh Phangan ferry, Koh Samui Koh Tao ferry, Koh Phi Phi ferry, Koh Phangan Koh Tao ferry, Phuket Koh Samui ferry, Thailand ferries, 12GO Asia, Thailand ferry booking">
-<meta name="author" content="Shahaf SND">
+    <meta name="description"
+        content="EasyFerry – Israel’s trusted website for booking ferries in Thailand. Koh Samui, Koh Phangan, Phuket, Koh Phi Phi – fast and secure reservations.">
+    <meta name="keywords"
+        content="Koh Samui Koh Phangan ferry, Koh Samui Koh Tao ferry, Koh Phi Phi ferry, Koh Phangan Koh Tao ferry, Phuket Koh Samui ferry, Thailand ferries, 12GO Asia, Thailand ferry booking">
+    <meta name="author" content="Shahaf SND">
 
     <meta name="robots" content="index, follow">
     <!-- GEO -->
@@ -40,9 +40,9 @@
     <!-- Open Graph -->
     <meta property="og:title" content="🚢 Book Ferries in Thailand – Koh Samui, Koh Phangan, Phuket & More">
     <meta property="og:description"
-    content="The easiest, fastest, and most convenient way to book ferries in Thailand – Koh Samui, Koh Phangan, Koh Tao, and Phuket. Compare prices and make smart bookings in just 2 minutes.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://snddigitalagency.com/easy-ferry">
+        content="The easiest, fastest, and most convenient way to book ferries in Thailand – Koh Samui, Koh Phangan, Koh Tao, and Phuket. Compare prices and make smart bookings in just 2 minutes.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://snddigitalagency.com/easy-ferry">
 
     <!-- old ferry image: -->
     <!-- <meta property="og:image"
@@ -55,13 +55,13 @@
     <meta property="og:image"
         content="https://images.unsplash.com/photo-1613589118187-25096300fb74?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
     <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🚢 Thailand Ferry Booking – Koh Samui, Koh Phangan, Phuket, Koh Phi Phi & More">
-<meta name="twitter:description"
-    content="Book ferries in Thailand: Koh Samui to Koh Phangan, Koh Samui to Koh Tao, Koh Phangan to Koh Tao, and more – reserve now with 12GO.">
+    <meta name="twitter:title" content="🚢 Thailand Ferry Booking – Koh Samui, Koh Phangan, Phuket, Koh Phi Phi & More">
+    <meta name="twitter:description"
+        content="Book ferries in Thailand: Koh Samui to Koh Phangan, Koh Samui to Koh Tao, Koh Phangan to Koh Tao, and more – reserve now with 12GO.">
 
     <!-- JSON-LD Structured Data -->
     <!-- TravelAgency עם Offers ו-AggregateRating -->
-  <script type="application/ld+json">
+    <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "TravelAgency",
@@ -972,6 +972,30 @@ function closePortModal(){
             margin-top: 10px;
         }
 
+        .redirect-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #475569;
+            /* אפור כהה ומקצועי */
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        /* אנימציה קלה של fade-in */
+        .redirect-text {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+
         /* ===================  MOBILE   =========================================================== */
 
         @media (max-width: 480px) {
@@ -1044,7 +1068,8 @@ function closePortModal(){
     <div class="overlay">
         <!-- Logo Header -->
         <div class="logo-header">
-            <img src="../image/EasyFerryLogo.jpeg" alt="EasyFerry – Thailand Ferry Booking" loading="eager" decoding="async" />
+            <img src="../image/EasyFerryLogo.jpeg" alt="EasyFerry – Thailand Ferry Booking" loading="eager"
+                decoding="async" />
         </div>
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
@@ -1125,7 +1150,7 @@ function closePortModal(){
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
                     All options are already filtered for you – let's continue
-                   to pick your exact ferry time.
+                    to pick your exact ferry time.
                 </div>
                 <div class="trust">
                     <div>✔️ Over 8,000+ verified bookings</div>
@@ -1174,7 +1199,7 @@ function closePortModal(){
         To support our work and keep this platform free, we use affiliate links with trusted brands like 12go
     </div>
     <div id="navButtons">
-                <button id="resetButton" title="מהתחלה" class="icon-button">
+        <button id="resetButton" title="מהתחלה" class="icon-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none"
                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
                 aria-hidden="true">
@@ -1564,10 +1589,11 @@ function closePortModal(){
         </div>
     </div>
     <div style="display:none">
-        EasyFerry - Easy ferry booking in Thailand. Seamless, affordable, and tailored to your travel needs. Book now for the best prices and secure your spot on the next ferry! 🚤
+        EasyFerry - Easy ferry booking in Thailand. Seamless, affordable, and tailored to your travel needs. Book now
+        for the best prices and secure your spot on the next ferry! 🚤
     </div>
     <div id="copyToast" class="copy-toast">
-        ✅ Link copied to clipboard 
+        ✅ Link copied to clipboard
     </div>
     <!-- Loading Redirect Screen -->
     <div id="redirectScreen" class="redirect-screen hidden">
@@ -1576,11 +1602,15 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-⏳ You’re heading to 12GO to choose your exact departure time and securely complete your booking.
+                You’re heading to 12GO to choose your exact departure time and securely complete your booking.
             </div>
             <div class="redirect-subtext">
                 All options are already filtered for you – just pick your exact ferry time!
             </div>
+            <div id="redirectText" class="redirect-text-animated">
+                ⏳Please wait – just a few seconds
+            </div>
+
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="EasyFerry boat logo">
             </div>

@@ -957,6 +957,26 @@ function closePortModal(){
         .focus-final-step .coupon-box {
             margin-top: 10px;
         }
+        
+        .redirect-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #475569;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+        .redirect-text {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
 
         /* ===================  MOBILE   =========================================================== */
 
@@ -1539,10 +1559,13 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                ⏳ מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
+                 מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
             </div>
             <div class="redirect-subtext">
                 כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
+            </div>
+                        <div id="redirectText" class="redirect-text-animated">
+                ⏳אנא המתינו מספר שניות...  
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
