@@ -1,15 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-      <link rel="icon" type="image/png" sizes="32x32" href="/icons/goldBluefavicon-32x32.png">
-      <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png">
-      <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/goldBluefavicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Reconnect with Nature: Your Perfect Mountain Escape" />
+    <meta property="og:description"
+        content="Breathe in the fresh mountain air and discover breathtaking landscapes for your next unforgettable getaway." />
+    <meta property="og:url" content="https://snddigitalagency.com" />
+    <meta property="og:site_name" content="SND Digital Agency" />
+    <meta property="og:image"
+        content="https://images.unsplash.com/photo-1571497569639-7bd0fcd36c64?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Reconnect with Nature: Your Perfect Mountain Escape" />
+    <meta name="twitter:description"
+        content="Breathe in the fresh mountain air and discover breathtaking landscapes for your next unforgettable getaway." />
+    <meta name="twitter:image"
+        content="https://images.unsplash.com/photo-1571497569639-7bd0fcd36c64?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
+    <meta name="twitter:site" content="@SNDdigital" />
+
     <title>Redirecting | SND Digital Agency</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-
         body {
             background: #f5f7fa;
             color: #0d1b2a;
@@ -96,7 +115,7 @@
         .loader {
             width: 50px;
             height: 50px;
-            border: 5px solid rgba(0,0,0,0.1);
+            border: 5px solid rgba(0, 0, 0, 0.1);
             border-top: 5px solid #b88b14;
             border-radius: 50%;
             margin: 2rem auto;
@@ -104,49 +123,57 @@
         }
 
         @keyframes fadeIn {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
-
     </style>
 </head>
+
 <body>
-<header>
-    <img src="/logo_no_text.png" alt="SND Digital Agency Logo" class="logo"/>
-    <h1>SND Digital Agency</h1>
-</header>
-<main>
-    <div class="loader"></div>
-    <h1 class="page-title">
-      
-        Redirecting to Homepage
-    </h1>
-    <p>
-        Hang tight! We’re taking you to the SND DIGITAL AGENCY home page.
-    </p>
-    <a href="/">Click here if you are not redirected</a>
-    <div class="countdown">Redirecting in <span id="timer">2</span> seconds...</div>
-</main>
+    <header>
+        <img src="/logo_no_text.png" alt="SND Digital Agency Logo" class="logo" />
+        <h1>SND Digital Agency</h1>
+    </header>
+    <main>
+        <div class="loader"></div>
+        <h1 class="page-title">
 
-<script>
-    let timeLeft = 2;
-    const timerElem = document.getElementById('timer');
+            Redirecting to Homepage
+        </h1>
+        <p>
+            Hang tight! We’re taking you to the SND DIGITAL AGENCY home page.
+        </p>
+        <a href="/">Click here if you are not redirected</a>
+        <div class="countdown">Redirecting in <span id="timer">2</span> seconds...</div>
+    </main>
 
-    const countdownInterval = setInterval(() => {
-        timeLeft--;
-        timerElem.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(countdownInterval);
-            window.location.href = '/';
-        }
-    }, 1000);
-</script>
-<noscript>
-    <meta http-equiv="refresh" content="2; url=/">
-</noscript>
+    <script>
+        let timeLeft = 2;
+        const timerElem = document.getElementById('timer');
+
+        const countdownInterval = setInterval(() => {
+            timeLeft--;
+            timerElem.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = '/';
+            }
+        }, 1000);
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="2; url=/">
+    </noscript>
 </body>
+
 </html>
