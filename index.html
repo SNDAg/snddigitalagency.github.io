@@ -1,53 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Invalid Link</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #0b1a2b; /* כחול כהה רציני */
-      color: #ffffff;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
+      <link rel="icon" type="image/png" sizes="32x32" href="/icons/goldBluefavicon-32x32.png">
+      <link rel="icon" type="image/png" sizes="48x48" href="/icons/favicon-48x48.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Redirecting | SND Digital Agency</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
 
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-    }
+        body {
+            background: #f5f7fa;
+            color: #0d1b2a;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
 
-    p {
-      font-size: 1.2rem;
-      line-height: 1.5;
-      max-width: 600px;
-      color: #cccccc;
-    }
+        header img.logo {
+            height: 50px;
+            width: auto;
+        }
 
-    a {
-      color: #1ea7fd;
-      text-decoration: none;
-      font-weight: 600;
-    }
+        header {
+            background-color: #0d1b2a;
+            color: #c39555;
+            padding: 2rem 1rem;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
 
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 480px;
+            margin: 3rem auto;
+        }
+
+        h1.page-title {
+            font-size: 2.8rem;
+            color: #0b2545;
+            display: flex;
+            font-weight: 600;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        h1.page-title .icon {
+            font-size: 3rem;
+            color: #b88b14;
+        }
+
+        p {
+            font-size: 1.25rem;
+            color: #444;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        a {
+            color: #b88b14;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        a:hover {
+            border-color: #b88b14;
+        }
+
+        .countdown {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0,0,0,0.1);
+            border-top: 5px solid #b88b14;
+            border-radius: 50%;
+            margin: 2rem auto;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+    </style>
 </head>
 <body>
-  <div>
-    <h1>Invalid Link</h1>
+<header>
+    <img src="/logo_no_text.png" alt="SND Digital Agency Logo" class="logo"/>
+    <h1>SND Digital Agency</h1>
+</header>
+<main>
+    <div class="loader"></div>
+    <h1 class="page-title">
+      
+        Redirecting to Homepage
+    </h1>
     <p>
-      You have reached an invalid or unauthorized link. Please check your source and use a proper, official link to access this content.
+        Hang tight! We’re taking you to the SND DIGITAL AGENCY home page.
     </p>
-  </div>
+    <a href="/">Click here if you are not redirected</a>
+    <div class="countdown">Redirecting in <span id="timer">2</span> seconds...</div>
+</main>
+
+<script>
+    let timeLeft = 2;
+    const timerElem = document.getElementById('timer');
+
+    const countdownInterval = setInterval(() => {
+        timeLeft--;
+        timerElem.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            window.location.href = '/';
+        }
+    }, 1000);
+</script>
+<noscript>
+    <meta http-equiv="refresh" content="2; url=/">
+</noscript>
 </body>
 </html>
