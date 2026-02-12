@@ -1,0 +1,1112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+         <!-- Tradedoubler site verification 2448977 -->
+         <link href="/icons/goldBluefavicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
+         <link href="/icons/favicon-48x48.png" rel="icon" sizes="48x48" type="image/png"/>
+         <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+          <meta charset="UTF-8">
+         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+         <style>
+           @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+           .header {
+             display: flex;
+             align-items: center;
+             gap: 10px;
+           }
+           /*    comment in to disable comingSoon pages */
+         /*         a[href="/comingSoon/"] {
+         pointer-events: none;
+         cursor: default;
+         color: #b88b14;
+         text-decoration: none;
+         } */
+         .logo {
+           height: 50px;
+           width: auto;
+         }
+         body {
+           background: #f5f7fa;
+           color: #0d1b2a;
+           font-family: 'Poppins', sans-serif;
+           margin: 0;
+         }
+         header {
+           background-color: #0d1b2a;
+           color: #c39555;
+           padding: 2rem 1rem;
+           text-align: center;
+           animation: fadeIn 1s ease-in-out;
+         }
+         header h1 {
+           margin: 0;
+           font-size: 2.2rem;
+           letter-spacing: 1px;
+           transition: all 0.3s ease;
+         }
+         header h1:hover {
+           transform: scale(1.05);
+         }
+         main {
+           max-width: 800px;
+           margin: 3rem auto;
+           padding: 0 1rem;
+           line-height: 1.6;
+         }
+         /* אפקט fade-up התחלה - כל המקטעים */
+         section.fade-section {
+           opacity: 0;
+           transform: translateY(30px);
+           transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+         }
+         /* מחלקה שמתווספת כשהאלמנט נראה במסך */
+         section.fade-section.visible {
+           opacity: 1;
+           transform: translateY(0);
+         }
+         h2 {
+           color: #111827;
+           margin-bottom: 1rem;
+         }
+         ul {
+           padding-left: 1.2rem;
+         }
+         .cards {
+           display: grid;
+           grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+           gap: 1rem;
+           margin-top: 1rem;
+         }
+         .card {
+           background: white;
+           border-radius: 8px;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+           padding: 1rem;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+         }
+         .card:hover {
+           transform: scale(1.04);
+           box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+         }
+         .static-card {
+           background: white;
+           border-radius: 8px;
+           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+           padding: 1rem;
+           transition: transform 0.3s ease, box-shadow 0.3s ease;
+           box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+         }
+         footer {
+           background-color: #f1f1f1;
+           padding: 2rem 1rem;
+           text-align: center;
+         }
+         .contact-icons {
+           display: flex;
+           justify-content: center;
+           gap: 1rem;
+           margin-top: 1rem;
+           flex-wrap: wrap;
+         }
+         .contact-icons a {
+           display: inline-flex;
+           align-items: center;
+           gap: 0.5rem;
+           background-color: #e5f8f0;
+           padding: 0.5rem 1rem;
+           border-radius: 5px;
+           text-decoration: none;
+           color: #111827;
+           font-weight: bold;
+           transition: background-color 0.3s ease, transform 0.3s ease;
+         }
+         .contact-icons a:hover {
+           background-color: #d0f1e3;
+           transform: translateY(-2px);
+         }
+         .contact-icons img {
+           width: 24px;
+           height: 24px;
+         }
+         .logos {
+           display: flex;
+           justify-content: center;
+           flex-wrap: wrap;
+           gap: 2rem;
+           margin-top: 2rem;
+         }
+         .logos img {
+           height: 40px;
+           opacity: 0.7;
+         }
+         .badge-new {
+           display: inline-block;
+           background: linear-gradient(90deg, #ff7e5f, #feb47b);
+           color: white;
+           font-weight: bold;
+           font-size: 0.85rem;
+           padding: 0.35em 0.75em;
+           border-radius: 999px;
+           text-transform: uppercase;
+           letter-spacing: 0.5px;
+           margin-right: 0.5rem;
+           box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+           vertical-align: middle;
+         }
+         .floating-button {
+           position: fixed;
+           bottom: 30px;
+           right: 30px;
+           background-color: #25D366;
+           color: white;
+           padding: 0.75rem 1.6rem;
+           border-radius: 50px;
+           font-weight: bold;
+           text-decoration: none;
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+           transition: background-color 0.3s ease, transform 0.2s ease;
+           display: flex;
+           align-items: center;
+           gap: 0.5rem;
+           z-index: 999;
+         }
+         .floating-button img {
+           width: 22px;
+           height: 22px;
+         }
+         .floating-button:hover {
+           background-color: #1ebe5d;
+           transform: scale(1.08);
+         }
+         section.contact {
+           border: 2px solid #c39555;
+           border-radius: 8px;
+           padding: 20px;
+           background-color: #fdfcfb;
+           box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+           max-width: 500px;
+           margin: 2rem auto 0;
+           display: none;
+           transition: all 0.5s ease;
+         }
+         section.contact h2 {
+           margin-top: 0;
+           margin-bottom: 20px;
+           text-align: center;
+           color: #021b33;
+         }
+         section.contact p {
+           text-align: center;
+           font-weight: 600;
+           margin-bottom: 25px;
+           color: #021b33;
+         }
+         form {
+           display: flex;
+           flex-direction: column;
+           gap: 15px;
+         }
+         label {
+           font-weight: bold;
+           color: #021b33;
+         }
+         input[type="text"],
+         input[type="email"],
+         textarea {
+           padding: 10px;
+           border: 1.8px solid #c9a548;
+           border-radius: 5px;
+           font-size: 1rem;
+           resize: vertical;
+         }
+         textarea {
+           min-height: 100px;
+         }
+         button {
+           background-color: #c9a548;
+           color: #021b33;
+           font-weight: bold;
+           padding: 14px;
+           border: none;
+           border-radius: 6px;
+           font-size: 1.2rem;
+           cursor: pointer;
+           transition: background-color 0.3s ease;
+         }
+         button:hover {
+           background-color: #a88a35;
+         }
+         /* אנימציות */
+         @keyframes fadeIn {
+           0% {
+             opacity: 0;
+           }
+           100% {
+             opacity: 1;
+           }
+         }
+       }
+       .toggle-button {
+         background: linear-gradient(90deg, #c39555, #a8803a);
+         color: white;
+         padding: 10px 18px;
+         font-size: 1rem;
+         border: none;
+         border-radius: 24px;
+         cursor: pointer;
+         margin: 2rem auto 1rem;
+         display: block;
+         font-weight: 600;
+         box-shadow: 0 3px 8px rgba(196, 149, 85, 0.35);
+         transition: background 0.3s ease, transform 0.2s ease;
+       }
+       .toggle-button:hover {
+         background: linear-gradient(90deg, #a8803a, #c39555);
+         transform: scale(1.05);
+       }
+       ul.custom-list {
+         list-style: none;
+         padding-left: 0;
+       }
+       ul.custom-list li {
+         position: relative;
+         padding-left: 28px;
+         margin-bottom: 12px;
+         font-size: 1.1rem;
+         color: #0d1b2a;
+       }
+       ul.custom-list li::before {
+         content: '✦';
+         position: absolute;
+         left: 0;
+         color: #0d1b2a;
+         font-size: 1.2rem;
+         top: 0;
+         line-height: 1;
+       }
+       h2 {
+         font-family: 'Poppins', sans-serif;
+         font-weight: 550;
+         font-size: 1.6rem;
+         color: #111827;
+         position: relative;
+         margin-bottom: 1.2rem;
+         padding-bottom: 6px;
+       }
+       .highlight-paragraph {
+         font-size: 1.1rem;
+         color: #374151;
+         margin-bottom: 1rem;
+       }
+       .brand {
+         font-weight: 600;
+       }
+       .brand.booking {
+         color: #1a73e8;
+       }
+       .brand.viator {
+         color: #00664d;
+       }
+       background-color: #f9f9fb
+       ;
+     }
+     background-color: #ffffff
+     ;
+   }
+   .hamburger-wrapper {
+     position: fixed;
+     top: 0;
+     left: 0;
+     height: 100vh;
+     width: 50px;
+     background-color: #0d1b2a;
+     z-index: 1000;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     padding-top: 20px;
+   }
+   nav.mobile-nav {
+     position: fixed;
+     top: 0;
+     left: 50px;
+     width: 250px;
+     height: auto;
+     max-height: 100vh;
+     overflow-y: auto;
+     background-color: #0d1b2a;
+     transform: translateX(-100%);
+     transition: transform 0.3s ease;
+     z-index: 999;
+     padding: 2rem 1rem;
+     text-align: left;
+   }
+   html {
+     scroll-behavior: smooth;
+   }
+   .urger {
+     background-color: #1c2d44;
+     padding: 10px;
+     border-radius: 6px;
+     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+   }
+   .hamburger:hover {
+     background-color: rgba(255, 255, 255, 0.17);
+   }
+   nav.mobile-nav {
+     width: 250px !important;
+     height: auto !important;
+     max-height: 100vh !important;
+     overflow-y: auto !important;
+     border-left: 2px solid #c39555;
+     border-right: 2px solid #c39555;
+     box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+   }
+ </style>
+ <meta content="width=device-width, initial-scale=1" name="viewport"/>
+ <title>SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism</title>
+ <meta content="SND Digital Agency provides tailored digital marketing solutions for hotels, resorts, and tourism businesses. Boost your bookings and online presence with expert campaigns."
+ name="description"/>
+ <meta content="Digital Marketing, Hospitality Marketing, Tourism Marketing, Hotels Marketing, Resorts Advertising, Online Marketing, SEO for Hotels, Social Media Marketing, Influencer Marketing, Booking Collaboration, Travel Marketing Agency"
+ name="keywords"/>
+ <meta content="SND Digital Agency" name="author"/>
+ <meta content="index, follow" name="robots"/>
+ <!-- Open Graph / Facebook -->
+ <meta content="website" property="og:type"/>
+ <meta content="SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism" property="og:title"/>
+ <meta content="Tailored marketing solutions for hotels, resorts, and tourism destinations. Increase visibility, traffic, and bookings with SND Digital Agency."
+ property="og:description"/>
+ <meta content="https://snddigitalagency.com" property="og:url"/>
+ <meta content="SND Digital Agency" property="og:site_name"/>
+ <meta content="https://snddigitalagency.com/og-image.jpg" property="og:image"/>
+ <!-- Twitter -->
+ <meta content="summary_large_image" name="twitter:card"/>
+ <meta content="SND Digital Agency | Expert Digital Marketing for Hospitality &amp; Tourism" name="twitter:title"/>
+ <meta content="Boost your hospitality business with customized digital marketing campaigns by SND Digital Agency."
+ name="twitter:description"/>
+ <meta content="https://snddigitalagency.com/twitter-image.jpg" name="twitter:image"/>
+ <meta content="@SNDdigital" name="twitter:site"/>
+</head>
+
+<!-- Newsletter -->
+<div id="newsletterModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.6); z-index:9999;">
+  <div style="background:white; max-width:400px; margin:10% auto; padding:2rem; border-radius:12px; text-align:center; box-shadow:0 0 20px rgba(0,0,0,0.2);">
+    <h2 style="margin-bottom:1rem;">Join Our Travel List ✈️</h2>
+    <p style="margin-bottom:1.5rem;">Get curated hotel highlights and insider tips directly to your inbox.</p>
+    <form id="newsletterForm" onsubmit="handleNewsletterSubmit(event)" method="POST">
+      <input type="email" name="email" placeholder="Your email" required style="padding:10px; width:100%; margin-bottom:1rem; border-radius:6px; border:1px solid #ccc;">
+      <button type="submit" style="padding:10px 20px; background-color:#c39555; border:none; color:white; border-radius:6px;">Subscribe</button>
+      <div id="newsletterSuccessMsg" style="display:none; color:green; margin-top:1rem; font-weight:500;">
+        Thanks! You’re subscribed.
+      </div>
+    </form>
+    <br><button onclick="document.getElementById('newsletterModal').style.display='none'" style="background:none; border:none; color:#666; text-decoration:underline;">No thanks</button>
+  </div>
+</div>
+<body>
+
+<!--oldd video -->
+<!-- <section style="position:relative; width:100vw; height:100vh; overflow:hidden; margin:0; padding:0;">
+  <div style="position:absolute; top:-25%; left:0; width:100%; height:170%; overflow:hidden; z-index:-1;">
+    <iframe src="https://www.youtube.com/embed/6YhBoRzDBFU?autoplay=1&mute=1&controls=0&loop=1&playlist=6YhBoRzDBFU&modestbranding=1&rel=0&disablekb=1&fs=0&showinfo=0&start=150&end=170" 
+    frameborder="0" allowfullscreen
+    style="width:100%; height:100%; object-fit:cover;">
+    </iframe>
+  </div>
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.1); z-index:1;"></div>
+  <div class="hero-text">
+    <h1 style="font-size:5rem;">Let the Journey Begin</h1>
+    <p style="font-size:1.8rem;">Inspired hospitality. Digital elevation.</p>
+  </div>
+</section>
+<style>
+  .hero-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    top: 35%;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeSlideIn 1.6s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style> -->
+
+<!-- video -->
+<section style="position:relative; width:100vw; height:100vh; overflow:hidden; margin:0; padding:0;">
+  <div style="position:absolute; top:-25%; left:0; width:100%; height:170%; overflow:hidden; z-index:-1;">
+    <video autoplay muted loop playsinline 
+      style="width:100%; height:100%; object-fit:cover;">
+      <source src="/videos/cover.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <div style="position:absolute; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.1); z-index:1;"></div>
+  <div class="hero-text">
+    <h1 style="font-size:5rem;">Let the Journey Begin</h1>
+    <p style="font-size:1.8rem;">Inspired hospitality. Digital elevation.</p>
+  </div>
+</section>
+<style>
+  .hero-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+    top: 35%;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeSlideIn 1.6s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+<!-- video end -->
+
+
+<div class="hamburger-wrapper">
+ <button class="hamburger" onclick="toggleMenu()">
+   <span></span>
+   <span></span>
+   <span></span>
+ </button>
+</div>
+
+<nav class="mobile-nav" id="mobileMenu">
+ <a href="#about-us">About Us</a>
+ <a href="#services">Our Services</a>
+ <a href="#case-studies">Case Studies</a>
+ <a href="#testimonials">Testimonials</a>
+ <a href="#process">Our Process</a>
+ <a href="#partner">Partner With Us</a>
+ <a href="#hotels">Recommended Hotels</a>
+  <a href="#top-restaurants">Top Restaurants</a>
+ <a href="#viator-experiences">Travel Experiences</a>
+ <a href="/contact/">Contact Us</a>
+</nav>
+<style>
+ .hamburger {
+   position: fixed;
+   top: 20px;
+   left: 20px;
+   background: none;
+   border: none;
+   cursor: pointer;
+   z-index: 1000;
+ }
+ .hamburger span {
+   display: block;
+   width: 25px;
+   height: 3px;
+   margin: 5px;
+   background-color: #0d1b2a;
+   border-radius: 2px;
+ }
+ nav.mobile-nav {
+   display: flex;
+   flex-direction: column;
+   background-color: #0d1b2a;
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   transform: translateX(-100%);
+   transition: transform 0.3s ease;
+   z-index: 999;
+   padding-top: 8rem;
+   padding-bottom: 24rem;
+   text-align: center;
+ }
+ nav.mobile-nav.open {
+   transform: translateX(0);
+ }
+ nav.mobile-nav a {
+   color: #c39555;
+   font-size: 1.2rem;
+   margin: 1rem 0;
+   text-decoration: none;
+ }
+</style>
+<header>
+ <img alt="SND Digital Agency Logo" class="logo" src="logo_no_text.png"/>
+ <div>
+  <h1>SND Digital Agency</h1>
+  <p>Digital Strategy &amp; Business Partnerships</p>
+</div>
+</header>
+<main>
+ <section class="fade-section" id="who-we-are">
+  <h2>Who We Are</h2>
+  <p>
+    SND Digital Agency is a boutique consultancy specializing in digital strategy,
+    business partnerships, and tailored marketing solutions in the travel, hospitality, and curated experiences sector.
+    We support brands and entrepreneurs with impactful campaigns, growth models, and audience-driven travel storytelling.
+  </p>
+</section>
+<br/>
+<section class="fade-section" id="about-us">
+  <h2>About Us</h2>
+  <p>
+    Founded by a digital strategist with over a decade of experience in marketing and partnerships,
+    SND Digital Agency brings a human-first, insight-led approach to brand growth. Our work spans
+    from local campaigns and hospitality projects to international travel collaborations and curated tours.
+  </p>
+</section>
+<br/>
+<section class="fade-section" id="what-we-do">
+  <h2>What We Do</h2>
+  <ul class="custom-list">
+    <li>Strategic growth planning for travel, hospitality brands, and experience providers</li>
+    <li>Development and execution of impactful partnerships</li>
+    <li>Campaign localization tailored to audience, region, and type of travel experience</li>
+    <li>Brand positioning through insight-led storytelling and content</li>
+    <li>Agile delivery rooted in deep industry understanding of hotels, tours, and activities</li>
+    <li>Global perspective with a focus on local resonance and authentic travel moments</li>
+  </ul>
+</section>
+<br/>
+<section style="text-align: center; margin: 2rem 0;">
+  <div style="
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  ">
+  <a href="/article-improve-digital-presence"
+  onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';"
+  onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';"
+  style="
+  display: inline-block;
+  background: linear-gradient(90deg, #c39555, #a8803a);
+  color: white;
+  font-weight: 600;
+  padding: 8px 20px;
+  border-radius: 24px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 8px rgba(196, 149, 85, 0.35);
+  transition: background 0.3s ease, transform 0.2s ease;
+  letter-spacing: 0.03em;
+  min-width: 280px;
+  text-align: center;
+  ">
+  Discover how to boost your boutique hotel's digital presence →
+</a>
+<a href="/article-barcelona-families"
+onmouseover="this.style.background='linear-gradient(90deg, #a8803a, #c39555)'; this.style.transform='scale(1.05)';"
+onmouseout="this.style.background='linear-gradient(90deg, #c39555, #a8803a)'; this.style.transform='scale(1)';"
+style="
+display: inline-block;
+background: linear-gradient(90deg, #c39555, #a8803a);
+color: white;
+font-weight: 600;
+padding: 8px 20px;
+border-radius: 24px;
+text-decoration: none;
+font-size: 0.95rem;
+box-shadow: 0 3px 8px rgba(196, 149, 85, 0.35);
+transition: background 0.3s ease, transform 0.2s ease;
+letter-spacing: 0.03em;
+min-width: 280px;
+text-align: center;
+">
+Explore our top picks for families in Barcelona →
+</a>
+</div>
+</section>
+<br/>
+<section class="fade-section" id="services">
+  <h2>Our Services</h2>
+  <div class="cards">
+   <div class="static-card">Strategy &amp; Audit for Travel Brands</div>
+   <div class="static-card">Content Management</div>
+   <div class="static-card">Business Partnership Curation</div>
+ </div>
+</section>
+<br/>
+<section class="fade-section" id="why-us">
+  <h2>Why Choose Us</h2>
+  <ul class="custom-list">
+   <li>Results-driven and insight-based strategies</li>
+   <li>Deep understanding of the travel and hospitality industries</li>
+   <li>Personal approach with agile delivery</li>
+   <li>Global mindset, local impact</li>
+ </ul>
+</section>
+<br/>
+<section class="fade-section" id="case-studies">
+  <h2>Case Studies</h2>
+  <div class="static-card">
+   <h3>📈 Aegeo Bliss Retreat – Cycladic Isles</h3>
+   <p>Led a targeted digital campaign that resulted in a 35% increase in seasonal bookings and a 2.3x ROAS.</p>
+ </div>
+ <br/>
+ <div class="static-card">
+   <h3>🏨 Casa Del Mar Palace – Central Anatolia</h3>
+   <p>Increased direct bookings by 42% through multilingual campaign optimization and influencer
+    collaborations.
+  </p>
+</div>
+<p style="font-size: 1.0rem; color: #666; font-style: italic; margin-top:1rem;">
+ These success stories represent just a glimpse of our growing collaborative network.
+</p>
+</section>
+<br/><br/>
+<section class="fade-section" id="testimonials">
+  <h2>Client Testimonials</h2>
+  <blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
+   “Working with SND was a turning point for our visibility online. Their team understood our boutique vibe and
+   elevated our presence perfectly.”
+ </blockquote>
+ <p style="text-align: right; font-weight: bold;">– Lea Andros, Owner, The Horizon House (Santorini)</p>
+ <br/>
+ <blockquote style="font-style: italic; font-size: 1.05rem; color: #374151;">
+   “Our bookings soared and we’ve built stronger brand trust thanks to their strategic yet human approach.”
+ </blockquote>
+ <p style="text-align: right; font-weight: bold;">– Marco Del Rio, Manager, Villa Lume (Amalfi Coast)</p>
+</section>
+<br/>
+<section class="fade-section" id="process">
+  <h2>Our 5-Step Collaboration Process</h2>
+  <ul class="custom-list">
+   <li><strong>Discovery:</strong> Understanding your brand, goals and market landscape</li>
+   <li><strong>Strategy:</strong> Co-creating KPI-aligned campaigns</li>
+   <li><strong>Production:</strong> Crafting creative, partnerships or content</li>
+   <li><strong>Launch:</strong> Targeted execution and iteration</li>
+   <li><strong>Measurement:</strong> Tracking performance and learning</li>
+ </ul>
+</section>
+<section class="fade-section" id="partner"
+style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;">
+<h2>Partner With Us</h2>
+<p style="font-size: 1.1rem; color: #374151;">
+ Are you a boutique hotel, resort, or experience provider looking to grow your digital presence and reach the
+ right audience?
+ We invite select properties to join our curated network and benefit from strategic marketing and tailored
+ exposure opportunities.
+</p>
+<br/>
+<button class="toggle-button" onclick="toggleLetsTalkContactForm()">📬 Request to Join</button>
+</section>
+<section class="fade-section">
+  <blockquote style="font-style: italic; font-size: 1.2rem; margin: 2rem 0; text-align: center;">“We don’t just
+   connect brands — we create meaningful partnerships.”
+ </blockquote>
+</section>
+<section class="contact" id="talk-contact-form">
+  <h2>Join Us!</h2>
+  <p>Let’s work together to elevate your brand!<br/>
+   Submit your details and we’ll reach out to schedule a personalized discovery call.
+ </p>
+ <form 
+ id="joinForm"
+ action="https://formspree.io/f/xovwzpjq"
+ method="POST">
+ <label for="name">Full Name</label>
+ <input id="name" name="Full Name" type="text" required />
+ <label for="email">Email Address</label>
+ <input id="email" name="Email Address" type="email" required />
+ <label for="phone">Phone Number</label>
+ <input id="phone" name="Phone Number" type="text" required />
+ <br />
+ <button type="submit">Submit</button>
+</form>
+</section>
+<br/>
+
+
+<section class="fade-section" id="top-restaurants" style="margin-top:4rem;">
+  <h2>🍽️ Top Local Eats – Our Handpicked Favorites</h2>
+  <p>
+    Discover the best dining spots loved by locals and traveler, All selected for exceptional taste, atmosphere, and service.
+  </p>
+  <br/>
+  <div class="cards">
+    <!-- Card 1 -->
+<div class="card">
+  <img src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?q=80&w=800&auto=format&fit=crop" 
+       alt="Taverna dei migliori Ramtesh" 
+       style="width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px;">
+  <h3>🍽️ Taverna dei migliori - Roma</h3>
+  <p>Authentic flavors, warm atmosphere, and a true Italian dining experience in the heart of the city.</p>
+    <a href="https://www.tavernadeimigliori.com/prenota" style="color:#b88b14;font-weight:bold;" target="_blank">Book a Table&gt;&gt;</a>
+</div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1543353071-873f17a7a088?q=80&w=800&auto=format&fit=crop" 
+           alt="Seafood Restaurant" 
+           style="width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px;">
+      <h3>🦞 Monte Marinero Seafood - Barcelona</h3>
+      <p>Fresh catch daily with panoramic views – a must-visit for seafood lovers.</p>
+ <a href="https://www.thefork.es/restaurante/monte-marinero-r835125#booking=" style="color:#b88b14;font-weight:bold;" target="_blank">Book a Table&gt;&gt;</a>
+    </div>
+  </div>
+    <div class="cards">
+      <!-- Card 3 (fixed image) -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+           alt="Fine Dining" 
+           style="width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px;">
+      <h3>🥂 Étoile – Fine Dining</h3>
+      <p>Elegant ambiance and a seasonal chef’s menu that delights every palate.</p>
+      <span style="color:#b88b14;font-weight:bold;">See details &gt;&gt;</span>
+    </div>
+
+    <!-- Card 4 (new) -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1533777857889-4be7c70b33f7?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+           alt="Vegan Bistro" 
+           style="width:100%;height:160px;object-fit:cover;border-radius:6px;margin-bottom:12px;">
+      <h3>🌱 Verde Vita – Vegan Bistro</h3>
+      <p>Fresh, creative plant-based dishes that even non-vegans rave about.</p>
+      <span style="color:#b88b14;font-weight:bold;">See details &gt;&gt;</span>
+    </div>
+</div>
+</section>
+</br>
+<section class="fade-section" id="hotels">
+  <h2>🌍 Hotel Highlights from Our Community</h2>
+  <p>
+   Each month, we feature hotel partners whose guest experiences stood out in feedback from clients and
+   collaborators. These highlights reflect the power of brand-aligned experiences and the results of great
+   partnerships.
+ </p>
+ <br/>
+ <div class="card">
+   <h3>🌅 Mykonos Bliss Hotel – Mykonos, Greece</h3>
+   <p>A romantic haven with panoramic views and warm service. This property continuously ranks high among
+    couples and influencers alike.
+  </p>
+  <a href="/Mykonos-Bliss-Hotel//" style="color: #b88b14; font-weight: bold;">Discover more &gt;&gt;</a>
+</div>
+<br/>
+<div class="card">
+ <h3>🕌 Boutique Taksim Palace – Istanbul, Turkey</h3>
+ <p>Nestled in the heart of Istanbul, this boutique property is celebrated for its authenticity and location
+  near cultural landmarks.
+</p>
+<a href="/Boutique-Taksim-Palace/" style="color: #b88b14; font-weight: bold;">Learn more &gt;&gt;</a>
+</div>
+<br/>
+<div class="card">
+ <h3>🏝️ U Pattaya – Thailand</h3>
+ <p>Beachfront serenity with standout design. A client favorite for immersive hospitality and consistent
+  guest satisfaction.
+</p>
+<a href="/U-Pattaya/" style="color: #b88b14; font-weight: bold;">More info &gt;&gt;</a>
+</div>
+<p style="margin-top: 1.5rem; color: #444;">Want to feature your hotel in next month's picks?
+</p>
+</section>
+<button class="toggle-button" onclick="toggleContactForm()">💬 Let's Talk</button>
+<section class="contact" id="contact-form">
+  <h2>Get in Touch</h2>
+  <p>Interested in exploring a partnership? Let’s work together to elevate your brand.</p>
+  <form 
+  id="contactForm"
+  action="https://formspree.io/f/mwpbjwvb"
+  method="POST">
+  <label for="name">Full Name</label>
+  <input id="name" name="Full Name" type="text" required />
+  <label for="email">Email Address</label>
+  <input id="email" name="Email Address" type="email" required />
+  <label for="message">Message</label>
+  <textarea id="message" name="Message" required></textarea>
+  <button type="submit">Send Message</button>
+</form>
+</section>
+
+</br></br></br>
+
+<!-- Viator Section -->
+<section class="fade-section" id="viator-experiences">
+  <h2 style="margin-bottom:30px;">Featured Travel Experiences</h2>
+  <p>
+    Discover our recommended experiences in collaboration with <strong>Viator</strong> – unique, memorable, and part of the inspired journeys we love to share.
+  </p>
+</br>
+  <!-- Grid of cards barcelona -->
+  <div class="experience-grid" style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;">
+    <!-- Card 1 -->
+    <div class="experience-card" style="background:#fff;border-radius:10px;padding:20px;width:280px;box-shadow:0 0 10px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+      <img src="https://images.unsplash.com/photo-1703694791524-5b05b7a7b25a?q=80&w=735&auto=format&fit=crop" alt="Barcelona Street Art Tour" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:15px;">
+      <h3 style="margin:0 0 10px;font-size:1.3em;color:#0056b3;">Barcelona Street Art Tour</h3>
+      <p style="font-size:0.95em;color:#555;flex-grow:1;">Discover the hidden graffiti gems of El Raval with a local artist-guide.</p>
+      <a href="https://www.viator.com/tours/Barcelona/Barcelona-Street-Art-Graffitti-Bicycle-Tour/d562-8763P1?pid=P00259952&mcid=42383&medium=link&campaign=Barcelona-Graffitti" class="cta-button" style="display:inline-block;margin-top:10px;padding:10px 15px;background:#0056b3;color:#fff;border-radius:5px;text-decoration:none;font-weight:bold;">Book on Viator</a>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="experience-card" style="background:#fff;border-radius:10px;padding:20px;width:280px;box-shadow:0 0 10px rgba(0,0,0,0.05);display:flex;flex-direction:column;">
+      <img src="https://plus.unsplash.com/premium_photo-1683707120391-6c0da3cac6be?q=80&w=687&auto=format&fit=crop" alt="Catalan Cooking Workshop" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:15px;">
+      <h3 style="margin:0 0 10px;font-size:1.3em;color:#0056b3;">Catalan Cooking Workshop</h3>
+      <p style="font-size:0.95em;color:#555;flex-grow:1;">Learn to prepare traditional Catalan dishes in an immersive local kitchen experience.</p>
+      <a href="https://www.viator.com/tours/Barcelona/Master-Catalan-Hands-On-Cooking-Workshop/d562-482496P2?pid=P00259952&mcid=42383&medium=link&campaign=Barcelona-Cooking" class="cta-button" style="display:inline-block;margin-top:10px;padding:10px 15px;background:#0056b3;color:#fff;border-radius:5px;text-decoration:none;font-weight:bold;">Book on Viator</a>
+    </div>
+  </div>
+</br></br>
+  <!-- Grid of cards vietnam and costa rica -->
+  <div class="experience-grid" style="display:flex;flex-wrap:wrap;gap:30px;justify-content:center;">
+  <!-- Centered Hanoi card -->
+  <div style="display:flex;justify-content:center;">
+    <div class="experience-card" style="background:#fff;border-radius:10px;padding:20px;width:280px;box-shadow:0 0 10px rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;">
+      <img src="https://images.unsplash.com/photo-1592202178023-2dbb4527b006?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Hanoi One Day Tour" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:15px;">
+      <h3 style="margin:0 0 10px;font-size:1.3em;color:#0056b3;">Top Picks for One Day in Hanoi</h3>
+      <p style="font-size:0.95em;color:#555;flex-grow:1;">Experience the best of Hanoi and Vietnam with our top rated exclusive adventures.</p>
+      <a href="/hanoi" class="cta-button" style="display:inline-block;margin-top:10px;padding:10px 15px;background:#0056b3;color:#fff;border-radius:5px;text-decoration:none;font-weight:bold;">Explore Now</a>
+    </div>
+  </div>
+
+<!-- Centered Costa Rica card -->
+<div style="display:flex;justify-content:center;">
+  <div class="experience-card" style="background:#fff;border-radius:10px;padding:20px;width:280px;box-shadow:0 0 10px rgba(0,0,0,0.05);display:flex;flex-direction:column;align-items:center;">
+    <img src="https://dynamic-media.tacdn.com/media/photo-o/2f/0c/9d/fe/caption.jpg?w=700&h=500&s=1" alt="Costa Rica Adventure" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:15px;">
+    <h3 style="margin:0 0 10px;font-size:1.3em;color:#0056b3;">Top-Rated Costa Rica Experiences</h3>
+    <p style="font-size:0.95em;color:#555;flex-grow:1;">Discover the magic of Costa Rica with experiences that make every moment unforgettable.</p>
+    <a href="/costa-rica" class="cta-button" style="display:inline-block;margin-top:10px;padding:10px 15px;background:#0056b3;color:#fff;border-radius:5px;text-decoration:none;font-weight:bold;">Explore Now</a>
+  </div>
+</div>
+</div>
+  <!-- Footer promo -->
+  <div style="margin:60px auto 30px;text-align:center;font-size:0.9em;color:#777;max-width:800px;">
+    <p><em>Want your travel experience featured here? Contact us to collaborate or learn more about how we support boutique tourism worldwide.</em></p>
+  </div>
+
+  <div data-id=viator-banner data-partner-id=P00259952 data-url="https://www.viator.com/" data-banner-width=728 data-banner-height=90 data-banner-language=en data-banner-selection=banner1></div>
+  <script async src="https://partners.vtrcdn.com/static/scripts/banners/banners.js"></script>
+</section>
+<!-- Viator Section -->
+
+
+
+<section
+class="bg-gradient-to-r from-[#f8fafc] to-[#eef2f7] py-12 px-6 rounded-2xl shadow-xl max-w-4xl mx-auto my-16 text-center">
+<h2 class="text-3xl font-bold text-gray-800 mb-4"
+style="margin-top: 4rem; border-top: 2px solid #e0e0e0; padding-top: 2rem;"><br/>
+<span class="badge-new">New</span> Expanding With Leading Travel Brands
+</h2>
+<p class="highlight-paragraph">
+ We're in the process of partnering with leading global travel platforms like
+ <span class="brand booking">Booking.com</span> and
+ <span class="brand viator">Viator</span> by TripAdvisor, to enrich our offerings via affiliate programs.
+</p>
+<p class="text-gray-600 mb-6">
+ Soon, you will be able to explore and book curated hotels, experiences, and restaurants directly through our
+ recommendations – all seamlessly integrated into your planning journey.
+</p>
+<div class="text-sm italic text-gray-500">
+ Integration in progress. Stay tuned for exclusive options, tailored by destination.
+</div>
+</section>
+<br/><br/>
+</main>
+<footer style="padding: 2rem; font-size: 0.9rem; text-align: center;">
+ <p style="max-width: 700px; margin: auto;">
+  <strong>Affiliate Disclosure</strong><br />
+  To support our work and keep this platform free for travelers, we use affiliate links with trusted travel brands like 
+  <a href="https://www.booking.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Booking.com</a> and 
+  <a href="https://www.viator.com/" target="_blank" rel="nofollow noopener" style="color: #c39555;">Viator</a>. <br />
+  When you book through these links, we may earn a commission — at no extra cost to you.<br />
+  These partnerships allow us to continue curating and sharing travel recommendations with our community.
+</p>
+</footer>
+<footer>
+ <h2>Let’s Grow Together</h2>
+ <p>Get in touch to explore collaboration opportunities in travel, hospitality, and digital strategy.</p>
+ <div class="contact-icons">
+  <a class="whatsapp-button" target="_blank">
+    <img alt="WhatsApp Icon" src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png"/>
+    WhatsApp
+  </a>
+  <a href="mailto:info@snddigitalagency.com">
+    <img alt="Email Icon" src="https://img.icons8.com/ios-filled/50/000000/new-post.png"/>
+    info@snddigitalagency.com
+  </a>
+</div>
+<br/>
+<nav style="margin-top: 1.5rem; text-align: center;">
+  <a href="/about" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">About Us</a> |
+  <a href="/contact" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Contact
+  Us</a> |
+  <a href="/privacy" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Privacy
+  Policy</a> |
+  <a href="/terms-of-use" style="margin: 0 10px; color: #0d1b2a; text-decoration: none; font-weight: 250;">Terms
+  Of Use</a>
+</nav>
+<p style="margin-top: 2rem; font-size: 0.62rem; color: #666;">
+  Found an issue? <a href="mailto:support@snddigitalagency.com">support@snddigitalagency.com</a>
+</p>
+</footer>
+<br/><br/>
+<div id="whatsapp-data"></div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+const handWave = String.fromCodePoint(0x1F44B);
+const message = `Hi ${handWave} I would love to hear more about working with SND Digital Agency.`;
+const url = "https://wa.me/972506986298?text=" + encodeURIComponent(message);
+    document.getElementById("whatsapp-data").setAttribute("data-whatsapp", url);
+  });
+</script>
+<script>
+ function isInViewport(el) {
+   const rect = el.getBoundingClientRect();
+   return (
+     rect.top <= (window.innerHeight || document.documentElement.clientHeight) - 100
+     && rect.bottom >= 0
+     );
+ }
+
+ function checkFadeSections() {
+   const sections = document.querySelectorAll('.fade-section');
+   sections.forEach(section => {
+     if (isInViewport(section)) {
+       section.classList.add('visible');
+     }
+   });
+ }
+
+ window.addEventListener('scroll', checkFadeSections);
+ window.addEventListener('resize', checkFadeSections);
+ window.addEventListener('load', checkFadeSections);
+
+ window.addEventListener('DOMContentLoaded', () => {
+   const whatsappLink = document.getElementById('whatsapp-data').dataset.whatsapp;
+   document.querySelectorAll('.whatsapp-button').forEach(btn => {
+     btn.href = whatsappLink;
+   });
+ });
+
+ const forms = [
+   { id: "contactForm", buttonLabel: "Send Message" },
+   { id: "joinForm", buttonLabel: "Submit" }
+ ];
+
+ forms.forEach(({ id, buttonLabel }) => {
+   const form = document.getElementById(id);
+   if (!form) return;
+
+   const button = form.querySelector("button[type='submit']");
+   let status = form.querySelector(".form-status");
+   if (!status) {
+     status = document.createElement("p");
+     status.className = "form-status";
+     status.style.fontSize = "0.9rem";
+     status.style.marginTop = "1rem";
+     form.appendChild(status);
+   }
+
+   form.addEventListener("submit", async function (e) {
+     e.preventDefault();
+     button.disabled = true;
+     button.textContent = "Sending...";
+
+     const formData = new FormData(form);
+     try {
+       const response = await fetch(form.action, {
+         method: "POST",
+         body: formData,
+         headers: { 'Accept': 'application/json' }
+       });
+
+       if (response.ok) {
+         form.reset();
+         status.textContent = "✅ Thanks! Your message has been sent.";
+         status.style.color = "green";
+       } else {
+         status.textContent = "❌ Oops! Something went wrong. Please try again.";
+         status.style.color = "red";
+       }
+     } catch (error) {
+       status.textContent = "❌ Network error. Please try again later.";
+       status.style.color = "red";
+     }
+
+     button.disabled = false;
+     button.textContent = buttonLabel;
+   });
+ });
+
+
+ function toggleContactForm() {
+   const form = document.getElementById('contact-form');
+   form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+ }
+
+ function toggleLetsTalkContactForm() {
+   const form = document.getElementById('talk-contact-form');
+   form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+ }
+
+ function toggleMenu() {
+   document.getElementById('mobileMenu').classList.toggle('open');
+ }
+</script>
+<br/><br/>
+<!--<a class="floating-button"-->
+<!--href="https://wa.me/972506986298?text=Hi%20%F0%9F%91%8B%20I%E2%80%99d%20love%20to%20hear%20more%20about%20working%20with%20SND%20Digital%20Agency"-->
+<!--target="_blank">-->
+<!--<img alt="WhatsApp" src="https://img.icons8.com/ios-filled/24/ffffff/whatsapp.png"/>-->
+<!--WhatsApp-->
+<!--</a>-->
+<script>
+ window.addEventListener('load', () => {
+   const overlay = document.getElementById('youtubeOverlay');
+   setTimeout(() => {
+     overlay.style.opacity = '0';
+             setTimeout(() => overlay.remove(), 800); // הסרה מוחלטת לאחר ההיעלמות
+           }, 4000); // מופיע ל־4 שניות
+ });
+</script>
+<script>
+  let newsletterShown = false;
+
+  function handleNewsletterSubmit(event) {
+    event.preventDefault();
+    const form = document.querySelector('#newsletterForm');
+    form.reset();
+    const msg = document.querySelector('#newsletterSuccessMsg');
+    msg.style.display = 'block';
+  }
+
+  function shouldShowNewsletter() {
+    const params = new URLSearchParams(window.location.search);
+    return !params.has('noNewsletter');
+  }
+
+  function showNewsletterIfVisible() {
+    if (!shouldShowNewsletter() || newsletterShown) return;
+
+    const section = document.getElementById('services');
+    if (!section) return;
+
+    const rect = section.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight && rect.bottom >= 0;
+
+    if (inView) {
+      document.getElementById('newsletterModal').style.display = 'block';
+      newsletterShown = true;
+      window.removeEventListener('scroll', showNewsletterIfVisible);
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    showNewsletterIfVisible();
+    window.addEventListener('scroll', showNewsletterIfVisible);
+  });
+</script>
+</body>
+</html>
