@@ -1475,20 +1475,25 @@ function closePortModal(){
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
             let progress = 0;
+            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
+            const intervalTime = 220; // כל כמה ms נעשה עדכון
+            const steps = Math.ceil(totalTime / intervalTime);
+            const increment = 100 / steps;
             const interval = setInterval(() => {
-                progress += Math.random() * 8 + 6; // natural feel
+                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = progress + '%';
                     clearInterval(interval);
                     setTimeout(() => {
                         window.location.href = finalUrl;
-                    }, 400);
+                    }, 400); // זמן קצר לפני ניווט
                 } else {
                     bar.style.width = progress + '%';
                 }
-            }, 220);
+            }, intervalTime);
         }
+
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -1644,8 +1649,9 @@ function closePortModal(){
                 ✔️ כל הבחירות שלכם כבר מסומנות <br>
                 <strong>אין צורך לחפש מחדש!</strong>
             </div>
-            <div id="redirectText" class="redirect-text-animated" style="margin-top: 20px; font-size: 15px; color: #475569;">
-                ⏳מעבירים אתכן תוך כמה שניות…
+            <div id="redirectText" class="redirect-text-animated"
+                style="margin-top: 20px; font-size: 15px; color: #475569;">
+                ⏳מעבירים אתכם תוך כמה שניות…
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
