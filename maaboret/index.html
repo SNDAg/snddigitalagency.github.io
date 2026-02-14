@@ -41,7 +41,7 @@
         content="הדרך הכי נוחה, מהירה ומשתלמת להזמין מעבורות בתאילנד – קוסמוי, קופנגן, קוטאו ופוקט. השוואת מחירים והזמנה חכמה ב־2 דקות.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://snddigitalagency.com/maaboret">
-    
+
     <!-- old ferry image: -->
     <!-- <meta property="og:image"
         content="https://images.unsplash.com/photo-1564835099575-3a09829cbee8?q=80&w=1400&auto=format&fit=crop"> -->
@@ -155,7 +155,7 @@ function closePortModal(){
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
             --logo-blue: #1c445e;
-            /* <-- כאן הוספנו את הצבע החדש */
+            --logo12go-green: #4DB84D
         }
 
         /* ================== BASE ================== */
@@ -317,7 +317,7 @@ function closePortModal(){
 
         .general-link a {
             display: inline-block;
-            background: #4DB84D;
+            background: var(--logo12go-green);
             color: white;
             text-decoration: none;
             padding: 6px 12px;
@@ -808,15 +808,8 @@ function closePortModal(){
             transition: width 0.3s ease;
         }
 
-        .redirect-text {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--gray-2);
-            margin-bottom: 8px;
-        }
-
         .redirect-subtext {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 470;
             color: var(--gray-1);
             line-height: 1.4;
@@ -957,7 +950,7 @@ function closePortModal(){
         .focus-final-step .coupon-box {
             margin-top: 10px;
         }
-        
+
         .redirect-text {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             font-size: 16px;
@@ -966,10 +959,13 @@ function closePortModal(){
             text-align: center;
             margin-top: 12px;
             line-height: 1.4;
-        }
-        .redirect-text {
+            margin-bottom: 4px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
+        }
+
+        .redirect-text strong {
+            font-weight: 700;
         }
 
         @keyframes fadeIn {
@@ -978,6 +974,41 @@ function closePortModal(){
             }
         }
 
+        /* ================= PREVIEW BEFORE REDIRECT ================= */
+        .booking-preview {
+            margin: 18px 0 14px;
+            text-align: center;
+        }
+
+        .booking-preview-img {
+            width: 100%;
+            max-width: 220px;
+            height: auto;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .booking-preview-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo-12go {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            object-fit: contain;
+            padding: 6px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===================  MOBILE   =========================================================== */
+        /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
 
         @media (max-width: 480px) {
@@ -1041,7 +1072,37 @@ function closePortModal(){
             h1 {
                 font-size: 22px;
             }
+
+            .booking-preview-img {
+                max-width: 190px;
+                transform: scale(0.98);
+            }
+
+            .booking-preview {
+                margin: 14px 0 10px;
+            }
+
+            .redirect-text {
+                font-size: 15px;
+            }
+
+            .redirect-subtext {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .redirect-card {
+                padding: 18px 14px;
+            }
+
+            .redirect-text strong {
+                font-weight: 700;
+            }
         }
+
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
     </style>
 </head>
 
@@ -1131,7 +1192,7 @@ function closePortModal(){
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
                     כל האפשרויות כבר סוננו עבורך – ממשיכים
-                    </br>לבחירת שעה מדוייקת
+                    <br>לבחירת שעה מדויקת
                 </div>
                 <div class="trust">
                     <div>✔️ ללא עמלות, המחיר הכי זול!</div>
@@ -1147,7 +1208,7 @@ function closePortModal(){
                     </svg>
                 </button>
                 <div class="note">
-                    מעבר לאתר הרשמי של 12GO לתשלום מאובטח🔒
+                    מעבר לאתר הרשמי לתשלום מאובטח 🔒
                 </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע על נמל היציאה – להציג למונית
@@ -1398,6 +1459,11 @@ function closePortModal(){
             }, 50);
         }
         function goToBooking() {
+
+            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            // if (typeof fbq !== 'undefined') {
+            //     fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
+            // }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1409,20 +1475,25 @@ function closePortModal(){
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
             let progress = 0;
+            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
+            const intervalTime = 220; // כל כמה ms נעשה עדכון
+            const steps = Math.ceil(totalTime / intervalTime);
+            const increment = 100 / steps;
             const interval = setInterval(() => {
-                progress += Math.random() * 8 + 6; // natural feel
+                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = progress + '%';
                     clearInterval(interval);
                     setTimeout(() => {
                         window.location.href = finalUrl;
-                    }, 400);
+                    }, 400); // זמן קצר לפני ניווט
                 } else {
                     bar.style.width = progress + '%';
                 }
-            }, 220);
+            }, intervalTime);
         }
+
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -1559,19 +1630,31 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                 מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
+                הכל מוכן! מעבירים אתכם עכשיו ל-
+                <strong style="color: var(--logo12go-green);">12GO</strong>
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
+                    <img src="/image/12go.png"
+                        style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
+                        alt="12GO">
+                </div>
+                לבחירת שעת יציאה מדויקת ותשלום 🔒
+            </div>
+            <!-- Preview of next page -->
+            <div class="booking-preview">
+                <img src="/image/12goExample.jpg" alt="בחירת שעה ותשלום ב-12GO" width="220" height="150" loading="lazy"
+                    class="booking-preview-img" />
             </div>
             <div class="redirect-subtext">
-                כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
+                ✔️ כל הבחירות שלכם כבר מסומנות <br>
+                <strong>אין צורך לחפש מחדש!</strong>
             </div>
-                        <div id="redirectText" class="redirect-text-animated">
-                ⏳אנא המתינו מספר שניות...  
+            <div id="redirectText" class="redirect-text-animated"
+                style="margin-top: 20px; font-size: 15px; color: #475569;">
+                ⏳מעבירים אתכם תוך כמה שניות…
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
-            </div>
-            <div class="redirect-brand">
-                MAABORET ✕ 12GO
             </div>
         </div>
     </div>
