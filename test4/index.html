@@ -394,9 +394,7 @@ function closePortModal(){
             font-size: 15px;
             letter-spacing: 1.3px;
             color: #EA580C;
-            /* כתום כהה */
             background: #FFEDD5;
-            /* כתום בהיר */
             border: 1px solid #FB923C;
             border-radius: 10px;
             padding: 6px 14px;
@@ -404,7 +402,12 @@ function closePortModal(){
             margin-top: 6px;
         }
 
-        /* כפתור העתקה - רגוע */
+        .coupon-code:hover {
+            opacity: 1;
+            background: #FFEDD5;
+            transform: none;
+        }
+
         .coupon-btn.icon-only {
             width: 28px;
             height: 28px;
@@ -1208,7 +1211,7 @@ function closePortModal(){
                     </svg>
                 </button>
                 <div class="note">
-                    מעבר לאתר הרשמי של 12GO לתשלום מאובטח🔒
+                    מעבר לאתר הרשמי לתשלום מאובטח 🔒
                 </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע על נמל היציאה – להציג למונית
@@ -1219,7 +1222,7 @@ function closePortModal(){
                         קוד 5% הנחה למשתמשים חדשים
                     </div>
                     <div class="coupon-action">
-                        <div class="coupon-code" id="couponCode">CJ12GO</div>
+                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()" aria-label="העתקת קוד"></button>
                         <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
                             <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <rect x="8" y="7" width="12" height="14" rx="3"></rect>
@@ -1349,6 +1352,7 @@ function closePortModal(){
         const resetBtn = document.getElementById('resetButton');
         const summaryText = document.getElementById('summaryText');
         const couponCodeEl = document.getElementById('couponCode');
+
         /* =========================
            HELPERS
         ========================= */
@@ -1506,7 +1510,9 @@ function closePortModal(){
             });
         }
         function goBackStep() {
-            if (stepHistory.length === 0) return;
+            //display general-link again if going back from step final
+            document.querySelector('.general-link')?.style.removeProperty('display');
+           if (stepHistory.length === 0) return;
             const prev = stepHistory.pop();
             document.querySelectorAll('.step').forEach(s => {
                 s.classList.add('hidden');
@@ -1651,7 +1657,7 @@ function closePortModal(){
             </div>
             <div id="redirectText" class="redirect-text-animated"
                 style="margin-top: 20px; font-size: 15px; color: #475569;">
-                ⏳מעבירים אתכם תוך כמה שניות…
+                ⏳ כמה שניות...
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
