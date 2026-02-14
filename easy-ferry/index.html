@@ -169,7 +169,7 @@ function closePortModal(){
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
             --logo-blue: #1c445e;
-            /* <-- כאן הוספנו את הצבע החדש */
+            --logo12go-green: #4DB84D
         }
 
         /* ================== BASE ================== */
@@ -331,7 +331,7 @@ function closePortModal(){
 
         .general-link a {
             display: inline-block;
-            background: #4DB84D;
+            background: var(--logo12go-green);
             color: white;
             text-decoration: none;
             padding: 6px 12px;
@@ -384,10 +384,10 @@ function closePortModal(){
             background: #FFF7ED;
             border: 1.5px dashed #FB923C;
             border-radius: 16px;
-            padding: 9px 14px;
+            padding: 10px 14px;
             font-size: 12.5px;
             font-weight: 400;
-            margin-top: 2px;
+            margin-top: 4px;
             gap: 8px;
             display: flex;
             align-items: center;
@@ -408,9 +408,7 @@ function closePortModal(){
             font-size: 15px;
             letter-spacing: 1.3px;
             color: #EA580C;
-            /* כתום כהה */
             background: #FFEDD5;
-            /* כתום בהיר */
             border: 1px solid #FB923C;
             border-radius: 10px;
             padding: 6px 14px;
@@ -418,7 +416,12 @@ function closePortModal(){
             margin-top: 6px;
         }
 
-        /* כפתור העתקה - רגוע */
+        .coupon-code:hover {
+            opacity: 1;
+            background: #FFEDD5;
+            transform: none;
+        }
+
         .coupon-btn.icon-only {
             width: 28px;
             height: 28px;
@@ -822,15 +825,8 @@ function closePortModal(){
             transition: width 0.3s ease;
         }
 
-        .redirect-text {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--gray-2);
-            margin-bottom: 8px;
-        }
-
         .redirect-subtext {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 470;
             color: var(--gray-1);
             line-height: 1.4;
@@ -977,16 +973,16 @@ function closePortModal(){
             font-size: 16px;
             font-weight: 500;
             color: #475569;
-            /* אפור כהה ומקצועי */
             text-align: center;
             margin-top: 12px;
             line-height: 1.4;
-        }
-
-        /* אנימציה קלה של fade-in */
-        .redirect-text {
+            margin-bottom: 4px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
+        }
+
+        .redirect-text strong {
+            font-weight: 700;
         }
 
         @keyframes fadeIn {
@@ -995,7 +991,41 @@ function closePortModal(){
             }
         }
 
+        /* ================= PREVIEW BEFORE REDIRECT ================= */
+        .booking-preview {
+            margin: 18px 0 14px;
+            text-align: center;
+        }
 
+        .booking-preview-img {
+            width: 100%;
+            max-width: 220px;
+            height: auto;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .booking-preview-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo-12go {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            object-fit: contain;
+            padding: 6px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===================  MOBILE   =========================================================== */
+        /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
 
         @media (max-width: 480px) {
@@ -1059,7 +1089,37 @@ function closePortModal(){
             h1 {
                 font-size: 22px;
             }
+
+            .booking-preview-img {
+                max-width: 190px;
+                transform: scale(0.98);
+            }
+
+            .booking-preview {
+                margin: 14px 0 10px;
+            }
+
+            .redirect-text {
+                font-size: 15px;
+            }
+
+            .redirect-subtext {
+                font-size: 14px;
+                line-height: 1.4;
+            }
+
+            .redirect-card {
+                padding: 18px 14px;
+            }
+
+            .redirect-text strong {
+                font-weight: 700;
+            }
         }
+
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
     </style>
 </head>
 
@@ -1178,7 +1238,8 @@ function closePortModal(){
                         New users get 5% off with this code
                     </div>
                     <div class="coupon-action">
-                        <div class="coupon-code" id="couponCode">CJ12GO</div>
+                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()"
+                            aria-label="Copy coupon code"></button>
                         <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="Copy coupon code">
                             <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <rect x="8" y="7" width="12" height="14" rx="3"></rect>
@@ -1189,7 +1250,7 @@ function closePortModal(){
                 </div>
             </div>
             <div id="couponCopied" class="coupon-copied hidden">
-                Code copied successfully
+                ✅ Code copied successfully
             </div>
         </div>
         <!-- סיום card -->
@@ -1440,6 +1501,11 @@ function closePortModal(){
         }
 
         function goToBooking() {
+
+            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            // if (typeof fbq !== 'undefined') {
+            //     fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
+            // }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1451,20 +1517,25 @@ function closePortModal(){
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
             let progress = 0;
+            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
+            const intervalTime = 220; // כל כמה ms נעשה עדכון
+            const steps = Math.ceil(totalTime / intervalTime);
+            const increment = 100 / steps;
             const interval = setInterval(() => {
-                progress += Math.random() * 8 + 6; // natural feel
+                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = progress + '%';
                     clearInterval(interval);
                     setTimeout(() => {
                         window.location.href = finalUrl;
-                    }, 400);
+                    }, 400); // זמן קצר לפני ניווט
                 } else {
                     bar.style.width = progress + '%';
                 }
-            }, 220);
+            }, intervalTime);
         }
+
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -1602,23 +1673,36 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                You’re heading to 12GO to choose your exact departure time and securely complete your booking.
+                All set! We're taking you now to
+                <strong style="color: var(--logo12go-green);">12GO</strong>
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
+                    <img src="/image/12go.png"
+                        style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
+                        alt="12GO">
+                </div>
+                Choose your exact departure time and pay securely 🔒
+            </div>
+            <!-- Preview of next page -->
+            <div class="booking-preview">
+                <img src="/image/12goExample.jpg" alt="בחירת שעה ותשלום ב-12GO" width="220" height="150" loading="lazy"
+                    class="booking-preview-img" />
             </div>
             <div class="redirect-subtext">
-                All options are already filtered for you – just pick your exact ferry time!
-            </div>
-            <div id="redirectText" class="redirect-text-animated">
-                ⏳Please wait – just a few seconds
+                ✔️ All your selections are already saved <br>
+                <strong>No need to search again!</strong>
             </div>
 
-            <div class="brand-logo-animated">
-                <img src="../image/BoatLogo.jpeg" alt="EasyFerry boat logo">
+            <div id="redirectText" class="redirect-text-animated"
+                style="margin-top: 20px; font-size: 15px; color: #475569;">
+                ⏳ Just a few seconds...
             </div>
-            <div class="redirect-brand">
-                EasyFerry ✕ 12GO
+            <div class="brand-logo-animated">
+                <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
             </div>
         </div>
     </div>
+    
     <!-- PORT MODAL -->
     <div id="portModal" class="port-modal hidden">
         <div class="port-card">
