@@ -979,6 +979,27 @@ function closePortModal(){
             }
         }
 
+        /* ================= PREVIEW BEFORE REDIRECT ================= */
+        .booking-preview {
+            margin: 18px 0 14px;
+            text-align: center;
+        }
+
+        .booking-preview img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .booking-preview img {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 220px;
+            height: auto;
+            border-radius: 14px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+            border: 1px solid #e5e7eb;
+        }
+
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
@@ -1043,6 +1064,11 @@ function closePortModal(){
 
             h1 {
                 font-size: 22px;
+            }
+
+            .booking-preview img {
+                max-width: 190px;
+                transform: scale(0.98);
             }
         }
 
@@ -1138,7 +1164,7 @@ function closePortModal(){
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
                     כל האפשרויות כבר סוננו עבורך – ממשיכים
-                    </br>לבחירת שעה מדוייקת
+                    <br>לבחירת שעה מדויקת
                 </div>
                 <div class="trust">
                     <div>✔️ ללא עמלות, המחיר הכי זול!</div>
@@ -1564,7 +1590,6 @@ function closePortModal(){
     <div id="copyToast" class="copy-toast">
         ✅ הקישור הועתק
     </div>
-
     <!-- Loading Redirect Screen -->
     <div id="redirectScreen" class="redirect-screen hidden">
         <div class="redirect-card">
@@ -1574,8 +1599,8 @@ function closePortModal(){
             <div class="redirect-text">
                 הכל מוכן! מעבירים אתכם ל-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
-                </br>
-                             לבחירת שעת יציאה מדויקת והשלמת תשלום
+                <br>
+                לבחירת שעת יציאה מדויקת ותשלום🔒
             </div>
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
                 <img src="/image/12go.png"
@@ -1584,8 +1609,14 @@ function closePortModal(){
             </div>
             <div class="redirect-subtext">
                 כל הבחירות שלכם כבר מסומנות באתר<br>
-                 <strong>אין צורך לחפש מחדש!</strong>
+                <strong>אין צורך לחפש מחדש!</strong>
             </div>
+            <!-- Preview of next page -->
+            <div class="booking-preview">
+                <img src="/image/12goExample.jpg" alt="בחירת שעה ותשלום ב-12GO" width="220" height="150"
+                    loading="lazy" />
+            </div>
+
             <div id="redirectText" class="redirect-text-animated">
                 ⏳אנא המתינו מספר שניות...
             </div>
