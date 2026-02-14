@@ -808,13 +808,6 @@ function closePortModal(){
             transition: width 0.3s ease;
         }
 
-        .redirect-text {
-            font-size: 17px;
-            font-weight: 600;
-            color: var(--gray-2);
-            margin-bottom: 8px;
-        }
-
         .redirect-subtext {
             font-size: 13px;
             font-weight: 470;
@@ -966,11 +959,13 @@ function closePortModal(){
             text-align: center;
             margin-top: 12px;
             line-height: 1.4;
-        }
-
-        .redirect-text {
+            margin-bottom: 8px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
+        }
+
+        .redirect-text strong {
+            font-weight: 700;
         }
 
         @keyframes fadeIn {
@@ -1069,6 +1064,30 @@ function closePortModal(){
             .booking-preview img {
                 max-width: 190px;
                 transform: scale(0.98);
+            }
+
+            .booking-preview {
+                margin: 14px 0 10px;
+            }
+
+            .redirect-text {
+                font-size: 15px;
+                line-height: 1.4;
+            }
+
+            .redirect-subtext {
+                font-size: 13px;
+                line-height: 1.4;
+            }
+
+            .redirect-card {
+                padding: 18px 14px;
+            }
+
+            .redirect-text strong {
+                display: block;
+                margin-top: 4px;
+                font-weight: 700;
             }
         }
 
@@ -1600,7 +1619,7 @@ function closePortModal(){
                 הכל מוכן! מעבירים אתכם ל-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
                 <br>
-                לבחירת שעת יציאה מדויקת ותשלום🔒
+                לבחירת שעת יציאה מדויקת ותשלום 🔒
             </div>
             <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
                 <img src="/image/12go.png"
