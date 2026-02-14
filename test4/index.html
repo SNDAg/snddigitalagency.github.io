@@ -41,7 +41,7 @@
         content="הדרך הכי נוחה, מהירה ומשתלמת להזמין מעבורות בתאילנד – קוסמוי, קופנגן, קוטאו ופוקט. השוואת מחירים והזמנה חכמה ב־2 דקות.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://snddigitalagency.com/maaboret">
-    
+
     <!-- old ferry image: -->
     <!-- <meta property="og:image"
         content="https://images.unsplash.com/photo-1564835099575-3a09829cbee8?q=80&w=1400&auto=format&fit=crop"> -->
@@ -155,7 +155,7 @@ function closePortModal(){
             --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 8px 20px rgba(0, 0, 0, 0.15);
             --logo-blue: #1c445e;
-            /* <-- כאן הוספנו את הצבע החדש */
+            --logo12go-green: #4DB84D
         }
 
         /* ================== BASE ================== */
@@ -317,7 +317,7 @@ function closePortModal(){
 
         .general-link a {
             display: inline-block;
-            background: #4DB84D;
+            background: var(--logo12go-green);
             color: white;
             text-decoration: none;
             padding: 6px 12px;
@@ -958,6 +958,29 @@ function closePortModal(){
             margin-top: 10px;
         }
 
+        .redirect-text {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #475569;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+
+        .redirect-text {
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ===================  MOBILE   =========================================================== */
+        /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
 
         @media (max-width: 480px) {
@@ -1022,6 +1045,10 @@ function closePortModal(){
                 font-size: 22px;
             }
         }
+
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
+        /* ===================  END MOBILE  =========================================================== */
     </style>
 </head>
 
@@ -1378,6 +1405,11 @@ function closePortModal(){
             }, 50);
         }
         function goToBooking() {
+
+            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            if (typeof fbq !== 'undefined') {
+                fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1532,6 +1564,7 @@ function closePortModal(){
     <div id="copyToast" class="copy-toast">
         ✅ הקישור הועתק
     </div>
+
     <!-- Loading Redirect Screen -->
     <div id="redirectScreen" class="redirect-screen hidden">
         <div class="redirect-card">
@@ -1539,19 +1572,59 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                ⏳ מעבירים אתכם ל-12GO לבחירת השעה המדויקת והשלמת התשלום...
+                הכל מוכן! מעבירים אתכם ל-
+                <strong style="color: var(--logo12go-green);">12GO</strong>
+                </br>
+                             לבחירת שעת יציאה מדויקת והשלמת תשלום
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                <img src="/image/12go.png"
+                    style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
+                    alt="12GO">
             </div>
             <div class="redirect-subtext">
-                כל האפשרויות כבר סוננו עבורך – נשאר לבחור שעה
+                כל הבחירות שלכם כבר מסומנות באתר<br>
+                 <strong>אין צורך לחפש מחדש!</strong>
+            </div>
+            <div id="redirectText" class="redirect-text-animated">
+                ⏳אנא המתינו מספר שניות...
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
             </div>
-            <div class="redirect-brand">
-                MAABORET ✕ 12GO
-            </div>
         </div>
     </div>
+
+    <!-- new -->
+    <!-- Loading Redirect Screen -->
+    <!-- <div id="redirectScreen" class="redirect-screen hidden">
+        <div class="redirect-card">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                <img src="/image/BoatLogo.jpeg"
+                    style="width: 60px; height: 60px; border-radius: 12px; shadow: var(--shadow-sm);" alt="Maaboret">
+                <div style="font-size: 24px; color: #e5e7eb;">×</div>
+                <img src="/image/12go.png"
+                    style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; background: #002f5a; padding: 5px;"
+                    alt="12GO">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress" id="loaderProgress"></div>
+            </div>
+            <div class="redirect-text" style="color: var(--gray-2); font-weight: 700; font-size: 18px;">
+                הכל מוכן! מעבירים אותך לסגירת הזמנה
+            </div>
+            <div class="redirect-subtext" style="margin-top: 10px; font-size: 14px;">
+                הבחירות שלך כבר מסומנות באתר<strong>12GO</strong><br>
+                !אין צורך לחפש מחדש
+                נשאר רק לבחור שעה ולשלם 🚢
+            </div>
+            <div id="redirectText" class="redirect-text-animated"
+                style="font-size: 13px; color: var(--blue-3); margin-top: 15px; font-weight: 600;">
+                ⏳ מאמתים זמינות מושבים אחרונים...
+            </div>
+        </div>
+    </div> -->
+
     <!-- PORT MODAL -->
     <div id="portModal" class="port-modal hidden">
         <div class="port-card">
