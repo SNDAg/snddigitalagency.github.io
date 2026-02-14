@@ -959,7 +959,7 @@ function closePortModal(){
             text-align: center;
             margin-top: 12px;
             line-height: 1.4;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             opacity: 0;
             animation: fadeIn 0.8s ease forwards;
         }
@@ -980,19 +980,31 @@ function closePortModal(){
             text-align: center;
         }
 
-        .booking-preview img:hover {
-            transform: scale(1.03);
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
-        }
-
-        .booking-preview img {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .booking-preview-img {
             width: 100%;
             max-width: 220px;
             height: auto;
             border-radius: 14px;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
             border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .booking-preview-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .logo-12go {
+            width: 60px;
+            height: 60px;
+            border-radius: 14px;
+            object-fit: contain;
+            padding: 6px;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* ===================  MOBILE   =========================================================== */
@@ -1061,7 +1073,7 @@ function closePortModal(){
                 font-size: 22px;
             }
 
-            .booking-preview img {
+            .booking-preview-img {
                 max-width: 190px;
                 transform: scale(0.98);
             }
@@ -1072,7 +1084,6 @@ function closePortModal(){
 
             .redirect-text {
                 font-size: 15px;
-                line-height: 1.4;
             }
 
             .redirect-subtext {
@@ -1085,8 +1096,6 @@ function closePortModal(){
             }
 
             .redirect-text strong {
-                display: block;
-                margin-top: 4px;
                 font-weight: 700;
             }
         }
@@ -1616,28 +1625,27 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                הכל מוכן! מעבירים אתכם ל-
+                הכל מוכן! מעבירים אתכם עכשיו ל-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
-                <br>
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
+                    <img src="/image/12go.png"
+                        style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
+                        alt="12GO">
+                </div>
                 לבחירת שעת יציאה מדויקת ותשלום 🔒
-            </div>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
-                <img src="/image/12go.png"
-                    style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
-                    alt="12GO">
-            </div>
-            <div class="redirect-subtext">
-                כל הבחירות שלכם כבר מסומנות באתר<br>
-                <strong>אין צורך לחפש מחדש!</strong>
             </div>
             <!-- Preview of next page -->
             <div class="booking-preview">
-                <img src="/image/12goExample.jpg" alt="בחירת שעה ותשלום ב-12GO" width="220" height="150"
-                    loading="lazy" />
+                <img src="/image/12goExample.jpg" alt="בחירת שעה ותשלום ב-12GO" width="220" height="150" loading="lazy"
+                    class="booking-preview-img" />
             </div>
-
+            <div class="redirect-subtext">
+                ✔️ כל הבחירות שלכם כבר מסומנות <br>
+                <strong>אין צורך לחפש מחדש!</strong>
+            </div>
             <div id="redirectText" class="redirect-text-animated">
-                ⏳אנא המתינו מספר שניות...
+                ⏳מעבירים אתכם תוך כמה שניות…
             </div>
             <div class="brand-logo-animated">
                 <img src="../image/BoatLogo.jpeg" alt="MAABORET boat logo">
