@@ -1222,7 +1222,8 @@ function closePortModal(){
                         קוד 5% הנחה למשתמשים חדשים
                     </div>
                     <div class="coupon-action">
-                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()" aria-label="העתקת קוד"></button>
+                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()"
+                            aria-label="העתקת קוד"></button>
                         <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
                             <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <rect x="8" y="7" width="12" height="14" rx="3"></rect>
@@ -1510,6 +1511,8 @@ function closePortModal(){
             });
         }
         function goBackStep() {
+            //display general-link again if going back from step final
+            document.querySelector('.general-link')?.style.removeProperty('display');
             if (stepHistory.length === 0) return;
             const prev = stepHistory.pop();
             document.querySelectorAll('.step').forEach(s => {
