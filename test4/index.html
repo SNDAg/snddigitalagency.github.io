@@ -256,11 +256,25 @@ function closePortModal(){
             justify-content: flex-start;
         }
 
+
         .options button {
             flex: 1 1 calc(50% - 6px);
             min-width: 100px;
             max-width: 200px;
             text-align: center;
+            position: relative;
+            margin-bottom: 6px !important;
+            /* ריווח מינימלי לשלבים 1, 2 ו-3 */
+            transition: transform 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        #step-date .options button {
+            margin-bottom: 25px !important;
         }
 
         /* ================== SUMMARY ================== */
@@ -366,20 +380,7 @@ function closePortModal(){
         }
 
         /* ================== COUPON (OPTIMIZED) ================== */
-        .coupon-box {
-            background: #FFF7ED;
-            border: 1.5px dashed #FB923C;
-            border-radius: 16px;
-            padding: 10px 14px;
-            font-size: 12.5px;
-            font-weight: 400;
-            margin-top: 4px;
-            gap: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
+
 
         .coupon-text {
             flex: 1;
@@ -389,18 +390,7 @@ function closePortModal(){
             line-height: 1.45;
         }
 
-        .coupon-code {
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 1.3px;
-            color: #EA580C;
-            background: #FFEDD5;
-            border: 1px solid #FB923C;
-            border-radius: 10px;
-            padding: 6px 14px;
-            display: inline-block;
-            margin-top: 6px;
-        }
+
 
         .coupon-code:hover {
             opacity: 1;
@@ -1010,6 +1000,128 @@ function closePortModal(){
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+
+        /* מיקום הטקסט האדום - מוודא שהוא לא דוחף את הכפתור */
+        .last-seats {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            right: 0;
+            font-size: 11px;
+            font-weight: 700;
+            color: #ef4444;
+            line-height: 1;
+        }
+
+        .social-proof-toast {
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150px);
+            background: white;
+            border-radius: 50px;
+            padding: 8px 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10000;
+            width: max-content;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #f1f5f9;
+        }
+
+        .social-proof-toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .coupon-box {
+            border-radius: 16px;
+            font-size: 12.5px;
+            font-weight: 400;
+            margin-top: 4px;
+            gap: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+            border: 2px dashed #f59e0b !important;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+            padding: 15px !important;
+        }
+
+        .coupon-code {
+            font-size: 15px;
+            letter-spacing: 1.3px;
+            border-radius: 10px;
+            padding: 6px 14px;
+            display: inline-block;
+            margin-top: 6px;
+            background: white !important;
+            color: #b45309 !important;
+            border: 1px solid #f59e0b !important;
+            transform: rotate(-2deg);
+            font-weight: 800 !important;
+        }
+
+        .urgency-banner {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-right: 4px solid #fb7185;
+            text-align: right;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .coupon-container {
+            background: linear-gradient(135deg, #fffcf0 0%, #fff4d1 100%);
+            border: 2px dashed #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .coupon-container:active {
+            transform: scale(0.98);
+        }
+
+        .coupon-code-box {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
@@ -1171,8 +1283,14 @@ function closePortModal(){
             <div id="step-date" class="step hidden">
                 <h1>למתי?</h1>
                 <div class="options">
-                    <button onclick="selectDate('today')">היום</button>
-                    <button onclick="selectDate('tomorrow')">מחר</button>
+                    <button onclick="selectDate('today')">
+                        היום
+                        <span class="last-seats">🔥 נותרו <span id="randomSeats">3</span> מקומות!</span>
+                    </button>
+                    <button onclick="selectDate('tomorrow')">
+                        מחר
+                        <span class="last-seats">מקומות אחרונים</span>
+                    </button>
                     <button onclick="selectDate('dayAfterTomorrow')">מחרתיים</button>
                     <button onclick="selectDate('noDate')">אחר</button>
                 </div>
@@ -1222,7 +1340,8 @@ function closePortModal(){
                         קוד 5% הנחה למשתמשים חדשים
                     </div>
                     <div class="coupon-action">
-                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()" aria-label="העתקת קוד"></button>
+                        <button class="coupon-code" id="couponCode" onclick="copyCoupon()"
+                            aria-label="העתקת קוד"></button>
                         <button class="coupon-btn icon-only" onclick="copyCoupon()" aria-label="העתקת קוד">
                             <svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true">
                                 <rect x="8" y="7" width="12" height="14" rx="3"></rect>
@@ -1462,41 +1581,48 @@ function closePortModal(){
                 }
             }, 50);
         }
+        // פונקציית ה-Social Proof המשופרת
+        function triggerSocialProof() {
+            const randomUsers = Math.floor(Math.random() * (34 - 14 + 1)) + 14;
+            const toast = document.getElementById('socialProof');
+            if (toast) {
+                document.getElementById('socialProofText').innerHTML = `🔥 <b>${randomUsers} ישראלים</b> הזמינו את הקו הזה היום`;
+                setTimeout(() => toast.classList.add('show'), 2500);
+                setTimeout(() => toast.classList.remove('show'), 10500);
+            }
+        }
+        window.addEventListener('load', triggerSocialProof);
         function goToBooking() {
 
-            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            // if (typeof fbq !== 'undefined') {
-            //     fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
-            // }
-            // Build booking URL
-            let url =
-                `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
-            if (state.depTime) url += `&dep_time=${state.depTime}`;
-            const finalUrl = affiliateBase + encodeURIComponent(url);
-            // Show redirect screen
-            const screen = document.getElementById('redirectScreen');
-            const bar = document.getElementById('loaderProgress');
-            screen.classList.remove('hidden');
-            let progress = 0;
-            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
-            const intervalTime = 220; // כל כמה ms נעשה עדכון
-            const steps = Math.ceil(totalTime / intervalTime);
-            const increment = 100 / steps;
-            const interval = setInterval(() => {
-                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
-                if (progress >= 100) {
-                    progress = 100;
-                    bar.style.width = progress + '%';
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        window.location.href = finalUrl;
-                    }, 400); // זמן קצר לפני ניווט
-                } else {
-                    bar.style.width = progress + '%';
-                }
-            }, intervalTime);
+
+            const toLocation = placeNames[state.to] || 'היעד';
+            const redirectCard = document.querySelector('.redirect-card');
+
+            if (redirectCard && !document.getElementById('urgencyMsg')) {
+                const urgencyDiv = document.createElement('div');
+                urgencyDiv.id = 'urgencyMsg';
+                urgencyDiv.className = 'urgency-banner';
+                urgencyDiv.innerHTML = `⚠️ <b>רגע!</b> המחירים ל${toLocation} עולים ככל שמתקרבים למועד. כדאי לשריין עכשיו.`;
+                redirectCard.prepend(urgencyDiv);
+            }
+            document.getElementById('redirectModal').classList.remove('hidden');
+            setTimeout(() => {
+                const link = generateBookingLink();
+                window.location.href = link;
+            }, 4500);
         }
+        window.addEventListener('DOMContentLoaded', () => {
+            triggerSocialProof();
+        });
+        function updateRandomSeats() {
+            const seatsElement = document.getElementById('randomSeats');
+            if (seatsElement) {
+                const randomNumber = Math.floor(Math.random() * (7 - 2 + 1)) + 2;
+                seatsElement.innerText = randomNumber;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', updateRandomSeats);
 
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
@@ -1512,7 +1638,7 @@ function closePortModal(){
         function goBackStep() {
             //display general-link again if going back from step final
             document.querySelector('.general-link')?.style.removeProperty('display');
-           if (stepHistory.length === 0) return;
+            if (stepHistory.length === 0) return;
             const prev = stepHistory.pop();
             document.querySelectorAll('.step').forEach(s => {
                 s.classList.add('hidden');
@@ -1636,7 +1762,7 @@ function closePortModal(){
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                הכל מוכן! מעבירים אתכם עכשיו ל-
+                הכל מוכן! מעבירים אתכם עכשיו למחיר הנמוך ביותר שמצאנו ב-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
                 <div
                     style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
@@ -1644,7 +1770,7 @@ function closePortModal(){
                         style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain; padding: 5px;"
                         alt="12GO">
                 </div>
-                לבחירת שעת יציאה מדויקת ותשלום 🔒
+                נותר רק לבחור שעת יציאה ⏱
             </div>
             <!-- Preview of next page -->
             <div class="booking-preview">
@@ -1672,6 +1798,10 @@ function closePortModal(){
             <div class="port-name" id="portName"></div>
             <div class="port-hint">זהו נמל היציאה של המעבורת שלך</div>
         </div>
+    </div>
+    <div id="socialProof" class="social-proof-toast">
+        <div class="pulse-dot"></div>
+        <span id="socialProofText" style="font-size: 14px; color: #333; font-weight: 500;"></span>
     </div>
 </body>
 
