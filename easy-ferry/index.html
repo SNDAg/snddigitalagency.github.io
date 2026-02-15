@@ -99,22 +99,6 @@
     "reviewCount": "132"
   }
 }
-/* ===== PORT MODAL ===== */
-function openPortModal(){
-  const fromName = placeNames[state.from];
-  const toName = placeNames[state.to];
-  let port = '';
-  if(portsBySource[fromName] && portsBySource[fromName][toName]){
-    port = portsBySource[fromName][toName];
-  } else {
-    port = 'No port information available';
-  }
-  document.getElementById('portName').innerText = port;
-  document.getElementById('portModal').classList.remove('hidden');
-}
-function closePortModal(){
-  document.getElementById('portModal').classList.add('hidden');
-}
 </script>
     <!-- BreadcrumbList תקין -->
     <script type="application/ld+json">
@@ -136,22 +120,6 @@ function closePortModal(){
              }
            ]
          }
-/* ===== PORT MODAL ===== */
-function openPortModal(){
-  const fromName = placeNames[state.from];
-  const toName = placeNames[state.to];
-  let port = '';
-  if(portsBySource[fromName] && portsBySource[fromName][toName]){
-    port = portsBySource[fromName][toName];
-  } else {
-port = 'No port information available';
-  }
-  document.getElementById('portName').innerText = port;
-  document.getElementById('portModal').classList.remove('hidden');
-}
-function closePortModal(){
-  document.getElementById('portModal').classList.add('hidden');
-}
 </script>
     <style>
         /* ================== CSS VARIABLES ================== */
@@ -275,6 +243,17 @@ function closePortModal(){
             min-width: 100px;
             max-width: 200px;
             text-align: center;
+            position: relative;
+            margin-bottom: 6px !important;
+            transition: transform 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #step-date .options button {
+            margin-bottom: 25px !important;
         }
 
         /* ================== SUMMARY ================== */
@@ -380,20 +359,6 @@ function closePortModal(){
         }
 
         /* ================== COUPON (OPTIMIZED) ================== */
-        .coupon-box {
-            background: #FFF7ED;
-            border: 1.5px dashed #FB923C;
-            border-radius: 16px;
-            padding: 10px 14px;
-            font-size: 12.5px;
-            font-weight: 400;
-            margin-top: 4px;
-            gap: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
 
         .coupon-text {
             flex: 1;
@@ -401,19 +366,6 @@ function closePortModal(){
             font-size: 13.5px;
             color: #1f2933;
             line-height: 1.45;
-        }
-
-        .coupon-code {
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 1.3px;
-            color: #EA580C;
-            background: #FFEDD5;
-            border: 1px solid #FB923C;
-            border-radius: 10px;
-            padding: 6px 14px;
-            display: inline-block;
-            margin-top: 6px;
         }
 
         .coupon-code:hover {
@@ -1024,6 +976,129 @@ function closePortModal(){
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        .last-seats {
+            position: absolute;
+            bottom: -22px;
+            left: 0;
+            right: 0;
+            font-size: 11px;
+            font-weight: 700;
+            color: #ef4444;
+            line-height: 1;
+        }
+
+        .social-proof-toast {
+            display: none;
+            position: fixed;
+            bottom: 85px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150px);
+            background: white;
+            border-radius: 50px;
+            padding: 8px 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10000;
+            width: max-content;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid #f1f5f9;
+        }
+
+        .social-proof-toast.show {
+            display: flex;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .coupon-box {
+            border-radius: 16px;
+            font-size: 12.5px;
+            font-weight: 400;
+            margin-top: 4px;
+            gap: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+            border: 2px dashed #f59e0b !important;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+            padding: 15px !important;
+        }
+
+        .coupon-code {
+            font-size: 15px;
+            letter-spacing: 1.3px;
+            border-radius: 10px;
+            padding: 6px 14px;
+            display: inline-block;
+            margin-top: 6px;
+            background: white !important;
+            color: #b45309 !important;
+            border: 1px solid #f59e0b !important;
+            transform: rotate(-2deg);
+            font-weight: 800 !important;
+        }
+
+        .urgency-banner {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            border-right: 4px solid #fb7185;
+            text-align: right;
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .coupon-container {
+            background: linear-gradient(135deg, #fffcf0 0%, #fff4d1 100%);
+            border: 2px dashed #f59e0b;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 20px 0;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .coupon-container:active {
+            transform: scale(0.98);
+        }
+
+        .coupon-code-box {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            margin-top: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
@@ -1186,8 +1261,12 @@ function closePortModal(){
             <div id="step-date" class="step hidden">
                 <h1>Travel date</h1>
                 <div class="options">
-                    <button onclick="selectDate('today')">Today</button>
-                    <button onclick="selectDate('tomorrow')">Tomorrow</button>
+                    <button onclick="selectDate('today')">Today
+                        <span class="last-seats">🔥 Only <span id="randomSeats">3</span> spots left !</span>
+                    </button>
+                    <button onclick="selectDate('tomorrow')">Tomorrow
+                        <span class="last-seats">Last spots</span>
+                    </button>
                     <button onclick="selectDate('dayAfterTomorrow')">Day after tomorrow</button>
                     <button onclick="selectDate('noDate')">Other date</button>
                 </div>
@@ -1217,7 +1296,7 @@ function closePortModal(){
                     <div>✔️ Thailand’s leading transport provider</div>
                     <div>✔️ No hidden fees – best prices guaranteed </div>
                 </div>
-                <button class="cta" onclick="goToBooking()" class="cta">
+                <button class="cta" onclick="goToBooking()">
                     Choose Time & Complete Booking
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
@@ -1286,6 +1365,8 @@ function closePortModal(){
         /* =========================
            STATE
         ========================= */
+        let socialProofNumber = null;
+        let socialProofShown = false;
         const stepHistory = [];
         const state = {
             from: '',
@@ -1421,6 +1502,7 @@ function closePortModal(){
         function selectTo(value) {
             state.to = value;
             transition('step-to', 'step-people');
+            maybeShowSocialProof();
         }
         function selectPeople(value) {
             state.people = value;
@@ -1536,6 +1618,16 @@ function closePortModal(){
             }, intervalTime);
         }
 
+        function updateRandomSeats() {
+            const seatsElement = document.getElementById('randomSeats');
+            if (seatsElement) {
+                const randomNumber = Math.floor(Math.random() * (7 - 2 + 1)) + 2;
+                seatsElement.innerText = randomNumber;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', updateRandomSeats);
+
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -1630,6 +1722,18 @@ function closePortModal(){
             document.getElementById('portName').innerText = port;
             document.getElementById('portModal').classList.remove('hidden');
         }
+        function maybeShowSocialProof() {
+            if (socialProofShown) return;
+            if (!socialProofNumber) {
+                socialProofNumber = Math.floor(Math.random() * 7) + 3; // 3–9
+            }
+            const toast = document.getElementById('socialProof');
+            if (toast) {
+                document.getElementById('socialProofText').innerHTML = `🔥 <b>${socialProofNumber} people</b> booked this route today!`;
+                setTimeout(() => toast.classList.add('show'), 800);
+                setTimeout(() => toast.classList.remove('show'), 4000);
+            }
+        }
         function closePortModal() {
             document.getElementById('portModal').classList.add('hidden');
         }
@@ -1711,6 +1815,10 @@ function closePortModal(){
             <div class="port-name" id="portName"></div>
             <div class="port-hint">This is your ferry departure port</div>
         </div>
+    </div>
+    <div id="socialProof" class="social-proof-toast">
+        <div class="pulse-dot"></div>
+        <span id="socialProofText" style="font-size: 14px; color: #333; font-weight: 500;"></span>
     </div>
 </body>
 
