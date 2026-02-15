@@ -1092,6 +1092,47 @@
             text-transform: uppercase;
         }
 
+        /* ===== Step 1 Marketing Hook ===== */
+        .step-hook {
+            margin: 10px 0 18px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #ecfeff, #f0fdfa);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 14px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #0369a1;
+            box-shadow: 0 3px 10px rgba(14, 165, 233, 0.12);
+            animation: hookFade 0.9s ease;
+            text-align: center;
+        }
+
+        .step-hook span {
+            display: block;
+            margin-top: 4px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        @keyframes hookFade {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .redirect-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
+        }
+
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
         /* ===================  MOBILE   =========================================================== */
@@ -1196,7 +1237,7 @@
     <div class="overlay">
         <!-- Logo Header -->
         <div class="logo-header">
-            <img src="../image/MAABORET-LOGO3.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
+            <img src="../image/MAABORET-LOGO4.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
@@ -1210,6 +1251,10 @@
             <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <h1>מאיפה יוצאים?</h1>
+                <div class="step-hook">
+                    פחות מדקה ואתם עם כרטיס ביד ✨
+                    <span>בלי טלפונים • בלי סוכנים • בלי כאב ראש</span>
+                </div>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
@@ -1754,7 +1799,11 @@
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                הכל מוכן! מעבירים אתכם עכשיו למחיר הנמוך ביותר שמצאנו ב-
+                <div class="redirect-main">
+                    ✔️ בחירה מצוינת! <br>
+                    עוד רגע הכרטיס שלך מוכן 🚤
+                </div>
+                אנחנו מעבירים אתכם עכשיו למחיר הנמוך ביותר שמצאנו ב-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
                 <div
                     style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
