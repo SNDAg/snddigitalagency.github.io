@@ -2,12 +2,6 @@
 <html lang="en" dir="ltr">
 
 <head>
-    <!-- old Favicon -->
-    <!-- <link href="/icons/ship-favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
-         <link href="/icons/ship-favicon-48x48.png" rel="icon" sizes="48x48" type="image/png"/>
-         <link href="/icons/ship-apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
-         <link href="/icons/ship-apple-touch-icon-167x167.png" rel="apple-touch-icon" sizes="167x167"/>
-         <link href="/icons/ship-android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png"/> -->
     <!-- Favicon & App Icons -->
     <link rel="icon" type="image/png" sizes="16x16" href="/icons/MAABORET-icon/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/icons/MAABORET-icon/favicon-32x32.png">
@@ -231,12 +225,14 @@
         }
 
         /* ================== OPTIONS ================== */
+        /* ================== OPTIONS ================== */
         .options {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
             justify-content: flex-start;
         }
+
 
         .options button {
             flex: 1 1 calc(50% - 6px);
@@ -251,6 +247,7 @@
             align-items: center;
             justify-content: center;
         }
+
 
         #step-date .options button {
             margin-bottom: 25px !important;
@@ -360,6 +357,7 @@
 
         /* ================== COUPON (OPTIMIZED) ================== */
 
+
         .coupon-text {
             flex: 1;
             min-width: 0;
@@ -367,6 +365,8 @@
             color: #1f2933;
             line-height: 1.45;
         }
+
+
 
         .coupon-code:hover {
             opacity: 1;
@@ -674,10 +674,16 @@
             z-index: 2;
         }
 
+        body.step-1 .logo-header {
+            margin-top: -80px;
+            margin-bottom: 16px;
+        }
+
+
         .logo-header img {
             background: transparent;
             box-shadow: none;
-            max-width: 220px;
+            max-width: 178px;
             width: 100%;
             height: auto;
             border-radius: 26px;
@@ -976,6 +982,8 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+
+        /* מיקום הטקסט האדום - מוודא שהוא לא דוחף את הכפתור */
         .last-seats {
             position: absolute;
             bottom: -22px;
@@ -1098,98 +1106,46 @@
             text-transform: uppercase;
         }
 
+        /* ===== Step 1 Marketing Hook ===== */
+        .step-hook {
+            margin: 8px 0 18px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #ecfeff, #f0fdfa);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: 14px;
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #0369a1;
+            box-shadow: 0 3px 10px rgba(14, 165, 233, 0.12);
+            animation: hookFade 0.9s ease;
+            text-align: center;
+        }
 
-        /* ===================  MOBILE   =========================================================== */
-        /* ===================  MOBILE   =========================================================== */
-        /* ===================  MOBILE   =========================================================== */
+        .step-hook span {
+            display: block;
+            margin-top: 4px;
+            font-size: 12.5px;
+            font-weight: 500;
+            color: #475569;
+        }
 
-        @media (max-width: 480px) {
-            body {
-                background-position: center top;
+        @keyframes hookFade {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
             }
 
-            .affiliate-footer {
-                font-size: 9px;
-                padding: 0 6px;
-                line-height: 1.4;
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
+        }
 
-            .general-link {
-                bottom: 8px;
-                z-index: 9;
-            }
-
-            .general-link a {
-                padding: 6px 12px;
-                font-size: 12px;
-                border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-            }
-
-            .card {
-                padding: 20px;
-                border-radius: 20px;
-                max-width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-
-            #navButtons {
-                gap: 6px;
-            }
-
-            .port-card {
-                max-width: 95%;
-                min-height: 70vh;
-                padding: 40px 20px;
-                border-radius: 20px;
-            }
-
-            .port-name {
-                font-size: 24px;
-            }
-
-            .port-title {
-                font-size: 20px;
-            }
-
-            .show-port-btn {
-                font-size: 14px;
-                font-weight: 500;
-                padding: 7px 6px;
-                margin: 15px 0 13px 0;
-                opacity: .75;
-            }
-
-            h1 {
-                font-size: 22px;
-            }
-
-            .booking-preview-img {
-                max-width: 190px;
-                transform: scale(0.98);
-            }
-
-            .booking-preview {
-                margin: 14px 0 10px;
-            }
-
-            .redirect-text {
-                font-size: 15px;
-            }
-
-            .redirect-subtext {
-                font-size: 14px;
-                line-height: 1.4;
-            }
-
-            .redirect-card {
-                padding: 18px 14px;
-            }
-
-            .redirect-text strong {
-                font-weight: 700;
-            }
+        .redirect-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 10px;
         }
 
         /* ===================  END MOBILE  =========================================================== */
@@ -1217,7 +1173,10 @@
         <div class="card">
             <!-- שלב 1 -->
             <div id="step-from" class="step">
-                <h1>Where are you departing from?</h1>
+                <div class="step-hook">
+                    2 minutes and your ticket is in hand ✨
+                    <span>Compare and book instantly — no stress!</span>
+                </div>
                 <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">Koh Samui</button>
                     <button onclick="selectFrom('koh-phangan')">Koh Phangan</button>
@@ -1454,15 +1413,35 @@
            HELPERS
         ========================= */
         function transition(fromId, toId) {
+            document.body.classList.remove(
+                'step-1',
+                'step-2',
+                'step-3',
+                'step-4',
+                'step-5',
+                'step-6'
+            );
+            const stepMap = {
+                'step-from': 'step-1',
+                'step-to': 'step-2',
+                'step-people': 'step-3',
+                'step-date': 'step-4',
+                'step-dep-time': 'step-5',
+                'step-summary': 'step-6'
+            };
+            document.body.classList.add(stepMap[toId]);
             stepHistory.push(fromId);
             document.getElementById(fromId).classList.add('hidden');
+
             const next = document.getElementById(toId);
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
+
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
+
         function getFormattedDate(option) {
             const base = new Date();
             const offsets = {
@@ -1709,6 +1688,7 @@
         document
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
+        document.body.classList.add('step-1');
         /* ===== PORT MODAL ===== */
         function openPortModal() {
             const from = state.from;
