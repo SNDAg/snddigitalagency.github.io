@@ -150,7 +150,7 @@
             padding: 20px;
             box-sizing: border-box;
             justify-content: flex-start;
-            padding-top: 30px;
+            padding-top: 90px;
         }
 
         h1 {
@@ -653,15 +653,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 16px;
-            margin-top: 0px;
+            margin-bottom: 26px;
+            margin-top: -30px;
             z-index: 2;
         }
+
+        body.step-1 .logo-header {
+            margin-top: -80px;
+            margin-bottom: 16px;
+        }
+
 
         .logo-header img {
             background: transparent;
             box-shadow: none;
-            max-width: 176px; /* מוקטן ב־20% */
+            max-width: 178px;
             width: 100%;
             height: auto;
             border-radius: 26px;
@@ -1086,7 +1092,7 @@
 
         /* ===== Step 1 Marketing Hook ===== */
         .step-hook {
-            margin: 10px 0 18px;
+            margin: 8px 0 18px;
             padding: 10px 14px;
             background: linear-gradient(135deg, #ecfeff, #f0fdfa);
             border: 1px solid rgba(14, 165, 233, 0.25);
@@ -1157,10 +1163,8 @@
                 padding: 20px;
                 border-radius: 20px;
                 max-width: 95%;
+                max-height: 90vh;
                 overflow-y: auto;
-                max-height: none;
-                overflow: visible;
-                margin-bottom: 60px;
             }
 
             #navButtons {
@@ -1489,15 +1493,35 @@
            HELPERS
         ========================= */
         function transition(fromId, toId) {
+            document.body.classList.remove(
+                'step-1',
+                'step-2',
+                'step-3',
+                'step-4',
+                'step-5',
+                'step-6'
+            );
+            const stepMap = {
+                'step-from': 'step-1',
+                'step-to': 'step-2',
+                'step-people': 'step-3',
+                'step-date': 'step-4',
+                'step-dep-time': 'step-5',
+                'step-summary': 'step-6'
+            };
+            document.body.classList.add(stepMap[toId]);
             stepHistory.push(fromId);
             document.getElementById(fromId).classList.add('hidden');
+
             const next = document.getElementById(toId);
             next.classList.remove('hidden', 'step');
             void next.offsetWidth;
             next.classList.add('step');
+
             centerLastVisibleButtons();
             updateProgressDots(toId);
         }
+
         function getFormattedDate(option) {
             const base = new Date();
             const offsets = {
@@ -1726,6 +1750,8 @@
         document
             .getElementById('backButton')
             .addEventListener('click', goBackStep);
+        document.body.classList.add('step-1');
+
         /* ===== PORT MODAL ===== */
         function openPortModal() {
             const from = state.from;
@@ -1794,11 +1820,7 @@
                 <div class="loader-progress" id="loaderProgress"></div>
             </div>
             <div class="redirect-text">
-                <div class="redirect-main">
-                    ✔️ בחירה מצוינת! <br>
-                    עוד רגע הכרטיס שלך מוכן 🚤
-                </div>
-                אנחנו מעבירים אתכם עכשיו למחיר הנמוך ביותר שמצאנו ב-
+                הכל מוכן! מעבירים אתכם עכשיו למחיר הנמוך ביותר שמצאנו ב-
                 <strong style="color: var(--logo12go-green);">12GO</strong>
                 <div
                     style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 16px;">
