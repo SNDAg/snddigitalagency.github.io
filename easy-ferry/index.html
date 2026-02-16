@@ -1249,7 +1249,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
@@ -1673,11 +1673,14 @@
         }
 
         function goToBooking() {
-
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            // if (typeof fbq !== 'undefined') {
-            //     fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
-            // }
+            try {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
+                }
+            } catch (e) {
+                console.log("Pixel tracking failed, continuing anyway.");
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +

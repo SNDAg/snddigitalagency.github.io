@@ -1644,9 +1644,14 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            // if (typeof fbq !== 'undefined') {
-            //     fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
-            // }
+            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            try {
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
+                }
+            } catch (e) {
+                console.log("Pixel tracking failed, continuing anyway.");
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
