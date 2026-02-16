@@ -1756,8 +1756,8 @@
             'step-summary': '6'
         };
         function updateProgressDots(currentStep) {
-            // אם זה שלב ראשון → להסתיר
-            if (currentStep === 'step-from') {
+            // אם זה שלב ראשון או אחרון להסתיר
+            if (currentStep === 'step-from' || currentStep === 'step-summary') {
                 progressDots.classList.add('hidden');
                 return;
             }
