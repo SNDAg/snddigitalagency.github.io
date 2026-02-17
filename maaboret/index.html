@@ -876,7 +876,7 @@
 
         .last-seats {
             position: absolute;
-            bottom: -22px;
+            bottom: -17px;
             left: 0;
             right: 0;
             font-size: 11px;
@@ -1052,6 +1052,7 @@
             transition: opacity 0.6s ease-in-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             backface-visibility: hidden;
         }
+
         .splash-content {
             text-align: center;
             /* מונע ריצוד של הטקסט */
@@ -1064,7 +1065,6 @@
             height: 120px;
             margin: 0 auto 25px;
             will-change: transform;
-            /* הכנת הדפדפן לאנימציה */
         }
 
         .splash-logo {
@@ -1076,24 +1076,24 @@
 
         .splash-title {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 900; 
+            font-weight: 900;
             color: #ffffff;
             margin: 0;
-            font-size: 34px; 
+            font-size: 34px;
             letter-spacing: 4px;
             text-transform: uppercase;
             opacity: 0;
             will-change: transform, opacity, filter;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             animation: fadeInUpBlur 0.8s forwards 0.3s;
         }
 
         .splash-subtitle {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 19px; /* הגדלנו משמעותית */
+            font-size: 19px;
             margin-top: 15px;
-            font-weight: 600; /* משקל חזק יותר שלא ייראה חלש */
-            color: rgba(255, 255, 255, 0.9); /* לבן כמעט מלא */
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
             opacity: 0;
             letter-spacing: 0.5px;
             max-width: 320px;
@@ -1101,6 +1101,7 @@
             margin-right: auto;
             animation: fadeInUpBlur 0.8s forwards 0.5s;
         }
+
         @keyframes boatFloat {
 
             0%,
@@ -1128,10 +1129,10 @@
         }
 
         .splash-exit {
-    opacity: 0 !important;
-    transform: scale(1.1); 
-    pointer-events: none; 
-}
+            opacity: 0 !important;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
 
         /* =============================================  MOBILE  ======================================
 =============================================  MOBILE  ======================================
