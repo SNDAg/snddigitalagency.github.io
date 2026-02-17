@@ -120,28 +120,26 @@
             --logo12go-green: #4DB84D
         }
 
-        /* ================== BASE ================== */
         body {
             margin: 0;
             min-height: 100vh;
             font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background-image: url("https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg");
+            background-image: url(https://pics.freeartbackgrounds.com/midle/Longtail_Boat_at_Poda_Island_Krabi_Thailand_Background-1385.jpg);
             background-size: cover;
             background-position: center center;
             background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
+            position: relative
         }
 
         .hidden {
-            display: none !important;
+            display: none !important
         }
 
-        /* ================== OVERLAY ================== */
         .overlay {
-            background: rgba(0, 0, 0, 0.25);
+            background: rgba(0, 0, 0, .25);
             backdrop-filter: blur(6px);
             width: 100%;
             min-height: 100vh;
@@ -151,73 +149,69 @@
             padding: 20px;
             box-sizing: border-box;
             justify-content: flex-start;
-            padding-top: 90px;
+            padding-top: 90px
         }
 
         h1 {
             margin-bottom: 24px;
             color: var(--logo-blue);
             font-size: 24px;
-            font-weight: 700;
+            font-weight: 700
         }
 
-        /* ================== STEP ANIMATION ================== */
         .step {
-            animation: stepIn 0.45s ease;
+            animation: stepIn .45s ease
         }
 
         @keyframes stepIn {
             from {
                 opacity: 0;
-                transform: translateY(12px);
+                transform: translateY(12px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
-        /* ================== BUTTON BASE ================== */
         button {
             background: linear-gradient(270deg, var(--blue-2), var(--blue-1));
-            color: white;
+            color: #fff;
             border: none;
             border-radius: 18px;
             padding: 18px 12px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: var(--shadow-sm);
+            transition: all .25s ease;
+            box-shadow: var(--shadow-sm)
         }
 
         .options button:nth-child(even) {
-            background: linear-gradient(90deg, var(--blue-2), var(--blue-1));
+            background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
         }
 
         button:active {
-            transform: scale(0.97);
+            transform: scale(.97)
         }
 
         button:hover {
             transform: translateY(-4px) scale(1.03);
             background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
-            box-shadow: var(--shadow-lg);
+            box-shadow: var(--shadow-lg)
         }
 
         .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3));
+            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
         }
 
-        /* ================== OPTIONS ================== */
         .options {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            justify-content: flex-start;
+            justify-content: flex-start
         }
-
 
         .options button {
             flex: 1 1 calc(50% - 6px);
@@ -226,27 +220,24 @@
             text-align: center;
             position: relative;
             margin-bottom: 6px !important;
-            transition: transform 0.1s;
+            transition: transform .1s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: center
         }
-
 
         #step-date .options button {
-            margin-bottom: 25px !important;
+            margin-bottom: 25px !important
         }
 
-        /* ================== SUMMARY ================== */
         .summary {
             font-size: 18px;
             font-weight: 600;
             line-height: 1.45;
-            margin-bottom: 18px;
+            margin-bottom: 18px
         }
 
-        /* ================== CTA ================== */
         .cta {
             display: inline-flex;
             align-items: center;
@@ -259,55 +250,52 @@
             border-radius: 22px;
             background: linear-gradient(135deg, var(--orange-1), var(--orange-2));
             box-shadow: var(--shadow-lg);
-            transition: all 0.25s ease;
+            transition: all .25s ease
         }
 
         .cta:hover {
             background: linear-gradient(135deg, var(--orange-3), var(--orange-1));
-            transform: translateY(-3px) scale(1.02);
+            transform: translateY(-3px) scale(1.02)
         }
 
-        /* ================== NOTES ================== */
         .note {
             margin-top: 18px;
             font-size: 14px;
             color: var(--gray-1);
-            margin-bottom: 12px;
+            margin-bottom: 12px
         }
 
         .routeNote {
             color: #b45309;
             margin-bottom: 12px;
-            font-size: 12px;
+            font-size: 12px
         }
 
-        /* ================== GENERAL LINK ================== */
         .general-link {
             position: fixed;
             bottom: 20px;
             width: 100%;
             text-align: center;
-            z-index: 9;
+            z-index: 9
         }
 
         .general-link a {
             display: inline-block;
             background: var(--logo12go-green);
-            color: white;
+            color: #fff;
             text-decoration: none;
             padding: 6px 12px;
             border-radius: 10px;
             font-size: 12px;
             font-weight: 600;
-            transition: all 0.2s ease;
+            transition: all .2s ease
         }
 
         .general-link a:hover {
             background: #3ca638;
-            transform: translateY(-1px);
+            transform: translateY(-1px)
         }
 
-        /* ================== FOOTER ================== */
         .affiliate-footer {
             position: absolute;
             bottom: 13px;
@@ -319,44 +307,21 @@
             padding: 0 8px;
             box-sizing: border-box;
             line-height: 1.3;
-            z-index: 1;
+            z-index: 1
         }
-
-        /* ================== WHATSAPP ================== */
-        .whatsapp-button {
-            position: fixed;
-            bottom: 18px;
-            left: 20px;
-            width: 50px;
-            height: 50px;
-            background: #fff;
-            border-radius: 50%;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            text-decoration: none;
-            transition: transform 0.2s;
-        }
-
-        /* ================== COUPON (OPTIMIZED) ================== */
-
 
         .coupon-text {
             flex: 1;
             min-width: 0;
             font-size: 13.5px;
             color: #1f2933;
-            line-height: 1.45;
+            line-height: 1.45
         }
-
-
 
         .coupon-code:hover {
             opacity: 1;
-            background: #FFEDD5;
-            transform: none;
+            background: #ffedd5;
+            transform: none
         }
 
         .coupon-btn.icon-only {
@@ -364,45 +329,43 @@
             height: 28px;
             padding: 0;
             border-radius: 8px;
-            opacity: 0.7;
-            background: #FFF7ED;
-            color: #9A3412;
+            opacity: .7;
+            background: #fff7ed;
+            color: #9a3412;
             box-shadow: none;
-            border: 1px solid #FED7AA;
-            transition: all 0.15s ease;
+            border: 1px solid #fed7aa;
+            transition: all .15s ease
         }
 
         .coupon-btn.icon-only:hover {
             opacity: 1;
-            background: #FFEDD5;
-            transform: none;
+            background: #ffedd5;
+            transform: none
         }
 
         .coupon-btn.icon-only svg {
             width: 13px;
-            height: 13px;
+            height: 13px
         }
 
         .coupon-btn.icon-only svg rect {
             fill: none;
             stroke-width: 1.6;
-            stroke: #EA580C;
+            stroke: #ea580c
         }
 
-        /* הודעת העתקה */
         .coupon-copied {
             font-size: 12px;
-            color: #9A3412;
-            background: #FFEDD5;
+            color: #9a3412;
+            background: #ffedd5;
             padding: 5px 10px;
             border-radius: 8px;
             margin-top: 6px;
             text-align: center;
-            opacity: 0.95;
-            font-weight: 500;
+            opacity: .95;
+            font-weight: 500
         }
 
-        /* ================== NAV BUTTONS  ================== */
         #navButtons {
             position: fixed;
             top: 5px;
@@ -410,7 +373,7 @@
             transform: translateX(-50%);
             display: none;
             gap: 8px;
-            z-index: 1000;
+            z-index: 1000
         }
 
         #navButtons button {
@@ -420,58 +383,58 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, .85);
             border: none;
             border-radius: 50%;
             cursor: pointer;
-            transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+            transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
             color: var(--gray-2);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, .25)
         }
 
         #navButtons button:hover {
             transform: translateY(-2px) scale(1.2);
             opacity: 1;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, .35)
         }
 
         .share-wrapper {
             position: fixed;
             bottom: 8px;
             left: 20px;
-            z-index: 9999;
+            z-index: 9999
         }
 
         .share-main-btn {
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: white;
+            background: #fff;
             border: none;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
             cursor: pointer;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center
         }
 
         .summary-helper {
             font-size: 14px;
             font-weight: 400;
             color: var(--gray-1);
-            margin-bottom: 14px;
+            margin-bottom: 14px
         }
 
         .trust {
-            margin: 12px 0 18px 0;
+            margin: 12px 0 18px 0
         }
 
         .trust div {
             font-size: 12px;
             font-weight: 500;
             color: var(--gray-1);
-            line-height: 1.5;
+            line-height: 1.5
         }
 
         .share-main-btn svg {
@@ -481,68 +444,45 @@
             stroke: #1f2937;
             stroke-width: 2.2;
             stroke-linecap: round;
-            stroke-linejoin: round;
+            stroke-linejoin: round
         }
 
         .share-main-btn:hover {
-            background: white !important;
+            background: #fff !important;
             transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .35)
         }
 
         .share-menu .share-item:hover {
             background: #d8d5d5 !important;
-            color: white !important;
+            color: #fff !important;
             transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-
-        }
-
-        .share-menu {
-            position: absolute;
-            bottom: 50px;
-            /* מרחק קטן יותר מהכפתור הראשי */
-            left: 0;
-            background: white;
-            border-radius: 10px;
-            /* קטן יותר */
-            padding: 6px;
-            /* קטן יותר */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
-            /* צל עדין */
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            /* רווח קטן יותר בין הכפתורים */
-            min-width: 32px;
-            /* רוחב מינימלי */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .35)
         }
 
         .share-item .copy-icon {
             width: 20px;
-            /* קטן יותר */
-            height: 20px;
-            /* קטן יותר */
+            height: 20px
         }
 
         .share-item .copy-icon rect {
             fill: none;
             stroke: #1f2937;
-            stroke-width: 2;
+            stroke-width: 2
         }
 
         #shareMenu {
-            display: none;
+            display: none
         }
 
         #shareMenu:not(.hidden) {
-            display: flex;
+            display: flex
         }
 
-        /* =======================================
-   Share Menu - the group of Circle Buttons coming out of the main share button
-   ======================================= */
         .share-menu {
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .08);
+            min-width: 32px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -551,7 +491,7 @@
             left: 50%;
             transform: translateX(-50%);
             padding: 0;
-            background: transparent;
+            background: transparent
         }
 
         .share-item {
@@ -563,57 +503,55 @@
             width: 38px;
             height: 38px;
             border-radius: 50%;
-            background: white;
+            background: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .3);
+            transition: all .2s ease;
             text-decoration: none;
-            color: inherit;
+            color: inherit
         }
 
         .share-item:hover {
             transform: translateY(-4px) scale(1.1);
-            box-shadow: 0 4px 10px rgba(211, 219, 223, 0.25);
+            box-shadow: 0 4px 10px rgba(211, 219, 223, .25)
         }
 
         .share-item img,
         .share-item svg {
             width: 20px;
-            height: 20px;
+            height: 20px
         }
 
-        /* ================== TOAST COPY ================== */
         .copy-toast {
             position: fixed;
             bottom: 90px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
-            background: rgba(31, 41, 55, 0.95);
-            color: white;
+            background: rgba(31, 41, 55, .95);
+            color: #fff;
             padding: 10px 18px;
             border-radius: 14px;
             font-size: 14px;
             font-weight: 600;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, .35);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.35s ease;
-            z-index: 99999;
+            transition: all .35s ease;
+            z-index: 99999
         }
 
         .copy-toast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0)
         }
 
-        /* ================== PROGRESS DOTS ================== */
         .progress-dots {
             display: flex;
             justify-content: center;
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 24px
         }
 
         .progress-dots .dot {
@@ -621,34 +559,27 @@
             height: 14px;
             border-radius: 50%;
             background-color: #c4c4c4;
-            transition: background-color 0.25s;
+            transition: background-color .25s
         }
 
         .progress-dots .dot.active {
-            background-color: var(--green-1);
+            background-color: var(--green-1)
         }
 
-        /* ================== CARD ================== */
         .card {
             color: var(--gray-2);
             text-align: center;
             backdrop-filter: blur(8px);
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, .98);
             border-radius: 30px;
             padding: 40px 25px 30px 25px;
             width: 92%;
             max-width: 400px;
             margin-bottom: 120px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
-            position: relative;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .15);
+            position: relative
         }
-
-        /* ================== LOGO HEADER ================== */
-        .logo-header img:hover {
-            transform: scale(1.03);
-        }
-
-        /* ================== LOGO HEADER ================== */
+        
         .logo-header {
             width: 100%;
             display: flex;
@@ -656,41 +587,38 @@
             align-items: center;
             margin-bottom: 26px;
             margin-top: -30px;
-            z-index: 2;
+            z-index: 2
         }
 
         body.step-1 .logo-header {
             margin-top: -80px;
-            margin-bottom: 16px;
+            margin-bottom: 16px
         }
 
-
         .logo-header img {
-            background: transparent;
+            background: 0 0;
             box-shadow: none;
             max-width: 178px;
             width: 100%;
             height: auto;
             border-radius: 26px;
-            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35));
-            transition: transform 0.25s ease;
+            filter: drop-shadow(0 6px 14px rgba(0, 0, 0, .35));
+            transition: transform .25s ease
         }
 
         .logo-header img:hover {
-            transform: scale(1.03);
+            transform: scale(1.03)
         }
 
-        /* Focus mode – hide logo on final step */
         .focus-final-step .logo-header {
-            display: none !important;
+            display: none !important
         }
 
-        /* ================== ANIMATED BRAND LOGO ================== */
         .brand-logo-animated {
             margin: 18px auto 10px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: center
         }
 
         .brand-logo-animated img {
@@ -698,56 +626,54 @@
             height: auto;
             animation: floatBoat 2.6s ease-in-out infinite;
             filter: none;
-            background: transparent;
+            background: 0 0
         }
 
-        /* אנימציית ציפה עדינה */
         @keyframes floatBoat {
             0% {
-                transform: translateY(0);
+                transform: translateY(0)
             }
 
             50% {
-                transform: translateY(-6px);
+                transform: translateY(-6px)
             }
 
             100% {
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
-        /* ================== REDIRECT SCREEN ================== */
         .redirect-screen {
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(15, 23, 42, .75);
             backdrop-filter: blur(8px);
             z-index: 999999;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: center
         }
 
         .redirect-card {
-            background: white;
+            background: #fff;
             border-radius: 26px;
             padding: 30px 22px;
             width: 90%;
             max-width: 360px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-            animation: fadeInScale 0.4s ease;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .35);
+            animation: fadeInScale .4s ease
         }
 
         @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(.9)
             }
 
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1)
             }
         }
 
@@ -757,7 +683,7 @@
             background: #e5e7eb;
             border-radius: 20px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 20px
         }
 
         .loader-progress {
@@ -765,7 +691,7 @@
             width: 0%;
             background: linear-gradient(90deg, var(--blue-1), var(--blue-2));
             border-radius: 20px;
-            transition: width 0.3s ease;
+            transition: width .3s ease
         }
 
         .redirect-subtext {
@@ -773,17 +699,16 @@
             font-weight: 470;
             color: var(--gray-1);
             line-height: 1.4;
-            margin-bottom: 16px;
+            margin-bottom: 16px
         }
 
         .redirect-brand {
             font-size: 13px;
             font-weight: 600;
             color: var(--blue-3);
-            letter-spacing: 0.5px;
+            letter-spacing: .5px
         }
 
-        /* ===== PORT MODAL ===== */
         .port-modal {
             position: fixed;
             inset: 0;
@@ -793,24 +718,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 20px
         }
 
         .port-card {
-            background: white;
+            background: #fff;
             border-radius: 26px;
             padding: 36px 28px;
             width: 100%;
             max-width: 700px;
-            /* היה ~360 → עכשיו כפול */
             min-height: 260px;
-            /* נותן “נוכחות” */
             text-align: center;
             box-shadow: 0 20px 50px rgba(0, 0, 0, .4);
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center
         }
 
         .port-title {
@@ -828,7 +751,7 @@
             border-radius: 12px;
             padding: 10px 8px;
             margin: 14px 0;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px
         }
 
         .port-hint {
@@ -852,14 +775,14 @@
             align-items: center;
             justify-content: center;
             line-height: 1;
-            padding: 0;
+            padding: 0
         }
 
         .show-port-btn {
             margin: 14px 0 6px 0;
-            background: transparent;
+            background: 0 0;
             color: #0284c7;
-            border: 1px dashed rgba(14, 165, 233, 0.35);
+            border: 1px dashed rgba(14, 165, 233, .35);
             border-radius: 10px;
             padding: 8px 6px;
             font-size: 13.5px;
@@ -868,38 +791,32 @@
             width: 100%;
             transition: all .2s ease;
             box-shadow: none;
-            opacity: .85;
+            opacity: .85
         }
 
         .show-port-btn:hover {
-            background: rgba(14, 165, 233, 0.06);
-            border-style: solid;
-            border-color: rgba(14, 165, 233, 0.5);
-            color: #0369a1;
+            border-style: solid;       
             opacity: 1;
-        }
-
-        .show-port-btn:hover {
-            background: rgba(14, 165, 233, 0.12);
-            border-color: rgba(14, 165, 233, 0.4);
+            background: rgba(14, 165, 233, .12);
+            border-color: rgba(14, 165, 233, .4);
             color: #0284c7;
-            transform: translateY(-1px);
+            transform: translateY(-1px)
         }
 
         .focus-final-step #navButtons {
-            top: 6px;
+            top: 6px
         }
 
         .focus-final-step .overlay {
-            padding-top: 51px;
+            padding-top: 51px
         }
 
         .focus-final-step .card {
-            margin-bottom: 60px;
+            margin-bottom: 60px
         }
 
         .focus-final-step .coupon-box {
-            margin-top: 10px;
+            margin-top: 10px
         }
 
         .redirect-text {
@@ -912,23 +829,22 @@
             line-height: 1.4;
             margin-bottom: 4px;
             opacity: 0;
-            animation: fadeIn 0.8s ease forwards;
+            animation: fadeIn .8s ease forwards
         }
 
         .redirect-text strong {
-            font-weight: 700;
+            font-weight: 700
         }
 
         @keyframes fadeIn {
             to {
-                opacity: 1;
+                opacity: 1
             }
         }
 
-        /* ================= PREVIEW BEFORE REDIRECT ================= */
         .booking-preview {
             margin: 18px 0 14px;
-            text-align: center;
+            text-align: center
         }
 
         .booking-preview-img {
@@ -937,15 +853,15 @@
             height: auto;
             border-radius: 14px;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .12);
             display: block;
             margin: 0 auto;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform .3s ease, box-shadow .3s ease
         }
 
         .booking-preview-img:hover {
             transform: scale(1.03);
-            box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 14px 32px rgba(0, 0, 0, .35)
         }
 
         .logo-12go {
@@ -955,11 +871,9 @@
             object-fit: contain;
             padding: 6px;
             background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .15)
         }
 
-
-        /* מיקום הטקסט האדום - מוודא שהוא לא דוחף את הכפתור */
         .last-seats {
             position: absolute;
             bottom: -22px;
@@ -968,7 +882,7 @@
             font-size: 11px;
             font-weight: 700;
             color: #ef4444;
-            line-height: 1;
+            line-height: 1
         }
 
         .social-proof-toast {
@@ -977,22 +891,22 @@
             bottom: 85px;
             left: 50%;
             transform: translateX(-50%) translateY(150px);
-            background: white;
+            background: #fff;
             border-radius: 50px;
             padding: 8px 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
             display: flex;
             align-items: center;
             gap: 8px;
             z-index: 10000;
             width: max-content;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid #f1f5f9;
+            transition: transform .6s cubic-bezier(.175, .885, .32, 1.275);
+            border: 1px solid #f1f5f9
         }
 
         .social-proof-toast.show {
             display: flex;
-            transform: translateX(-50%) translateY(0);
+            transform: translateX(-50%) translateY(0)
         }
 
         .coupon-box {
@@ -1005,10 +919,10 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+            background: linear-gradient(135deg, #fffbeb 0, #fef3c7 100%) !important;
             border: 2px dashed #f59e0b !important;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-            padding: 15px !important;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, .2);
+            padding: 15px !important
         }
 
         .coupon-code {
@@ -1018,11 +932,11 @@
             padding: 6px 14px;
             display: inline-block;
             margin-top: 6px;
-            background: white !important;
+            background: #fff !important;
             color: #b45309 !important;
             border: 1px solid #f59e0b !important;
             transform: rotate(-2deg);
-            font-weight: 800 !important;
+            font-weight: 800 !important
         }
 
         .urgency-banner {
@@ -1034,67 +948,66 @@
             font-size: 14px;
             border-right: 4px solid #fb7185;
             text-align: right;
-            animation: pulse-red 2s infinite;
+            animation: pulse-red 2s infinite
         }
 
         @keyframes pulse-red {
             0% {
-                opacity: 1;
+                opacity: 1
             }
 
             50% {
-                opacity: 0.8;
+                opacity: .8
             }
 
             100% {
-                opacity: 1;
+                opacity: 1
             }
         }
 
         .coupon-container {
-            background: linear-gradient(135deg, #fffcf0 0%, #fff4d1 100%);
+            background: linear-gradient(135deg, #fffcf0 0, #fff4d1 100%);
             border: 2px dashed #f59e0b;
             border-radius: 16px;
             padding: 16px;
             margin: 20px 0;
             text-align: center;
             position: relative;
-            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.1);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, .1);
             cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent
         }
 
         .coupon-container:active {
-            transform: scale(0.98);
+            transform: scale(.98)
         }
 
         .coupon-code-box {
             display: inline-block;
             background: #f59e0b;
-            color: white;
+            color: #fff;
             padding: 8px 20px;
             border-radius: 8px;
             font-weight: 800;
             font-size: 1.3rem;
             margin-top: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .1);
             letter-spacing: 1.5px;
-            text-transform: uppercase;
+            text-transform: uppercase
         }
 
-        /* ===== Step 1 Marketing Hook ===== */
         .step-hook {
             margin: 8px 0 18px;
             padding: 10px 14px;
             background: linear-gradient(135deg, #ecfeff, #f0fdfa);
-            border: 1px solid rgba(14, 165, 233, 0.25);
+            border: 1px solid rgba(14, 165, 233, .25);
             border-radius: 14px;
             font-size: 13.5px;
             font-weight: 600;
             color: #0369a1;
-            box-shadow: 0 3px 10px rgba(14, 165, 233, 0.12);
-            animation: hookFade 0.9s ease;
-            text-align: center;
+            box-shadow: 0 3px 10px rgba(14, 165, 233, .12);
+            animation: hookFade .9s ease;
+            text-align: center
         }
 
         .step-hook span {
@@ -1102,18 +1015,18 @@
             margin-top: 4px;
             font-size: 12px;
             font-weight: 500;
-            color: #475569;
+            color: #475569
         }
 
         @keyframes hookFade {
             from {
                 opacity: 0;
-                transform: translateY(-6px);
+                transform: translateY(-6px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
@@ -1121,34 +1034,34 @@
             font-size: 18px;
             font-weight: 700;
             color: #0f172a;
-            margin-bottom: 10px;
+            margin-bottom: 10px
         }
 
-        /* ===================  MOBILE   =========================================================== */
-        /* ===================  MOBILE   =========================================================== */
-        /* ===================  MOBILE   =========================================================== */
+        /* =============================================  MOBILE  ======================================
+=============================================  MOBILE  ======================================
+=============================================  MOBILE  ====================================== */
 
-        @media (max-width: 480px) {
+        @media (max-width:480px) {
             body {
-                background-position: center top;
+                background-position: center top
             }
 
             .affiliate-footer {
                 font-size: 9px;
                 padding: 0 6px;
-                line-height: 1.4;
+                line-height: 1.4
             }
 
             .general-link {
                 bottom: 8px;
-                z-index: 9;
+                z-index: 9
             }
 
             .general-link a {
                 padding: 6px 12px;
                 font-size: 12px;
                 border-radius: 10px;
-                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, .25)
             }
 
             .card {
@@ -1156,26 +1069,26 @@
                 border-radius: 20px;
                 max-width: 95%;
                 max-height: 90vh;
-                overflow-y: auto;
+                overflow-y: auto
             }
 
             #navButtons {
-                gap: 6px;
+                gap: 6px
             }
 
             .port-card {
                 max-width: 95%;
                 min-height: 70vh;
                 padding: 40px 20px;
-                border-radius: 20px;
+                border-radius: 20px
             }
 
             .port-name {
-                font-size: 24px;
+                font-size: 24px
             }
 
             .port-title {
-                font-size: 20px;
+                font-size: 20px
             }
 
             .show-port-btn {
@@ -1183,37 +1096,37 @@
                 font-weight: 500;
                 padding: 7px 6px;
                 margin: 15px 0 13px 0;
-                opacity: .75;
+                opacity: .75
             }
 
             h1 {
-                font-size: 22px;
+                font-size: 22px
             }
 
             .booking-preview-img {
                 max-width: 190px;
-                transform: scale(0.98);
+                transform: scale(.98)
             }
 
             .booking-preview {
-                margin: 14px 0 10px;
+                margin: 14px 0 10px
             }
 
             .redirect-text {
-                font-size: 15px;
+                font-size: 15px
             }
 
             .redirect-subtext {
                 font-size: 14px;
-                line-height: 1.4;
+                line-height: 1.4
             }
 
             .redirect-card {
-                padding: 18px 14px;
+                padding: 18px 14px
             }
 
             .redirect-text strong {
-                font-weight: 700;
+                font-weight: 700
             }
         }
 
@@ -1227,7 +1140,7 @@
         !function (f, b, e, v, n, t, s) {
             if (f.fbq) return; n = f.fbq = function () {
                 n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
             };
             if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
             n.queue = []; t = b.createElement(e); t.async = !0;
