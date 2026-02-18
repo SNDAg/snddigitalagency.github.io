@@ -1070,6 +1070,7 @@
             transition: opacity 0.6s ease-in-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             backface-visibility: hidden;
         }
+
         .splash-content {
             text-align: center;
             /* מונע ריצוד של הטקסט */
@@ -1094,24 +1095,27 @@
 
         .splash-title {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 900; 
+            font-weight: 900;
             color: #ffffff;
             margin: 0;
-            font-size: 34px; 
+            font-size: 34px;
             letter-spacing: 4px;
             text-transform: uppercase;
             opacity: 0;
             will-change: transform, opacity, filter;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             animation: fadeInUpBlur 0.8s forwards 0.3s;
         }
 
         .splash-subtitle {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 19px; /* הגדלנו משמעותית */
+            font-size: 19px;
+            /* הגדלנו משמעותית */
             margin-top: 15px;
-            font-weight: 600; /* משקל חזק יותר שלא ייראה חלש */
-            color: rgba(255, 255, 255, 0.9); /* לבן כמעט מלא */
+            font-weight: 600;
+            /* משקל חזק יותר שלא ייראה חלש */
+            color: rgba(255, 255, 255, 0.9);
+            /* לבן כמעט מלא */
             opacity: 0;
             letter-spacing: 0.5px;
             max-width: 320px;
@@ -1119,6 +1123,7 @@
             margin-right: auto;
             animation: fadeInUpBlur 0.8s forwards 0.5s;
         }
+
         @keyframes boatFloat {
 
             0%,
@@ -1146,10 +1151,11 @@
         }
 
         .splash-exit {
-    opacity: 0 !important;
-    transform: scale(1.1); 
-    pointer-events: none; 
-}
+            opacity: 0 !important;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
         /* 
 =============================================  MOBILE  ======================================
 =============================================  MOBILE  ======================================
@@ -1309,8 +1315,8 @@
                     <button onclick="selectFrom('koh-tao')">Koh Tao</button>
                     <button onclick="selectFrom('phuket')">Phuket</button>
                     <button onclick="selectFrom('krabi')">Krabi</button>
+                    <button onclick="selectFrom('ao-nang')">Ao Nang</button>
                     <button onclick="selectFrom('koh-phi-phi')">Koh Phi Phi</button>
-                    <button onclick="selectFrom('surat-thani')">Surat Thani</button>
                     <button onclick="selectFrom('koh-lanta')">Koh Lanta</button>
                 </div>
             </div>
@@ -1322,10 +1328,12 @@
                     <button data-place="koh-phangan" onclick="selectTo('koh-phangan')">Koh Phangan</button>
                     <button data-place="koh-tao" onclick="selectTo('koh-tao')">Koh Tao</button>
                     <button data-place="phuket" onclick="selectTo('phuket')">Phuket</button>
+                    <button data-place="ao-nang" onclick="selectTo('ao-nang')">Ao Nang</button>
                     <button data-place="krabi" onclick="selectTo('krabi')">Krabi</button>
+                    <button data-place="railay-beach" onclick="selectTo('railay-beach')">Railay Beach</button>
                     <button data-place="koh-phi-phi" onclick="selectTo('koh-phi-phi')">Koh Phi Phi</button>
-                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">Surat Thani</button>
                     <button data-place="koh-lanta" onclick="selectTo('koh-lanta')">Koh Lanta</button>
+                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">Surat Thani</button>
                 </div>
             </div>
             <!-- שלב 3 -->
@@ -1466,24 +1474,28 @@
         const affiliateBase = 'https://www.kqzyfj.com/click-101474270-17138047?url=';
         const otherAmountOfpeople = 8;
         const placeNames = {
-            'koh-samui': 'koh samui',
-            'koh-phangan': 'koh phangan',
-            'koh-tao': 'koh tao',
-            'phuket': 'phuket',
-            'surat-thani': 'surat thani',
-            'krabi': 'krabi',
-            'koh-phi-phi': 'koh phi phi',
-            'koh-lanta': 'koh lanta'
+            'koh-samui': 'Koh Samui',
+            'koh-phangan': 'Koh Phangan',
+            'koh-tao': 'Koh Tao',
+            'phuket': 'Phuket',
+            'surat-thani': 'Surat Thani',
+            'krabi': 'Krabi',
+            'railay-beach': 'Railay Beach',
+            'ao-nang': 'Ao Nang',
+            'koh-phi-phi': 'Koh Phi Phi',
+            'koh-lanta': 'Koh Lanta'
         };
         const connections = {
-            'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
-            'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
-            'koh-tao': ['koh-samui', 'koh-phangan', 'phuket', 'surat-thani'],
-            'surat-thani': ['phuket', 'koh-samui', 'koh-lanta', 'koh-phangan'],
-            'phuket': ['koh-phi-phi', 'krabi', 'koh-lanta', 'koh-samui', 'koh-phangan', 'surat-thani'],
-            'krabi': ['phuket', 'koh-phi-phi', 'koh-samui', 'koh-lanta', 'koh-phangan'],
-            'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta', 'koh-samui'],
-            'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi', 'koh-samui']
+            'koh-samui': ['koh-phangan', 'koh-tao', 'surat-thani'],
+            'koh-phangan': ['koh-samui', 'koh-tao', 'surat-thani'],
+            'koh-tao': ['koh-samui', 'koh-phangan', 'surat-thani'],
+            'surat-thani': ['phuket', 'koh-samui', 'koh-phangan', 'krabi'],
+            'phuket': ['koh-phi-phi', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang', 'surat-thani'],
+            'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'surat-thani'],
+            'koh-phi-phi': ['phuket', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang'],
+            'ao-nang': ['phuket', 'koh-phi-phi', 'koh-lanta', 'railay-beach'],
+            'railay-beach': ['phuket', 'koh-phi-phi', 'koh-lanta', 'ao-nang'],
+            'koh-lanta': ['phuket', 'koh-phi-phi', 'krabi', 'railay-beach', 'ao-nang']
         };
         const dateText = {
             today: 'today',
@@ -1493,13 +1505,13 @@
         };
         const portsBySource = {
             "koh-samui": {
-                "koh-phangan": "Bangrak Pier / Nathon Pier",
+                "koh-phangan": "Bangrak Pier / Nathon Pier (Depending on the ferry company)",
                 "koh-tao": "Mae Haad Pier",
                 "surat-thani": "Donsak Pier"
             },
             "koh-phangan": {
                 "koh-samui": "Thongsala Pier",
-                "koh-tao": "Haad Rin / Thong Sala Pier"
+                "koh-tao": "Haad Rin / Thong Sala Pier (Depending on the ferry company)"
             },
             "koh-tao": {
                 "koh-samui": "Mae Haad Pier",
@@ -1508,21 +1520,37 @@
             "phuket": {
                 "koh-phi-phi": "Rassada Pier",
                 "koh-lanta": "Rassada Pier",
-                "krabi": "Rassada Pier"
+                "krabi": "Rassada Pier",
+                "ao-nang": "Rassada Pier",
+                "railay-beach": "Rassada Pier"
             },
             "krabi": {
                 "phuket": "Klong Jilad Pier",
                 "koh-lanta": "Klong Jilad Pier",
                 "koh-phi-phi": "Klong Jilad Pier"
             },
+            "ao-nang": {
+                "phuket": "Nopparat Thara Pier",
+                "koh-lanta": "Nopparat Thara Pier",
+                "koh-phi-phi": "Nopparat Thara Pier"
+            },
+            "railay-beach": {
+                "phuket": "Railay Floating Pier",
+                "koh-lanta": "Railay Floating Pier",
+                "koh-phi-phi": "Railay Floating Pier"
+            },
             "koh-lanta": {
                 "phuket": "Saladan Pier",
                 "krabi": "Saladan Pier",
+                "ao-nang": "Saladan Pier",
+                "railay-beach": "Saladan Pier",
                 "koh-phi-phi": "Saladan Pier"
             },
             "koh-phi-phi": {
                 "phuket": "Tonsai Pier",
                 "krabi": "Tonsai Pier",
+                "ao-nang": "Tonsai Pier",
+                "railay-beach": "Tonsai Pier",
                 "koh-lanta": "Tonsai Pier"
             },
             "surat-thani": {
@@ -1688,13 +1716,21 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            try {
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
-                }
-            } catch (e) {
-                console.log("Pixel tracking failed, continuing anyway.");
-            }
+try {
+    if (
+        typeof fbq !== 'undefined' &&
+        (
+            window.location.pathname.startsWith('/easy-ferry') ||
+            window.location.pathname.startsWith('/maaboret')
+        )
+    ) {
+        fbq('track', 'InitiateCheckout', {
+            content_name: state.from + '_to_' + state.to
+        });
+    }
+} catch (e) {
+    console.log("Pixel tracking failed, continuing anyway.");
+}
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1845,7 +1881,7 @@
         function closePortModal() {
             document.getElementById('portModal').classList.add('hidden');
         }
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             const splash = document.getElementById('splash-screen');
             setTimeout(() => {

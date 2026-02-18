@@ -26,7 +26,7 @@
     <meta name="ICBM" content="31.0461, 34.8516" />
     <!-- Hreflang -->
     <link rel="alternate" hreflang="he" href="https://snddigitalagency.com/maaboret" />
-    <link rel="alternate" hreflang="en" href="https://snddigitalagency.com/maaboret-en" />
+    <link rel="alternate" hreflang="en" href="https://snddigitalagency.com/easy-ferry" />
     <!-- Canonical -->
     <link rel="canonical" href="https://snddigitalagency.com/maaboret" />
     <!-- Open Graph -->
@@ -1052,6 +1052,7 @@
             transition: opacity 0.6s ease-in-out, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             backface-visibility: hidden;
         }
+
         .splash-content {
             text-align: center;
             /* מונע ריצוד של הטקסט */
@@ -1076,24 +1077,27 @@
 
         .splash-title {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-weight: 900; 
+            font-weight: 900;
             color: #ffffff;
             margin: 0;
-            font-size: 34px; 
+            font-size: 34px;
             letter-spacing: 4px;
             text-transform: uppercase;
             opacity: 0;
             will-change: transform, opacity, filter;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             animation: fadeInUpBlur 0.8s forwards 0.3s;
         }
 
         .splash-subtitle {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 19px; /* הגדלנו משמעותית */
+            font-size: 19px;
+            /* הגדלנו משמעותית */
             margin-top: 15px;
-            font-weight: 600; /* משקל חזק יותר שלא ייראה חלש */
-            color: rgba(255, 255, 255, 0.9); /* לבן כמעט מלא */
+            font-weight: 600;
+            /* משקל חזק יותר שלא ייראה חלש */
+            color: rgba(255, 255, 255, 0.9);
+            /* לבן כמעט מלא */
             opacity: 0;
             letter-spacing: 0.5px;
             max-width: 320px;
@@ -1101,6 +1105,7 @@
             margin-right: auto;
             animation: fadeInUpBlur 0.8s forwards 0.5s;
         }
+
         @keyframes boatFloat {
 
             0%,
@@ -1128,10 +1133,35 @@
         }
 
         .splash-exit {
-    opacity: 0 !important;
-    transform: scale(1.1); 
-    pointer-events: none; 
-}
+            opacity: 0 !important;
+            transform: scale(1.1);
+            pointer-events: none;
+        }
+
+        #lang-switch {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 99999;
+        }
+
+        #lang-switch button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #0f172a;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            transition: all .2s ease;
+        }
+
+        #lang-switch button:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: #fff;
+        }
 
         /* =============================================  MOBILE  ======================================
 =============================================  MOBILE  ======================================
@@ -1253,6 +1283,9 @@
 </head>
 
 <body>
+    <div id="lang-switch">
+        <button onclick="switchLang('en')">EN | HE</button>
+    </div>
     <div id="splash-screen">
         <div class="splash-content">
             <div class="boat-wrapper">
@@ -1524,6 +1557,7 @@
            HELPERS
         ========================= */
         function transition(fromId, toId) {
+            saveAppState();
             document.body.classList.remove(
                 'step-1',
                 'step-2',
@@ -1654,14 +1688,21 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            try {
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'InitiateCheckout', { content_name: state.from + '_to_' + state.to });
-                }
-            } catch (e) {
-                console.log("Pixel tracking failed, continuing anyway.");
-            }
+try {
+    if (
+        typeof fbq !== 'undefined' &&
+        (
+            window.location.pathname.startsWith('/easy-ferry') ||
+            window.location.pathname.startsWith('/maaboret')
+        )
+    ) {
+        fbq('track', 'InitiateCheckout', {
+            content_name: state.from + '_to_' + state.to
+        });
+    }
+} catch (e) {
+    console.log("Pixel tracking failed, continuing anyway.");
+}
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1818,7 +1859,15 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            restoreAppState();
             const splash = document.getElementById('splash-screen');
+            const urlParams = new URLSearchParams(window.location.search);
+            const shouldSkip = urlParams.get("skipSplash") === "1";
+            if (shouldSkip && splash) {
+                splash.style.display = "none";
+                return;
+            }
+            if (!splash) return;
             setTimeout(() => {
                 splash.classList.add('splash-exit');
                 setTimeout(() => {
@@ -1827,6 +1876,66 @@
             }, 2100);
         });
 
+        function saveAppState() {
+            const currentStep =
+                document.querySelector('.step:not(.hidden)')?.id || 'step-from';
+            const data = {
+                step: currentStep,
+                state: state
+            };
+            localStorage.setItem('easyFerryState', JSON.stringify(data));
+        }
+        function restoreAppState() {
+            const saved = localStorage.getItem('easyFerryState');
+            if (!saved) return;
+            const data = JSON.parse(saved);
+            Object.assign(state, data.state);
+            document.querySelectorAll('.step').forEach(s => {
+                s.classList.add('hidden');
+            });
+            const el = document.getElementById(data.step);
+            if (el) {
+                el.classList.remove('hidden');
+            }
+            if (data.step !== 'step-from') {
+                document.getElementById('navButtons').style.display = 'flex';
+            }
+        }
+
+        window.addEventListener('load', restoreAppState);
+        function switchLang(lang) {
+            if (lang === "en") {
+                window.location.href = "/test-en?skipSplash=1";
+            } else {
+                window.location.href = "/test4?skipSplash=1";
+            }
+        }
+        // ===== INIT STATE =====
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasReferralState = urlParams.has('step') || urlParams.has('from') || urlParams.has('to');
+
+        // אם אין הפניה – מוחקים את מצב האפליקציה
+        if (!hasReferralState) {
+            localStorage.removeItem('easyFerryState');
+        }
+
+        // אם יש הפניה – אפשר לאתחל state מהפרמטרים
+        if (hasReferralState) {
+            if (urlParams.has('from')) state.from = urlParams.get('from');
+            if (urlParams.has('to')) state.to = urlParams.get('to');
+            if (urlParams.has('people')) state.people = Number(urlParams.get('people'));
+            if (urlParams.has('date')) state.date = urlParams.get('date');
+            if (urlParams.has('depTime')) state.depTime = Number(urlParams.get('depTime'));
+        }
+
+        // מחזירים מצב אם קיים ב-localStorage
+        restoreAppState();
+
+        // עדכון stepHistory כדי שהלחצן goBackStep יעבוד גם אחרי הפניה
+        const currentStep = document.querySelector('.step:not(.hidden)')?.id || 'step-from';
+        if (currentStep !== 'step-from') stepHistory.push(currentStep);
+
+        //  ===== scrpt =====
     </script>
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
