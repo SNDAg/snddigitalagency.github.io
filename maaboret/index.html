@@ -191,9 +191,11 @@
         .options button:nth-child(even) {
             background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
         }
+
         .options button:nth-child(even):hover {
             background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
         }
+
         button:active {
             transform: scale(.97)
         }
@@ -1075,8 +1077,23 @@
             width: 100%;
             border-radius: 50%;
             box-shadow: 0 0 40px rgba(14, 165, 233, 0.25);
-            animation: boatFloat 3s ease-in-out infinite;
+            animation:
+                logoFadeIn 0.8s ease forwards,
+                boatFloat 3s ease-in-out infinite 1.2s;
         }
+
+        @keyframes logoFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
 
         .splash-title {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -1315,7 +1332,7 @@
                     <button data-place="koh-phi-phi" onclick="selectTo('koh-phi-phi')">קופיפי</button>
                     <button data-place="koh-lanta" onclick="selectTo('koh-lanta')">קו לנטה</button>
                     <button data-place="surat-thani" onclick="selectTo('surat-thani')">סוראט תאני</button>
-                    
+
                 </div>
             </div>
             <!-- שלב 3 -->
@@ -1474,12 +1491,12 @@
             'koh-phangan': ['koh-samui', 'koh-tao', 'surat-thani'],
             'koh-tao': ['koh-samui', 'koh-phangan', 'surat-thani'],
             'surat-thani': ['phuket', 'koh-samui', 'koh-phangan', 'krabi'],
-            'phuket': ['koh-phi-phi', 'koh-lanta', 'krabi', 'railay-beach','ao-nang', 'surat-thani'],
+            'phuket': ['koh-phi-phi', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang', 'surat-thani'],
             'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'surat-thani'],
-            'koh-phi-phi': ['phuket', 'koh-lanta', 'krabi', 'railay-beach','ao-nang'],
+            'koh-phi-phi': ['phuket', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang'],
             'ao-nang': ['phuket', 'koh-phi-phi', 'koh-lanta', 'railay-beach'],
             'railay-beach': ['phuket', 'koh-phi-phi', 'koh-lanta', 'ao-nang'],
-            'koh-lanta': ['phuket', 'koh-phi-phi','krabi', 'railay-beach','ao-nang']
+            'koh-lanta': ['phuket', 'koh-phi-phi', 'krabi', 'railay-beach', 'ao-nang']
         };
         const dateText = {
             today: 'היום',
@@ -1487,60 +1504,60 @@
             dayAfterTomorrow: 'מחרתיים',
             noDate: ''
         };
- const portsBySource = {
-    "koh-samui": {
-        "koh-phangan": "Bangrak Pier / Nathon Pier (Depending on the ferry company)",
-        "koh-tao": "Mae Haad Pier",
-        "surat-thani": "Donsak Pier"
-    },
-    "koh-phangan": {
-        "koh-samui": "Thongsala Pier",
-        "koh-tao": "Haad Rin / Thong Sala Pier (Depending on the ferry company)"
-    },
-    "koh-tao": {
-        "koh-samui": "Mae Haad Pier",
-        "koh-phangan": "Mae Haad Pier"
-    },
-    "phuket": {
-        "koh-phi-phi": "Rassada Pier",
-        "koh-lanta": "Rassada Pier",
-        "krabi": "Rassada Pier",
-        "ao-nang": "Rassada Pier",
-        "railay-beach": "Rassada Pier"
-    },
-    "krabi": {
-        "phuket": "Klong Jilad Pier",
-        "koh-lanta": "Klong Jilad Pier",
-        "koh-phi-phi": "Klong Jilad Pier"
-    },
-    "ao-nang": {
-        "phuket": "Nopparat Thara Pier",
-        "koh-lanta": "Nopparat Thara Pier",
-        "koh-phi-phi": "Nopparat Thara Pier"
-    },
-    "railay-beach": {
-        "phuket": "Railay Floating Pier",
-        "koh-lanta": "Railay Floating Pier",
-        "koh-phi-phi": "Railay Floating Pier"
-    },
-    "koh-lanta": {
-        "phuket": "Saladan Pier",
-        "krabi": "Saladan Pier",
-        "ao-nang": "Saladan Pier",
-        "railay-beach": "Saladan Pier",
-        "koh-phi-phi": "Saladan Pier"
-    },
-    "koh-phi-phi": {
-        "phuket": "Tonsai Pier",
-        "krabi": "Tonsai Pier",
-        "ao-nang": "Tonsai Pier",
-        "railay-beach": "Tonsai Pier",
-        "koh-lanta": "Tonsai Pier"
-    },
-    "surat-thani": {
-        "koh-samui": "Donsak Pier"
-    }
-};
+        const portsBySource = {
+            "koh-samui": {
+                "koh-phangan": "Bangrak Pier / Nathon Pier (Depending on the ferry company)",
+                "koh-tao": "Mae Haad Pier",
+                "surat-thani": "Donsak Pier"
+            },
+            "koh-phangan": {
+                "koh-samui": "Thongsala Pier",
+                "koh-tao": "Haad Rin / Thong Sala Pier (Depending on the ferry company)"
+            },
+            "koh-tao": {
+                "koh-samui": "Mae Haad Pier",
+                "koh-phangan": "Mae Haad Pier"
+            },
+            "phuket": {
+                "koh-phi-phi": "Rassada Pier",
+                "koh-lanta": "Rassada Pier",
+                "krabi": "Rassada Pier",
+                "ao-nang": "Rassada Pier",
+                "railay-beach": "Rassada Pier"
+            },
+            "krabi": {
+                "phuket": "Klong Jilad Pier",
+                "koh-lanta": "Klong Jilad Pier",
+                "koh-phi-phi": "Klong Jilad Pier"
+            },
+            "ao-nang": {
+                "phuket": "Nopparat Thara Pier",
+                "koh-lanta": "Nopparat Thara Pier",
+                "koh-phi-phi": "Nopparat Thara Pier"
+            },
+            "railay-beach": {
+                "phuket": "Railay Floating Pier",
+                "koh-lanta": "Railay Floating Pier",
+                "koh-phi-phi": "Railay Floating Pier"
+            },
+            "koh-lanta": {
+                "phuket": "Saladan Pier",
+                "krabi": "Saladan Pier",
+                "ao-nang": "Saladan Pier",
+                "railay-beach": "Saladan Pier",
+                "koh-phi-phi": "Saladan Pier"
+            },
+            "koh-phi-phi": {
+                "phuket": "Tonsai Pier",
+                "krabi": "Tonsai Pier",
+                "ao-nang": "Tonsai Pier",
+                "railay-beach": "Tonsai Pier",
+                "koh-lanta": "Tonsai Pier"
+            },
+            "surat-thani": {
+                "koh-samui": "Donsak Pier"
+            }
+        };
 
         /* =========================
            DOM CACHE
@@ -1683,21 +1700,21 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-try {
-    if (
-        typeof fbq !== 'undefined' &&
-        (
-            window.location.pathname.startsWith('/easy-ferry') ||
-            window.location.pathname.startsWith('/maaboret')
-        )
-    ) {
-        fbq('track', 'InitiateCheckout', {
-            content_name: state.from + '_to_' + state.to
-        });
-    }
-} catch (e) {
-    console.log("Pixel tracking failed, continuing anyway.");
-}
+            try {
+                if (
+                    typeof fbq !== 'undefined' &&
+                    (
+                        window.location.pathname.startsWith('/easy-ferry') ||
+                        window.location.pathname.startsWith('/maaboret')
+                    )
+                ) {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: state.from + '_to_' + state.to
+                    });
+                }
+            } catch (e) {
+                console.log("Pixel tracking failed, continuing anyway.");
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1859,7 +1876,7 @@ try {
                 splash.classList.add('splash-exit');
                 setTimeout(() => {
                     splash.style.display = 'none';
-                }, 600);
+                }, 700);
             }, 2100);
         });
 
