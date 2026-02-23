@@ -201,8 +201,20 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .options button:nth-child(odd) {
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(odd):hover {
+            background: linear-gradient(to right, var(--blue-3), var(--blue-1));
+        }
+
         .options button:nth-child(even) {
-            background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(even):hover {
+            background: linear-gradient(to left, var(--blue-3), var(--blue-1));
         }
 
         button:active {
@@ -213,10 +225,6 @@
             transform: translateY(-4px) scale(1.03);
             background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
             box-shadow: var(--shadow-lg)
-        }
-
-        .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
         }
 
         .options {
@@ -1195,16 +1203,6 @@
             font-weight: 700;
         }
 
-        /* כפתור ימני - ירוק חיצוני לימין */
-        #dynamic-date-options button:nth-child(even) {
-            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
-        }
-
-        /* כפתור שמאלי - ירוק חיצוני לשמאל */
-        #dynamic-date-options button:nth-child(odd) {
-            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
-        }
-
         .date-main {
             font-size: 18px;
             display: block;
@@ -1478,7 +1476,7 @@
                     </svg>
                 </button>
                 <div class="note">
-                    You’ll be redirected for secure checkout 🔒
+                    Redirecting for secure checkout 🔒
                 </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 Departure port info – for the taxi

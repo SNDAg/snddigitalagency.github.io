@@ -188,12 +188,20 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .options button:nth-child(odd) {
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(odd):hover {
+            background: linear-gradient(to left, var(--blue-3), var(--blue-1));
+        }
+
         .options button:nth-child(even) {
-            background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
         }
 
         .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
+            background: linear-gradient(to right, var(--blue-3), var(--blue-1));
         }
 
         button:active {
@@ -1178,16 +1186,6 @@
             color: #fff;
             font-size: 18px;
             font-weight: 700;
-        }
-
-        /* כפתור ימני - ירוק חיצוני לימין */
-        #dynamic-date-options button:nth-child(even) {
-            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
-        }
-
-        /* כפתור שמאלי - ירוק חיצוני לשמאל */
-        #dynamic-date-options button:nth-child(odd) {
-            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
         }
 
         .date-main {
