@@ -1155,6 +1155,78 @@
             pointer-events: none;
         }
 
+        /* ============================================= 
+   בלוק מעודכן: בחירת תאריכים סימטרית ונקייה
+   ============================================= */
+        /* --- עיצוב כפתורים: סימטריה וגרדיאנט ירוק חיצוני --- */
+        #dynamic-date-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        #dynamic-date-options button {
+            height: 80px;
+            /* גובה כפתור נקי */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 25px !important;
+            /* רווח קבוע לטקסט האדום שצף למטה */
+            border: none;
+            border-radius: 18px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* כפתור ימני - ירוק חיצוני לימין */
+        #dynamic-date-options button:nth-child(even) {
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        /* כפתור שמאלי - ירוק חיצוני לשמאל */
+        #dynamic-date-options button:nth-child(odd) {
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
+        }
+
+        .date-main {
+            font-size: 18px;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .date-sub {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .urgency-label {
+            position: absolute;
+            bottom: -22px;
+            /* מוציא את הטקסט החוצה למטה */
+            left: 0;
+            right: 0;
+            font-size: 11px;
+            color: #ef4444;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #moreThan7Btn {
+            background: linear-gradient(135deg, #1c445e, #14b8a6) !important;
+            filter: brightness(1.1);
+            /* עושה אותו טיפה יותר חי וקשור לירוק */
+            margin-bottom: 6px !important;
+        }
+
         /* =============================================  MOBILE  ======================================
 =============================================  MOBILE  ======================================
 =============================================  MOBILE  ====================================== */
@@ -1345,24 +1417,32 @@
                     <button onclick="selectPeople(4)">4</button>
                     <button onclick="selectPeople(5)">5</button>
                     <button onclick="selectPeople(6)">6</button>
-                    <button onclick="selectPeople(7)">7</button>
-                    <button onclick="selectPeople(otherAmountOfpeople)">אחר</button>
+                    <button id="moreThan7Btn" onclick="showGroupSlider()"
+                        style="background: var(--logo-blue); border: 2px solid rgba(255,255,255,0.2);">קבוצה
+                        (7+)</button>
+                </div>
+
+                <div id="groupSliderContainer" class="hidden"
+                    style="margin-top: 25px; background: #f8fafc; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">כמות משתתפים: <span
+                            id="sliderValue" style="color: var(--orange-1); font-size: 24px;">12</span></div>
+                    <input type="range" id="peopleSlider" min="7" max="22" value="12" step="1"
+                        style="width: 100%; height: 12px; border-radius: 10px; accent-color: var(--orange-1); cursor: pointer;"
+                        oninput="document.getElementById('sliderValue').innerText = this.value">
+                    <button onclick="selectPeople(document.getElementById('peopleSlider').value)"
+                        style="width: 100%; margin-top: 15px; padding: 12px; background: var(--logo-blue);">אישור</button>
                 </div>
             </div>
             <!-- שלב 4 -->
             <div id="step-date" class="step hidden">
-                <h1>למתי?</h1>
-                <div class="options">
-                    <button onclick="selectDate('today')">
-                        היום
-                        <span class="last-seats">🔥 נותרו <span id="randomSeats">3</span> מקומות!</span>
-                    </button>
-                    <button onclick="selectDate('tomorrow')">
-                        מחר
-                        <span class="last-seats">מקומות אחרונים</span>
-                    </button>
-                    <button onclick="selectDate('dayAfterTomorrow')">מחרתיים</button>
-                    <button onclick="selectDate('noDate')">אחר</button>
+                <h1>למתי הכרטיס?</h1>
+                <div class="options" id="dynamic-date-options">
+                    <button id="todayBtn" onclick="selectDate('today')"></button>
+                    <button id="tomorrowBtn" onclick="selectDate('tomorrow')"></button>
+                    <button id="day3Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button id="day4Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button id="day5Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button onclick="selectDate('noDate')">אחר...</button>
                 </div>
             </div>
             <!-- שלב 5 -->
@@ -1639,13 +1719,87 @@
             transition('step-to', 'step-people');
             maybeShowSocialProof();
         }
+        // הצגת הסליידר לקבוצות גדולות
+        function showGroupSlider() {
+            document.getElementById('groupSliderContainer').classList.remove('hidden');
+            document.getElementById('moreThan7Btn').classList.add('hidden');
+        }
+        function updateDayNames() {
+            const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+            const now = new Date();
+
+            const config = [
+                { id: 'todayBtn', offset: 0, label: 'היום' },
+                { id: 'tomorrowBtn', offset: 1, label: 'מחר' },
+                { id: 'day3Btn', offset: 2 },
+                { id: 'day4Btn', offset: 3 },
+                { id: 'day5Btn', offset: 4 }
+            ];
+
+            config.forEach(item => {
+                const d = new Date();
+                d.setDate(now.getDate() + item.offset);
+                const btn = document.getElementById(item.id);
+
+                if (btn) {
+                    const dayName = daysArr[d.getDay()];
+                    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+
+                    let mainText, subText;
+                    if (item.label) {
+                        mainText = item.label;
+                        subText = `(${dayName}, ${dateStr})`;
+                    } else {
+                        mainText = `יום ${dayName}`;
+                        subText = `(${dateStr})`;
+                    }
+
+                    btn.innerHTML = `
+                <span class="date-main">${mainText}</span>
+                <span class="date-sub">${subText}</span>
+            `;
+
+                    // החזרת לוגיקת המקומות האחרונים עם מספר רנדומלי
+                    if (item.offset === 0) {
+                        const randomSeats = Math.floor(Math.random() * 8) + 6; // מספר בין 6 ל-13
+                        btn.innerHTML += `<span class="urgency-label">🔥 נותרו ${randomSeats} מקומות!</span>`;
+                    } else if (item.offset === 1) {
+                        btn.innerHTML += `<span class="urgency-label">מקומות אחרונים</span>`;
+                    }
+
+                    btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                }
+            });
+        }
+
+        // בחירת אנשים - קוראת לעדכון התאריכים
         function selectPeople(value) {
-            state.people = value;
+            state.people = parseInt(value);
+            updateDayNames(); // מעדכן את כל הכפתורים
             transition('step-people', 'step-date');
         }
-        function selectDate(value) {
-            state.date = value;
+
+        // בחירת תאריך
+        function selectDate(value, element) {
+            if (value === 'dynamic' || value === 'today' || value === 'tomorrow') {
+                // אם זה אחד הכפתורים שעדכנו דינמית, ניקח את התאריך מה-dataset
+                const targetElement = (value === 'today') ? document.getElementById('todayBtn') :
+                    (value === 'tomorrow') ? document.getElementById('tomorrowBtn') : element;
+                state.date = 'custom';
+                state.customDateString = targetElement.dataset.fullDate;
+            } else {
+                state.date = value;
+                state.customDateString = null;
+            }
             transition('step-date', 'step-dep-time');
+        }
+
+        // פונקציית העזר ללינק הסופי
+        function getFinalDate() {
+            if (state.date === 'custom' && state.customDateString) {
+                return state.customDateString;
+            }
+            return getFormattedDate(state.date);
         }
         function selectDepTime(value) {
             state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
@@ -1718,7 +1872,7 @@
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
+                `?date=${getFinalDate(state.date)}&people=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
             const finalUrl = affiliateBase + encodeURIComponent(url);
             // Show redirect screen
