@@ -1848,6 +1848,7 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            const singleOrderPrice = 5.00; 
             try {
                 if (
                     typeof fbq !== 'undefined' &&
@@ -1859,7 +1860,9 @@
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: 5.00
+                        value: (Number(state.people) || 1) * singleOrderPrice, // ערך משוער להזמנה
+                        num_items: Number(state.people) || 1,       // פרמטר שפייסבוק אוהבת לאופטימיזציה
+                        content_type: 'product'
                     });
                 }
             } catch (e) {
