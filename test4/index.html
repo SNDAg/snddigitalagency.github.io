@@ -1676,8 +1676,7 @@
             const offsets = {
                 today: 0,
                 tomorrow: 1,
-                dayAfterTomorrow: 2,
-                noDate: 3
+                noDate: 5
             };
             base.setDate(base.getDate() + (offsets[option] ?? 0));
             return `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
