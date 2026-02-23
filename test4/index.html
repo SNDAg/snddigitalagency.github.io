@@ -1743,11 +1743,9 @@
                 <span class="date-main">${mainText}</span>
                 <span class="date-sub">${subText}</span>
             `;
-                    if (item.offset === 0) {
-                        const seats = state.people + (Math.floor(Math.random() * 3) + 1);
+                    if (item.offset >= 0 && item.offset <= 2) {
+                        const seats = state.people + (Math.floor(Math.random() * 6) + 1);
                         btn.innerHTML += `<span class="urgency-label">🔥 נותרו ${seats} מקומות!</span>`;
-                    } else if (item.offset === 1) {
-                        btn.innerHTML += `<span class="urgency-label">🔥 מקומות אחרונים!</span>`;
                     }
                     btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
                 }
