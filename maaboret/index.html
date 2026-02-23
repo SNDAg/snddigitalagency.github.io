@@ -1155,6 +1155,67 @@
             pointer-events: none;
         }
 
+        #dynamic-date-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        #dynamic-date-options button {
+            height: 80px;
+            /* גובה כפתור נקי */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            margin-bottom: 25px !important;
+            /* רווח קבוע לטקסט האדום שצף למטה */
+            border: none;
+            border-radius: 18px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* כפתור ימני - ירוק חיצוני לימין */
+        #dynamic-date-options button:nth-child(even) {
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        /* כפתור שמאלי - ירוק חיצוני לשמאל */
+        #dynamic-date-options button:nth-child(odd) {
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
+        }
+
+        .date-main {
+            font-size: 18px;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .date-sub {
+            font-size: 13px;
+            opacity: 0.8;
+            font-weight: 400;
+            margin-top: 4px;
+        }
+
+        .urgency-label {
+            position: absolute;
+            bottom: -22px;
+            /* מוציא את הטקסט החוצה למטה */
+            left: 0;
+            right: 0;
+            font-size: 11px;
+            color: #ef4444;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
         /* =============================================  MOBILE  ======================================
 =============================================  MOBILE  ======================================
 =============================================  MOBILE  ====================================== */
@@ -1337,7 +1398,7 @@
             </div>
             <!-- שלב 3 -->
             <div id="step-people" class="step hidden">
-                <h1>כמה אנשים?</h1>
+                <h1>כמה נוסעים אתם?</h1>
                 <div class="options">
                     <button onclick="selectPeople(1)">1</button>
                     <button onclick="selectPeople(2)">2</button>
@@ -1345,29 +1406,35 @@
                     <button onclick="selectPeople(4)">4</button>
                     <button onclick="selectPeople(5)">5</button>
                     <button onclick="selectPeople(6)">6</button>
-                    <button onclick="selectPeople(7)">7</button>
-                    <button onclick="selectPeople(otherAmountOfpeople)">אחר</button>
+                    <button id="moreThan7Btn" onclick="showGroupSlider()">7 ומעלה</button>
+                </div>
+
+                <div id="groupSliderContainer" class="hidden"
+                    style="margin-top: 25px; background: #f8fafc; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">מספר נוסעים: <span
+                            id="sliderValue" style="color: var(--orange-1); font-size: 24px;">9</span></div>
+                    <input type="range" id="peopleSlider" min="7" max="22" value="12" step="1"
+                        style="width: 100%; height: 12px; border-radius: 10px; accent-color: var(--orange-1); cursor: pointer;"
+                        oninput="document.getElementById('sliderValue').innerText = this.value">
+                    <button onclick="selectPeople(document.getElementById('peopleSlider').value)"
+                        style="width: 100%; margin-top: 15px; padding: 12px; background: var(--logo-blue);">אישור</button>
                 </div>
             </div>
             <!-- שלב 4 -->
             <div id="step-date" class="step hidden">
-                <h1>למתי?</h1>
-                <div class="options">
-                    <button onclick="selectDate('today')">
-                        היום
-                        <span class="last-seats">🔥 נותרו <span id="randomSeats">3</span> מקומות!</span>
-                    </button>
-                    <button onclick="selectDate('tomorrow')">
-                        מחר
-                        <span class="last-seats">מקומות אחרונים</span>
-                    </button>
-                    <button onclick="selectDate('dayAfterTomorrow')">מחרתיים</button>
-                    <button onclick="selectDate('noDate')">אחר</button>
+                <h1>באיזה תאריך?</h1>
+                <div class="options" id="dynamic-date-options">
+                    <button id="todayBtn" onclick="selectDate('today')"></button>
+                    <button id="tomorrowBtn" onclick="selectDate('tomorrow')"></button>
+                    <button id="day3Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button id="day4Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button id="day5Btn" onclick="selectDate('dynamic', this)"></button>
+                    <button onclick="selectDate('noDate')">אחר...</button>
                 </div>
             </div>
             <!-- שלב 5 -->
             <div id="step-dep-time" class="step hidden">
-                <h1>מתי לצאת?</h1>
+                <h1>באיזו שעה נוח לכם?</h1>
                 <div class="options">
                     <button onclick="selectDepTime('early')">מוקדם</button>
                     <button onclick="selectDepTime('late')">מאוחר</button>
@@ -1376,7 +1443,7 @@
             </div>
             <!-- סיכום -->
             <div id="step-summary" class="step hidden">
-                <h1>יאללה, יוצאים לדרך 🚤</h1>
+                <h1>המסלול שלכם מוכן!🚤</h1>
                 <div class="routeNote" id="routeNote">
                     <!-- הודעה על עומס אם יש-->
                 </div>
@@ -1604,8 +1671,7 @@
             const offsets = {
                 today: 0,
                 tomorrow: 1,
-                dayAfterTomorrow: 2,
-                noDate: 3
+                noDate: 5
             };
             base.setDate(base.getDate() + (offsets[option] ?? 0));
             return `${base.getFullYear()}-${String(base.getMonth() + 1).padStart(2, '0')}-${String(base.getDate()).padStart(2, '0')}`;
@@ -1639,61 +1705,124 @@
             transition('step-to', 'step-people');
             maybeShowSocialProof();
         }
+        // הצגת הסליידר לקבוצות גדולות
+        function showGroupSlider() {
+            document.getElementById('groupSliderContainer').classList.remove('hidden');
+            document.getElementById('moreThan7Btn').classList.add('hidden');
+        }
+        function updateDayNames() {
+            const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+            const now = new Date();
+
+            const config = [
+                { id: 'todayBtn', offset: 0, label: 'היום' },
+                { id: 'tomorrowBtn', offset: 1, label: 'מחר' },
+                { id: 'day3Btn', offset: 2 },
+                { id: 'day4Btn', offset: 3 },
+                { id: 'day5Btn', offset: 4 }
+            ];
+
+            config.forEach(item => {
+                const d = new Date();
+                d.setDate(now.getDate() + item.offset);
+                const btn = document.getElementById(item.id);
+
+                if (btn) {
+                    const dayName = daysArr[d.getDay()];
+                    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+
+                    // המבנה הנקי: כותרת גדולה ומתחתיה שם היום והתאריך בלי סוגריים מיותרים
+                    const mainText = item.label || `יום ${dayName}`;
+                    const subText = item.label ? `${dayName}, ${dateStr}` : dateStr;
+
+                    btn.innerHTML = `
+                <span class="date-main">${mainText}</span>
+                <span class="date-sub">${subText}</span>
+            `;
+                    if (item.offset >= 0 && item.offset <= 2) {
+                        const seats = state.people + (Math.floor(Math.random() * 6) + 1);
+                        btn.innerHTML += `<span class="urgency-label">🔥 נותרו ${seats} מקומות!</span>`;
+                    }
+                    btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                }
+            });
+        }
+
+        // בחירת אנשים - קוראת לעדכון התאריכים
         function selectPeople(value) {
-            state.people = value;
+            state.people = parseInt(value);
+            updateDayNames(); // מעדכן את כל הכפתורים
             transition('step-people', 'step-date');
         }
-        function selectDate(value) {
-            state.date = value;
+
+        // בחירת תאריך
+        function selectDate(value, element) {
+            if (value === 'dynamic' || value === 'today' || value === 'tomorrow') {
+                // אם זה אחד הכפתורים שעדכנו דינמית, ניקח את התאריך מה-dataset
+                const targetElement = (value === 'today') ? document.getElementById('todayBtn') :
+                    (value === 'tomorrow') ? document.getElementById('tomorrowBtn') : element;
+                state.date = 'custom';
+                state.customDateString = targetElement.dataset.fullDate;
+            } else {
+                state.date = value;
+                state.customDateString = null;
+            }
             transition('step-date', 'step-dep-time');
+        }
+
+        // פונקציית העזר ללינק הסופי
+        function getFinalDate() {
+            if (state.date === 'custom' && state.customDateString) {
+                return state.customDateString;
+            }
+            return getFormattedDate(state.date);
         }
         function selectDepTime(value) {
             state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
-            let timeText = '';
-            if (value === 'early') timeText = 'מוקדמת';
-            if (value === 'late') timeText = 'מאוחרת';
-            const dayText = dateText[state.date] || '';
-            const isSpecialDay =
-                dayText === 'היום' ||
-                dayText === 'מחר' ||
-                dayText === 'מחרתיים';
-            let startText = 'מעבורת';
-            if (timeText && isSpecialDay) {
-                startText += ` ${timeText} ${dayText}`;
+
+            // 1. סוג המעבורת
+            let typeText = 'מעבורת';
+            if (value === 'early') typeText = 'מעבורת מוקדמת';
+            if (value === 'late') typeText = 'מעבורת מאוחרת';
+
+            // 2. עיבוד חכם של התאריך
+            let timeDescription = '';
+            const dateBtn = document.querySelector(`button[data-full-date="${getFinalDate()}"]`);
+
+            if (dateBtn) {
+                let main = dateBtn.querySelector('.date-main').innerText; // למשל: "מחר" או "יום שלישי"
+                let sub = dateBtn.querySelector('.date-sub').innerText;   // למשל: "שלישי, 24/2" או "24/2"
+                const dateOnly = sub.includes(',') ? sub.split(',')[1].trim() : sub;
+                if (main === 'היום' || main === 'מחר') {
+                    timeDescription = `${main}, ה-${dateOnly}`; // "מחר, ה-24/2"
+                } else {
+                    const prefix = main.startsWith('יום') ? 'ב' : '';
+                    timeDescription = `${prefix}${main}, ה-${dateOnly}`;
+                }
             }
-            const target = `מ${placeNames[state.from]} ל${placeNames[state.to]}`;
-            let peopleText = '';
-            if (state.people === 1) {
-                peopleText = ' לאדם אחד';
-            } else if (state.people !== otherAmountOfpeople) {
-                peopleText = ` ל${state.people} אנשים`;
-            }
-            summaryText.innerHTML =
-                `${startText}${peopleText} ${target}`;
-            document
-                .querySelector('.general-link')
-                ?.style.setProperty('display', 'none');
-            // --- עדכון הודעת routeNote מלאה ---
+            let peopleText = state.people === 1 ? 'לאדם אחד' : `ל-${state.people} אנשים`;
+            const fromName = placeNames[state.from];
+            const toName = placeNames[state.to];
+            summaryText.innerHTML = `
+        <div style="font-family: inherit; line-height: 1.5;">
+            <span style="font-weight: 700; color: var(--logo-blue);">${typeText}</span> 
+            <span>${timeDescription}</span>
+            <br>
+            <span>${peopleText} מ${fromName} ל${toName}</span>
+        </div>
+    `;
+            document.querySelector('.general-link')?.style.setProperty('display', 'none');
             const routeNote = document.getElementById('routeNote');
             if (state.from && state.to) {
-                routeNote.innerHTML = `
-           ⚠️  עומס גבוה במסלול ${placeNames[state.from]} ← ${placeNames[state.to]} בעונה זו!<br>
-            מומלץ להזמין מקומות מראש 
-        `;
-            } else {
-                routeNote.innerHTML = '';
+                routeNote.innerHTML = `⚠️ עומס גבוה במסלול ${fromName} ← ${toName} בעונה זו!<br>המקומות ישמרו לזמן מוגבל, מומלץ לשריין כעת.`;
             }
+
             transition('step-dep-time', 'step-summary');
-            // Focus mode – hide logo on final step
             document.body.classList.add('focus-final-step');
+
             setTimeout(() => {
                 const card = document.querySelector('.card');
-                if (card) {
-                    card.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }
+                if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
 
@@ -1718,7 +1847,7 @@
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFormattedDate(state.date)}&people=${state.people}&direction=forward`;
+                `?date=${getFinalDate(state.date)}&people=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
             const finalUrl = affiliateBase + encodeURIComponent(url);
             // Show redirect screen
@@ -1859,14 +1988,14 @@
 
         function maybeShowSocialProof() {
             if (socialProofShown) return;
-            if (!socialProofNumber) {
-                socialProofNumber = Math.floor(Math.random() * 7) + 3; // 3–9
-            }
+            const extraPeople = Math.floor(Math.random() * 8) + 4;
+            socialProofNumber = state.people + extraPeople;
             const toast = document.getElementById('socialProof');
             if (toast) {
-                document.getElementById('socialProofText').innerHTML = `🔥 <b>${socialProofNumber} ישראלים</b> הזמינו את הקו הזה היום`;
+                document.getElementById('socialProofText').innerHTML = `🔥 <b>עוד ${socialProofNumber} ישראלים</b> הזמינו את המסלול הזה היום`;
                 setTimeout(() => toast.classList.add('show'), 800);
-                setTimeout(() => toast.classList.remove('show'), 4000);
+                setTimeout(() => toast.classList.remove('show'), 4500);
+                socialProofShown = true;
             }
         }
 

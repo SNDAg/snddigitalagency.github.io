@@ -1818,7 +1818,7 @@
             document.querySelector('.general-link')?.style.setProperty('display', 'none');
             const routeNote = document.getElementById('routeNote');
             if (state.from && state.to) {
-                routeNote.innerHTML = `⚠️ עומס גבוה במסלול ${fromName} ← ${toName} בעונה זו!<br>מומלץ להזמין מראש`;
+                routeNote.innerHTML = `⚠️ עומס גבוה במסלול ${fromName} ← ${toName} בעונה זו!<br>המקומות ישמרו לזמן מוגבל, מומלץ לשריין כעת.`;
             }
 
             transition('step-dep-time', 'step-summary');
