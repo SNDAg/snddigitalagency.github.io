@@ -201,8 +201,20 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .options button:nth-child(odd) {
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(odd):hover {
+            background: linear-gradient(to right, var(--blue-3), var(--blue-1));
+        }
+
         .options button:nth-child(even) {
-            background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(even):hover {
+            background: linear-gradient(to left, var(--blue-3), var(--blue-1));
         }
 
         button:active {
@@ -213,10 +225,6 @@
             transform: translateY(-4px) scale(1.03);
             background: linear-gradient(270deg, var(--blue-1), var(--blue-3));
             box-shadow: var(--shadow-lg)
-        }
-
-        .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
         }
 
         .options {
@@ -272,10 +280,10 @@
         }
 
         .note {
-            margin-top: 18px;
+            margin-top: 10px;
             font-size: 14px;
             color: var(--gray-1);
-            margin-bottom: 12px
+            margin-bottom: 11px
         }
 
         .routeNote {
@@ -1085,6 +1093,7 @@
             will-change: transform;
             /* הכנת הדפדפן לאנימציה */
         }
+
         .splash-logo {
             width: 100%;
             border-radius: 50%;
@@ -1192,16 +1201,6 @@
             color: #fff;
             font-size: 18px;
             font-weight: 700;
-        }
-
-        /* כפתור ימני - ירוק חיצוני לימין */
-        #dynamic-date-options button:nth-child(even) {
-            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
-        }
-
-        /* כפתור שמאלי - ירוק חיצוני לשמאל */
-        #dynamic-date-options button:nth-child(odd) {
-            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
         }
 
         .date-main {
@@ -1461,8 +1460,7 @@
                 </div>
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
-                    All options are already filtered for you – let's continue
-                    to pick your exact ferry time.
+                    All options are already filtered for you
                 </div>
                 <div class="trust">
                     <div>✔️ Over 8,000+ verified bookings</div>
@@ -1478,7 +1476,7 @@
                     </svg>
                 </button>
                 <div class="note">
-                    You’ll be redirected to the official 12GO website</br>for secure checkout 🔒
+                    Redirecting for secure checkout 🔒
                 </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 Departure port info – for the taxi
@@ -1715,43 +1713,43 @@
             transition('step-to', 'step-people');
             maybeShowSocialProof();
         }
-         // הצגת הסליידר לקבוצות גדולות
+        // הצגת הסליידר לקבוצות גדולות
         function showGroupSlider() {
             document.getElementById('groupSliderContainer').classList.remove('hidden');
             document.getElementById('moreThan7Btn').classList.add('hidden');
         }
         function updateDayNames() {
-    const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const now = new Date();
-    const config = [
-        { id: 'todayBtn', offset: 0, label: 'Today' },
-        { id: 'tomorrowBtn', offset: 1, label: 'Tomorrow' },
-        { id: 'day3Btn', offset: 2 },
-        { id: 'day4Btn', offset: 3 },
-        { id: 'day5Btn', offset: 4 }
-    ];
-    config.forEach(item => {
-        const d = new Date();
-        d.setDate(now.getDate() + item.offset);
-        const btn = document.getElementById(item.id);
-        if (btn) {
-            const dayName = daysArr[d.getDay()];
-            const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
-            const mainText = item.label || dayName;
-            const subText = item.label ? `${dayName}, ${dateStr}` : dateStr;
+            const daysArr = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const now = new Date();
+            const config = [
+                { id: 'todayBtn', offset: 0, label: 'Today' },
+                { id: 'tomorrowBtn', offset: 1, label: 'Tomorrow' },
+                { id: 'day3Btn', offset: 2 },
+                { id: 'day4Btn', offset: 3 },
+                { id: 'day5Btn', offset: 4 }
+            ];
+            config.forEach(item => {
+                const d = new Date();
+                d.setDate(now.getDate() + item.offset);
+                const btn = document.getElementById(item.id);
+                if (btn) {
+                    const dayName = daysArr[d.getDay()];
+                    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+                    const mainText = item.label || dayName;
+                    const subText = item.label ? `${dayName}, ${dateStr}` : dateStr;
 
-            btn.innerHTML = `
+                    btn.innerHTML = `
                 <span class="date-main">${mainText}</span>
                 <span class="date-sub">${subText}</span>
             `;
-            if (item.offset >= 0 && item.offset <= 2) {
-                const seats = state.people + (Math.floor(Math.random() * 6) + 1);
-                btn.innerHTML += `<span class="urgency-label">🔥 Only ${seats} seats left!</span>`;
-            }
-            btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    if (item.offset >= 0 && item.offset <= 2) {
+                        const seats = state.people + (Math.floor(Math.random() * 6) + 1);
+                        btn.innerHTML += `<span class="urgency-label">🔥 Only ${seats} seats left!</span>`;
+                    }
+                    btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                }
+            });
         }
-    });
-}
         function selectPeople(value) {
             state.people = parseInt(value);
             updateDayNames(); // מעדכן את כל הכפתורים
@@ -1772,7 +1770,7 @@
             }
             transition('step-date', 'step-dep-time');
         }
-                function getFinalDate() {
+        function getFinalDate() {
             if (state.date === 'custom' && state.customDateString) {
                 return state.customDateString;
             }
@@ -1780,89 +1778,93 @@
         }
 
         function selectDepTime(value) {
-    // Update departure time state
-    state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
+            // Update departure time state
+            state.depTime = value === 'early' ? 1 : value === 'late' ? 2 : '';
 
-    // 1. Ferry Type Description
-    let typeText = 'Ferry';
-    if (value === 'early') typeText = 'Early Ferry';
-    if (value === 'late') typeText = 'Late Ferry';
+            // 1. Ferry Type Description
+            let typeText = 'Ferry';
+            if (value === 'early') typeText = 'Early Ferry';
+            if (value === 'late') typeText = 'Late Ferry';
 
-    // 2. Smart Date Processing (matching the advanced logic)
-    let timeDescription = '';
-    const dateBtn = document.querySelector(`button[data-full-date="${getFinalDate()}"]`);
+            // 2. Smart Date Processing (matching the advanced logic)
+            let timeDescription = '';
+            const dateBtn = document.querySelector(`button[data-full-date="${getFinalDate()}"]`);
 
-    if (dateBtn) {
-        let main = dateBtn.querySelector('.date-main').innerText; // e.g., "Tomorrow" or "Tuesday"
-        let sub = dateBtn.querySelector('.date-sub').innerText;   // e.g., "Tuesday, 24/2" or "24/2"
-        
-        // Extract only the date part (e.g., "24/2")
-        const dateOnly = sub.includes(',') ? sub.split(',')[1].trim() : sub;
+            if (dateBtn) {
+                let main = dateBtn.querySelector('.date-main').innerText; // e.g., "Tomorrow" or "Tuesday"
+                let sub = dateBtn.querySelector('.date-sub').innerText;   // e.g., "Tuesday, 24/2" or "24/2"
 
-        // English phrasing: "Tomorrow, Feb 24th" or "on Tuesday, Feb 24th"
-        if (main.toLowerCase() === 'today' || main.toLowerCase() === 'tomorrow') {
-            timeDescription = `${main}, ${dateOnly}`;
-        } else {
-            timeDescription = `on ${main}, ${dateOnly}`;
-        }
-    }
+                // Extract only the date part (e.g., "24/2")
+                const dateOnly = sub.includes(',') ? sub.split(',')[1].trim() : sub;
 
-    // 3. People & Route Phrasing
-    let peopleText = state.people === 1 ? 'for 1 person' : `for ${state.people} people`;
-    const fromName = placeNames[state.from];
-    const toName = placeNames[state.to];
+                // English phrasing: "Tomorrow, Feb 24th" or "on Tuesday, Feb 24th"
+                if (main.toLowerCase() === 'today' || main.toLowerCase() === 'tomorrow') {
+                    timeDescription = `${main}, ${dateOnly}`;
+                } else {
+                    timeDescription = `on ${main}, ${dateOnly}`;
+                }
+            }
 
-    // Update Summary with the new styling
-    summaryText.innerHTML = `
+            // 3. People & Route Phrasing
+            let peopleText = state.people === 1 ? 'for 1 person' : `for ${state.people} people`;
+            const fromName = placeNames[state.from];
+            const toName = placeNames[state.to];
+
+            // Update Summary with the new styling
+            summaryText.innerHTML = `
         <div style="font-family: inherit; line-height: 1.5;">
-            <span style="font-weight: 700; color: var(--logo-blue);">${typeText}</span> 
+            <span>${typeText}</span> 
             <span>${timeDescription}</span>
             <br>
             <span>${peopleText} from ${fromName} to ${toName}</span>
         </div>
     `;
 
-    // Hide general link
-    document.querySelector('.general-link')?.style.setProperty('display', 'none');
+            // Hide general link
+            document.querySelector('.general-link')?.style.setProperty('display', 'none');
 
-    // --- Update Route Note (High Demand Alert) ---
-    const routeNote = document.getElementById('routeNote');
-    if (state.from && state.to) {
-        routeNote.innerHTML = `
-            ⚠️ High demand on the ${fromName} → ${toName} route this season!<br>
-            Availability is limited, we recommend booking now.
-        `;
-    } else {
-        routeNote.innerHTML = '';
-    }
+            // --- Update Route Note (High Demand Alert) ---
+            const routeNote = document.getElementById('routeNote');
+            if (state.from && state.to) {
+                routeNote.innerHTML = `
+    <div style="font-size: 0.9em; line-height: 1.4;">
+        ⚠️ High demand for ${fromName} → ${toName}!<br>
+        Availability is limited. Secure your spot now.
+    </div>
+`;
+            } else {
+                routeNote.innerHTML = '';
+            }
 
-    // Transition & UX
-    transition('step-dep-time', 'step-summary');
-    document.body.classList.add('focus-final-step');
+            // Transition & UX
+            transition('step-dep-time', 'step-summary');
+            document.body.classList.add('focus-final-step');
 
-    setTimeout(() => {
-        const card = document.querySelector('.card');
-        if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 50);
-}
+            setTimeout(() => {
+                const card = document.querySelector('.card');
+                if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        }
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-try {
-    if (
-        typeof fbq !== 'undefined' &&
-        (
-            window.location.pathname.startsWith('/easy-ferry') ||
-            window.location.pathname.startsWith('/maaboret')
-        )
-    ) {
-        fbq('track', 'InitiateCheckout', {
-            content_name: state.from + '_to_' + state.to
-        });
-    }
-} catch (e) {
-    console.log("Pixel tracking failed, continuing anyway.");
-}
+            try {
+                if (
+                    typeof fbq !== 'undefined' &&
+                    (
+                        window.location.pathname.startsWith('/easy-ferry') ||
+                        window.location.pathname.startsWith('/maaboret')
+                    )
+                ) {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: state.from + '_to_' + state.to,
+                        currency: 'USD',
+                        value: 5.00
+                    });
+                }
+            } catch (e) {
+                console.log("Pixel tracking failed, continuing anyway.");
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +

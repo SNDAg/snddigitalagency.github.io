@@ -188,12 +188,20 @@
             box-shadow: var(--shadow-sm)
         }
 
+        .options button:nth-child(odd) {
+            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
+        }
+
+        .options button:nth-child(odd):hover {
+            background: linear-gradient(to left, var(--blue-3), var(--blue-1));
+        }
+
         .options button:nth-child(even) {
-            background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
+            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
         }
 
         .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
+            background: linear-gradient(to right, var(--blue-3), var(--blue-1));
         }
 
         button:active {
@@ -260,10 +268,10 @@
         }
 
         .note {
-            margin-top: 18px;
+            margin-top: 10px;
             font-size: 14px;
             color: var(--gray-1);
-            margin-bottom: 12px
+            margin-bottom: 11px
         }
 
         .routeNote {
@@ -1155,10 +1163,6 @@
             pointer-events: none;
         }
 
-        /* ============================================= 
-   בלוק מעודכן: בחירת תאריכים סימטרית ונקייה
-   ============================================= */
-        /* --- עיצוב כפתורים: סימטריה וגרדיאנט ירוק חיצוני --- */
         #dynamic-date-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1182,16 +1186,6 @@
             color: #fff;
             font-size: 18px;
             font-weight: 700;
-        }
-
-        /* כפתור ימני - ירוק חיצוני לימין */
-        #dynamic-date-options button:nth-child(even) {
-            background: linear-gradient(to left, var(--blue-2), var(--blue-1));
-        }
-
-        /* כפתור שמאלי - ירוק חיצוני לשמאל */
-        #dynamic-date-options button:nth-child(odd) {
-            background: linear-gradient(to right, var(--blue-2), var(--blue-1));
         }
 
         .date-main {
@@ -1447,14 +1441,13 @@
             </div>
             <!-- סיכום -->
             <div id="step-summary" class="step hidden">
-                <h1>המסלול שלכם מוכן!🚤</h1>
+                <h1>המסלול שלכם מוכן 🚤</h1>
                 <div class="routeNote" id="routeNote">
                     <!-- הודעה על עומס אם יש-->
                 </div>
                 <div class="summary" id="summaryText"></div>
                 <div class="note summary-helper">
-                    כל האפשרויות כבר סוננו עבורך – ממשיכים
-                    <br>לבחירת שעה מדויקת
+                    כל האפשרויות כבר סוננו עבורך
                 </div>
                 <div class="trust">
                     <div>✔️ ללא עמלות, המחיר הכי זול!</div>
@@ -1809,7 +1802,7 @@
             const toName = placeNames[state.to];
             summaryText.innerHTML = `
         <div style="font-family: inherit; line-height: 1.5;">
-            <span style="font-weight: 700; color: var(--logo-blue);">${typeText}</span> 
+            <span>${typeText}</span> 
             <span>${timeDescription}</span>
             <br>
             <span>${peopleText} מ${fromName} ל${toName}</span>
@@ -1842,7 +1835,9 @@
                     )
                 ) {
                     fbq('track', 'InitiateCheckout', {
-                        content_name: state.from + '_to_' + state.to
+                        content_name: state.from + '_to_' + state.to,
+                        currency: 'USD',
+                        value: 5.00
                     });
                 }
             } catch (e) {
