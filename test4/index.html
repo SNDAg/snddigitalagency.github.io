@@ -1159,7 +1159,7 @@
    בלוק מעודכן: בחירת תאריכים סימטרית ונקייה
    ============================================= */
         /* --- עיצוב כפתורים: סימטריה וגרדיאנט ירוק חיצוני --- */
-        #dynamic-date-options {
+ #dynamic-date-options {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
@@ -1218,13 +1218,6 @@
             font-weight: 700;
             text-align: center;
             white-space: nowrap;
-        }
-
-        #moreThan7Btn {
-            background: linear-gradient(135deg, #1c445e, #14b8a6) !important;
-            filter: brightness(1.1);
-            /* עושה אותו טיפה יותר חי וקשור לירוק */
-            margin-bottom: 6px !important;
         }
 
         /* =============================================  MOBILE  ======================================
@@ -1418,8 +1411,7 @@
                     <button onclick="selectPeople(5)">5</button>
                     <button onclick="selectPeople(6)">6</button>
                     <button id="moreThan7Btn" onclick="showGroupSlider()"
-                        style="background: var(--logo-blue); border: 2px solid rgba(255,255,255,0.2);">קבוצה
-                        (7+)</button>
+                        >7 ומעלה</button>
                 </div>
 
                 <div id="groupSliderContainer" class="hidden"
@@ -1724,53 +1716,47 @@
             document.getElementById('groupSliderContainer').classList.remove('hidden');
             document.getElementById('moreThan7Btn').classList.add('hidden');
         }
-        function updateDayNames() {
-            const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
-            const now = new Date();
+       function updateDayNames() {
+    const daysArr = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+    const now = new Date();
+    
+    const config = [
+        { id: 'todayBtn', offset: 0, label: 'היום' },
+        { id: 'tomorrowBtn', offset: 1, label: 'מחר' },
+        { id: 'day3Btn', offset: 2 },
+        { id: 'day4Btn', offset: 3 },
+        { id: 'day5Btn', offset: 4 }
+    ];
 
-            const config = [
-                { id: 'todayBtn', offset: 0, label: 'היום' },
-                { id: 'tomorrowBtn', offset: 1, label: 'מחר' },
-                { id: 'day3Btn', offset: 2 },
-                { id: 'day4Btn', offset: 3 },
-                { id: 'day5Btn', offset: 4 }
-            ];
-
-            config.forEach(item => {
-                const d = new Date();
-                d.setDate(now.getDate() + item.offset);
-                const btn = document.getElementById(item.id);
-
-                if (btn) {
-                    const dayName = daysArr[d.getDay()];
-                    const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
-
-                    let mainText, subText;
-                    if (item.label) {
-                        mainText = item.label;
-                        subText = `(${dayName}, ${dateStr})`;
-                    } else {
-                        mainText = `יום ${dayName}`;
-                        subText = `(${dateStr})`;
-                    }
-
-                    btn.innerHTML = `
+    config.forEach(item => {
+        const d = new Date();
+        d.setDate(now.getDate() + item.offset);
+        const btn = document.getElementById(item.id);
+        
+        if (btn) {
+            const dayName = daysArr[d.getDay()];
+            const dateStr = `${d.getDate()}/${d.getMonth() + 1}`;
+            
+            // המבנה הנקי: כותרת גדולה ומתחתיה שם היום והתאריך בלי סוגריים מיותרים
+            const mainText = item.label || `יום ${dayName}`;
+            const subText = item.label ? `${dayName}, ${dateStr}` : dateStr;
+            
+            btn.innerHTML = `
                 <span class="date-main">${mainText}</span>
                 <span class="date-sub">${subText}</span>
             `;
+        
+            if (item.offset === 0) {
+                const seats = Math.floor(Math.random() * 8) + 6;
+                btn.innerHTML += `<span class="urgency-label">🔥 נותרו ${seats} מקומות!</span>`;
+            } else if (item.offset === 1) {
+                btn.innerHTML += `<span class="urgency-label">מקומות אחרונים</span>`;
+            }
 
-                    // החזרת לוגיקת המקומות האחרונים עם מספר רנדומלי
-                    if (item.offset === 0) {
-                        const randomSeats = Math.floor(Math.random() * 8) + 6; // מספר בין 6 ל-13
-                        btn.innerHTML += `<span class="urgency-label">🔥 נותרו ${randomSeats} מקומות!</span>`;
-                    } else if (item.offset === 1) {
-                        btn.innerHTML += `<span class="urgency-label">מקומות אחרונים</span>`;
-                    }
-
-                    btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-                }
-            });
+            btn.dataset.fullDate = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         }
+    });
+}
 
         // בחירת אנשים - קוראת לעדכון התאריכים
         function selectPeople(value) {
