@@ -26,7 +26,7 @@
     <meta name="ICBM" content="31.0461, 34.8516" />
     <!-- Hreflang -->
     <link rel="alternate" hreflang="he" href="https://snddigitalagency.com/maaboret" />
-    <link rel="alternate" hreflang="en" href="https://snddigitalagency.com/easy-ferry" />
+    <link rel="alternate" hreflang="en" href="https://snddigitalagency.com/maaboret-en" />
     <!-- Canonical -->
     <link rel="canonical" href="https://snddigitalagency.com/maaboret" />
     <!-- Open Graph -->
@@ -192,6 +192,10 @@
             background: linear-gradient(90deg, var(--blue-2), var(--blue-1))
         }
 
+        .options button:nth-child(even):hover {
+            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
+        }
+
         button:active {
             transform: scale(.97)
         }
@@ -202,9 +206,6 @@
             box-shadow: var(--shadow-lg)
         }
 
-        .options button:nth-child(even):hover {
-            background: linear-gradient(90deg, var(--blue-1), var(--blue-3))
-        }
 
         .options {
             display: flex;
@@ -401,9 +402,14 @@
 
         .share-wrapper {
             position: fixed;
-            bottom: 8px;
-            left: 20px;
+            bottom: 9px;
+            left: 14px;
             z-index: 9999
+        }
+
+        .focus-final-step .share-wrapper {
+            bottom: 4px;
+            left: 5px;
         }
 
         .share-main-btn {
@@ -876,7 +882,7 @@
 
         .last-seats {
             position: absolute;
-            bottom: -22px;
+            bottom: -17px;
             left: 0;
             right: 0;
             font-size: 11px;
@@ -1044,7 +1050,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(circle at 30% 20%, #1e293b, #0f172a 60%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1065,15 +1071,29 @@
             height: 120px;
             margin: 0 auto 25px;
             will-change: transform;
-            /* הכנת הדפדפן לאנימציה */
         }
 
         .splash-logo {
             width: 100%;
             border-radius: 50%;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
-            animation: boatFloat 3s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(14, 165, 233, 0.25);
+            animation:
+                logoFadeIn 0.8s ease forwards,
+                boatFloat 3s ease-in-out infinite 1.2s;
         }
+
+        @keyframes logoFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
 
         .splash-title {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -1092,12 +1112,9 @@
         .splash-subtitle {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             font-size: 19px;
-            /* הגדלנו משמעותית */
             margin-top: 15px;
             font-weight: 600;
-            /* משקל חזק יותר שלא ייראה חלש */
             color: rgba(255, 255, 255, 0.9);
-            /* לבן כמעט מלא */
             opacity: 0;
             letter-spacing: 0.5px;
             max-width: 320px;
@@ -1136,31 +1153,6 @@
             opacity: 0 !important;
             transform: scale(1.1);
             pointer-events: none;
-        }
-
-        #lang-switch {
-            position: fixed;
-            top: 14px;
-            left: 14px;
-            z-index: 99999;
-        }
-
-        #lang-switch button {
-            background: rgba(255, 255, 255, 0.9);
-            color: #0f172a;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 6px 12px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            transition: all .2s ease;
-        }
-
-        #lang-switch button:hover {
-            transform: translateY(-2px) scale(1.05);
-            background: #fff;
         }
 
         /* =============================================  MOBILE  ======================================
@@ -1283,9 +1275,6 @@
 </head>
 
 <body>
-    <div id="lang-switch">
-        <button onclick="switchLang('en')">EN | HE</button>
-    </div>
     <div id="splash-screen">
         <div class="splash-content">
             <div class="boat-wrapper">
@@ -1300,7 +1289,7 @@
     <div class="overlay">
         <!-- Logo Header -->
         <div class="logo-header">
-            <img src="../image/MAABORET-LOGO5.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
+            <img src="../image/MAABORET-LOGO7.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
@@ -1324,8 +1313,8 @@
                     <button onclick="selectFrom('koh-tao')">קוטאו</button>
                     <button onclick="selectFrom('phuket')">פוקט</button>
                     <button onclick="selectFrom('krabi')">קראבי</button>
+                    <button onclick="selectFrom('ao-nang')">או נאנג</button>
                     <button onclick="selectFrom('koh-phi-phi')">קופיפי</button>
-                    <button onclick="selectFrom('surat-thani')">סוראט תאני</button>
                     <button onclick="selectFrom('koh-lanta')">קו לנטה</button>
                 </div>
             </div>
@@ -1337,10 +1326,13 @@
                     <button data-place="koh-phangan" onclick="selectTo('koh-phangan')">קופנגן</button>
                     <button data-place="koh-tao" onclick="selectTo('koh-tao')">קוטאו</button>
                     <button data-place="phuket" onclick="selectTo('phuket')">פוקט</button>
+                    <button data-place="ao-nang" onclick="selectTo('ao-nang')">או נאנג</button>
                     <button data-place="krabi" onclick="selectTo('krabi')">קראבי</button>
+                    <button data-place="railay-beach" onclick="selectTo('railay-beach')">ריילי ביץ'</button>
                     <button data-place="koh-phi-phi" onclick="selectTo('koh-phi-phi')">קופיפי</button>
-                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">סוראט תאני</button>
                     <button data-place="koh-lanta" onclick="selectTo('koh-lanta')">קו לנטה</button>
+                    <button data-place="surat-thani" onclick="selectTo('surat-thani')">סוראט תאני</button>
+
                 </div>
             </div>
             <!-- שלב 3 -->
@@ -1489,18 +1481,22 @@
             'phuket': 'פוקט',
             'surat-thani': 'סוראט תאני',
             'krabi': 'קראבי',
+            'railay-beach': 'ריילי ביץ',
+            'ao-nang': 'או נאנג',
             'koh-phi-phi': 'קופיפי',
             'koh-lanta': 'קו לנטה'
         };
         const connections = {
-            'koh-samui': ['koh-phangan', 'koh-tao', 'phuket', 'surat-thani'],
-            'koh-phangan': ['koh-samui', 'koh-tao', 'phuket', 'surat-thani'],
-            'koh-tao': ['koh-samui', 'koh-phangan', 'phuket', 'surat-thani'],
-            'surat-thani': ['phuket', 'koh-samui', 'koh-lanta', 'koh-phangan'],
-            'phuket': ['koh-phi-phi', 'krabi', 'koh-lanta', 'koh-samui', 'koh-phangan', 'surat-thani'],
-            'krabi': ['phuket', 'koh-phi-phi', 'koh-samui', 'koh-lanta', 'koh-phangan'],
-            'koh-phi-phi': ['phuket', 'krabi', 'koh-lanta', 'koh-samui'],
-            'koh-lanta': ['phuket', 'krabi', 'koh-phi-phi', 'koh-samui']
+            'koh-samui': ['koh-phangan', 'koh-tao', 'surat-thani'],
+            'koh-phangan': ['koh-samui', 'koh-tao', 'surat-thani'],
+            'koh-tao': ['koh-samui', 'koh-phangan', 'surat-thani'],
+            'surat-thani': ['phuket', 'koh-samui', 'koh-phangan', 'krabi'],
+            'phuket': ['koh-phi-phi', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang', 'surat-thani'],
+            'krabi': ['phuket', 'koh-phi-phi', 'koh-lanta', 'surat-thani'],
+            'koh-phi-phi': ['phuket', 'koh-lanta', 'krabi', 'railay-beach', 'ao-nang'],
+            'ao-nang': ['phuket', 'koh-phi-phi', 'koh-lanta', 'railay-beach'],
+            'railay-beach': ['phuket', 'koh-phi-phi', 'koh-lanta', 'ao-nang'],
+            'koh-lanta': ['phuket', 'koh-phi-phi', 'krabi', 'railay-beach', 'ao-nang']
         };
         const dateText = {
             today: 'היום',
@@ -1510,13 +1506,13 @@
         };
         const portsBySource = {
             "koh-samui": {
-                "koh-phangan": "Bangrak Pier / Nathon Pier",
+                "koh-phangan": "Bangrak Pier / Nathon Pier (Depending on the ferry company)",
                 "koh-tao": "Mae Haad Pier",
                 "surat-thani": "Donsak Pier"
             },
             "koh-phangan": {
                 "koh-samui": "Thongsala Pier",
-                "koh-tao": "Haad Rin / Thong Sala Pier"
+                "koh-tao": "Haad Rin / Thong Sala Pier (Depending on the ferry company)"
             },
             "koh-tao": {
                 "koh-samui": "Mae Haad Pier",
@@ -1525,27 +1521,44 @@
             "phuket": {
                 "koh-phi-phi": "Rassada Pier",
                 "koh-lanta": "Rassada Pier",
-                "krabi": "Rassada Pier"
+                "krabi": "Rassada Pier",
+                "ao-nang": "Rassada Pier",
+                "railay-beach": "Rassada Pier"
             },
             "krabi": {
                 "phuket": "Klong Jilad Pier",
                 "koh-lanta": "Klong Jilad Pier",
                 "koh-phi-phi": "Klong Jilad Pier"
             },
+            "ao-nang": {
+                "phuket": "Nopparat Thara Pier",
+                "koh-lanta": "Nopparat Thara Pier",
+                "koh-phi-phi": "Nopparat Thara Pier"
+            },
+            "railay-beach": {
+                "phuket": "Railay Floating Pier",
+                "koh-lanta": "Railay Floating Pier",
+                "koh-phi-phi": "Railay Floating Pier"
+            },
             "koh-lanta": {
                 "phuket": "Saladan Pier",
                 "krabi": "Saladan Pier",
+                "ao-nang": "Saladan Pier",
+                "railay-beach": "Saladan Pier",
                 "koh-phi-phi": "Saladan Pier"
             },
             "koh-phi-phi": {
                 "phuket": "Tonsai Pier",
                 "krabi": "Tonsai Pier",
+                "ao-nang": "Tonsai Pier",
+                "railay-beach": "Tonsai Pier",
                 "koh-lanta": "Tonsai Pier"
             },
             "surat-thani": {
                 "koh-samui": "Donsak Pier"
             }
         };
+
         /* =========================
            DOM CACHE
         ========================= */
@@ -1557,7 +1570,6 @@
            HELPERS
         ========================= */
         function transition(fromId, toId) {
-            saveAppState();
             document.body.classList.remove(
                 'step-1',
                 'step-2',
@@ -1688,21 +1700,21 @@
 
         function goToBooking() {
             //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-try {
-    if (
-        typeof fbq !== 'undefined' &&
-        (
-            window.location.pathname.startsWith('/easy-ferry') ||
-            window.location.pathname.startsWith('/maaboret')
-        )
-    ) {
-        fbq('track', 'InitiateCheckout', {
-            content_name: state.from + '_to_' + state.to
-        });
-    }
-} catch (e) {
-    console.log("Pixel tracking failed, continuing anyway.");
-}
+            try {
+                if (
+                    typeof fbq !== 'undefined' &&
+                    (
+                        window.location.pathname.startsWith('/easy-ferry') ||
+                        window.location.pathname.startsWith('/maaboret')
+                    )
+                ) {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: state.from + '_to_' + state.to
+                    });
+                }
+            } catch (e) {
+                console.log("Pixel tracking failed, continuing anyway.");
+            }
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
@@ -1859,83 +1871,15 @@ try {
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            restoreAppState();
             const splash = document.getElementById('splash-screen');
-            const urlParams = new URLSearchParams(window.location.search);
-            const shouldSkip = urlParams.get("skipSplash") === "1";
-            if (shouldSkip && splash) {
-                splash.style.display = "none";
-                return;
-            }
-            if (!splash) return;
             setTimeout(() => {
                 splash.classList.add('splash-exit');
                 setTimeout(() => {
                     splash.style.display = 'none';
-                }, 600);
+                }, 700);
             }, 2100);
         });
 
-        function saveAppState() {
-            const currentStep =
-                document.querySelector('.step:not(.hidden)')?.id || 'step-from';
-            const data = {
-                step: currentStep,
-                state: state
-            };
-            localStorage.setItem('easyFerryState', JSON.stringify(data));
-        }
-        function restoreAppState() {
-            const saved = localStorage.getItem('easyFerryState');
-            if (!saved) return;
-            const data = JSON.parse(saved);
-            Object.assign(state, data.state);
-            document.querySelectorAll('.step').forEach(s => {
-                s.classList.add('hidden');
-            });
-            const el = document.getElementById(data.step);
-            if (el) {
-                el.classList.remove('hidden');
-            }
-            if (data.step !== 'step-from') {
-                document.getElementById('navButtons').style.display = 'flex';
-            }
-        }
-
-        window.addEventListener('load', restoreAppState);
-        function switchLang(lang) {
-            if (lang === "en") {
-                window.location.href = "/test-en?skipSplash=1";
-            } else {
-                window.location.href = "/test4?skipSplash=1";
-            }
-        }
-        // ===== INIT STATE =====
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasReferralState = urlParams.has('step') || urlParams.has('from') || urlParams.has('to');
-
-        // אם אין הפניה – מוחקים את מצב האפליקציה
-        if (!hasReferralState) {
-            localStorage.removeItem('easyFerryState');
-        }
-
-        // אם יש הפניה – אפשר לאתחל state מהפרמטרים
-        if (hasReferralState) {
-            if (urlParams.has('from')) state.from = urlParams.get('from');
-            if (urlParams.has('to')) state.to = urlParams.get('to');
-            if (urlParams.has('people')) state.people = Number(urlParams.get('people'));
-            if (urlParams.has('date')) state.date = urlParams.get('date');
-            if (urlParams.has('depTime')) state.depTime = Number(urlParams.get('depTime'));
-        }
-
-        // מחזירים מצב אם קיים ב-localStorage
-        restoreAppState();
-
-        // עדכון stepHistory כדי שהלחצן goBackStep יעבוד גם אחרי הפניה
-        const currentStep = document.querySelector('.step:not(.hidden)')?.id || 'step-from';
-        if (currentStep !== 'step-from') stepHistory.push(currentStep);
-
-        //  ===== scrpt =====
     </script>
     <div class="share-wrapper">
         <button class="share-main-btn" onclick="toggleShareMenu()" aria-label="שיתוף">
