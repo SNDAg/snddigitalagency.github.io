@@ -1822,28 +1822,35 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
+        
         function reportEventToFacebookAndRedirect(finalUrl) {
             let redirected = false;
 
-            // פונקציה שמבצעת רידיירקט רק פעם אחת
+            // פונקציה פנימית להפניה בטוחה
             function safeRedirect() {
                 if (redirected) return;
                 redirected = true;
                 window.location.href = finalUrl;
             }
 
-            // רשת ביטחון: אם הפיקסל נתקע, עוברים דף בכל מקרה אחרי 1.5 שניות
+            // רשת ביטחון חיצונית: אם הפיקסל לא עונה, עוברים בכל מקרה אחרי 1.5 שניות
             const backupTimeout = setTimeout(safeRedirect, 1500);
 
             try {
-                // בדיקה שהפיקסל קיים ונטען
-                if (typeof fbq !== 'undefined') {
+                if (
+                    typeof fbq !== 'undefined' &&
+                    (
+                        window.location.pathname.startsWith('/easy-ferry') ||
+                        window.location.pathname.startsWith('/maaboret')
+                    )
+                ) {
+                    const singleOrderPrice = 4.00;
                     const passengerCount = Number(state.people) || 1;
 
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: passengerCount * 4.00,
+                        value: passengerCount * singleOrderPrice,
                         num_items: passengerCount,
                         content_type: 'product'
                     }, {
@@ -1851,36 +1858,40 @@
                             clearTimeout(backupTimeout); // הפיקסל הצליח, מבטלים את הגיבוי
                             safeRedirect();
                         },
-                        timeout: 800 // מחכים לפייסבוק גג 0.8 שניות בתוך ה-SDK
+                        timeout: 800 // המתנה פנימית בתוך ה-SDK
                     });
                 } else {
-                    safeRedirect(); // אין פיקסל? עוברים מיד
+                    // אם הפיקסל לא קיים או שאנחנו לא בנתיב הנכון
+                    clearTimeout(backupTimeout);
+                    safeRedirect();
                 }
             } catch (e) {
-                console.error('FB Error:', e);
+                console.error('Facebook Pixel failed:', e);
                 safeRedirect();
             }
         }
-
         function goToBooking() {
-            // בניית ה-URL (שימי לב: תיקנתי את הקריאה ל-getFinalDate ללא פרמטרים כי כך היא מוגדרת אצלך)
+            // בניית ה-URL (שימוש ב-getFinalDate ללא פרמטרים כפי שמוגדר אצלך)
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
 
             const finalUrl = affiliateBase + encodeURIComponent(url);
 
-            // הפעלת האנימציה
+            // הצגת מסך ההפניה
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
 
             let progress = 0;
+            // אנימציה יציבה וחלקה יותר (כ-3.5 שניות)
             const interval = setInterval(() => {
                 progress += (100 / 35) * (0.8 + Math.random() * 0.4);
+
                 if (progress >= 100) {
                     bar.style.width = '100%';
                     clearInterval(interval);
-                    // בסוף האנימציה - שולחים לדיווח
+
+                    // המתנה קצרה בסוף האנימציה ואז מעבר לדיווח
                     setTimeout(() => {
                         reportEventToFacebookAndRedirect(finalUrl);
                     }, 200);
@@ -1889,6 +1900,7 @@
                 }
             }, 100);
         }
+        
         function updateRandomSeats() {
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) {
