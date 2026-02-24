@@ -1894,27 +1894,33 @@
             }
         }
         function goToBooking() {
-            // בניית ה-URL (שימוש ב-getFinalDate ללא פרמטרים כפי שמוגדר אצלך)
+            // בניית ה-URL
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
 
             const finalUrl = affiliateBase + encodeURIComponent(url);
+
             // הצגת מסך ההפניה
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
 
             let progress = 0;
-            // אנימציה יציבה וחלקה יותר (כ-3.5 שניות)
+            let reported = false; // דגל למניעת שליחה כפולה
+
             const interval = setInterval(() => {
+                // אנימציה יציבה וחלקה (כ-3.5 שניות)
                 progress += (100 / 35) * (0.8 + Math.random() * 0.4);
+                if (progress >= 90 && !reported) {
+                    reported = true;
+                    reportEventToFacebookAndRedirect(finalUrl);
+                }
+
                 if (progress >= 100) {
+                    progress = 100;
                     bar.style.width = '100%';
                     clearInterval(interval);
-                    // המתנה קצרה בסוף האנימציה ואז מעבר לדיווח
-                    setTimeout(() => {
-                        reportEventToFacebookAndRedirect(finalUrl);
-                    }, 200);
+                    // הרידיירקט יתבצע אוטומטית על ידי ה-eventCallback בתוך reportEvent
                 } else {
                     bar.style.width = progress + '%';
                 }
