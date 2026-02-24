@@ -1846,9 +1846,14 @@
             }, 50);
         }
 
-        function goToBooking() {
-            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
-            const singleOrderPrice = 5.00; 
+       
+        function reportEventToFacebookAndRedirect(finalUrl) {
+            let redirected = false;
+            function safeRedirect(url) {
+                if (redirected) return;
+                redirected = true;
+                window.location.href = url;
+            }
             try {
                 if (
                     typeof fbq !== 'undefined' &&
@@ -1857,21 +1862,36 @@
                         window.location.pathname.startsWith('/maaboret')
                     )
                 ) {
+                    const singleOrderPrice = 4.00;
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: (Number(state.people) || 1) * singleOrderPrice, // ערך משוער להזמנה
-                        num_items: Number(state.people) || 1,       // פרמטר שפייסבוק אוהבת לאופטימיזציה
+                        value: (Number(state.people) || 1) * singleOrderPrice,
+                        num_items: Number(state.people) || 1,
                         content_type: 'product'
+                    }, {
+                        eventCallback: function () {
+                            // פייסבוק אישר / או timeout נגמר
+                            safeRedirect(finalUrl);
+                        },
+                        timeout: 700 // מקסימום המתנה (ms)
                     });
+                    return;
                 }
             } catch (e) {
-                console.log("Pixel tracking failed, continuing anyway.");
+                console.log('Facebook Pixel failed:', e);
             }
+            // fallback אם fbq לא קיים / קרס
+            setTimeout(() => {
+                safeRedirect(finalUrl);
+            }, 600);
+        }
+
+        function goToBooking() {
             // Build booking URL
             let url =
                 `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFinalDate(state.date)}&people=${state.people}&direction=forward`;
+                `?date=${getFinalDate(state.date)}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
             const finalUrl = affiliateBase + encodeURIComponent(url);
             // Show redirect screen
@@ -1890,8 +1910,8 @@
                     bar.style.width = progress + '%';
                     clearInterval(interval);
                     setTimeout(() => {
-                        window.location.href = finalUrl;
-                    }, 400); // זמן קצר לפני ניווט
+                        reportEventToFacebookAndRedirect(finalUrl);
+                    }, 400);
                 } else {
                     bar.style.width = progress + '%';
                 }
