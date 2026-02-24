@@ -1845,79 +1845,70 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
-
-       
         function reportEventToFacebookAndRedirect(finalUrl) {
             let redirected = false;
-            function safeRedirect(url) {
+            // פונקציה שמבצעת רידיירקט רק פעם אחת
+            function safeRedirect() {
                 if (redirected) return;
                 redirected = true;
-                window.location.href = url;
+                window.location.href = finalUrl;
             }
+            // רשת ביטחון: אם הפיקסל נתקע, עוברים דף בכל מקרה אחרי 1.5 שניות
+            const backupTimeout = setTimeout(safeRedirect, 1500);
             try {
-                if (
-                    typeof fbq !== 'undefined' &&
-                    (
-                        window.location.pathname.startsWith('/easy-ferry') ||
-                        window.location.pathname.startsWith('/maaboret')
-                    )
-                ) {
-                    const singleOrderPrice = 4.00;
+                // בדיקה שהפיקסל קיים ונטען
+                if (typeof fbq !== 'undefined') {
+                    const passengerCount = Number(state.people) || 1;
+
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: (Number(state.people) || 1) * singleOrderPrice,
-                        num_items: Number(state.people) || 1,
+                        value: passengerCount * 4.00,
+                        num_items: passengerCount,
                         content_type: 'product'
                     }, {
                         eventCallback: function () {
-                            // פייסבוק אישר / או timeout נגמר
-                            safeRedirect(finalUrl);
+                            clearTimeout(backupTimeout); // הפיקסל הצליח, מבטלים את הגיבוי
+                            safeRedirect();
                         },
-                        timeout: 700 // מקסימום המתנה (ms)
+                        timeout: 800 // מחכים לפייסבוק גג 0.8 שניות בתוך ה-SDK
                     });
-                    return;
+                } else {
+                    safeRedirect(); // אין פיקסל? עוברים מיד
                 }
             } catch (e) {
-                console.log('Facebook Pixel failed:', e);
+                console.error('FB Error:', e);
+                safeRedirect();
             }
-            // fallback אם fbq לא קיים / קרס
-            setTimeout(() => {
-                safeRedirect(finalUrl);
-            }, 600);
         }
 
         function goToBooking() {
-            // Build booking URL
-            let url =
-                `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFinalDate(state.date)}&people=${state.people}&adults=${state.people}&direction=forward`;
+            // בניית ה-URL (שימי לב: תיקנתי את הקריאה ל-getFinalDate ללא פרמטרים כי כך היא מוגדרת אצלך)
+            let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
+
             const finalUrl = affiliateBase + encodeURIComponent(url);
-            // Show redirect screen
+
+            // הפעלת האנימציה
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
+
             let progress = 0;
-            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
-            const intervalTime = 220; // כל כמה ms נעשה עדכון
-            const steps = Math.ceil(totalTime / intervalTime);
-            const increment = 100 / steps;
             const interval = setInterval(() => {
-                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
+                progress += (100 / 35) * (0.8 + Math.random() * 0.4);
                 if (progress >= 100) {
-                    progress = 100;
-                    bar.style.width = progress + '%';
+                    bar.style.width = '100%';
                     clearInterval(interval);
+                    // בסוף האנימציה - שולחים לדיווח
                     setTimeout(() => {
                         reportEventToFacebookAndRedirect(finalUrl);
-                    }, 400);
+                    }, 200);
                 } else {
                     bar.style.width = progress + '%';
                 }
-            }, intervalTime);
+            }, 100);
         }
-
         function updateRandomSeats() {
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) {
