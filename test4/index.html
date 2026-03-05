@@ -1462,10 +1462,25 @@
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-
-                <div class="note">
-                    מעבר לאתר הרשמי לתשלום מאובטח 🔒
-                </div>
+<div class="payment-methods" style="margin: 15px 0; opacity: 0.8; text-align: center; font-family: sans-serif;">
+    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 תשלום מאובטח ב-12GO</span>
+    
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg" 
+         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196578.png'" 
+         width="30" style="margin: 0 5px; vertical-align: middle;">
+    
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196561.png'" 
+         width="18" style="margin: 0 5px; vertical-align: middle;">
+    
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" 
+         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196565.png'" 
+         width="43" style="margin: 0 5px; vertical-align: middle;">
+    
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg" 
+         onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968411.png'" 
+         width="15" style="margin: 0 5px; vertical-align: middle;">
+</div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע על נמל היציאה – להציג למונית
                 </button>
@@ -1822,10 +1837,20 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
+        
+        function reportEventToFacebookAndRedirect(finalUrl) {
+            let redirected = false;
 
+            // פונקציה פנימית להפניה בטוחה
+            function safeRedirect() {
+                if (redirected) return;
+                redirected = true;
+                window.location.href = finalUrl;
+            }
 
-        function goToBooking() {
-            //Facebook Pixel – מעקב אחרי לחיצה על כפתור ההזמנה
+            // רשת ביטחון חיצונית: אם הפיקסל לא עונה, עוברים בכל מקרה אחרי 1.5 שניות
+            const backupTimeout = setTimeout(safeRedirect, 1500);
+
             try {
                 if (
                     typeof fbq !== 'undefined' &&
@@ -1834,45 +1859,67 @@
                         window.location.pathname.startsWith('/maaboret')
                     )
                 ) {
+                    const singleOrderPrice = 4.00;
+                    const passengerCount = Number(state.people) || 1;
+
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: 5.00
+                        value: passengerCount * singleOrderPrice,
+                        num_items: passengerCount,
+                        content_type: 'product'
+                    }, {
+                        eventCallback: function () {
+                            clearTimeout(backupTimeout); // הפיקסל הצליח, מבטלים את הגיבוי
+                            safeRedirect();
+                        },
+                        timeout: 800 // המתנה פנימית בתוך ה-SDK
                     });
+                } else {
+                    // אם הפיקסל לא קיים או שאנחנו לא בנתיב הנכון
+                    clearTimeout(backupTimeout);
+                    safeRedirect();
                 }
             } catch (e) {
-                console.log("Pixel tracking failed, continuing anyway.");
+                console.error('Facebook Pixel failed:', e);
+                safeRedirect();
             }
-            // Build booking URL
-            let url =
-                `https://12go.asia/en/travel/${state.from}/${state.to}` +
-                `?date=${getFinalDate(state.date)}&people=${state.people}&direction=forward`;
+        }
+       
+        function goToBooking() {
+            // בניית ה-URL
+            let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
+
             const finalUrl = affiliateBase + encodeURIComponent(url);
-            // Show redirect screen
+
+            // הצגת מסך ההפניה
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
+
             let progress = 0;
-            const totalTime = 4000; // זמן כולל באנימציה 4 שניות
-            const intervalTime = 220; // כל כמה ms נעשה עדכון
-            const steps = Math.ceil(totalTime / intervalTime);
-            const increment = 100 / steps;
+            let reported = false; // דגל למניעת שליחה כפולה
+
             const interval = setInterval(() => {
-                progress += increment * (0.9 + Math.random() * 0.2); // מוסיפים קצת וריאציה טבעית
+                // אנימציה יציבה וחלקה (כ-3.5 שניות)
+                progress += (100 / 35) * (0.8 + Math.random() * 0.4);
+                if (progress >= 90 && !reported) {
+                    reported = true;
+                    reportEventToFacebookAndRedirect(finalUrl);
+                }
+
                 if (progress >= 100) {
                     progress = 100;
-                    bar.style.width = progress + '%';
+                    bar.style.width = '100%';
                     clearInterval(interval);
-                    setTimeout(() => {
-                        window.location.href = finalUrl;
-                    }, 400); // זמן קצר לפני ניווט
+                    // הרידיירקט יתבצע אוטומטית על ידי ה-eventCallback בתוך reportEvent
                 } else {
                     bar.style.width = progress + '%';
                 }
-            }, intervalTime);
+            }, 100);
         }
-
+        
         function updateRandomSeats() {
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) {
