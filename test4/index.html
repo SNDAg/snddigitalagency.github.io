@@ -1081,28 +1081,29 @@
             margin: 0 auto 25px;
             will-change: transform;
         }
-.price-highlight {
-    font-family: 'Assistant', sans-serif;
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: baseline; /* מיישר את הטקסט לפי הבסיס שלו */
-    gap: 6px;
-    color: #1f2937; /* צבע כהה עמוק ואחיד */
-}
 
-.price-amount {
-    font-size: 24px; /* המספר ממש גדול */
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -1px;
-}
+        .price-highlight {
+            font-family: 'Assistant', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 4px;
+            margin: 16px 0;
+        }
 
-.price-unit {
-    font-size: 16px;
-    font-weight: 600;
-    color: #64748b; /* אפור ניטרלי לטקסט הנלווה */
-}
+        .price-amount {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1;
+        }
+
+        .price-unit {
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
         .splash-logo {
             width: 100%;
             border-radius: 50%;
@@ -1469,11 +1470,11 @@
                 </div>
 
                 <div class="summary" id="summaryText" style="margin-bottom: 10px;"></div>
-<div class="price-highlight">
-    <span class="price-unit">החל מ-</span>
-    <span class="price-amount" dir="ltr">$11</span>
-    <span class="price-unit">לאדם</span>
-</div>
+                <div class="price-highlight">
+                    <span class="price-unit">החל מ-</span>
+                    <span class="price-amount" dir="ltr" id="dynamicPrice">$11.2</span>
+                    <span class="price-unit">לאדם</span>
+                </div>
                 <div class="trust-container"
                     style="margin-bottom: 25px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0;">
                     <div style="font-size: 13.5px; color: #475569; margin-bottom: 6px; font-weight: 500;">✔️ הפרטים
@@ -1854,7 +1855,7 @@
             if (state.from && state.to) {
                 routeNote.innerHTML = `⚠️ עומס גבוה במסלול ${fromName} ← ${toName} בעונה זו!<br>המקומות ישמרו לזמן מוגבל, מומלץ לשריין כעת.`;
             }
-
+            updateDynamicPrice();
             transition('step-dep-time', 'step-summary');
             document.body.classList.add('focus-final-step');
 
@@ -2030,6 +2031,16 @@
                     dot.classList.remove('active');
                 }
             });
+        }
+        function updateDynamicPrice() {
+            const min = 11.2;
+            const max = 11.9;
+            const finalPrice = (Math.random() * (max - min) + min).toFixed(1);
+
+            const priceElement = document.getElementById('dynamicPrice');
+            if (priceElement) {
+                priceElement.innerText = '$' + finalPrice;
+            }
         }
         /* =========================
            INIT
