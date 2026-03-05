@@ -1865,86 +1865,58 @@
             }, 50);
         }
 
-        function reportEventToFacebookAndRedirect(finalUrl) {
-            let redirected = false;
-
-            // פונקציה פנימית להפניה בטוחה
-            function safeRedirect() {
-                if (redirected) return;
-                redirected = true;
-                window.location.href = finalUrl;
-            }
-
-            // רשת ביטחון חיצונית: אם הפיקסל לא עונה, עוברים בכל מקרה אחרי 1.5 שניות
-            const backupTimeout = setTimeout(safeRedirect, 1500);
-
-            try {
-                if (
-                    typeof fbq !== 'undefined' &&
-                    (
-                        window.location.pathname.startsWith('/easy-ferry') ||
-                        window.location.pathname.startsWith('/maaboret')
-                    )
-                ) {
-                    const singleOrderPrice = 4.00;
-                    const passengerCount = Number(state.people) || 1;
-
-                    fbq('track', 'InitiateCheckout', {
-                        content_name: state.from + '_to_' + state.to,
-                        currency: 'USD',
-                        value: passengerCount * singleOrderPrice,
-                        num_items: passengerCount,
-                        content_type: 'product'
-                    }, {
-                        eventCallback: function () {
-                            clearTimeout(backupTimeout); // הפיקסל הצליח, מבטלים את הגיבוי
-                            safeRedirect();
-                        },
-                        timeout: 800 // המתנה פנימית בתוך ה-SDK
-                    });
-                } else {
-                    // אם הפיקסל לא קיים או שאנחנו לא בנתיב הנכון
-                    clearTimeout(backupTimeout);
-                    safeRedirect();
-                }
-            } catch (e) {
-                console.error('Facebook Pixel failed:', e);
-                safeRedirect();
-            }
-        }
-
         function goToBooking() {
-            // בניית ה-URL
+            // 1. בניית הלינק - נשאר ללא שינוי, תקין לחלוטין
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
-
             const finalUrl = affiliateBase + encodeURIComponent(url);
 
-            // הצגת מסך ההפניה
+            // 2. הכנת המסך
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
 
             let progress = 0;
-            let reported = false; // דגל למניעת שליחה כפולה
+            let eventReported = false;
 
             const interval = setInterval(() => {
-                // אנימציה יציבה וחלקה (כ-3.5 שניות)
-                progress += (100 / 35) * (0.8 + Math.random() * 0.4);
-                if (progress >= 90 && !reported) {
-                    reported = true;
-                    reportEventToFacebookAndRedirect(finalUrl);
+                // אנימציה ריאליסטית (משתנה קלות בכל פעימה)
+                // (100 / 25) ייתן בערך 2.5 שניות של טעינה
+                progress += (100 / 25) * (0.8 + Math.random() * 0.4);
+
+                // שליחת הפיקסל "על הדרך" ב-40% כדי שלא יעכב כלום בסוף
+                if (progress >= 40 && !eventReported) {
+                    eventReported = true;
+                    reportToFacebook(); // פונקציה חיצונית (Fire & Forget)
                 }
 
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = '100%';
                     clearInterval(interval);
-                    // הרידיירקט יתבצע אוטומטית על ידי ה-eventCallback בתוך reportEvent
+                    window.location.href = finalUrl;
                 } else {
                     bar.style.width = progress + '%';
                 }
             }, 100);
+        }
+
+        // הפונקציה לשימוש עתידי או נוכחי (לא מעכבת את היוזר)
+        function reportToFacebook() {
+            try {
+                if (typeof fbq !== 'undefined' &&
+                    (window.location.pathname.startsWith('/easy-ferry') || window.location.pathname.startsWith('/maaboret'))) {
+                    fbq('track', 'InitiateCheckout', {
+                        content_name: state.from + '_to_' + state.to,
+                        currency: 'USD',
+                        value: (Number(state.people) || 1) * 4.00,
+                        num_items: Number(state.people) || 1,
+                        content_type: 'product'
+                    });
+                }
+            } catch (e) {
+                console.error('FB Pixel Error:', e);
+            }
         }
 
         function updateRandomSeats() {
