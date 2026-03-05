@@ -1081,18 +1081,28 @@
             margin: 0 auto 25px;
             will-change: transform;
         }
-        .price-highlight {
-            font-family: 'Assistant', sans-serif;
-            font-size: 28px;
-            font-weight: 800;
-            color: #1f2937;
-            letter-spacing: -0.5px;
-            margin: 20px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-        }
+.price-highlight {
+    font-family: 'Assistant', sans-serif;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: baseline; /* מיישר את הטקסט לפי הבסיס שלו */
+    gap: 6px;
+    color: #1f2937; /* צבע כהה עמוק ואחיד */
+}
+
+.price-amount {
+    font-size: 24px; /* המספר ממש גדול */
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.price-unit {
+    font-size: 16px;
+    font-weight: 600;
+    color: #64748b; /* אפור ניטרלי לטקסט הנלווה */
+}
         .splash-logo {
             width: 100%;
             border-radius: 50%;
@@ -1459,13 +1469,11 @@
                 </div>
 
                 <div class="summary" id="summaryText" style="margin-bottom: 10px;"></div>
-
 <div class="price-highlight">
-    <span style="font-size: 0.6em; font-weight: 600; color: #64748b;">החל מ-</span>
-    <span dir="ltr" style="color: #0ea5e9;">$11</span> 
-    <span style="font-size: 0.6em; font-weight: 600; color: #64748b;">לאדם</span>
+    <span class="price-unit">החל מ-</span>
+    <span class="price-amount" dir="ltr">$11</span>
+    <span class="price-unit">לאדם</span>
 </div>
-
                 <div class="trust-container"
                     style="margin-bottom: 25px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0;">
                     <div style="font-size: 13.5px; color: #475569; margin-bottom: 6px; font-weight: 500;">✔️ הפרטים
