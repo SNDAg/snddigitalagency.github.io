@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icons/MAABORET-icon/android-chrome-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/MAABORET-icon/apple-touch-icon.png">
     <link rel="shortcut icon" href="/icons/MAABORET-icon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ========== SEO  ========== -->
@@ -793,7 +794,7 @@
         }
 
         .show-port-btn {
-            margin: 14px 0 6px 0;
+            margin: 10px 0 6px 0;
             background: 0 0;
             color: #0284c7;
             border: 1px dashed rgba(14, 165, 233, .35);
@@ -1080,7 +1081,18 @@
             margin: 0 auto 25px;
             will-change: transform;
         }
-
+        .price-highlight {
+            font-family: 'Assistant', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1f2937;
+            letter-spacing: -0.5px;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
         .splash-logo {
             width: 100%;
             border-radius: 50%;
@@ -1442,45 +1454,51 @@
             <!-- סיכום -->
             <div id="step-summary" class="step hidden">
                 <h1>המסלול שלכם מוכן 🚤</h1>
-                <div class="routeNote" id="routeNote">
-                    <!-- הודעה על עומס אם יש-->
+
+                <div class="routeNote" id="routeNote" style="margin-bottom: 20px;">
                 </div>
-                <div class="summary" id="summaryText"></div>
-                <div class="note summary-helper">
-                    כל האפשרויות כבר סוננו עבורך
+
+                <div class="summary" id="summaryText" style="margin-bottom: 10px;"></div>
+
+<div class="price-highlight">
+    <span style="font-size: 0.6em; font-weight: 600; color: #64748b;">החל מ-</span>
+    <span dir="ltr" style="color: #0ea5e9;">$11</span> 
+    <span style="font-size: 0.6em; font-weight: 600; color: #64748b;">לאדם</span>
+</div>
+
+                <div class="trust-container"
+                    style="margin-bottom: 25px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 13.5px; color: #475569; margin-bottom: 6px; font-weight: 500;">✔️ הפרטים
+                        סוננו עבורך ויופיעו ב-12GO</div>
+                    <div style="font-size: 13.5px; color: #475569; font-weight: 500;">✔️ הזמנה מאובטחת • ללא עמלות
+                        נוספות</div>
                 </div>
-                <div class="trust">
-                    <div>✔️ ללא עמלות, המחיר הכי זול!</div>
-                    <div>✔️ מעל 8,000 הזמנות מאומתות</div>
-                    <div>✔️ ספק התחבורה הגדול בתאילנד</div>
-                </div>
+
                 <button class="cta" onclick="goToBooking()">
-                    לבחירת שעה ותשלום
+                    בדיקת זמינות ומחירים
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
                         <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-<div class="payment-methods" style="margin: 15px 0; opacity: 0.8; text-align: center; font-family: sans-serif;">
-    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 תשלום מאובטח ב-12GO</span>
-    
-    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg" 
-         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196578.png'" 
-         width="30" style="margin: 0 5px; vertical-align: middle;">
-    
-    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
-         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196561.png'" 
-         width="18" style="margin: 0 5px; vertical-align: middle;">
-    
-    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" 
-         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196565.png'" 
-         width="43" style="margin: 0 5px; vertical-align: middle;">
-    
-    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg" 
-         onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968411.png'" 
-         width="15" style="margin: 0 5px; vertical-align: middle;">
-</div>
+                <div class="payment-methods"
+                    style="margin: 15px 0; opacity: 0.8; text-align: center; font-family: sans-serif;">
+                    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 תשלום מאובטח
+                        ב-12GO</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196578.png'" width="30"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196561.png'" width="18"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196565.png'" width="43"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968411.png'" width="15"
+                        style="margin: 0 5px; vertical-align: middle;">
+                </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 מידע על נמל היציאה – להציג למונית
                 </button>
@@ -1837,7 +1855,7 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
-        
+
         function reportEventToFacebookAndRedirect(finalUrl) {
             let redirected = false;
 
@@ -1885,7 +1903,7 @@
                 safeRedirect();
             }
         }
-       
+
         function goToBooking() {
             // בניית ה-URL
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
@@ -1919,7 +1937,7 @@
                 }
             }, 100);
         }
-        
+
         function updateRandomSeats() {
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) {
