@@ -9,6 +9,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/icons/MAABORET-icon/android-chrome-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/icons/MAABORET-icon/apple-touch-icon.png">
     <link rel="shortcut icon" href="/icons/MAABORET-icon/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;700;800&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- ========== SEO  ========== -->
@@ -805,7 +806,7 @@
         }
 
         .show-port-btn {
-            margin: 14px 0 6px 0;
+            margin: 7px 0 4px 0;
             background: 0 0;
             color: #0284c7;
             border: 1px dashed rgba(14, 165, 233, .35);
@@ -1092,6 +1093,27 @@
             margin: 0 auto 25px;
             will-change: transform;
             /* הכנת הדפדפן לאנימציה */
+        }
+ .price-highlight {
+            font-family: 'Assistant', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: baseline;
+            gap: 4px;
+            margin: 16px 0;
+        }
+
+        .price-amount {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1f2937;
+            line-height: 1;
+        }
+
+        .price-unit {
+            font-size: 16px;
+            font-weight: 600;
+            color: #64748b;
         }
 
         .splash-logo {
@@ -1454,29 +1476,47 @@
                 </div>
             </div>
             <!-- סיכום -->
-            <div id="step-summary" class="step hidden">
+                      <div id="step-summary" class="step hidden">
                 <h1>You're all set 🚤</h1>
-                <div class="routeNote" id="routeNote">
+
+                <div class="routeNote" id="routeNote" style="margin-bottom: 20px;">
                 </div>
-                <div class="summary" id="summaryText"></div>
-                <div class="note summary-helper">
-                    All options are already filtered for you
+
+                <div class="summary" id="summaryText" style="margin-bottom: 10px;"></div>
+                <div class="price-highlight">
+                    <span class="price-unit">Starting from - </span>
+                    <span class="price-amount" dir="ltr" id="dynamicPrice">$11.2</span>
+                    <span class="price-unit">per person</span>
                 </div>
-                <div class="trust">
-                    <div>✔️ Over 8,000+ verified bookings</div>
-                    <div>✔️ Thailand’s leading transport provider</div>
-                    <div>✔️ No hidden fees – best prices guaranteed </div>
+                <div class="trust-container"
+                    style="margin-bottom: 25px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0;">
+                    <div style="font-size: 13.5px; color: #475569; margin-bottom: 2px; font-weight: 500;">✔️ All options are already filtered for you</div>
+                    <div style="font-size: 13.5px; color: #475569; font-weight: 500;">✔️ No hidden fees • Best prices guaranteed</div>
                 </div>
+
                 <button class="cta" onclick="goToBooking()">
-                    Choose Time & Complete Booking
+                   Choose Time & Complete Booking
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
-                        <polyline points="9 6 15 12 9 18" />
+                        <polyline points="15 18 9 12 15 6" />
                     </svg>
                 </button>
-                <div class="note">
-                    Redirecting for secure checkout 🔒
+                <div class="payment-methods"
+                    style="margin: 12px 0; opacity: 0.8; text-align: center; font-family: sans-serif;">
+                    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 Secure checkout at 12GO</span>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196578.png'" width="30"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196561.png'" width="18"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196565.png'" width="43"
+                        style="margin: 0 5px; vertical-align: middle;">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_Pay_logo.svg"
+                        onerror="this.src='https://cdn-icons-png.flaticon.com/512/5968/5968411.png'" width="15"
+                        style="margin: 0 5px; vertical-align: middle;">
                 </div>
                 <button class="show-port-btn" onclick="openPortModal()">
                     💡 Departure port info – for the taxi
@@ -1837,6 +1877,7 @@
             }
 
             // Transition & UX
+            updateDynamicPrice();
             transition('step-dep-time', 'step-summary');
             document.body.classList.add('focus-final-step');
 
@@ -1845,87 +1886,69 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
+                function updateDynamicPrice() {
+            const min = 11.2;
+            const max = 11.9;
+            const finalPrice = (Math.random() * (max - min) + min).toFixed(1);
 
-        function reportEventToFacebookAndRedirect(finalUrl) {
-            let redirected = false;
-
-            // פונקציה פנימית להפניה בטוחה
-            function safeRedirect() {
-                if (redirected) return;
-                redirected = true;
-                window.location.href = finalUrl;
+            const priceElement = document.getElementById('dynamicPrice');
+            if (priceElement) {
+                priceElement.innerText = '$' + finalPrice;
             }
-
-            // רשת ביטחון חיצונית: אם הפיקסל לא עונה, עוברים בכל מקרה אחרי 1.5 שניות
-            const backupTimeout = setTimeout(safeRedirect, 1500);
-
+        }
+                function reportToFacebook() {
             try {
-                if (
-                    typeof fbq !== 'undefined' &&
-                    (
-                        window.location.pathname.startsWith('/easy-ferry') ||
-                        window.location.pathname.startsWith('/maaboret')
-                    )
-                ) {
-                    const singleOrderPrice = 4.00;
-                    const passengerCount = Number(state.people) || 1;
-
+                if (typeof fbq !== 'undefined' &&
+                    (window.location.pathname.startsWith('/easy-ferry') || window.location.pathname.startsWith('/maaboret'))) {
                     fbq('track', 'InitiateCheckout', {
                         content_name: state.from + '_to_' + state.to,
                         currency: 'USD',
-                        value: passengerCount * singleOrderPrice,
-                        num_items: passengerCount,
+                        value: (Number(state.people) || 1) * 4.00,
+                        num_items: Number(state.people) || 1,
                         content_type: 'product'
-                    }, {
-                        eventCallback: function () {
-                            clearTimeout(backupTimeout); // הפיקסל הצליח, מבטלים את הגיבוי
-                            safeRedirect();
-                        },
-                        timeout: 800 // המתנה פנימית בתוך ה-SDK
                     });
-                } else {
-                    // אם הפיקסל לא קיים או שאנחנו לא בנתיב הנכון
-                    clearTimeout(backupTimeout);
-                    safeRedirect();
                 }
             } catch (e) {
-                console.error('Facebook Pixel failed:', e);
-                safeRedirect();
+                console.error('FB Pixel Error:', e);
             }
         }
-        function goToBooking() {
-            // בניית ה-URL
+       function goToBooking() {
+            // 1. בניית הלינק - נשאר ללא שינוי, תקין לחלוטין
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
 
             const finalUrl = affiliateBase + encodeURIComponent(url);
 
-            // הצגת מסך ההפניה
+            // 2. הכנת המסך
             const screen = document.getElementById('redirectScreen');
             const bar = document.getElementById('loaderProgress');
             screen.classList.remove('hidden');
 
             let progress = 0;
-            let reported = false; // דגל למניעת שליחה כפולה
+            let eventReported = false;
 
             const interval = setInterval(() => {
-                // אנימציה יציבה וחלקה (כ-3.5 שניות)
-                progress += (100 / 35) * (0.8 + Math.random() * 0.4);
-                if (progress >= 90 && !reported) {
-                    reported = true;
-                    reportEventToFacebookAndRedirect(finalUrl);
+                // אנימציה ריאליסטית (משתנה קלות בכל פעימה)
+                // (100 / 25) ייתן בערך 2.5 שניות של טעינה
+                progress += (100 / 25) * (0.8 + Math.random() * 0.4);
+
+                // שליחת הפיקסל "על הדרך" ב-40% כדי שלא יעכב כלום בסוף
+                if (progress >= 40 && !eventReported) {
+                    eventReported = true;
+                    reportToFacebook(); // פונקציה חיצונית (Fire & Forget)
                 }
 
                 if (progress >= 100) {
                     progress = 100;
                     bar.style.width = '100%';
                     clearInterval(interval);
-                    // הרידיירקט יתבצע אוטומטית על ידי ה-eventCallback בתוך reportEvent
+                    window.location.href = finalUrl;
                 } else {
                     bar.style.width = progress + '%';
                 }
             }, 100);
         }
+
         function updateRandomSeats() {
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) {
