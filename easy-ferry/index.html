@@ -1094,7 +1094,8 @@
             will-change: transform;
             /* הכנת הדפדפן לאנימציה */
         }
- .price-highlight {
+
+        .price-highlight {
             font-family: 'Assistant', sans-serif;
             display: flex;
             justify-content: center;
@@ -1476,7 +1477,7 @@
                 </div>
             </div>
             <!-- סיכום -->
-                      <div id="step-summary" class="step hidden">
+            <div id="step-summary" class="step hidden">
                 <h1>You're all set 🚤</h1>
 
                 <div class="routeNote" id="routeNote" style="margin-bottom: 20px;">
@@ -1490,12 +1491,14 @@
                 </div>
                 <div class="trust-container"
                     style="margin-bottom: 25px; background: #f8fafc; padding: 12px; border-radius: 14px; border: 1px solid #e2e8f0;">
-                    <div style="font-size: 13.5px; color: #475569; margin-bottom: 2px; font-weight: 500;">✔️ All options are already filtered for you</div>
-                    <div style="font-size: 13.5px; color: #475569; font-weight: 500;">✔️ No hidden fees • Best prices guaranteed</div>
+                    <div style="font-size: 13.5px; color: #475569; margin-bottom: 2px; font-weight: 500;">✔️ All options
+                        are already filtered for you</div>
+                    <div style="font-size: 13.5px; color: #475569; font-weight: 500;">✔️ No hidden fees • Best prices
+                        guaranteed</div>
                 </div>
 
                 <button class="cta" onclick="goToBooking()">
-                   Choose Time & Complete Booking
+                    Choose Time & Complete Booking
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="white"
                         stroke-width="3" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                         style="margin-left:8px;">
@@ -1504,7 +1507,8 @@
                 </button>
                 <div class="payment-methods"
                     style="margin: 12px 0; opacity: 0.8; text-align: center; font-family: sans-serif;">
-                    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 Secure checkout at 12GO</span>
+                    <span style="font-size: 13px; display: block; margin-bottom: 3px; color: #64748b;">🔒 Secure
+                        checkout at 12GO</span>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Visa_2021.svg"
                         onerror="this.src='https://cdn-icons-png.flaticon.com/512/196/196578.png'" width="30"
                         style="margin: 0 5px; vertical-align: middle;">
@@ -1886,7 +1890,7 @@
                 if (card) card.scrollTo({ top: 0, behavior: 'smooth' });
             }, 50);
         }
-                function updateDynamicPrice() {
+        function updateDynamicPrice() {
             const min = 11.2;
             const max = 11.9;
             const finalPrice = (Math.random() * (max - min) + min).toFixed(1);
@@ -1896,7 +1900,7 @@
                 priceElement.innerText = '$' + finalPrice;
             }
         }
-                function reportToFacebook() {
+        function reportToFacebook() {
             try {
                 if (typeof fbq !== 'undefined' &&
                     (window.location.pathname.startsWith('/easy-ferry') || window.location.pathname.startsWith('/maaboret'))) {
@@ -1912,7 +1916,7 @@
                 console.error('FB Pixel Error:', e);
             }
         }
-       function goToBooking() {
+        function goToBooking() {
             // 1. בניית הלינק - נשאר ללא שינוי, תקין לחלוטין
             let url = `https://12go.asia/en/travel/${state.from}/${state.to}?date=${getFinalDate()}&people=${state.people}&adults=${state.people}&direction=forward`;
             if (state.depTime) url += `&dep_time=${state.depTime}`;
@@ -1933,7 +1937,7 @@
                 progress += (100 / 25) * (0.8 + Math.random() * 0.4);
 
                 // שליחת הפיקסל "על הדרך" ב-40% כדי שלא יעכב כלום בסוף
-                if (progress >= 40 && !eventReported) {
+                if (progress >= 55 && !eventReported) {
                     eventReported = true;
                     reportToFacebook(); // פונקציה חיצונית (Fire & Forget)
                 }
