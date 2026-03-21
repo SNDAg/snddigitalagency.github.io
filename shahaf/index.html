@@ -7,7 +7,25 @@
     <title>Shahaf Friedlander | Backend Expert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Shahaf Friedlander | Backend Architect & Expert. Designing scalable systems, microservices, and production-ready infrastructure." />
+    <meta name="author" content="Shahaf Friedlander" />
+    <link rel="canonical" href="https://snddigitalagency.com/shahaf/" />
+    <!-- META TAGS -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://snddigitalagency.com/shahaf/" />
+    <meta property="og:title" content="Shahaf Friedlander | Backend Expert" />
+    <meta property="og:description"
+        content="Backend Architect & Consultant. Scalable systems, AWS, and Kubernetes. Let's build your next architecture challenge." />
+    <meta property="og:image" content="/image/cover-code.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
 
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Shahaf Friedlander | Backend Expert" />
+    <meta name="twitter:description" content="Scalable Backend Systems • Design & Delivery • Production-Ready Code" />
+    <meta name="twitter:image" content="/image/cover-code.png" />
     <style>
         :root {
             --primary: #6366f1;
@@ -236,6 +254,8 @@
         #toast {
             position: fixed;
             bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: var(--accent);
             color: #000;
             padding: 10px 20px;
@@ -245,8 +265,8 @@
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
-            left: 50%;
-            transform: translateX(-50%);
+            z-index: 9999;
+            /* התיקון הקריטי: מבטיח שזה יופיע מעל ה-Glassmorphism */
         }
     </style>
 </head>
@@ -273,7 +293,7 @@
 
             <div id="contact-info" class="hidden-info">
                 <div class="info-item" onclick="copyToClipboard('0506986298', 'Phone copied!')">
-                    <i class="fas fa-phone-alt"></i>
+                    <i class="fas fa-phone"></i>
                     <span>050-698-6298</span>
                     <i class="far fa-copy" style="margin-left: auto; font-size: 0.7rem; opacity: 0.5;"></i>
                 </div>
