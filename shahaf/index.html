@@ -54,15 +54,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .profile-wrapper {
@@ -113,11 +106,47 @@
             margin: 20px auto 0;
             line-height: 1.5;
             font-weight: 500;
-            letter-spacing: 0.02em;
         }
 
+        /* Details & Copy UI */
+        .details-container { margin-top: 15px; cursor: pointer; }
+        .details-toggle {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0.8;
+        }
+        .hidden-info {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .hidden-info.show { max-height: 120px; opacity: 1; margin-top: 15px; }
+        
+        .info-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.03);
+            padding: 8px;
+            border-radius: 12px;
+            transition: background 0.2s;
+        }
+        .info-item:active { background: rgba(99, 102, 241, 0.1); }
+
         .links-grid {
-            margin-top: 35px;
+            margin-top: 30px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -131,6 +160,7 @@
             text-decoration: none;
             color: var(--text-main);
             background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(5px);
             border: 1px solid var(--glass-border);
             transition: all 0.2s ease;
             opacity: 0;
@@ -138,38 +168,18 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-15px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-15px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .btn:hover,
-        .btn:active {
+        .btn:hover, .btn:active {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--primary);
             transform: translateY(-2px);
         }
 
-        .btn i {
-            font-size: 1.25rem;
-            margin-right: 15px;
-            width: 24px;
-            color: var(--primary);
-            text-align: center;
-        }
-
-        .btn-text {
-            flex-grow: 1;
-            text-align: left;
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
+        .btn i { font-size: 1.25rem; margin-right: 15px; width: 24px; color: var(--primary); text-align: center; }
+        .btn-text { flex-grow: 1; text-align: left; font-size: 0.95rem; font-weight: 500; }
 
         .btn-main {
             background: linear-gradient(135deg, var(--primary), #4f46e5);
@@ -178,95 +188,32 @@
             font-weight: 700;
             box-shadow: 0 12px 24px -10px rgba(99, 102, 241, 0.5);
         }
+        .btn-main i { color: #fff; }
 
-        .btn-main i {
-            color: #fff;
-        }
+        .btn:nth-child(1) { animation-delay: 0.1s; }
+        .btn:nth-child(2) { animation-delay: 0.2s; }
+        .btn:nth-child(3) { animation-delay: 0.3s; }
+        .btn:nth-child(4) { animation-delay: 0.4s; }
+        .btn:nth-child(5) { animation-delay: 0.5s; }
 
-        .btn:nth-child(1) {
-            animation-delay: 0.1s;
-        }
-
-        .btn:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .btn:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .btn:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        @media (max-width: 360px) {
-            .card {
-                padding: 35px 20px;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* עיצוב כפתור הגילוי והפרטים המוסתרים */
-        .details-container {
-            margin-top: 15px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .details-toggle {
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            background: var(--accent);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            color: var(--primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-
-        .details-toggle:hover {
-            opacity: 1;
-        }
-
-        .hidden-info {
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 700;
             opacity: 0;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .hidden-info.show {
-            max-height: 100px;
-            opacity: 1;
-            margin-top: 15px;
-        }
-
-        .info-item {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .info-item i {
-            font-size: 0.8rem;
-            width: 15px;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
     </style>
 </head>
 
 <body>
-
     <div class="card">
         <div class="profile-wrapper">
             <img src="/image/shahaf.png" alt="Shahaf Friedlander" class="profile-img">
@@ -279,24 +226,33 @@
         <div class="bio">
             Scalable Backend Systems • Design & Delivery • Production-Ready Code
         </div>
-        <div class="details-container" onclick="toggleDetails()">
-            <div class="details-toggle">
+
+        <div class="details-container">
+            <div class="details-toggle" onclick="toggleDetails()">
                 <span id="toggle-text">Show contact details</span>
                 <i class="fas fa-chevron-down" id="toggle-icon"></i>
             </div>
 
             <div id="contact-info" class="hidden-info">
-                <div class="info-item">
+                <div class="info-item" onclick="copyToClipboard('0506986298', 'Phone copied!')">
                     <i class="fas fa-phone-alt"></i>
                     <span>050-698-6298</span>
+                    <i class="far fa-copy" style="margin-left: auto; font-size: 0.7rem; opacity: 0.5;"></i>
                 </div>
-                <div class="info-item">
+                <div class="info-item" onclick="copyToClipboard('shahaf579@gmail.com', 'Email copied!')">
                     <i class="far fa-envelope"></i>
                     <span>shahaf579@gmail.com</span>
+                    <i class="far fa-copy" style="margin-left: auto; font-size: 0.7rem; opacity: 0.5;"></i>
                 </div>
             </div>
         </div>
+
         <div class="links-grid">
+            <a href="tel:0506986298" class="btn">
+                <i class="fas fa-phone"></i>
+                <span class="btn-text">Call Now</span>
+            </a>
+            
             <a href="https://wa.me/972506986298" class="btn">
                 <i class="fab fa-whatsapp"></i>
                 <span class="btn-text">WhatsApp Me</span>
@@ -318,14 +274,15 @@
             </a>
         </div>
     </div>
+
+    <div id="toast">Copied!</div>
+
     <script>
         function toggleDetails() {
             const info = document.getElementById('contact-info');
             const text = document.getElementById('toggle-text');
             const icon = document.getElementById('toggle-icon');
-
             info.classList.toggle('show');
-
             if (info.classList.contains('show')) {
                 text.innerText = 'Hide contact details';
                 icon.style.transform = 'rotate(180deg)';
@@ -334,7 +291,14 @@
                 icon.style.transform = 'rotate(0deg)';
             }
         }
+
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text);
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = '1';
+            setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
     </script>
 </body>
-
 </html>
