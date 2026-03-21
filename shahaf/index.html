@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shahaf Friedlander | Backend Expert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
-            --primary: #6366f1; 
-            --accent: #10b981;  
+            --primary: #6366f1;
+            --accent: #10b981;
             --bg: #030712;
             --glass: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -26,7 +27,7 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 35%),
                 radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08) 0%, transparent 35%);
             color: var(--text-main);
@@ -53,8 +54,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .profile-wrapper {
@@ -130,11 +138,19 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-15px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        .btn:hover, .btn:active {
+        .btn:hover,
+        .btn:active {
             background: rgba(255, 255, 255, 0.08);
             border-color: var(--primary);
             transform: translateY(-2px);
@@ -162,19 +178,93 @@
             font-weight: 700;
             box-shadow: 0 12px 24px -10px rgba(99, 102, 241, 0.5);
         }
-        .btn-main i { color: #fff; }
 
-        .btn:nth-child(1) { animation-delay: 0.1s; }
-        .btn:nth-child(2) { animation-delay: 0.2s; }
-        .btn:nth-child(3) { animation-delay: 0.3s; }
-        .btn:nth-child(4) { animation-delay: 0.4s; }
+        .btn-main i {
+            color: #fff;
+        }
+
+        .btn:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .btn:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .btn:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .btn:nth-child(4) {
+            animation-delay: 0.4s;
+        }
 
         @media (max-width: 360px) {
-            .card { padding: 35px 20px; }
-            h1 { font-size: 1.5rem; }
+            .card {
+                padding: 35px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* עיצוב כפתור הגילוי והפרטים המוסתרים */
+        .details-container {
+            margin-top: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .details-toggle {
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .details-toggle:hover {
+            opacity: 1;
+        }
+
+        .hidden-info {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .hidden-info.show {
+            max-height: 100px;
+            opacity: 1;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .info-item i {
+            font-size: 0.8rem;
+            width: 15px;
         }
     </style>
 </head>
+
 <body>
 
     <div class="card">
@@ -185,11 +275,27 @@
 
         <h1>Shahaf Friedlander</h1>
         <div class="title">Backend Architect & Consultant</div>
-        
+
         <div class="bio">
             Scalable Backend Systems • Design & Delivery • Production-Ready Code
         </div>
+        <div class="details-container" onclick="toggleDetails()">
+            <div class="details-toggle">
+                <span id="toggle-text">Show contact details</span>
+                <i class="fas fa-chevron-down" id="toggle-icon"></i>
+            </div>
 
+            <div id="contact-info" class="hidden-info">
+                <div class="info-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>050-698-6298</span>
+                </div>
+                <div class="info-item">
+                    <i class="far fa-envelope"></i>
+                    <span>shahaf579@gmail.com</span>
+                </div>
+            </div>
+        </div>
         <div class="links-grid">
             <a href="https://wa.me/972506986298" class="btn">
                 <i class="fab fa-whatsapp"></i>
@@ -212,6 +318,23 @@
             </a>
         </div>
     </div>
+    <script>
+        function toggleDetails() {
+            const info = document.getElementById('contact-info');
+            const text = document.getElementById('toggle-text');
+            const icon = document.getElementById('toggle-icon');
 
+            info.classList.toggle('show');
+
+            if (info.classList.contains('show')) {
+                text.innerText = 'Hide contact details';
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                text.innerText = 'Show contact details';
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+    </script>
 </body>
+
 </html>
