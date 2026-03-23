@@ -13,27 +13,16 @@ from collections import defaultdict
 # ========== USER  Configurations  ========================================
 # =========================================================================
 
-
-DEFAULT_CITY = "krabi"
+DEFAULT_CITY = "koh samui"
 
 PLACE_TYPES = [
-    'חומוס',
-    'שקשוקה',
-    'מסעדה',
-    'חבד',
-    'חב"ד',
-    'ישראלי',
-    'ישראלית',
-    'כשר',
-    'חלבי',
-    'בשרי',
-    'chabad'
+'kosher',
+'israel'
 ]
 
 
 ## google queries:
 TEMPLATES = [
-
     '{place} {city} @gmail.com',
     '{place} {city} @yahoo.com',
     ' {city} {place} email',
@@ -54,7 +43,6 @@ EXCLUDE_SITES = [
     "expedia.com",
     "tripadvisor.com",
     "airbnb.com",
-    "agoda.com",
     "hotels.com",
     "trivago.com",
     "kayak.com",
@@ -70,8 +58,6 @@ EXCLUDE_SITES = [
 ]
 
 # ============================================================
-
-
 # ========== Configs  ========================================
 
 API_KEYS = [
