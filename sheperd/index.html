@@ -227,7 +227,7 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            // 1. הסתרת ההסברים (הסימן שאלה) אוטומטית
+            // 1. הסתרת ההסברים
             document.getElementById('helpSection').classList.add('hidden');
 
             // 2. הפעלת אנימציית טעינה
@@ -239,10 +239,15 @@
                 Papa.parse(event.target.result, {
                     header: true, skipEmptyLines: true,
                     complete: (results) => {
-                        // 3. השהייה קלה בשביל האפקט המקצועי
                         setTimeout(() => {
                             processData(results.data);
-                            loader.classList.add('hidden'); // העלמת האנימציה
+                            
+                            // 3. העלמת האנימציה
+                            loader.classList.add('hidden'); 
+                            
+                            // *** השורה החדשה: מאפסת את השדה כדי שיהיה אפשר לטעון שוב ושוב ***
+                            e.target.value = ''; 
+                            
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 1500);
                     }
