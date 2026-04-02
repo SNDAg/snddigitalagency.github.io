@@ -357,32 +357,41 @@
 
             <div class="card p-8 bg-slate-50 shadow-inner border-dashed border-2 border-slate-200">
                 <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
-                    <span>📅</span> ככה הקובץ המיוצא צריך להיראות (דוגמה):
+                    <span>📅</span> דוגמא לקובץ המיוצא מחשבשבת:
                 </h3>
                 <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
                     <table class="w-full text-sm text-right bg-white font-mono">
                         <thead class="bg-slate-100 text-slate-500 font-bold">
                             <tr>
-                                <th class="p-2 border-r text-right">שם לקוח</th>
-                                <th class="p-2 border-r text-center">תאריך</th>
-                                <th class="p-2 border-r text-center">כמות בק"ג</th>
-                                <th class="p-2 border-r text-center">סכום</th>
-                                <th class="p-2 text-center">סטטוס</th>
+                                <th class="p-2 border-r text-right">שם חשבון</th>
+                                <th class="p-2 border-r text-center">תאריך אסמכתא</th>
+                                <th class="p-2 border-r text-center">כמות</th>
+                                <th class="p-2 border-r text-center">חובה</th>
+                                <th class="p-2 text-center">התאמה</th>
                             </tr>
                         </thead>
-                        <tbody class="text-slate-400">
-                            <tr class="border-t">
-                                <td class="p-2 border-r font-medium text-slate-600">משק גבינות השומרון</td>
-                                <td class="p-2 border-r text-center">01/04/17</td>
+                        <tbody class="text-slate-400 italic">
+                            <tr class="border-t bg-blue-50/30">
+                                <td class="p-2 border-r font-medium text-slate-600">משק לוי</td>
+                                <td class="p-2 border-r text-center">01/03/26</td>
                                 <td class="p-2 border-r text-center">150</td>
                                 <td class="p-2 border-r text-center">4,500</td>
-                                <td class="p-2 text-center">פתוח</td>
+                                <td class="p-2 text-center"></td>
+                            </tr>
+                            <tr class="border-t">
+                                <td class="p-2 border-r font-medium text-slate-500 italic">... שורות נוספות ...</td>
+                                <td class="p-2 border-r text-center">...</td>
+                                <td class="p-2 border-r text-center">...</td>
+                                <td class="p-2 border-r text-center">...</td>
+                                <td class="p-2 text-center">...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים
-                    צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים.</p>
+                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic text-right leading-relaxed">
+                    * המערכת תזהה אוטומטית את עמודת ה-<b>חובה</b> כסכום הכסף, ותחשב את ה<b>מחיר לקילו</b> לבד.<br>
+                    * שורה ללא מספר ב-<b>התאמה</b> תזוהה אוטומטית כחוב פתוח לגבייה.
+                </p>
             </div>
         </div>
 
