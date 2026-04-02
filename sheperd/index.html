@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Shepherd | Business Intelligence</title>
+    <title>Project Shepherd | BI Dashboard v1.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -13,7 +13,7 @@
         .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: all 0.2s; border: none; cursor: pointer; }
         .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgb(37 99 235 / 0.2); }
         .instruction-box { background: #eff6ff; border: 2px dashed #bfdbfe; border-radius: 1rem; padding: 1.5rem; margin-top: 2rem; }
-        .cow-icon { font-size: 3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .cow-icon { font-size: 3rem; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)); }
         .kpi-card { background: white; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; text-align: center; flex: 1; min-width: 200px; }
         .status-pill { padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
         @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .card { box-shadow: none; border: 1px solid #e2e8f0; } }
@@ -42,7 +42,7 @@
             <div class="card p-12 text-center border-b-8 border-blue-500">
                 <div class="text-7xl mb-6">📊</div>
                 <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed text-center">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
                 
                 <div class="instruction-box max-w-2xl mx-auto text-right text-slate-700">
                     <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר להפקת הקובץ:</p>
@@ -64,7 +64,7 @@
                 </h3>
                 <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
                     <table class="w-full text-sm text-right bg-white font-mono">
-                        <thead class="bg-slate-100 text-slate-500">
+                        <thead class="bg-slate-100 text-slate-500 font-bold">
                             <tr>
                                 <th class="p-2 border-r">שם לקוח</th>
                                 <th class="p-2 border-r text-center">תאריך</th>
@@ -81,16 +81,23 @@
                                 <td class="p-2 border-r text-center">4,500</td>
                                 <td class="p-2">פתוח</td>
                             </tr>
+                            <tr class="border-t bg-slate-50/50">
+                                <td class="p-2 border-r font-medium text-slate-600">מחלבת העמק</td>
+                                <td class="p-2 border-r text-center">28/03/17</td>
+                                <td class="p-2 border-r text-center">80</td>
+                                <td class="p-2 border-r text-center">2,100</td>
+                                <td class="p-2">שולם</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים.</p>
+                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים (01/04/17).</p>
             </div>
         </div>
 
-        <div id="dashboard" class="hidden space-y-8">
+        <div id="dashboard" class="hidden space-y-10">
             
-            <div class="flex flex-wrap gap-4 no-print">
+            <div class="flex flex-wrap gap-4 no-print text-right">
                 <div class="kpi-card border-t-4 border-blue-500">
                     <p class="text-slate-500 text-sm font-bold">סה"כ חובות פתוחים</p>
                     <p id="totalDebtAmt" class="text-2xl font-black text-blue-600 mt-1">0 ₪</p>
@@ -200,7 +207,7 @@
         }
 
         function processData(data) {
-            const today = new Date(); // המערכת תשתמש בתאריך של היום
+            const today = new Date();
             const customers = {};
             const debts = [];
 
@@ -208,10 +215,10 @@
                 const r = {};
                 Object.keys(row).forEach(k => r[k.trim()] = row[k]);
 
-                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'];
-                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['Date'];
-                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || 0);
-                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || 0);
+                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'] || r['Name'];
+                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['תאריך אסמכתא'] || r['תאריך חשבונית'] || r['Date'];
+                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || r['Quantity'] || 0);
+                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || r['Amount'] || 0);
                 const status = (r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'] || "").toString().trim();
 
                 const date = parseFlexibleDate(rawDate);
@@ -220,11 +227,10 @@
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                // לוגיקת חוב מעודכנת - כולל Unpaid
                 const isUnpaid = status.toLowerCase().includes('unpaid') || 
                                  status.includes('פתוח') || 
                                  status.includes('לא שולם') ||
-                                 (amt > 0 && status === ""); // אם יש סכום ואין סטטוס - זה חוב
+                                 (amt > 0 && status === ""); 
                 
                 if (isUnpaid) {
                     debts.push({ name, amt, date });
@@ -267,7 +273,7 @@
                     }
                 }
 
-                if (c.orders.length >= 3) {
+                if (c.orders.length >= 2) {
                     const lastQty = c.orders[c.orders.length - 1].qty;
                     const avgQty = c.orders.slice(0, -1).reduce((s, o) => s + o.qty, 0) / (c.orders.length - 1);
                     if (lastQty < avgQty * 0.7 && avgQty > 0) {
@@ -299,11 +305,9 @@
                     </tr>`;
             });
 
-            // Update CEO Summaries
             document.getElementById('totalDebtAmt').innerText = `${Math.round(totalDebt).toLocaleString()} ₪`;
             document.getElementById('totalCriticalChurn').innerText = critChurns;
             document.getElementById('totalQtyDrop').innerText = drops;
-
             document.getElementById('churnCount').innerText = `${churns} לקוחות`;
             document.getElementById('dropCount').innerText = `${drops} לקוחות`;
             document.getElementById('debtCount').innerText = `${debts.length} חובות`;
