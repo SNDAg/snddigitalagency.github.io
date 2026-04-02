@@ -29,14 +29,40 @@
                     <p class="text-slate-500 text-lg mt-2 font-medium">המערכת של אמא - ניהול חכם ופשוט</p>
                 </div>
             </div>
-            <div class="flex gap-3">
-                <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
-                <div class="relative btn-primary shadow-lg flex items-center justify-center">
-                    <span>טעינת CSV מחשבשבת</span>
-                    <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
+            <div class="flex flex-col items-end gap-2">
+                <div class="flex gap-3">
+                    <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
+                    <div class="relative btn-primary shadow-lg flex items-center justify-center">
+                        <span>טעינת CSV מחשבשבת</span>
+                        <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
+                    </div>
                 </div>
+                <button onclick="toggleHelp()" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-2 text-sm px-2">
+                    <span>❓</span> איך המערכת מנתחת את הנתונים?
+                </button>
             </div>
         </header>
+
+        <div id="helpSection" class="hidden card p-8 bg-white border-blue-200 mb-8 shadow-xl border-t-4 border-t-blue-500">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-slate-800">מדריך קצר: איך התובנות נוצרות?</h3>
+                <button onclick="toggleHelp()" class="text-slate-400 hover:text-slate-600 text-3xl">&times;</button>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-blue-50 p-5 rounded-xl">
+                    <h4 class="font-bold text-blue-900 mb-2 text-lg">🚨 זיהוי נטישה</h4>
+                    <p class="text-slate-600 leading-relaxed text-sm">המערכת מחשבת את הממוצע האישי של כל לקוח. חריגה של מעל 30% מהזמן הממוצע צובעת את הלקוח כחריגה, וחריגה של פי 2 צובעת אותו כאדום קריטי.</p>
+                </div>
+                <div class="bg-amber-50 p-5 rounded-xl">
+                    <h4 class="font-bold text-amber-900 mb-2 text-lg">📉 ירידה בכמות</h4>
+                    <p class="text-slate-600 leading-relaxed text-sm">השוואה בין ההזמנה האחרונה לממוצע ההיסטורי. אם הכמות ירדה ביותר מ-30%, המערכת מתריעה כדי שתוכלי לבדוק אם הוא עבר למתחרה.</p>
+                </div>
+                <div class="bg-slate-50 p-5 rounded-xl">
+                    <h4 class="font-bold text-slate-900 mb-2 text-lg">💰 גבייה חכמה</h4>
+                    <p class="text-slate-600 leading-relaxed text-sm">המערכת מאתרת תנועות "פתוחות" או יתרות חובה, ומחשבת את ימי הפיגור באופן אוטומטי מרגע הרישום ועד היום.</p>
+                </div>
+            </div>
+        </div>
 
         <div id="welcomeState" class="space-y-6">
             <div class="card p-12 text-center border-b-8 border-blue-500">
@@ -57,39 +83,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card p-8 bg-slate-50 shadow-inner border-dashed border-2 border-slate-200">
-                <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
-                    <span>📅</span> ככה הקובץ המיוצא צריך להיראות (דוגמה):
-                </h3>
-                <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
-                    <table class="w-full text-sm text-right bg-white font-mono">
-                        <thead class="bg-slate-100 text-slate-500">
-                            <tr>
-                                <th class="p-2 border-r">שם לקוח</th>
-                                <th class="p-2 border-r text-center">תאריך</th>
-                                <th class="p-2 border-r text-center">כמות בק"ג</th>
-                                <th class="p-2 border-r text-center">סכום</th>
-                                <th class="p-2">סטטוס</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-slate-400">
-                            <tr class="border-t">
-                                <td class="p-2 border-r font-medium text-slate-600">משק גבינות השומרון</td>
-                                <td class="p-2 border-r text-center">01/04/17</td>
-                                <td class="p-2 border-r text-center">150</td>
-                                <td class="p-2 border-r text-center">4,500</td>
-                                <td class="p-2">פתוח</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים (01/04/17).</p>
-            </div>
         </div>
 
         <div id="dashboard" class="hidden space-y-8">
-            
             <div class="flex flex-wrap gap-4 no-print text-right">
                 <div class="kpi-card border-t-4 border-blue-500">
                     <p class="text-slate-500 text-sm font-bold">סה"כ חובות פתוחים</p>
@@ -168,6 +164,16 @@
     </div>
 
     <script>
+        // פונקציית העזרה - הועברה למעלה כדי שתהיה זמינה תמיד
+        function toggleHelp() {
+            const helpSection = document.getElementById('helpSection');
+            if (helpSection.classList.contains('hidden')) {
+                helpSection.classList.remove('hidden');
+            } else {
+                helpSection.classList.add('hidden');
+            }
+        }
+
         document.getElementById('csvFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -201,7 +207,6 @@
             data.forEach(row => {
                 const r = {}; Object.keys(row).forEach(k => r[k.trim()] = row[k]);
                 
-                // מיפוי רחב לכל סוגי הכותרות מחשבשבת
                 const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'] || r['Name'];
                 const rawDate = r['תאריך'] || r['תאריך ערך'] || r['Date'];
                 const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || 0);
@@ -214,7 +219,6 @@
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                // זיהוי חוב משופר
                 const isUnpaid = status.includes('unpaid') || status.includes('פתוח') || status.includes('לא שולם') || (amt > 0 && status === "");
                 if (isUnpaid) debts.push({ name, amt, date });
             });
