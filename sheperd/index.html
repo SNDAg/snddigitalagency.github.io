@@ -1,99 +1,36 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Shepherd | Dashboard</title>
+    <title>Project Shepherd | Business Intelligence</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-
-        body {
-            font-family: 'Assistant', sans-serif;
-            background-color: #f0f7ff;
-            color: #1e293b;
-        }
-
-        .card {
-            background: white;
-            border-radius: 1.25rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: #2563eb;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgb(37 99 235 / 0.2);
-        }
-
-        .instruction-box {
-            background: #eff6ff;
-            border: 2px dashed #bfdbfe;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .cow-icon {
-            font-size: 3rem;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-        }
-
-        .status-pill {
-            padding: 4px 12px;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        @media print {
-            .no-print {
-                display: none !important;
-            }
-
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .card {
-                box-shadow: none;
-                border: 1px solid #e2e8f0;
-            }
-        }
+        body { font-family: 'Assistant', sans-serif; background-color: #f0f7ff; color: #1e293b; }
+        .card { background: white; border-radius: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); overflow: hidden; }
+        .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: all 0.2s; border: none; cursor: pointer; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgb(37 99 235 / 0.2); }
+        .instruction-box { background: #eff6ff; border: 2px dashed #bfdbfe; border-radius: 1rem; padding: 1.5rem; margin-top: 2rem; }
+        .cow-icon { font-size: 3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .kpi-card { background: white; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; text-align: center; flex: 1; min-width: 200px; }
+        .status-pill { padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+        @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .card { box-shadow: none; border: 1px solid #e2e8f0; } }
     </style>
 </head>
-
 <body class="p-4 md:p-10">
     <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 no-print">
             <div class="flex items-center gap-4">
                 <div class="cow-icon">🐄</div>
                 <div>
-                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span
-                            class="text-blue-600">Shepherd</span></h1>
+                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
                     <p class="text-slate-500 text-lg mt-2 font-medium">המערכת של אמא - ניהול חכם ופשוט</p>
                 </div>
             </div>
             <div class="flex gap-3">
-                <button onclick="window.print()"
-                    class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת
-                    דוח</button>
+                <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
                 <div class="relative btn-primary shadow-lg flex items-center justify-center">
                     <span>טעינת CSV מחשבשבת</span>
                     <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -105,24 +42,18 @@
             <div class="card p-12 text-center border-b-8 border-blue-500">
                 <div class="text-7xl mb-6">📊</div>
                 <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח
-                    אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
-
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+                
                 <div class="instruction-box max-w-2xl mx-auto text-right text-slate-700">
-                    <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר
-                        להפקת הקובץ:</p>
+                    <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר להפקת הקובץ:</p>
                     <div class="bg-white p-5 rounded-lg border border-blue-100 shadow-sm space-y-3">
                         <ol class="list-decimal list-inside space-y-2 text-sm">
-                            <li>בחשבשבת, הפיקי דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או
-                                <span class="font-bold text-blue-800">'אינדקס לקוחות'</span>.</li>
-                            <li>ודאי שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות, ויתרה</span>.
-                            </li>
-                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ כפורמט
-                                <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
+                            <li>בחשבשבת, הפיקי דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או <span class="font-bold text-blue-800">'אינדקס לקוחות'</span>.</li>
+                            <li>ודאי שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות, ויתרה</span>.</li>
+                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ כפורמט <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
                             <li>לחצי על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") ותעלי את הקובץ.</li>
                         </ol>
-                        <p class="text-xs text-slate-400 pt-2 border-t font-medium italic">המערכת תומכת בגרסאות קודמות
-                            של חשבשבת ובפורמטים של תאריכים ישנים.</p>
+                        <p class="text-xs text-slate-400 pt-2 border-t font-medium italic">המערכת תומכת בגרסאות קודמות של חשבשבת ובפורמטים של תאריכים ישנים.</p>
                     </div>
                 </div>
             </div>
@@ -153,17 +84,31 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים
-                    מיותרים וממירה תאריכים מכל השנים.</p>
+                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים.</p>
             </div>
         </div>
 
-        <div id="dashboard" class="hidden space-y-10">
+        <div id="dashboard" class="hidden space-y-8">
+            
+            <div class="flex flex-wrap gap-4 no-print">
+                <div class="kpi-card border-t-4 border-blue-500">
+                    <p class="text-slate-500 text-sm font-bold">סה"כ חובות פתוחים</p>
+                    <p id="totalDebtAmt" class="text-2xl font-black text-blue-600 mt-1">0 ₪</p>
+                </div>
+                <div class="kpi-card border-t-4 border-red-500">
+                    <p class="text-slate-500 text-sm font-bold">לקוחות בנטישה קריטית</p>
+                    <p id="totalCriticalChurn" class="text-2xl font-black text-red-600 mt-1">0</p>
+                </div>
+                <div class="kpi-card border-t-4 border-amber-500">
+                    <p class="text-slate-500 text-sm font-bold">צניחה בהזמנות (ק"ג)</p>
+                    <p id="totalQtyDrop" class="text-2xl font-black text-amber-600 mt-1">0</p>
+                </div>
+            </div>
+
             <section class="card">
                 <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
-                    <h2 class="text-xl font-bold flex items-center gap-3">🚨 לקוחות בסיכון נטישה</h2>
-                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
-                        לקוחות</span>
+                    <h2 class="text-xl font-bold flex items-center gap-3 text-white">🚨 לקוחות בסיכון נטישה</h2>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -182,9 +127,8 @@
 
             <section class="card">
                 <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
-                    <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות</h2>
-                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
-                        לקוחות</span>
+                    <h2 class="text-xl font-bold flex items-center gap-3 text-white">📉 צניחה חריגה בכמויות</h2>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -203,9 +147,8 @@
 
             <section class="card">
                 <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
-                    <h2 class="text-xl font-bold flex items-center gap-3">💰 ניהול גבייה ותזרים</h2>
-                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
-                        חובות</span>
+                    <h2 class="text-xl font-bold flex items-center gap-3 text-white">💰 ניהול גבייה ותזרים</h2>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 חובות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -265,7 +208,6 @@
                 const r = {};
                 Object.keys(row).forEach(k => r[k.trim()] = row[k]);
 
-                // מיפוי רחב מאוד כדי לתמוך בכל גרסת חשבשבת אפשרית
                 const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['שם'] || r['Customer_Name'] || r['Name'];
                 const rawDate = r['תאריך'] || r['תאריך ערך'] || r['תאריך אסמכתא'] || r['תאריך חשבונית'] || r['Date'];
                 const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['כמות במלאי'] || r['Quantity'] || 0);
@@ -273,15 +215,14 @@
                 const status = r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'];
 
                 const date = parseFlexibleDate(rawDate);
-                if (!name || !date) return; // דילוג על שורות ריקות או שורות סיכום
+                if (!name || !date) return;
 
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                // לוגיקת זיהוי חוב - תומכת גם במילה "פתוח" וגם ביתרה כספית
-                const isUnpaid = (status && (status.includes('לא שולם') || status.includes('פתוח') || status.includes('Unpaid'))) ||
-                    (amt > 0 && status !== 'שולם' && status !== 'Paid');
-
+                const isUnpaid = (status && (status.includes('לא שולם') || status.includes('פתוח') || status.includes('Unpaid'))) || 
+                                 (amt > 0 && status !== 'שולם' && status !== 'Paid');
+                
                 if (isUnpaid) {
                     debts.push({ name, amt, date });
                 }
@@ -294,8 +235,8 @@
             const churnBody = document.getElementById('churnBody');
             const dropBody = document.getElementById('dropBody');
             const debtBody = document.getElementById('debtBody');
-            let churns = 0, drops = 0;
-
+            
+            let churns = 0, critChurns = 0, drops = 0, totalDebt = 0;
             churnBody.innerHTML = ''; dropBody.innerHTML = ''; debtBody.innerHTML = '';
 
             Object.values(customers).forEach(c => {
@@ -312,6 +253,7 @@
                     if (last > avg * 1.3 && last > 7) {
                         churns++;
                         const isCrit = last > avg * 2;
+                        if (isCrit) critChurns++;
                         churnBody.innerHTML += `
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="p-5 font-bold text-slate-800 underline decoration-slate-200">${c.name}</td>
@@ -340,6 +282,7 @@
             });
 
             debts.sort((a, b) => a.date - b.date).forEach(d => {
+                totalDebt += d.amt;
                 const diff = Math.floor((today - d.date) / 86400000);
                 debtBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition">
@@ -353,6 +296,11 @@
                     </tr>`;
             });
 
+            // Update CEO Summaries
+            document.getElementById('totalDebtAmt').innerText = `${Math.round(totalDebt).toLocaleString()} ₪`;
+            document.getElementById('totalCriticalChurn').innerText = critChurns;
+            document.getElementById('totalQtyDrop').innerText = drops;
+
             document.getElementById('churnCount').innerText = `${churns} לקוחות`;
             document.getElementById('dropCount').innerText = `${drops} לקוחות`;
             document.getElementById('debtCount').innerText = `${debts.length} חובות`;
@@ -361,5 +309,4 @@
         }
     </script>
 </body>
-
 </html>
