@@ -43,26 +43,54 @@
             </div>
         </header>
 
-        <div id="helpSection" class="hidden card p-8 bg-white border-blue-200 mb-8 shadow-xl border-t-4 border-t-blue-500">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-slate-800">מדריך קצר: איך התובנות נוצרות?</h3>
-                <button onclick="toggleHelp()" class="text-slate-400 hover:text-slate-600 text-3xl">&times;</button>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="bg-blue-50 p-5 rounded-xl">
-                    <h4 class="font-bold text-blue-900 mb-2 text-lg">🚨 זיהוי נטישה</h4>
-                    <p class="text-slate-600 leading-relaxed text-sm">המערכת מחשבת את הממוצע האישי של כל לקוח. חריגה של מעל 30% מהזמן הממוצע צובעת את הלקוח כחריגה, וחריגה של פי 2 צובעת אותו כאדום קריטי.</p>
-                </div>
-                <div class="bg-amber-50 p-5 rounded-xl">
-                    <h4 class="font-bold text-amber-900 mb-2 text-lg">📉 ירידה בכמות</h4>
-                    <p class="text-slate-600 leading-relaxed text-sm">השוואה בין ההזמנה האחרונה לממוצע ההיסטורי. אם הכמות ירדה ביותר מ-30%, המערכת מתריעה כדי שתוכלי לבדוק אם הוא עבר למתחרה.</p>
-                </div>
-                <div class="bg-slate-50 p-5 rounded-xl">
-                    <h4 class="font-bold text-slate-900 mb-2 text-lg">💰 גבייה חכמה</h4>
-                    <p class="text-slate-600 leading-relaxed text-sm">המערכת מאתרת תנועות "פתוחות" או יתרות חובה, ומחשבת את ימי הפיגור באופן אוטומטי מרגע הרישום ועד היום.</p>
-                </div>
-            </div>
+        <div id="helpSection" class="hidden card p-8 bg-white border-blue-200 mb-8 shadow-xl border-t-4 border-t-blue-500 transition-all">
+    <div class="flex justify-between items-start mb-6">
+        <div>
+            <h3 class="text-2xl font-black text-slate-800">Project Shepherd: להוביל את העסק בביטחון</h3>
+            <p class="text-slate-500 mt-1 font-medium italic"> מזהים בזמן את המגמות שמתחת לפני השטח</p>
         </div>
+        <button onclick="toggleHelp()" class="text-slate-300 hover:text-slate-600 text-4xl leading-none">&times;</button>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">🚨</span>
+                <h4 class="font-bold text-blue-900 text-lg">נטישה סמויה</h4>
+            </div>
+            <p class="text-slate-600 leading-relaxed text-sm">
+                כמנהלת חשבונות, את רואה את החובות הבוערים. המערכת עוזרת לך לראות את אלו ש**שתקו**: לקוח שלא הזמין זמן רב יחסית לממוצע האישי שלו (פי 1.3 מהרגיל) יסומן כחריגה. אם עברו פי 2 ימים מהרגיל – זו נטישה קריטית שדורשת טלפון מיידי.
+            </p>
+        </div>
+
+        <div class="bg-amber-50/50 p-6 rounded-2xl border border-amber-100">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">📉</span>
+                <h4 class="font-bold text-amber-900 text-lg">מגמות צריכה</h4>
+            </div>
+            <p class="text-slate-600 leading-relaxed text-sm">
+                לפעמים הלקוח עדיין כאן, אבל הוא "דועך". המערכת משווה את ההזמנה האחרונה (בק"ג) לממוצע ההיסטורי שלו. צניחה של מעל 30% היא נורת אזהרה – אולי הוא התחיל לקנות חלק מהסחורה אצל מתחרה?
+            </p>
+        </div>
+
+        <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="text-2xl">💰</span>
+                <h4 class="font-bold text-slate-900 text-lg">תזרים וגבייה</h4>
+            </div>
+            <p class="text-slate-600 leading-relaxed text-sm">
+                במקום לעבור על דפים, הכל מרוכז כאן. המערכת מזהה אוטומטית תנועות פתוחות מחשבשבת (כולל יתרות חובה ללא סטטוס) ומחשבת ימי פיגור. בלחיצה אחת, תוכלי לשלוח תזכורת עדינה בוואטסאפ שתסגור את הפינה.
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-slate-400 text-xs font-medium uppercase tracking-wider">
+            🛡️ הפרטיות שלך חשובה: הניתוח מתבצע מקומית על הדפדפן שלך בלבד. הנתונים לא נשמרים בענן.
+        </p>
+        <p class="text-blue-600 font-bold text-sm">המערכת תומכת בפורמט CSV מחשבשבת ובכל סוגי התאריכים.</p>
+    </div>
+</div>
 
         <div id="welcomeState" class="space-y-6">
             <div class="card p-12 text-center border-b-8 border-blue-500">
