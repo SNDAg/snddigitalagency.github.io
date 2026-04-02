@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,133 +9,233 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Assistant', sans-serif; background-color: #f0f7ff; color: #1e293b; }
-        .card { background: white; border-radius: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); overflow: hidden; }
-        .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: all 0.2s; border: none; cursor: pointer; }
-        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgb(37 99 235 / 0.2); }
-        .instruction-box { background: #eff6ff; border: 2px dashed #bfdbfe; border-radius: 1rem; padding: 1.5rem; margin-top: 1.5rem; }
-        .cow-icon { font-size: 3rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
-        .kpi-card { background: white; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; text-align: center; flex: 1; min-width: 200px; }
-        .status-pill { padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
-        @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .card { box-shadow: none; border: 1px solid #e2e8f0; } }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f0f7ff;
+            color: #1e293b;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgb(37 99 235 / 0.2);
+        }
+
+        .instruction-box {
+            background: #eff6ff;
+            border: 2px dashed #bfdbfe;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .cow-icon {
+            font-size: 3rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .kpi-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+        }
     </style>
 </head>
+
 <body class="p-4 md:p-10">
-    <div id="loadingOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm transition-all duration-500">
-    <div class="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center text-xl">🐑</div>
+    <div id="loadingOverlay"
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm transition-all duration-500">
+        <div
+            class="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300">
+            <div class="relative">
+                <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+                <div class="absolute inset-0 flex items-center justify-center text-xl">🐑</div>
+            </div>
+            <p class="text-slate-800 font-bold text-lg">הרועה מעבד נתונים...</p>
+            <p class="text-slate-500 text-sm italic animate-pulse">מזהה מגמות ונטישות שקטות</p>
         </div>
-        <p class="text-slate-800 font-bold text-lg">הרועה מעבד נתונים...</p>
-        <p class="text-slate-500 text-sm italic animate-pulse">מזהה מגמות ונטישות שקטות</p>
     </div>
-</div>
     <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 no-print">
             <div class="flex items-center gap-4">
                 <div class="cow-icon">🐄</div>
                 <div>
-                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
+                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span
+                            class="text-blue-600">Shepherd</span></h1>
                     <p class="text-slate-500 text-lg mt-2 font-medium">כי גם עסק קטן צריך רועה שיודע לאן העדר הולך</p>
                 </div>
             </div>
             <div class="flex flex-col items-end gap-2">
                 <div class="flex gap-3">
-                    <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
+                    <button onclick="window.print()"
+                        class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת
+                        דוח</button>
                     <div class="relative btn-primary shadow-lg flex items-center justify-center">
                         <span>טעינת CSV מחשבשבת</span>
                         <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
                     </div>
                 </div>
-                <button onclick="toggleHelp()" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-2 text-sm px-2 mt-1">
+                <button onclick="toggleHelp()"
+                    class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-2 text-sm px-2 mt-1">
                     <span>❓</span> איך המערכת מנתחת את הנתונים?
                 </button>
             </div>
         </header>
 
- <div id="helpSection" class="hidden card overflow-hidden border-none shadow-2xl mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
-    <div class="bg-gradient-to-r from-blue-700 to-blue-500 p-6 text-white flex justify-between items-center text-right">
-        <div class="flex items-center gap-4">
-            <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm border border-white/30 shadow-inner">
-                <span class="text-4xl leading-none">🐑</span>
-            </div>
-            <div>
-                <h3 class="text-2xl font-black tracking-tight">מרכז השליטה של Shepherd</h3>
-                <p class="text-blue-100 opacity-90 font-medium mt-1 italic">איך המערכת הופכת את הנתונים שלך לכסף?</p>
-            </div>
-        </div>
-        <button onclick="toggleHelp()" class="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-full flex items-center justify-center transition-all text-2xl leading-none">&times;</button>
-    </div>
-
-    <div class="p-8 bg-white">
-        <div class="grid md:grid-cols-3 gap-6">
-            
-            <div class="group hover:border-red-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
-                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🚨</div>
-                <h4 class="font-bold text-slate-900 text-lg mb-2">זיהוי נטישה שקטה</h4>
-                <p class="text-slate-600 leading-relaxed text-sm">
-                    המערכת לומדת את **הקצב האישי** של כל לקוח. אם לקוח רגיל להזמין כל 10 ימים ועברו 13, הוא יצבע בכתום. אם עברו 20 יום - הוא יהיה אדום. 
-                    <span class="block mt-2 font-semibold text-red-600">המטרה: להחזיר אותו לעדר לפני שהוא הולך לאיבוד.</span>
-                </p>
-            </div>
-
-            <div class="group hover:border-amber-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
-                <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">📉</div>
-                <h4 class="font-bold text-slate-900 text-lg mb-2">ניטור דעיכת סחורה</h4>
-                <p class="text-slate-600 leading-relaxed text-sm">
-                    לפעמים הלקוח מזמין, אבל פחות. המערכת משווה את ההזמנה האחרונה לממוצע ההיסטורי שלו. 
-                    <span class="block mt-2 font-semibold text-amber-600">צניחה של 30% ומעלה בכמות תדליק נורה צהובה - אולי הוא מפצל קנייה?</span>
-                </p>
-            </div>
-
-            <div class="group hover:border-emerald-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
-                <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">💰</div>
-                <h4 class="font-bold text-slate-900 text-lg mb-2">אופטימיזציית גבייה</h4>
-                <p class="text-slate-600 leading-relaxed text-sm">
-                    במקום לחפש בניירות, המערכת שולפת חובות פתוחים ומחשבת את ימי הפיגור.
-                    <span class="block mt-2 font-semibold text-emerald-600">בלחיצה אחת, תוכלי לשלוח תזכורת עדינה בוואטסאפ שתסגור את הפינה.</span>
-                </p>
-            </div>
-        </div>
-
-        <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
-            
-            <div class="flex items-center gap-4 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-2xl shadow-inner">
-                <div class="flex -space-x-1 rtl:space-x-reverse">
-                    <span class="text-2xl">🔒</span>
-                    <span class="text-2xl text-emerald-600 animate-pulse">🛡️</span>
+        <div id="helpSection"
+            class="hidden card overflow-hidden border-none shadow-2xl mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div
+                class="bg-gradient-to-r from-blue-700 to-blue-500 p-6 text-white flex justify-between items-center text-right">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm border border-white/30 shadow-inner">
+                        <span class="text-4xl leading-none">🐑</span>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight">מרכז השליטה של Shepherd</h3>
+                        <p class="text-blue-100 opacity-90 font-medium mt-1 italic">איך המערכת הופכת את הנתונים שלך
+                            לכסף?</p>
+                    </div>
                 </div>
-                <div class="text-right">
-                    <p class="text-emerald-900 text-sm font-bold leading-tight">הפרטיות שלך חשובה לנו</p>
-                    <p class="text-emerald-700 text-xs font-medium mt-0.5">
-הניתוח מתבצע באופן מקומי בדפדפן בלבד. המידע אינו מועבר לשרת חיצוני ואינו נשמר בענן.
+                <button onclick="toggleHelp()"
+                    class="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-full flex items-center justify-center transition-all text-2xl leading-none">&times;</button>
+            </div>
 
-                    </p>
+            <div class="p-8 bg-white">
+                <div class="grid md:grid-cols-3 gap-6">
+
+                    <div
+                        class="group hover:border-red-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                        <div
+                            class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            🚨</div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-2">זיהוי נטישה שקטה</h4>
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            המערכת לומדת את **הקצב האישי** של כל לקוח. אם לקוח רגיל להזמין כל 10 ימים ועברו 13, הוא יצבע
+                            בכתום. אם עברו 20 יום - הוא יהיה אדום.
+                            <span class="block mt-2 font-semibold text-red-600">המטרה: להחזיר אותו לעדר לפני שהוא הולך
+                                לאיבוד.</span>
+                        </p>
+                    </div>
+
+                    <div
+                        class="group hover:border-amber-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                        <div
+                            class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            📉</div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-2">ניטור דעיכת סחורה</h4>
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            לפעמים הלקוח מזמין, אבל פחות. המערכת משווה את ההזמנה האחרונה לממוצע ההיסטורי שלו.
+                            <span class="block mt-2 font-semibold text-amber-600">צניחה של 30% ומעלה בכמות תדליק נורה
+                                צהובה - אולי הוא מפצל קנייה?</span>
+                        </p>
+                    </div>
+
+                    <div
+                        class="group hover:border-emerald-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                        <div
+                            class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
+                            💰</div>
+                        <h4 class="font-bold text-slate-900 text-lg mb-2">אופטימיזציית גבייה</h4>
+                        <p class="text-slate-600 leading-relaxed text-sm">
+                            במקום לחפש בניירות, המערכת שולפת חובות פתוחים ומחשבת את ימי הפיגור.
+                            <span class="block mt-2 font-semibold text-emerald-600">בלחיצה אחת, תוכלי לשלוח תזכורת עדינה
+                                בוואטסאפ שתסגור את הפינה.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="mt-8 pt-6 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+
+                    <div
+                        class="flex items-center gap-4 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-2xl shadow-inner">
+                        <div class="flex -space-x-1 rtl:space-x-reverse">
+                            <span class="text-2xl">🔒</span>
+                            <span class="text-2xl text-emerald-600 animate-pulse">🛡️</span>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-emerald-900 text-sm font-bold leading-tight">הפרטיות שלך חשובה לנו</p>
+                            <p class="text-emerald-700 text-xs font-medium mt-0.5">
+                                הניתוח מתבצע באופן מקומי בדפדפן בלבד. המידע אינו מועבר לשרת חיצוני ואינו נשמר בענן.
+
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="text-blue-600 font-bold text-sm bg-blue-50 px-5 py-2.5 rounded-full border border-blue-100 shadow-sm">
+                        💡 המערכת תומכת בפורמט CSV מחשבשבת ובכל סוגי התאריכים
+                    </div>
                 </div>
             </div>
-
-            <div class="text-blue-600 font-bold text-sm bg-blue-50 px-5 py-2.5 rounded-full border border-blue-100 shadow-sm">
-                💡 המערכת תומכת בפורמט CSV מחשבשבת ובכל סוגי התאריכים
-            </div>
         </div>
-    </div>
-</div>
 
         <div id="welcomeState" class="space-y-6">
             <div class="card p-12 text-center border-b-8 border-blue-500">
                 <div class="text-7xl mb-6">📊</div>
                 <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
-                
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח
+                    אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+
                 <div class="instruction-box max-w-2xl mx-auto text-right text-slate-700">
-                    <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר להפקת הקובץ:</p>
+                    <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר
+                        להפקת הקובץ:</p>
                     <div class="bg-white p-5 rounded-lg border border-blue-100 shadow-sm space-y-3">
                         <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
-                            <li>בחשבשבת, הפיקי דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או <span class="font-bold text-blue-800">'אינדקס לקוחות'</span>.</li>
-                            <li>ודאי שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות, ויתרה/סכום</span>.</li>
-                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ כפורמט <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
-                            <li>לחצי על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") ותעלי את הקובץ.</li>
+                            <li>בחשבשבת, הפיקו דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או
+                                <span class="font-bold text-blue-800">'אינדקס לקוחות'</span>.</li>
+                            <li>ודאו שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות,
+                                    ויתרה/סכום</span>.</li>
+                            <li>בצעו <span class="font-bold text-green-700">'ייצוא לאקסל'</span> יש לשמור את הקובץ
+                                כפורמט <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
+                            <li>לחצו על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") והעלו את הקובץ.</li>
                         </ol>
                     </div>
                 </div>
@@ -166,12 +267,13 @@
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים.</p>
+                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים
+                    צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים.</p>
             </div>
         </div>
 
         <div id="dashboard" class="hidden space-y-10">
-            
+
             <div class="flex flex-wrap gap-4 no-print text-right">
                 <div class="kpi-card border-t-4 border-blue-500 shadow-md">
                     <p class="text-slate-500 text-sm font-bold">סה"כ חובות פתוחים</p>
@@ -190,35 +292,98 @@
             <section class="card">
                 <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">🚨 לקוחות בסיכון נטישה</h2>
-                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
+                    <button onclick="exportTableToExcel('churnBody', 'נטישת_לקוחות')"
+                        class="group bg-white/10 hover:bg-white/20 border border-white/30 px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>ייצוא לאקסל</span>
+                    </button>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right"><thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase"><tr><th class="p-5">שם לקוח</th><th class="p-5 text-center">קצב ממוצע (ימים)</th><th class="p-5 text-center">ימים מאז רכישה</th><th class="p-5 text-left">סטטוס חריגה</th></tr></thead><tbody id="churnBody" class="divide-y divide-slate-100"></tbody></table>
+                    <table class="w-full text-right">
+                        <thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
+                            <tr>
+                                <th class="p-5">שם לקוח</th>
+                                <th class="p-5 text-center">קצב ממוצע (ימים)</th>
+                                <th class="p-5 text-center">ימים מאז רכישה</th>
+                                <th class="p-5 text-left">סטטוס חריגה</th>
+                            </tr>
+                        </thead>
+                        <tbody id="churnBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </section>
 
             <section class="card">
                 <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות</h2>
-                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
+                    <button onclick="exportTableToExcel('churnBody', 'נטישת_לקוחות')"
+                        class="group bg-white/10 hover:bg-white/20 border border-white/30 px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>ייצוא לאקסל</span>
+                    </button>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right"><thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase"><tr><th class="p-5">שם לקוח</th><th class="p-5 text-center">ממוצע היסטורי</th><th class="p-5 text-center">הזמנה אחרונה</th><th class="p-5 text-left">אחוז ירידה</th></tr></thead><tbody id="dropBody" class="divide-y divide-slate-100"></tbody></table>
+                    <table class="w-full text-right">
+                        <thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
+                            <tr>
+                                <th class="p-5">שם לקוח</th>
+                                <th class="p-5 text-center">ממוצע היסטורי</th>
+                                <th class="p-5 text-center">הזמנה אחרונה</th>
+                                <th class="p-5 text-left">אחוז ירידה</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dropBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </section>
 
             <section class="card">
                 <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">💰 ניהול גבייה ותזרים</h2>
-                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 חובות</span>
+                    <button onclick="exportTableToExcel('churnBody', 'נטישת_לקוחות')"
+                        class="group bg-white/10 hover:bg-white/20 border border-white/30 px-4 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 backdrop-blur-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                            class="h-3.5 w-3.5 group-hover:translate-y-0.5 transition-transform" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        <span>ייצוא לאקסל</span>
+                    </button>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        חובות</span>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full text-right"><thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase"><tr><th class="p-5">שם לקוח</th><th class="p-5 text-center">סכום החוב</th><th class="p-5 text-center">ימי פיגור</th><th class="p-5 text-left no-print">פעולה</th></tr></thead><tbody id="debtBody" class="divide-y divide-slate-100"></tbody></table>
+                    <table class="w-full text-right">
+                        <thead class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
+                            <tr>
+                                <th class="p-5">שם לקוח</th>
+                                <th class="p-5 text-center">סכום החוב</th>
+                                <th class="p-5 text-center">ימי פיגור</th>
+                                <th class="p-5 text-left no-print">פעולה</th>
+                            </tr>
+                        </thead>
+                        <tbody id="debtBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
                 </div>
             </section>
         </div>
     </div>
-   <script>
+    <script>
         function toggleHelp() {
             document.getElementById('helpSection').classList.toggle('hidden');
         }
@@ -241,13 +406,13 @@
                     complete: (results) => {
                         setTimeout(() => {
                             processData(results.data);
-                            
+
                             // 3. העלמת האנימציה
-                            loader.classList.add('hidden'); 
-                            
+                            loader.classList.add('hidden');
+
                             // *** השורה החדשה: מאפסת את השדה כדי שיהיה אפשר לטעון שוב ושוב ***
-                            e.target.value = ''; 
-                            
+                            e.target.value = '';
+
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 1500);
                     }
@@ -335,6 +500,47 @@
             document.getElementById('welcomeState').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
         }
+        function exportTableToExcel(tableId, fileName) {
+            const table = document.getElementById(tableId);
+            let csv = [];
+
+            // שליפת הכותרות מהטבלה האם (thead)
+            const headerRow = table.closest('section').querySelector('thead tr');
+            const headers = Array.from(headerRow.querySelectorAll('th'))
+                .map(th => th.innerText)
+                .filter(text => text !== 'פעולה' && text !== 'סטטוס חריגה'); // סינון עמודות שלא צריך באקסל
+            csv.push(headers.join(","));
+
+            // שליפת השורות
+            const rows = table.querySelectorAll("tr");
+            for (let i = 0; i < rows.length; i++) {
+                const row = [], cols = rows[i].querySelectorAll("td");
+                for (let j = 0; j < cols.length; j++) {
+                    // ניקוי טקסט: הסרת פסיקים (כדי לא להרוס את ה-CSV) ותגיות HTML
+                    let data = cols[j].innerText.replace(/,/g, '').trim();
+
+                    // אנחנו לא רוצים את עמודת ה"פעולה" (כפתור ה-WhatsApp) באקסל
+                    if (!cols[j].classList.contains('no-print') && j < headers.length) {
+                        row.push(data);
+                    }
+                }
+                csv.push(row.join(","));
+            }
+
+            // יצירת הקובץ עם תמיכה בעברית (BOM)
+            const csvContent = "\uFEFF" + csv.join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute("href", url);
+            link.setAttribute("download", fileName + "_" + new Date().toLocaleDateString() + ".csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 </body>
+
 </html>
