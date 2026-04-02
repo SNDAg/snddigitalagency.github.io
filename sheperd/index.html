@@ -34,8 +34,8 @@
 
         <div id="welcomeState" class="card p-20 text-center border-dashed border-2 border-blue-200 bg-blue-50/30">
             <div class="text-7xl mb-6">📊</div>
-            <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, ברוכים הבאים</h2>
-            <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+            <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי שחף, מוכנה להרשים?</h2>
+            <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלי את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
         </div>
 
         <div id="dashboard" class="hidden space-y-10">
@@ -216,4 +216,32 @@
             });
 
             // 3. חובות
-            debts.sort((a,b) => a.date - b.date).forEach(
+            // 3. חובות
+            debts.sort((a,b) => a.date - b.date).forEach(d => {
+                const diff = Math.floor((today - d.date) / 86400000);
+                debtBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-5 font-bold text-slate-700">${d.name}</td>
+                        <td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td>
+                        <td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td>
+                        <td class="p-5 text-left no-print">
+                            <a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" 
+                               target="_blank" 
+                               class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">
+                               שלחי תזכורת WhatsApp
+                            </a>
+                        </td>
+                    </tr>`;
+            });
+
+            // עדכון מונים והצגת הלוח
+            document.getElementById('churnCount').innerText = `${churns} לקוחות`;
+            document.getElementById('dropCount').innerText = `${drops} לקוחות`;
+            document.getElementById('debtCount').innerText = `${debts.length} חובות`;
+            
+            document.getElementById('welcomeState').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
