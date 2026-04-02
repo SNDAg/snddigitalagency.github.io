@@ -26,7 +26,7 @@
                 <div class="cow-icon">🐄</div>
                 <div>
                     <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
-                    <p class="text-slate-500 text-lg mt-2 font-medium">המערכת של אמא - ניהול חכם ופשוט</p>
+                    <p class="text-slate-500 text-lg mt-2 font-medium">כי גם עסק קטן צריך רועה שיודע לאן העדר הולך</p>
                 </div>
             </div>
             <div class="flex flex-col items-end gap-2">
@@ -43,29 +43,73 @@
             </div>
         </header>
 
-        <div id="helpSection" class="hidden card p-8 bg-white border-blue-200 mb-8 shadow-xl border-t-4 border-t-blue-500">
-            <div class="flex justify-between items-start mb-6 text-right">
-                <div>
-                    <h3 class="text-2xl font-black text-slate-800">Project Shepherd: להוביל את העסק בביטחון</h3>
-                    <p class="text-slate-500 mt-1 font-medium italic">מזהים בזמן את המגמות שמתחת לפני השטח</p>
-                </div>
-                <button onclick="toggleHelp()" class="text-slate-300 hover:text-slate-600 text-4xl leading-none">&times;</button>
+ <div id="helpSection" class="hidden card overflow-hidden border-none shadow-2xl mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+    <div class="bg-gradient-to-r from-blue-700 to-blue-500 p-6 text-white flex justify-between items-center text-right">
+        <div class="flex items-center gap-4">
+            <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm border border-white/30 shadow-inner">
+                <span class="text-4xl leading-none">🐑</span>
             </div>
-            <div class="grid md:grid-cols-3 gap-8 text-right">
-                <div class="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
-                    <h4 class="font-bold text-blue-900 text-lg mb-2">🚨 נטישה סמויה</h4>
-                    <p class="text-slate-600 text-sm leading-relaxed">המערכת מזהה לקוחות ש"שתקו" - כאלו שלא הזמינו זמן רב יחסית לממוצע האישי שלהם. אם לקוח חורג פי 2 מהזמן הרגיל שלו, זו נטישה קריטית.</p>
-                </div>
-                <div class="bg-amber-50/50 p-6 rounded-2xl border border-amber-100">
-                    <h4 class="font-bold text-amber-900 text-lg mb-2">📉 מגמות צריכה</h4>
-                    <p class="text-slate-600 text-sm leading-relaxed">השוואת ההזמנה האחרונה לממוצע ההיסטורי. צניחה של מעל 30% בכמות היא נורת אזהרה שצריך לבדוק.</p>
-                </div>
-                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
-                    <h4 class="font-bold text-slate-900 text-lg mb-2">💰 תזרים וגבייה</h4>
-                    <p class="text-slate-600 text-sm leading-relaxed">ריכוז אוטומטי של תנועות פתוחות מחשבשבת, חישוב ימי פיגור ואפשרות לשלוח תזכורת WhatsApp בלחיצת כפתור.</p>
-                </div>
+            <div>
+                <h3 class="text-2xl font-black tracking-tight">מרכז השליטה של Shepherd</h3>
+                <p class="text-blue-100 opacity-90 font-medium mt-1 italic">איך המערכת הופכת את הנתונים שלך לכסף?</p>
             </div>
         </div>
+        <button onclick="toggleHelp()" class="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-full flex items-center justify-center transition-all text-2xl leading-none">&times;</button>
+    </div>
+
+    <div class="p-8 bg-white">
+        <div class="grid md:grid-cols-3 gap-6">
+            
+            <div class="group hover:border-red-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">🚨</div>
+                <h4 class="font-bold text-slate-900 text-lg mb-2">זיהוי נטישה שקטה</h4>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    המערכת לומדת את **הקצב האישי** של כל לקוח. אם לקוח רגיל להזמין כל 10 ימים ועברו 13, הוא יצבע בכתום. אם עברו 20 יום - הוא יהיה אדום. 
+                    <span class="block mt-2 font-semibold text-red-600">המטרה: להחזיר אותו לעדר לפני שהוא הולך לאיבוד.</span>
+                </p>
+            </div>
+
+            <div class="group hover:border-amber-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                <div class="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">📉</div>
+                <h4 class="font-bold text-slate-900 text-lg mb-2">ניטור דעיכת סחורה</h4>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    לפעמים הלקוח מזמין, אבל פחות. המערכת משווה את ההזמנה האחרונה לממוצע ההיסטורי שלו. 
+                    <span class="block mt-2 font-semibold text-amber-600">צניחה של 30% ומעלה בכמות תדליק נורה צהובה - אולי הוא מפצל קנייה?</span>
+                </p>
+            </div>
+
+            <div class="group hover:border-emerald-200 border border-slate-100 p-6 rounded-2xl transition-all hover:shadow-md bg-white">
+                <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">💰</div>
+                <h4 class="font-bold text-slate-900 text-lg mb-2">אופטימיזציית גבייה</h4>
+                <p class="text-slate-600 leading-relaxed text-sm">
+                    במקום לחפש בניירות, המערכת שולפת חובות פתוחים ומחשבת את ימי הפיגור.
+                    <span class="block mt-2 font-semibold text-emerald-600">בלחיצה אחת, תוכלי לשלוח תזכורת עדינה בוואטסאפ שתסגור את הפינה.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-4 bg-emerald-50 border border-emerald-100 px-5 py-3 rounded-2xl shadow-inner">
+                <div class="flex -space-x-1 rtl:space-x-reverse">
+                    <span class="text-2xl">🔒</span>
+                    <span class="text-2xl text-emerald-600 animate-pulse">🛡️</span>
+                </div>
+                <div class="text-right">
+                    <p class="text-emerald-900 text-sm font-bold leading-tight">הפרטיות שלך חשובה לנו</p>
+                    <p class="text-emerald-700 text-xs font-medium mt-0.5">
+הניתוח מתבצע באופן מקומי בדפדפן בלבד. המידע אינו מועבר לשרת חיצוני ואינו נשמר בענן.
+
+                    </p>
+                </div>
+            </div>
+
+            <div class="text-blue-600 font-bold text-sm bg-blue-50 px-5 py-2.5 rounded-full border border-blue-100 shadow-sm">
+                💡 המערכת תומכת בפורמט CSV מחשבשבת ובכל סוגי התאריכים
+            </div>
+        </div>
+    </div>
+</div>
 
         <div id="welcomeState" class="space-y-6">
             <div class="card p-12 text-center border-b-8 border-blue-500">
