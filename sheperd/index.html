@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,23 +9,83 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .card { background: white; border-radius: 1.25rem; border: 1px solid #e2e8f0; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05); overflow: hidden; }
-        .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: all 0.2s; border: none; }
-        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 12px rgb(37 99 235 / 0.2); }
-        .status-pill { padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; border: 1px solid transparent; }
-        @media print { .no-print { display: none !important; } body { background: white; padding: 0; } .card { box-shadow: none; border: 1px solid #e2e8f0; } }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #f0f7ff;
+            color: #1e293b;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.25rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgb(37 99 235 / 0.2);
+        }
+
+        .instruction-box {
+            background: #eff6ff;
+            border: 2px dashed #bfdbfe;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .cow-icon {
+            font-size: 3rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #e2e8f0;
+            }
+        }
     </style>
 </head>
+
 <body class="p-4 md:p-10">
     <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 no-print">
-            <div>
-                <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
-                <p class="text-slate-500 text-lg mt-2 font-medium">מערכת חכמה לשימור לקוחות וניהול תזרים</p>
+            <div class="flex items-center gap-4">
+                <div class="cow-icon">🐄</div>
+                <div>
+                    <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span
+                            class="text-blue-600">Shepherd</span></h1>
+                    <p class="text-slate-500 text-lg mt-2 font-medium">המערכת של אמא - ניהול חכם ופשוט</p>
+                </div>
             </div>
             <div class="flex gap-3">
-                <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
+                <button onclick="window.print()"
+                    class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת
+                    דוח</button>
                 <div class="relative btn-primary shadow-lg cursor-pointer flex items-center justify-center">
                     <span>טעינת CSV מחשבשבת</span>
                     <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
@@ -32,18 +93,74 @@
             </div>
         </header>
 
-        <div id="welcomeState" class="card p-20 text-center border-dashed border-2 border-blue-200 bg-blue-50/30">
-            <div class="text-7xl mb-6">📊</div>
-            <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-            <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+        <div id="welcomeState" class="space-y-6">
+            <div class="card p-12 text-center border-b-8 border-blue-500">
+                <div class="text-7xl mb-6">📊</div>
+                <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed text-center">העלו את קובץ התנועות.
+                    המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+
+                <div class="instruction-box max-w-2xl mx-auto text-right">
+                    <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר
+                        להפקת הקובץ:</p>
+                    <div class="text-blue-700 bg-white p-5 rounded-lg border border-blue-100 shadow-sm space-y-3">
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+                            <li>בחשבשבת, הפיקי דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או
+                                <span class="font-bold text-blue-800">'אינדקס לקוחות עם יתרות'</span>.</li>
+                            <li>ודאי שהדוח כולל עמודות של תאריך, שם לקוח, כמות, ויתרה/סכום.</li>
+                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ במחשב.
+                            </li>
+                            <li>לחצי על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") ותעלי את הקובץ ששמרת.</li>
+                        </ol>
+                        <p class="text-xs text-slate-400 pt-2 border-t font-medium italic">המערכת תומכת בגרסאות קודמות
+                            של חשבשבת ובפורמטים של תאריכים ישנים.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 bg-slate-50 shadow-inner border-dashed border-2 border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                    <span>📅</span> ככה הקובץ המיוצא צריך להיראות (דוגמה):
+                </h3>
+                <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
+                    <table class="w-full text-sm text-right bg-white font-mono">
+                        <thead class="bg-slate-100 text-slate-500 font-bold">
+                            <tr>
+                                <th class="p-2 border-r">שם לקוח</th>
+                                <th class="p-2 border-r text-center">תאריך</th>
+                                <th class="p-2 border-r text-center">כמות בק"ג</th>
+                                <th class="p-2 border-r text-center">סכום</th>
+                                <th class="p-2">סטטוס</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-400">
+                            <tr class="border-t">
+                                <td class="p-2 border-r font-medium text-slate-600">משק גבינות השומרון</td>
+                                <td class="p-2 border-r text-center">01/04/17</td>
+                                <td class="p-2 border-r text-center">150</td>
+                                <td class="p-2 border-r text-center">4,500</td>
+                                <td class="p-2">פתוח</td>
+                            </tr>
+                            <tr class="border-t bg-slate-50/50">
+                                <td class="p-2 border-r font-medium text-slate-600">מחלבת העמק</td>
+                                <td class="p-2 border-r text-center">28/03/17</td>
+                                <td class="p-2 border-r text-center">80</td>
+                                <td class="p-2 border-r text-center">2,100</td>
+                                <td class="p-2">שולם</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-slate-400 mt-3 font-medium">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים
+                    מיותרים וממירה פורמטים של תאריכים מכל השנים (01/04/17).</p>
+            </div>
         </div>
 
         <div id="dashboard" class="hidden space-y-10">
-            
             <section class="card">
                 <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">🚨 לקוחות בסיכון נטישה</h2>
-                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -62,8 +179,8 @@
 
             <section class="card">
                 <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
-                    <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות (קנייה חלקית)</h2>
-                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
+                    <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות</h2>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -83,7 +200,7 @@
             <section class="card">
                 <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">💰 ניהול גבייה ותזרים</h2>
-                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 חובות</span>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 חובות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -103,12 +220,11 @@
     </div>
 
     <script>
-        document.getElementById('csvFile').addEventListener('change', function(e) {
+        document.getElementById('csvFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = function (event) {
                 const content = event.target.result;
                 Papa.parse(content, {
                     header: true,
@@ -116,8 +232,7 @@
                     complete: (results) => processData(results.data)
                 });
             };
-            // תמיכה בעברית מחשבשבת
-            reader.readAsText(file, "UTF-8"); 
+            reader.readAsText(file, "UTF-8");
         });
 
         function parseFlexibleDate(d) {
@@ -141,22 +256,21 @@
 
             data.forEach(row => {
                 const cleanRow = {};
-                // ניקוי רווחים משמות העמודות (קריטי ב-CSV)
                 Object.keys(row).forEach(k => cleanRow[k.trim()] = row[k]);
 
-                const name = cleanRow['Customer_Name'] || cleanRow['שם לקוח'] || cleanRow['שם חשבון'] || cleanRow['Name'];
-                const rawDate = cleanRow['Date'] || cleanRow['תאריך'] || cleanRow['תאריך חשבונית'];
-                const qty = parseFloat(cleanRow['Quantity_KG'] || cleanRow['כמות'] || cleanRow['Quantity'] || 0);
-                const amt = parseFloat(cleanRow['Invoice_Amount'] || cleanRow['סכום'] || cleanRow['Amount'] || 0);
-                const status = cleanRow['Status'] || cleanRow['סטטוס'] || cleanRow['מצב'];
-                
+                const name = cleanRow['שם לקוח'] || cleanRow['שם חשבון'] || cleanRow['לקוח'] || cleanRow['Customer_Name'] || cleanRow['Name'];
+                const rawDate = cleanRow['תאריך'] || cleanRow['תאריך ערך'] || cleanRow['תאריך אסמכתא'] || cleanRow['תאריך חשבונית'] || cleanRow['Date'];
+                const qty = parseFloat(cleanRow['כמות בק"ג'] || cleanRow['כמות'] || cleanRow['כמות במלאי'] || cleanRow['Quantity'] || 0);
+                const amt = parseFloat(cleanRow['סכום'] || cleanRow['סכום חובה'] || cleanRow['חובה'] || cleanRow['סה"כ'] || cleanRow['Amount'] || 0);
+                const status = cleanRow['סטטוס'] || cleanRow['מצב'] || cleanRow['יתרה'] || cleanRow['Status'];
+
                 const date = parseFlexibleDate(rawDate);
                 if (!name || !date) return;
 
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                if (status === 'Unpaid' || status === 'לא שולם' || status === 'פתוח') {
+                if (status === 'Unpaid' || status === 'לא שולם' || status === 'פתוח' || (amt > 0 && status !== 'שולם')) {
                     debts.push({ name, amt, date });
                 }
             });
@@ -168,22 +282,18 @@
             const churnBody = document.getElementById('churnBody');
             const dropBody = document.getElementById('dropBody');
             const debtBody = document.getElementById('debtBody');
-            
             let churns = 0, drops = 0;
             churnBody.innerHTML = ''; dropBody.innerHTML = ''; debtBody.innerHTML = '';
 
             Object.values(customers).forEach(c => {
-                c.orders.sort((a,b) => a.date - b.date);
-                
-                // 1. לוגיקת נטישה
+                c.orders.sort((a, b) => a.date - b.date);
                 if (c.orders.length >= 2) {
                     const diffs = [];
-                    for(let i=1; i<c.orders.length; i++) {
-                        diffs.push((c.orders[i].date - c.orders[i-1].date) / 86400000);
+                    for (let i = 1; i < c.orders.length; i++) {
+                        diffs.push((c.orders[i].date - c.orders[i - 1].date) / 86400000);
                     }
-                    const avg = diffs.reduce((a,b) => a+b, 0) / diffs.length;
-                    const last = (today - c.orders[c.orders.length-1].date) / 86400000;
-
+                    const avg = diffs.reduce((a, b) => a + b, 0) / diffs.length;
+                    const last = (today - c.orders[c.orders.length - 1].date) / 86400000;
                     if (last > avg * 1.3 && last > 7) {
                         churns++;
                         const isCrit = last > avg * 2;
@@ -191,33 +301,29 @@
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="p-5 font-bold text-slate-800 underline decoration-slate-200">${c.name}</td>
                                 <td class="p-5 text-center text-slate-500">${Math.round(avg)} ימים</td>
-                                <td class="p-5 text-center font-extrabold text-red-600 bg-red-50/30">${Math.floor(last)} ימים</td>
-                                <td class="p-5 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200'}">${isCrit ? 'קריטי - להתקשר' : 'חריגה מהזמן'}</span></td>
+                                <td class="p-5 text-center font-extrabold text-red-600">${Math.floor(last)} ימים</td>
+                                <td class="p-5 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${isCrit ? 'קריטי' : 'חריגה'}</span></td>
                             </tr>`;
                     }
                 }
-
-                // 2. צניחה בכמות
                 if (c.orders.length >= 3) {
-                    const lastQty = c.orders[c.orders.length-1].qty;
-                    const avgQty = c.orders.slice(0,-1).reduce((s,o)=>s+o.qty,0) / (c.orders.length-1);
+                    const lastQty = c.orders[c.orders.length - 1].qty;
+                    const avgQty = c.orders.slice(0, -1).reduce((s, o) => s + o.qty, 0) / (c.orders.length - 1);
                     if (lastQty < avgQty * 0.7 && avgQty > 0) {
                         drops++;
-                        const perc = Math.round((1 - lastQty/avgQty)*100);
+                        const perc = Math.round((1 - lastQty / avgQty) * 100);
                         dropBody.innerHTML += `
                             <tr class="hover:bg-slate-50 transition">
                                 <td class="p-5 font-bold text-slate-800">${c.name}</td>
-                                <td class="p-5 text-center text-slate-400 font-medium">${Math.round(avgQty).toLocaleString()} ק"ג</td>
+                                <td class="p-5 text-center text-slate-400">${Math.round(avgQty).toLocaleString()} ק"ג</td>
                                 <td class="p-5 text-center text-amber-600 font-black">${lastQty.toLocaleString()} ק"ג</td>
-                                <td class="p-5 text-left font-black text-amber-700 bg-amber-50/50">${perc}%-</td>
+                                <td class="p-5 text-left font-black text-amber-700">${perc}%-</td>
                             </tr>`;
                     }
                 }
             });
 
-            // 3. חובות
-            // 3. חובות
-            debts.sort((a,b) => a.date - b.date).forEach(d => {
+            debts.sort((a, b) => a.date - b.date).forEach(d => {
                 const diff = Math.floor((today - d.date) / 86400000);
                 debtBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition">
@@ -226,22 +332,18 @@
                         <td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td>
                         <td class="p-5 text-left no-print">
                             <a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" 
-                               target="_blank" 
-                               class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">
-                               שלחי תזכורת WhatsApp
-                            </a>
+                               target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">WhatsApp</a>
                         </td>
                     </tr>`;
             });
 
-            // עדכון מונים והצגת הלוח
             document.getElementById('churnCount').innerText = `${churns} לקוחות`;
             document.getElementById('dropCount').innerText = `${drops} לקוחות`;
             document.getElementById('debtCount').innerText = `${debts.length} חובות`;
-            
             document.getElementById('welcomeState').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
         }
     </script>
 </body>
+
 </html>
