@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Shepherd | BI Dashboard</title>
+    <title>Project Shepherd | Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -32,6 +32,7 @@
             font-weight: 700;
             transition: all 0.2s;
             border: none;
+            cursor: pointer;
         }
 
         .btn-primary:hover {
@@ -51,6 +52,13 @@
         .cow-icon {
             font-size: 3rem;
             filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
         @media print {
@@ -86,7 +94,7 @@
                 <button onclick="window.print()"
                     class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת
                     דוח</button>
-                <div class="relative btn-primary shadow-lg cursor-pointer flex items-center justify-center">
+                <div class="relative btn-primary shadow-lg flex items-center justify-center">
                     <span>טעינת CSV מחשבשבת</span>
                     <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
                 </div>
@@ -97,20 +105,21 @@
             <div class="card p-12 text-center border-b-8 border-blue-500">
                 <div class="text-7xl mb-6">📊</div>
                 <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed text-center">העלו את קובץ התנועות.
-                    המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח
+                    אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
 
-                <div class="instruction-box max-w-2xl mx-auto text-right">
+                <div class="instruction-box max-w-2xl mx-auto text-right text-slate-700">
                     <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר
                         להפקת הקובץ:</p>
-                    <div class="text-blue-700 bg-white p-5 rounded-lg border border-blue-100 shadow-sm space-y-3">
-                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-600">
+                    <div class="bg-white p-5 rounded-lg border border-blue-100 shadow-sm space-y-3">
+                        <ol class="list-decimal list-inside space-y-2 text-sm">
                             <li>בחשבשבת, הפיקי דוח <span class="font-bold text-blue-800">'כרטיס חו"ז לקוח'</span> או
-                                <span class="font-bold text-blue-800">'אינדקס לקוחות עם יתרות'</span>.</li>
-                            <li>ודאי שהדוח כולל עמודות של תאריך, שם לקוח, כמות, ויתרה/סכום.</li>
-                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ במחשב.
+                                <span class="font-bold text-blue-800">'אינדקס לקוחות'</span>.</li>
+                            <li>ודאי שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות, ויתרה</span>.
                             </li>
-                            <li>לחצי על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") ותעלי את הקובץ ששמרת.</li>
+                            <li>בצעי <span class="font-bold text-green-700">'ייצוא לאקסל'</span> ושמרי את הקובץ כפורמט
+                                <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
+                            <li>לחצי על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") ותעלי את הקובץ.</li>
                         </ol>
                         <p class="text-xs text-slate-400 pt-2 border-t font-medium italic">המערכת תומכת בגרסאות קודמות
                             של חשבשבת ובפורמטים של תאריכים ישנים.</p>
@@ -119,12 +128,12 @@
             </div>
 
             <div class="card p-8 bg-slate-50 shadow-inner border-dashed border-2 border-slate-200">
-                <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2">
+                <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
                     <span>📅</span> ככה הקובץ המיוצא צריך להיראות (דוגמה):
                 </h3>
                 <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
                     <table class="w-full text-sm text-right bg-white font-mono">
-                        <thead class="bg-slate-100 text-slate-500 font-bold">
+                        <thead class="bg-slate-100 text-slate-500">
                             <tr>
                                 <th class="p-2 border-r">שם לקוח</th>
                                 <th class="p-2 border-r text-center">תאריך</th>
@@ -141,18 +150,11 @@
                                 <td class="p-2 border-r text-center">4,500</td>
                                 <td class="p-2">פתוח</td>
                             </tr>
-                            <tr class="border-t bg-slate-50/50">
-                                <td class="p-2 border-r font-medium text-slate-600">מחלבת העמק</td>
-                                <td class="p-2 border-r text-center">28/03/17</td>
-                                <td class="p-2 border-r text-center">80</td>
-                                <td class="p-2 border-r text-center">2,100</td>
-                                <td class="p-2">שולם</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
                 <p class="text-xs text-slate-400 mt-3 font-medium">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים
-                    מיותרים וממירה פורמטים של תאריכים מכל השנים (01/04/17).</p>
+                    מיותרים וממירה תאריכים מכל השנים.</p>
             </div>
         </div>
 
@@ -160,12 +162,13 @@
             <section class="card">
                 <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">🚨 לקוחות בסיכון נטישה</h2>
-                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
                         <thead>
-                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase tracking-wider">
+                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
                                 <th class="p-5">שם לקוח</th>
                                 <th class="p-5 text-center">קצב ממוצע (ימים)</th>
                                 <th class="p-5 text-center">ימים מאז רכישה</th>
@@ -180,12 +183,13 @@
             <section class="card">
                 <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות</h2>
-                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
                         <thead>
-                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase tracking-wider">
+                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
                                 <th class="p-5">שם לקוח</th>
                                 <th class="p-5 text-center">ממוצע היסטורי</th>
                                 <th class="p-5 text-center">הזמנה אחרונה</th>
@@ -200,12 +204,13 @@
             <section class="card">
                 <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3">💰 ניהול גבייה ותזרים</h2>
-                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 חובות</span>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0
+                        חובות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
                         <thead>
-                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase tracking-wider">
+                            <tr class="bg-slate-50 border-b text-slate-400 text-sm font-bold uppercase">
                                 <th class="p-5">שם לקוח</th>
                                 <th class="p-5 text-center">סכום החוב</th>
                                 <th class="p-5 text-center">ימי פיגור</th>
@@ -241,7 +246,9 @@
             if (parts.length === 3) {
                 const day = parseInt(parts[0]);
                 const month = parseInt(parts[1]) - 1;
-                const year = parts[2].length === 2 ? 2000 + parseInt(parts[2]) : parseInt(parts[2]);
+                const yearStr = parts[2].trim();
+                let year = parseInt(yearStr);
+                if (yearStr.length === 2) year += 2000;
                 const date = new Date(year, month, day);
                 return isNaN(date.getTime()) ? null : date;
             }
@@ -255,22 +262,27 @@
             const debts = [];
 
             data.forEach(row => {
-                const cleanRow = {};
-                Object.keys(row).forEach(k => cleanRow[k.trim()] = row[k]);
+                const r = {};
+                Object.keys(row).forEach(k => r[k.trim()] = row[k]);
 
-                const name = cleanRow['שם לקוח'] || cleanRow['שם חשבון'] || cleanRow['לקוח'] || cleanRow['Customer_Name'] || cleanRow['Name'];
-                const rawDate = cleanRow['תאריך'] || cleanRow['תאריך ערך'] || cleanRow['תאריך אסמכתא'] || cleanRow['תאריך חשבונית'] || cleanRow['Date'];
-                const qty = parseFloat(cleanRow['כמות בק"ג'] || cleanRow['כמות'] || cleanRow['כמות במלאי'] || cleanRow['Quantity'] || 0);
-                const amt = parseFloat(cleanRow['סכום'] || cleanRow['סכום חובה'] || cleanRow['חובה'] || cleanRow['סה"כ'] || cleanRow['Amount'] || 0);
-                const status = cleanRow['סטטוס'] || cleanRow['מצב'] || cleanRow['יתרה'] || cleanRow['Status'];
+                // מיפוי רחב מאוד כדי לתמוך בכל גרסת חשבשבת אפשרית
+                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['שם'] || r['Customer_Name'] || r['Name'];
+                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['תאריך אסמכתא'] || r['תאריך חשבונית'] || r['Date'];
+                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['כמות במלאי'] || r['Quantity'] || 0);
+                const amt = parseFloat(r['סכום'] || r['חובה'] || r['סכום חובה'] || r['סה"כ'] || r['Amount'] || 0);
+                const status = r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'];
 
                 const date = parseFlexibleDate(rawDate);
-                if (!name || !date) return;
+                if (!name || !date) return; // דילוג על שורות ריקות או שורות סיכום
 
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                if (status === 'Unpaid' || status === 'לא שולם' || status === 'פתוח' || (amt > 0 && status !== 'שולם')) {
+                // לוגיקת זיהוי חוב - תומכת גם במילה "פתוח" וגם ביתרה כספית
+                const isUnpaid = (status && (status.includes('לא שולם') || status.includes('פתוח') || status.includes('Unpaid'))) ||
+                    (amt > 0 && status !== 'שולם' && status !== 'Paid');
+
+                if (isUnpaid) {
                     debts.push({ name, amt, date });
                 }
             });
@@ -283,10 +295,12 @@
             const dropBody = document.getElementById('dropBody');
             const debtBody = document.getElementById('debtBody');
             let churns = 0, drops = 0;
+
             churnBody.innerHTML = ''; dropBody.innerHTML = ''; debtBody.innerHTML = '';
 
             Object.values(customers).forEach(c => {
                 c.orders.sort((a, b) => a.date - b.date);
+
                 if (c.orders.length >= 2) {
                     const diffs = [];
                     for (let i = 1; i < c.orders.length; i++) {
@@ -294,6 +308,7 @@
                     }
                     const avg = diffs.reduce((a, b) => a + b, 0) / diffs.length;
                     const last = (today - c.orders[c.orders.length - 1].date) / 86400000;
+
                     if (last > avg * 1.3 && last > 7) {
                         churns++;
                         const isCrit = last > avg * 2;
@@ -306,6 +321,7 @@
                             </tr>`;
                     }
                 }
+
                 if (c.orders.length >= 3) {
                     const lastQty = c.orders[c.orders.length - 1].qty;
                     const avgQty = c.orders.slice(0, -1).reduce((s, o) => s + o.qty, 0) / (c.orders.length - 1);
