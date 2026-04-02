@@ -200,7 +200,7 @@
         }
 
         function processData(data) {
-            const today = new Date();
+            const today = new Date(); // המערכת תשתמש בתאריך של היום
             const customers = {};
             const debts = [];
 
@@ -208,11 +208,11 @@
                 const r = {};
                 Object.keys(row).forEach(k => r[k.trim()] = row[k]);
 
-                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['שם'] || r['Customer_Name'] || r['Name'];
-                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['תאריך אסמכתא'] || r['תאריך חשבונית'] || r['Date'];
-                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['כמות במלאי'] || r['Quantity'] || 0);
-                const amt = parseFloat(r['סכום'] || r['חובה'] || r['סכום חובה'] || r['סה"כ'] || r['Amount'] || 0);
-                const status = r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'];
+                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'];
+                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['Date'];
+                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || 0);
+                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || 0);
+                const status = (r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'] || "").toString().trim();
 
                 const date = parseFlexibleDate(rawDate);
                 if (!name || !date) return;
@@ -220,8 +220,11 @@
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                const isUnpaid = (status && (status.includes('לא שולם') || status.includes('פתוח') || status.includes('Unpaid'))) || 
-                                 (amt > 0 && status !== 'שולם' && status !== 'Paid');
+                // לוגיקת חוב מעודכנת - כולל Unpaid
+                const isUnpaid = status.toLowerCase().includes('unpaid') || 
+                                 status.includes('פתוח') || 
+                                 status.includes('לא שולם') ||
+                                 (amt > 0 && status === ""); // אם יש סכום ואין סטטוס - זה חוב
                 
                 if (isUnpaid) {
                     debts.push({ name, amt, date });
