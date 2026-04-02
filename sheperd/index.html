@@ -98,6 +98,7 @@
                 max-width: 100% !important;
                 width: 100% !important;
             }
+
             .bg-red-600,
             .bg-amber-500,
             .bg-slate-800 {
@@ -107,6 +108,7 @@
                 padding: 10px 0 !important;
                 justify-content: flex-start !important;
             }
+
             .card {
                 box-shadow: none !important;
                 border: none !important;
@@ -126,12 +128,14 @@
             td {
                 border-bottom: 1px solid #eee !important;
             }
+
             .text-red-600,
             .text-amber-600,
             .text-blue-600 {
                 color: black !important;
                 font-weight: bold !important;
             }
+
             .kpi-card {
                 border: 1px solid #ddd !important;
                 border-radius: 5px !important;
@@ -504,18 +508,34 @@
 
             const reader = new FileReader();
             reader.onload = function (event) {
-                Papa.parse(event.target.result, {
-                    header: true, skipEmptyLines: true,
+                let rawContent = event.target.result;
+
+                // --- שלב הניקוי הקריטי ---
+                const lines = rawContent.split('\n');
+                // אנחנו מחפשים את השורה שמתחילה במילה "שם" (כי שם הכותרות של חשבשבת)
+                const headerIndex = lines.findIndex(line => line.includes("שם"));
+
+                if (headerIndex === -1) {
+                    alert("לא נמצאו כותרות תקינות בקובץ. וודא שזה קובץ חשבשבת.");
+                    loader.classList.add('hidden');
+                    return;
+                }
+
+                // לוקחים רק מהכותרות ועד הסוף, ומסננים שורות סיכום ריקות
+                const cleanedContent = lines.slice(headerIndex)
+                    .filter(line => line.trim().length > 0 && !line.includes("סה\"כ") && !line.includes("סוף דוח"))
+                    .join('\n');
+
+                Papa.parse(cleanedContent, {
+                    header: true,
+                    skipEmptyLines: true,
                     complete: (results) => {
                         setTimeout(() => {
                             processData(results.data);
                             loader.classList.add('hidden');
-
-                            // החלפת נראות הכפתורים
                             document.getElementById('initialUpload').classList.add('hidden');
                             document.getElementById('actionButtons').classList.remove('hidden');
-
-                            input.value = ''; // איפוס כדי שיהיה אפשר להעלות את אותו קובץ שוב
+                            input.value = '';
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         }, 1000);
                     }
@@ -539,32 +559,44 @@
             }
             const isoDate = new Date(d); return isNaN(isoDate.getTime()) ? null : isoDate;
         }
-
         function processData(data) {
             const today = new Date();
             const customers = {};
             const debts = [];
 
             data.forEach(row => {
-                const r = {}; Object.keys(row).forEach(k => r[k.trim()] = row[k]);
-                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'] || r['Name'];
-                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['Date'];
-                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || 0);
-                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || 0);
-                const status = (r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'] || "").toString().trim().toLowerCase();
+                const r = {};
+                Object.keys(row).forEach(k => r[k.trim()] = row[k]);
+
+                // מיפוי שדות חשבשבת
+                const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'];
+                const rawDate = r['תאריך'] || r['תאריך אסמכתא'];
+                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || 0);
+                const amt = parseFloat(r['סכום'] || r['חובה'] || 0);
+                const status = (r['סטטוס'] || r['מצב'] || r['התאמה'] || "").toString().trim();
 
                 const date = parseFlexibleDate(rawDate);
                 if (!name || !date) return;
 
-                if (!customers[name]) customers[name] = { name, orders: [] };
-                customers[name].orders.push({ date, qty, amt });
+                // 1. קודם כל בודקים אם הלקוח קיים, אם לא - יוצרים אותו
+                if (!customers[name]) {
+                    customers[name] = { name, orders: [] };
+                }
 
-                const isUnpaid = status.includes('unpaid') || status.includes('פתוח') || status.includes('לא שולם') || (amt > 0 && (status === "" || status === "0"));
-                if (isUnpaid) debts.push({ name, amt, date });
+                // 2. מחשבים מחיר ליחידה
+                const unitPrice = qty > 0 ? (amt / qty) : 0;
+
+                // 3. דוחפים את הנתונים פעם אחת בלבד
+                customers[name].orders.push({ date, qty, amt, unitPrice });
+
+                // 4. בדיקת חובות פתוחים
+                const isUnpaid = status === "" || status === "0" || status.includes('פתוח');
+                if (isUnpaid && amt > 0) {
+                    debts.push({ name, amt, date });
+                }
             });
             renderDashboard(customers, debts, today);
         }
-
         function renderDashboard(customers, debts, today) {
             const churnBody = document.getElementById('churnBody'), dropBody = document.getElementById('dropBody'), debtBody = document.getElementById('debtBody');
             let churns = 0, critChurns = 0, drops = 0, totalDebt = 0;
@@ -653,23 +685,30 @@
             window.open(whatsappUrl, '_blank');
         }
         function downloadExampleCSV() {
+            // פורמט חשבשבת אמיתי עם הנתונים המקוריים שלך
             const csvContent = "\uFEFF" +
-                "שם לקוח,תאריך,כמות בק\"ג,סכום,סטטוס\n" +
-                "משק לוי,01/03/26,150,4500,פתוח\n" +
-                "משק לוי,10/03/26,140,4200,שולם\n" +
-                "רפת העמק,05/03/26,200,6000,פתוח\n" +
-                "רפת העמק,15/02/26,210,6300,שולם\n" +
-                "מושב נהלל - איציק,01/01/26,100,3000,שולם\n" + // לקוח בסיכון נטישה
-                "מרכז המזון אורי,10/03/26,50,1500,פתוח\n" +
-                "מרכז המזון אורי,01/03/26,150,4500,שולם\n" + // לקוח בצניחה
-                "קיבוץ גלעד,20/03/26,80,2400,פתוח";
+                "דוח תנועות בכרטיסי חו\"ז לקוחות,חברה: משק והורים בע\"מ,תאריכים: 01/01/2026-03/04/2026\n" +
+                "מספר עוסק: 512345678,,הופק בתאריך: 03/04/2026\n" +
+                ",,,,\n" +
+                "שם חשבון,תאריך אסמכתא,כמות,חובה,זכות,התאמה,סוג\n" +
+                "משק לוי,01/03/26,150,4500,0,,ח\"ס\n" +
+                "משק לוי,10/03/26,140,0,4200,123,קב\n" +
+                "רפת העמק,05/03/26,200,6000,0,,ח\"ס\n" +
+                "רפת העמק,15/02/26,210,0,6300,456,קב\n" +
+                "מושב נהלל - איציק,01/01/26,100,3000,0,789,ח\"ס\n" +
+                "מרכז המזון אורי,10/03/26,50,1500,0,,ח\"ס\n" +
+                "מרכז המזון אורי,01/03/26,150,0,4500,999,קב\n" +
+                "קיבוץ גלעד,20/03/26,80,2400,0,,ח\"ס\n" +
+                ",,,,\n" +
+                "סה\"כ לתקופה,,730,17400,19500,,\n" +
+                "סוף דוח,,,,";
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement("a");
             const url = URL.createObjectURL(blob);
 
             link.setAttribute("href", url);
-            link.setAttribute("download", "example_shepherd_data.csv");
+            link.setAttribute("download", "Shepherd_Example_Hashbashet.csv");
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
