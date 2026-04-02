@@ -154,8 +154,15 @@
                             לכסף?</p>
                     </div>
                 </div>
-                <button onclick="toggleHelp()"
-                    class="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-full flex items-center justify-center transition-all text-2xl leading-none">&times;</button>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="downloadExampleCSV()"
+                        class="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl flex items-center gap-2 transition-all text-sm font-bold border border-white/10 no-print">
+                        <span>📥</span> קובץ לדוגמה
+                    </button>
+                    <button onclick="toggleHelp()"
+                        class="bg-white/20 hover:bg-white/30 w-10 h-10 rounded-full flex items-center justify-center transition-all text-2xl leading-none">&times;</button>
+                </div>
             </div>
 
             <div class="p-8 bg-white">
@@ -196,7 +203,7 @@
                         <h4 class="font-bold text-slate-900 text-lg mb-2">אופטימיזציית גבייה</h4>
                         <p class="text-slate-600 leading-relaxed text-sm">
                             במקום לחפש בניירות, המערכת שולפת חובות פתוחים ומחשבת את ימי הפיגור.
-                            <span class="block mt-2 font-semibold text-emerald-600">בלחיצה אחת, תוכלי לשלוח תזכורת עדינה
+                            <span class="block mt-2 font-semibold text-emerald-600">בלחיצה אחת, תוכלי לשלוח תזכורת
                                 בוואטסאפ שתסגור את הפינה.</span>
                         </p>
                     </div>
@@ -246,7 +253,7 @@
                             <li>ודאו שהדוח כולל עמודות של: <span class="underline">תאריך, שם לקוח, כמות,
                                     ויתרה/סכום</span>.</li>
                             <li>בצעו <span class="font-bold text-green-700">'ייצוא לאקסל'</span> יש לשמור את הקובץ
-                                כפורמט <span class="font-bold text-red-600">CSV (מופרד בפסיקים)</span>.</li>
+                                כפורמט <span class="font-bold text-gray-600">CSV (מופרד בפסיקים)</span>.</li>
                             <li>לחצו על הכפתור הכחול למעלה בצד שמאל ("טעינת CSV") והעלו את הקובץ.</li>
                         </ol>
                     </div>
@@ -548,6 +555,30 @@
 
             const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(message);
             window.open(whatsappUrl, '_blank');
+        }
+        function downloadExampleCSV() {
+            // נתוני דוגמה שמייצגים לקוחות בסיכון, חובות וצניחה בכמויות
+            const csvContent = "\uFEFF" +
+                "שם לקוח,תאריך,כמות בק\"ג,סכום,סטטוס\n" +
+                "משק גבינות השומרון,01/03/26,150,4500,פתוח\n" +
+                "משק גבינות השומרון,10/03/26,140,4200,שולם\n" +
+                "סופר מרקט בעמק,05/03/26,200,6000,פתוח\n" +
+                "סופר מרקט בעמק,15/02/26,210,6300,שולם\n" +
+                "מעדניית הכפר,01/01/26,100,3000,שולם\n" + // לקוח בסיכון נטישה (לא קנה מזמן)
+                "אטליז האחים,10/03/26,50,1500,פתוח\n" +
+                "אטליז האחים,01/03/26,150,4500,שולם\n" + // לקוח בצניחה (מ-150 ל-50)
+                "מאפיית הטאבון,20/03/26,80,2400,פתוח";
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute("href", url);
+            link.setAttribute("download", "example_shepherd_data.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function exportTableToExcel(tableId, fileName) {
