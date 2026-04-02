@@ -1,111 +1,89 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Shepherd | Business Intelligence v1.2</title>
+    <title>Project Shepherd | BI v1.2 Final</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;700;800&display=swap');
-        body { font-family: 'Assistant', sans-serif; background-color: #f1f5f9; color: #1e293b; }
-        .card { background: white; border-radius: 1rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-        .status-pill { padding: 4px 12px; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
-        .btn-action { transition: all 0.2s; cursor: pointer; }
-        .btn-action:hover { transform: translateY(-1px); filter: brightness(1.1); }
-        @media print { .no-print { display: none; } body { background: white; p: 0; } .card { box-shadow: none; border: 1px solid #eee; } }
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&display=swap');
+        body { font-family: 'Assistant', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .card { background: white; border-radius: 1.25rem; border: 1px solid #e2e8f0; shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); overflow: hidden; }
+        .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 700; transition: all 0.2s; }
+        .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .status-pill { padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; }
+        @media print { .no-print { display: none; } }
     </style>
 </head>
 <body class="p-4 md:p-10">
-    <div class="max-w-5xl mx-auto">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 no-print">
+    <div class="max-w-6xl mx-auto">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 no-print">
             <div>
-                <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
-                <p class="text-slate-500 font-medium mt-1">מערכת חכמה לשימור לקוחות וניהול תזרים</p>
+                <h1 class="text-5xl font-extrabold tracking-tight text-slate-900">Project <span class="text-blue-600">Shepherd</span></h1>
+                <p class="text-slate-500 text-lg mt-2">מערכת חכמה לשימור לקוחות וניהול תזרים</p>
             </div>
             <div class="flex gap-3">
-                <button onclick="window.print()" class="btn-action bg-white border border-slate-200 px-5 py-2.5 rounded-xl text-sm font-bold shadow-sm text-slate-700">הדפסת דוח</button>
-                <div class="relative bg-blue-600 text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md btn-action overflow-hidden">
-                    <span>טעינת נתונים (CSV)</span>
+                <button onclick="window.print()" class="bg-white border border-slate-200 px-6 py-3 rounded-xl font-bold text-slate-700 shadow-sm hover:bg-slate-50 transition">הדפסת דוח</button>
+                <div class="relative btn-primary shadow-lg cursor-pointer">
+                    <span>טעינת CSV מחשבשבת</span>
                     <input type="file" id="csvFile" accept=".csv" class="absolute inset-0 opacity-0 cursor-pointer">
                 </div>
             </div>
+        </header>
+
+        <div id="welcome" class="card p-20 text-center border-dashed border-2 border-blue-200 bg-blue-50/30">
+            <div class="text-7xl mb-6">📉</div>
+            <h2 class="text-3xl font-extrabold mb-4 text-slate-800">מוכנה להרשים את ההורים?</h2>
+            <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלי את קובץ התנועות מחשבשבת ונפיק מיד תובנות על נטישה, צניחה בכמויות וחובות פתוחים.</p>
         </div>
 
-        <div id="welcomeState" class="card p-16 text-center border-dashed border-2 border-slate-300 bg-slate-50/50">
-            <div class="text-6xl mb-6">📊</div>
-            <h2 class="text-2xl font-bold mb-3 text-slate-800">היי שחף, מוכנים להתחיל?</h2>
-            <p class="text-slate-500 max-w-md mx-auto">העלי את קובץ התנועות מחשבשבת. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים.</p>
-        </div>
-
-        <div id="dashboard" class="hidden space-y-8">
-            <section class="card overflow-hidden">
-                <div class="bg-red-600 px-6 py-4 flex justify-between items-center text-white">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">🚨</span>
-                        <h2 class="font-bold text-lg">לקוחות בסיכון נטישה</h2>
-                    </div>
-                    <span id="churnCount" class="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">0 לקוחות</span>
+        <div id="dashboard" class="hidden space-y-10">
+            <section class="card border-red-100">
+                <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
+                    <h2 class="text-xl font-bold flex items-center gap-3">🚨 לקוחות בסיכון נטישה</h2>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right">
-                        <thead>
-                            <tr class="text-slate-400 text-xs font-bold uppercase bg-slate-50/50 border-b">
-                                <th class="p-4">שם הלקוח</th>
-                                <th class="p-4 text-center">קצב רכישה ממוצע</th>
-                                <th class="p-4 text-center">ימים מאז רכישה אחרונה</th>
-                                <th class="p-4 text-left">סטטוס חריגה</th>
-                            </tr>
-                        </thead>
-                        <tbody id="churnBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
+                <table class="w-full text-right">
+                    <thead class="bg-slate-50 border-b">
+                        <tr class="text-slate-400 text-sm">
+                            <th class="p-5">שם לקוח</th>
+                            <th class="p-5 text-center">קצב ממוצע (ימים)</th>
+                            <th class="p-5 text-center">ימים מאז רכישה</th>
+                            <th class="p-5 text-left">סטטוס</th>
+                        </tr>
+                    </thead>
+                    <tbody id="churnBody" class="divide-y divide-slate-100"></tbody>
+                </table>
             </section>
 
-            <section class="card overflow-hidden">
-                <div class="bg-amber-500 px-6 py-4 flex justify-between items-center text-white">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">📉</span>
-                        <h2 class="font-bold text-lg">צניחה חריגה בכמויות (קנייה חלקית)</h2>
-                    </div>
-                    <span id="dropCount" class="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">0 לקוחות</span>
+            <section class="card border-amber-100">
+                <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
+                    <h2 class="text-xl font-bold flex items-center gap-3">📉 צניחה חריגה בכמויות</h2>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right">
-                        <thead>
-                            <tr class="text-slate-400 text-xs font-bold bg-slate-50/50 border-b">
-                                <th class="p-4">שם הלקוח</th>
-                                <th class="p-4 text-center">ממוצע הזמנה היסטורי</th>
-                                <th class="p-4 text-center">הזמנה אחרונה (ק"ג)</th>
-                                <th class="p-4 text-left">אחוז ירידה</th>
-                            </tr>
-                        </thead>
-                        <tbody id="dropBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
+                <table class="w-full text-right">
+                    <thead class="bg-slate-50 border-b">
+                        <tr class="text-slate-400 text-sm">
+                            <th class="p-5">שם לקוח</th>
+                            <th class="p-5 text-center">ממוצע היסטורי (ק"ג)</th>
+                            <th class="p-5 text-center">הזמנה אחרונה</th>
+                            <th class="p-5 text-left">אחוז ירידה</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dropBody" class="divide-y divide-slate-100"></tbody>
+                </table>
             </section>
 
-            <section class="card overflow-hidden">
-                <div class="bg-slate-800 px-6 py-4 flex justify-between items-center text-white">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">💰</span>
-                        <h2 class="font-bold text-lg">ניהול גבייה ותזרים</h2>
-                    </div>
-                    <span id="debtCount" class="bg-white/20 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">0 חובות</span>
+            <section class="card border-slate-200">
+                <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
+                    <h2 class="text-xl font-bold flex items-center gap-3">💰 ניהול תזרים וגבייה</h2>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0</span>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right">
-                        <thead>
-                            <tr class="text-slate-400 text-xs font-bold bg-slate-50/50 border-b">
-                                <th class="p-4">שם הלקוח</th>
-                                <th class="p-4 text-center">סכום החוב</th>
-                                <th class="p-4 text-center">ימי פיגור</th>
-                                <th class="p-4 text-left no-print">פעולה</th>
-                            </tr>
-                        </thead>
-                        <tbody id="debtBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
+                <table class="w-full text-right divide-y divide-slate-100">
+                    <tbody id="debtBody"></tbody>
+                </table>
             </section>
         </div>
     </div>
@@ -114,32 +92,23 @@
         document.getElementById('csvFile').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const content = event.target.result;
-                Papa.parse(content, {
-                    header: true,
-                    skipEmptyLines: true,
-                    complete: (results) => processData(results.data)
-                });
-            };
-            // תמיכה בקידוד עברית נפוץ מחשבשבת
-            reader.readAsText(file, "UTF-8"); 
+            Papa.parse(file, {
+                header: true,
+                skipEmptyLines: true,
+                complete: (results) => processData(results.data)
+            });
         });
 
-        function parseFlexibleDate(d) {
+        function parseDate(d) {
             if (!d) return null;
             const parts = d.toString().split(/[\/\-\.]/);
             if (parts.length === 3) {
                 const day = parseInt(parts[0]);
                 const month = parseInt(parts[1]) - 1;
                 const year = parts[2].length === 2 ? 2000 + parseInt(parts[2]) : parseInt(parts[2]);
-                const date = new Date(year, month, day);
-                return isNaN(date.getTime()) ? null : date;
+                return new Date(year, month, day);
             }
-            const isoDate = new Date(d);
-            return isNaN(isoDate.getTime()) ? null : isoDate;
+            return new Date(d);
         }
 
         function processData(data) {
@@ -148,23 +117,21 @@
             const debts = [];
 
             data.forEach(row => {
-                const cleanRow = {};
-                Object.keys(row).forEach(k => cleanRow[k.trim()] = row[k]);
+                const r = {}; 
+                Object.keys(row).forEach(k => r[k.trim()] = row[k]);
 
-                // מיפוי שמות עמודות גמיש (עברית/אנגלית)
-                const name = cleanRow['Customer_Name'] || cleanRow['שם לקוח'] || cleanRow['שם חשבון'] || cleanRow['Name'];
-                const rawDate = cleanRow['Date'] || cleanRow['תאריך'] || cleanRow['תאריך חשבונית'];
-                const qty = parseFloat(cleanRow['Quantity_KG'] || cleanRow['כמות'] || cleanRow['Quantity'] || 0);
-                const amt = parseFloat(cleanRow['Invoice_Amount'] || cleanRow['סכום'] || cleanRow['Amount'] || 0);
-                const status = cleanRow['Status'] || cleanRow['סטטוס'] || cleanRow['מצב'];
-                
-                const date = parseFlexibleDate(rawDate);
-                if (!name || !date) return;
+                const name = r['Customer_Name'] || r['שם לקוח'] || r['שם חשבון'];
+                const date = parseDate(r['Date'] || r['תאריך']);
+                const qty = parseFloat(r['Quantity_KG'] || r['כמות'] || 0);
+                const amt = parseFloat(r['Invoice_Amount'] || r['סכום'] || 0);
+                const status = r['Status'] || r['סטטוס'] || r['מצב'];
+
+                if (!name || isNaN(date?.getTime())) return;
 
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                if (status === 'Unpaid' || status === 'לא שולם' || status === 'פתוח') {
+                if (status === 'Unpaid' || status === 'לא שולם') {
                     debts.push({ name, amt, date });
                 }
             });
@@ -176,73 +143,65 @@
             const churnBody = document.getElementById('churnBody');
             const dropBody = document.getElementById('dropBody');
             const debtBody = document.getElementById('debtBody');
-            
             let churns = 0, drops = 0;
+
             churnBody.innerHTML = ''; dropBody.innerHTML = ''; debtBody.innerHTML = '';
 
             Object.values(customers).forEach(c => {
                 c.orders.sort((a,b) => a.date - b.date);
                 
-                // 1. Churn Logic (נטישה)
                 if (c.orders.length >= 2) {
-                    const diffs = [];
-                    for(let i=1; i<c.orders.length; i++) {
-                        diffs.push((c.orders[i].date - c.orders[i-1].date) / 86400000);
-                    }
-                    const avg = diffs.reduce((a,b) => a+b, 0) / diffs.length;
-                    const last = (today - c.orders[c.orders.length-1].date) / 86400000;
+                    const diffs = c.orders.slice(1).map((o,i) => (o.date - c.orders[i].date)/86400000);
+                    const avg = diffs.reduce((a,b)=>a+b)/diffs.length;
+                    const last = (today - c.orders[c.orders.length-1].date)/86400000;
 
                     if (last > avg * 1.3 && last > 7) {
                         churns++;
                         const isCrit = last > avg * 2;
                         churnBody.innerHTML += `
                             <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4 font-bold text-slate-800 underline decoration-slate-200">${c.name}</td>
-                                <td class="p-4 text-center text-slate-500">${Math.round(avg)} ימים</td>
-                                <td class="p-4 text-center font-extrabold text-red-600 bg-red-50/30">${Math.floor(last)} ימים</td>
-                                <td class="p-4 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-amber-100 text-amber-700 border border-amber-200'}">${isCrit ? 'קריטי - להתקשר' : 'חריגה מהזמן'}</span></td>
+                                <td class="p-5 font-bold text-slate-800">${c.name}</td>
+                                <td class="p-5 text-center text-slate-500">${Math.round(avg)} ימים</td>
+                                <td class="p-5 text-center font-black text-red-600">${Math.floor(last)} ימים</td>
+                                <td class="p-5 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${isCrit ? 'קריטי' : 'חריגה'}</span></td>
                             </tr>`;
                     }
                 }
 
-                // 2. Quantity Drop (צניחה בכמות)
                 if (c.orders.length >= 3) {
                     const last = c.orders[c.orders.length-1].qty;
-                    const avg = c.orders.slice(0,-1).reduce((s,o)=>s+o.qty,0) / (c.orders.length-1);
-                    if (last < avg * 0.7 && avg > 0) {
+                    const avg = c.orders.slice(0,-1).reduce((s,o)=>s+o.qty,0)/(c.orders.length-1);
+                    if (last < avg * 0.7) {
                         drops++;
                         const perc = Math.round((1 - last/avg)*100);
                         dropBody.innerHTML += `
                             <tr class="hover:bg-slate-50 transition">
-                                <td class="p-4 font-bold text-slate-800">${c.name}</td>
-                                <td class="p-4 text-center text-slate-400 font-medium">${Math.round(avg).toLocaleString()} ק"ג</td>
-                                <td class="p-4 text-center text-amber-600 font-black">${last.toLocaleString()} ק"ג</td>
-                                <td class="p-4 text-left font-black text-amber-700 bg-amber-50/50">${perc}%-</td>
+                                <td class="p-5 font-bold text-slate-800">${c.name}</td>
+                                <td class="p-5 text-center text-slate-400">${Math.round(avg)} ק"ג</td>
+                                <td class="p-5 text-center text-amber-600 font-black">${last} ק"ג</td>
+                                <td class="p-5 text-left font-black text-amber-700">${perc}%-</td>
                             </tr>`;
                     }
                 }
             });
 
-            // 3. Debts (חובות)
             debts.sort((a,b) => a.date - b.date).forEach(d => {
-                const diff = Math.floor((today - d.date) / 86400000);
+                const overdue = Math.floor((today - d.date)/86400000);
                 debtBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="p-4 font-bold text-slate-700">${d.name}</td>
-                        <td class="p-4 text-center font-mono font-black text-blue-600 text-lg">${Math.round(d.amt).toLocaleString()} ₪</td>
-                        <td class="p-4 text-center text-slate-500 font-medium">${diff} ימי פיגור</td>
-                        <td class="p-4 text-left no-print">
-                            <a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + d.amt + ' ש"ח. תודה!')}" 
-                               target="_blank" 
-                               class="bg-green-50 text-green-700 border border-green-200 px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">שלחי תזכורת</a>
+                        <td class="p-5 font-bold text-slate-700">${d.name}</td>
+                        <td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td>
+                        <td class="p-5 text-center text-slate-400">${overdue} ימי פיגור</td>
+                        <td class="p-5 text-left no-print">
+                            <a href="https://wa.me/?text=שלום ${encodeURIComponent(d.name)}, רצינו להזכיר על חוב פתוח בסך ${d.amt} ₪. תודה!" target="_blank" class="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-200 transition">תזכורת WhatsApp</a>
                         </td>
                     </tr>`;
             });
 
-            document.getElementById('churnCount').innerText = `${churns} לקוחות`;
-            document.getElementById('dropCount').innerText = `${drops} לקוחות`;
-            document.getElementById('debtCount').innerText = `${debts.length} חובות`;
-            document.getElementById('welcomeState').classList.add('hidden');
+            document.getElementById('churnCount').innerText = churns;
+            document.getElementById('dropCount').innerText = drops;
+            document.getElementById('debtCount').innerText = debts.length;
+            document.getElementById('welcome').classList.add('hidden');
             document.getElementById('dashboard').classList.remove('hidden');
         }
     </script>
