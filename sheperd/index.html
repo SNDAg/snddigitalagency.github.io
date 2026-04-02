@@ -20,6 +20,16 @@
     </style>
 </head>
 <body class="p-4 md:p-10">
+    <div id="loadingOverlay" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-900/20 backdrop-blur-sm transition-all duration-500">
+    <div class="bg-white p-8 rounded-3xl shadow-2xl flex flex-col items-center gap-4 animate-in zoom-in duration-300">
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center text-xl">🐑</div>
+        </div>
+        <p class="text-slate-800 font-bold text-lg">הרועה מעבד נתונים...</p>
+        <p class="text-slate-500 text-sm italic animate-pulse">מזהה מגמות ונטישות שקטות</p>
+    </div>
+</div>
     <div class="max-w-6xl mx-auto">
         <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6 no-print">
             <div class="flex items-center gap-4">
@@ -208,8 +218,7 @@
             </section>
         </div>
     </div>
-
-    <script>
+   <script>
         function toggleHelp() {
             document.getElementById('helpSection').classList.toggle('hidden');
         }
@@ -217,11 +226,26 @@
         document.getElementById('csvFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (!file) return;
+
+            // 1. הסתרת ההסברים (הסימן שאלה) אוטומטית
+            document.getElementById('helpSection').classList.add('hidden');
+
+            // 2. הפעלת אנימציית טעינה
+            const loader = document.getElementById('loadingOverlay');
+            loader.classList.remove('hidden');
+
             const reader = new FileReader();
             reader.onload = function (event) {
                 Papa.parse(event.target.result, {
                     header: true, skipEmptyLines: true,
-                    complete: (results) => processData(results.data)
+                    complete: (results) => {
+                        // 3. השהייה קלה בשביל האפקט המקצועי
+                        setTimeout(() => {
+                            processData(results.data);
+                            loader.classList.add('hidden'); // העלמת האנימציה
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }, 1500);
+                    }
                 });
             };
             reader.readAsText(file, "UTF-8");
@@ -259,7 +283,6 @@
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                // זיהוי חוב משופר: Unpaid, פתוח, או סכום ללא סטטוס
                 const isUnpaid = status.includes('unpaid') || status.includes('פתוח') || status.includes('לא שולם') || (amt > 0 && (status === "" || status === "0"));
                 if (isUnpaid) debts.push({ name, amt, date });
             });
@@ -295,7 +318,7 @@
 
             debts.sort((a, b) => a.date - b.date).forEach(d => {
                 totalDebt += d.amt; const diff = Math.floor((today - d.date) / 86400000);
-                debtBody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-5 font-bold text-slate-700">${d.name}</td><td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td><td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td><td class="p-5 text-left no-print"><a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">WhatsApp</a></td></tr>`;
+                debtBody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-5 font-bold text-slate-700">${d.name}</td><td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td><td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td><td class="p-5 text-left no-print"><a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block font-assistant">WhatsApp</a></td></tr>`;
             });
 
             document.getElementById('totalDebtAmt').innerText = `${Math.round(totalDebt).toLocaleString()} ₪`;
