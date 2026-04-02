@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Shepherd | BI Dashboard v1.5</title>
+    <title>Project Shepherd | Business Intelligence</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -42,7 +42,7 @@
             <div class="card p-12 text-center border-b-8 border-blue-500">
                 <div class="text-7xl mb-6">📊</div>
                 <h2 class="text-3xl font-extrabold mb-4 text-slate-800">היי, מוכנים להתחיל?</h2>
-                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed text-center">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
+                <p class="text-slate-500 text-xl max-w-lg mx-auto leading-relaxed">העלו את קובץ התנועות. המערכת תנתח אוטומטית נטישה, ירידה בכמויות וחובות פתוחים תוך שניות.</p>
                 
                 <div class="instruction-box max-w-2xl mx-auto text-right text-slate-700">
                     <p class="font-bold text-blue-800 text-lg mb-3 flex items-center gap-2"><span>🖥️</span> מדריך מהיר להפקת הקובץ:</p>
@@ -64,7 +64,7 @@
                 </h3>
                 <div class="overflow-hidden rounded-lg border border-slate-200 shadow-sm">
                     <table class="w-full text-sm text-right bg-white font-mono">
-                        <thead class="bg-slate-100 text-slate-500 font-bold">
+                        <thead class="bg-slate-100 text-slate-500">
                             <tr>
                                 <th class="p-2 border-r">שם לקוח</th>
                                 <th class="p-2 border-r text-center">תאריך</th>
@@ -81,21 +81,14 @@
                                 <td class="p-2 border-r text-center">4,500</td>
                                 <td class="p-2">פתוח</td>
                             </tr>
-                            <tr class="border-t bg-slate-50/50">
-                                <td class="p-2 border-r font-medium text-slate-600">מחלבת העמק</td>
-                                <td class="p-2 border-r text-center">28/03/17</td>
-                                <td class="p-2 border-r text-center">80</td>
-                                <td class="p-2 border-r text-center">2,100</td>
-                                <td class="p-2">שולם</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <p class="text-xs text-slate-400 mt-3 font-medium text-center italic">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים (01/04/17).</p>
+                <p class="text-xs text-slate-400 mt-3 font-medium">המערכת מזהה אוטומטית מספרים צמודים, מנקה רווחים מיותרים וממירה תאריכים מכל השנים (01/04/17).</p>
             </div>
         </div>
 
-        <div id="dashboard" class="hidden space-y-10">
+        <div id="dashboard" class="hidden space-y-8">
             
             <div class="flex flex-wrap gap-4 no-print text-right">
                 <div class="kpi-card border-t-4 border-blue-500">
@@ -115,7 +108,7 @@
             <section class="card">
                 <div class="bg-red-600 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3 text-white">🚨 לקוחות בסיכון נטישה</h2>
-                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
+                    <span id="churnCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -135,7 +128,7 @@
             <section class="card">
                 <div class="bg-amber-500 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3 text-white">📉 צניחה חריגה בכמויות</h2>
-                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 לקוחות</span>
+                    <span id="dropCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 לקוחות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -155,7 +148,7 @@
             <section class="card">
                 <div class="bg-slate-800 px-8 py-5 flex justify-between items-center text-white">
                     <h2 class="text-xl font-bold flex items-center gap-3 text-white">💰 ניהול גבייה ותזרים</h2>
-                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black">0 חובות</span>
+                    <span id="debtCount" class="bg-white/20 px-4 py-1 rounded-full text-sm font-black text-white">0 חובות</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right">
@@ -180,10 +173,8 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function (event) {
-                const content = event.target.result;
-                Papa.parse(content, {
-                    header: true,
-                    skipEmptyLines: true,
+                Papa.parse(event.target.result, {
+                    header: true, skipEmptyLines: true,
                     complete: (results) => processData(results.data)
                 });
             };
@@ -194,16 +185,12 @@
             if (!d) return null;
             const parts = d.toString().split(/[\/\-\.]/);
             if (parts.length === 3) {
-                const day = parseInt(parts[0]);
-                const month = parseInt(parts[1]) - 1;
-                const yearStr = parts[2].trim();
-                let year = parseInt(yearStr);
-                if (yearStr.length === 2) year += 2000;
+                let day = parseInt(parts[0]), month = parseInt(parts[1]) - 1, year = parseInt(parts[2]);
+                if (parts[2].length === 2) year += 2000;
                 const date = new Date(year, month, day);
                 return isNaN(date.getTime()) ? null : date;
             }
-            const isoDate = new Date(d);
-            return isNaN(isoDate.getTime()) ? null : isoDate;
+            const iso = new Date(d); return isNaN(iso.getTime()) ? null : iso;
         }
 
         function processData(data) {
@@ -212,14 +199,14 @@
             const debts = [];
 
             data.forEach(row => {
-                const r = {};
-                Object.keys(row).forEach(k => r[k.trim()] = row[k]);
-
+                const r = {}; Object.keys(row).forEach(k => r[k.trim()] = row[k]);
+                
+                // מיפוי רחב לכל סוגי הכותרות מחשבשבת
                 const name = r['שם לקוח'] || r['שם חשבון'] || r['לקוח'] || r['Customer_Name'] || r['Name'];
-                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['תאריך אסמכתא'] || r['תאריך חשבונית'] || r['Date'];
-                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || r['Quantity'] || 0);
-                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || r['Amount'] || 0);
-                const status = (r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'] || "").toString().trim();
+                const rawDate = r['תאריך'] || r['תאריך ערך'] || r['Date'];
+                const qty = parseFloat(r['כמות בק"ג'] || r['כמות'] || r['Quantity_KG'] || 0);
+                const amt = parseFloat(r['סכום'] || r['חובה'] || r['Invoice_Amount'] || 0);
+                const status = (r['סטטוס'] || r['מצב'] || r['יתרה'] || r['Status'] || "").toString().trim().toLowerCase();
 
                 const date = parseFlexibleDate(rawDate);
                 if (!name || !date) return;
@@ -227,25 +214,17 @@
                 if (!customers[name]) customers[name] = { name, orders: [] };
                 customers[name].orders.push({ date, qty, amt });
 
-                const isUnpaid = status.toLowerCase().includes('unpaid') || 
-                                 status.includes('פתוח') || 
-                                 status.includes('לא שולם') ||
-                                 (amt > 0 && status === ""); 
-                
-                if (isUnpaid) {
-                    debts.push({ name, amt, date });
-                }
+                // זיהוי חוב משופר
+                const isUnpaid = status.includes('unpaid') || status.includes('פתוח') || status.includes('לא שולם') || (amt > 0 && status === "");
+                if (isUnpaid) debts.push({ name, amt, date });
             });
 
             renderDashboard(customers, debts, today);
         }
 
         function renderDashboard(customers, debts, today) {
-            const churnBody = document.getElementById('churnBody');
-            const dropBody = document.getElementById('dropBody');
-            const debtBody = document.getElementById('debtBody');
-            
-            let churns = 0, critChurns = 0, drops = 0, totalDebt = 0;
+            const churnBody = document.getElementById('churnBody'), dropBody = document.getElementById('dropBody'), debtBody = document.getElementById('debtBody');
+            let churns = 0, critChurns = 0, drops = 0, totalDebtAmt = 0;
             churnBody.innerHTML = ''; dropBody.innerHTML = ''; debtBody.innerHTML = '';
 
             Object.values(customers).forEach(c => {
@@ -253,23 +232,13 @@
 
                 if (c.orders.length >= 2) {
                     const diffs = [];
-                    for (let i = 1; i < c.orders.length; i++) {
-                        diffs.push((c.orders[i].date - c.orders[i - 1].date) / 86400000);
-                    }
+                    for (let i = 1; i < c.orders.length; i++) diffs.push((c.orders[i].date - c.orders[i-1].date) / 86400000);
                     const avg = diffs.reduce((a, b) => a + b, 0) / diffs.length;
                     const last = (today - c.orders[c.orders.length - 1].date) / 86400000;
 
                     if (last > avg * 1.3 && last > 7) {
-                        churns++;
-                        const isCrit = last > avg * 2;
-                        if (isCrit) critChurns++;
-                        churnBody.innerHTML += `
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-5 font-bold text-slate-800 underline decoration-slate-200">${c.name}</td>
-                                <td class="p-5 text-center text-slate-500">${Math.round(avg)} ימים</td>
-                                <td class="p-5 text-center font-extrabold text-red-600">${Math.floor(last)} ימים</td>
-                                <td class="p-5 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${isCrit ? 'קריטי' : 'חריגה'}</span></td>
-                            </tr>`;
+                        churns++; const isCrit = last > avg * 2; if (isCrit) critChurns++;
+                        churnBody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-5 font-bold text-slate-800 underline decoration-slate-200">${c.name}</td><td class="p-5 text-center text-slate-500">${Math.round(avg)} ימים</td><td class="p-5 text-center font-extrabold text-red-600">${Math.floor(last)} ימים</td><td class="p-5 text-left"><span class="status-pill ${isCrit ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'}">${isCrit ? 'קריטי' : 'חריגה'}</span></td></tr>`;
                     }
                 }
 
@@ -277,35 +246,18 @@
                     const lastQty = c.orders[c.orders.length - 1].qty;
                     const avgQty = c.orders.slice(0, -1).reduce((s, o) => s + o.qty, 0) / (c.orders.length - 1);
                     if (lastQty < avgQty * 0.7 && avgQty > 0) {
-                        drops++;
-                        const perc = Math.round((1 - lastQty / avgQty) * 100);
-                        dropBody.innerHTML += `
-                            <tr class="hover:bg-slate-50 transition">
-                                <td class="p-5 font-bold text-slate-800">${c.name}</td>
-                                <td class="p-5 text-center text-slate-400">${Math.round(avgQty).toLocaleString()} ק"ג</td>
-                                <td class="p-5 text-center text-amber-600 font-black">${lastQty.toLocaleString()} ק"ג</td>
-                                <td class="p-5 text-left font-black text-amber-700">${perc}%-</td>
-                            </tr>`;
+                        drops++; const perc = Math.round((1 - lastQty / avgQty) * 100);
+                        dropBody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-5 font-bold text-slate-800">${c.name}</td><td class="p-5 text-center text-slate-400">${Math.round(avgQty).toLocaleString()} ק"ג</td><td class="p-5 text-center text-amber-600 font-black">${lastQty.toLocaleString()} ק"ג</td><td class="p-5 text-left font-black text-amber-700">${perc}%-</td></tr>`;
                     }
                 }
             });
 
             debts.sort((a, b) => a.date - b.date).forEach(d => {
-                totalDebt += d.amt;
-                const diff = Math.floor((today - d.date) / 86400000);
-                debtBody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="p-5 font-bold text-slate-700">${d.name}</td>
-                        <td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td>
-                        <td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td>
-                        <td class="p-5 text-left no-print">
-                            <a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" 
-                               target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">WhatsApp</a>
-                        </td>
-                    </tr>`;
+                totalDebtAmt += d.amt; const diff = Math.floor((today - d.date) / 86400000);
+                debtBody.innerHTML += `<tr class="hover:bg-slate-50 transition"><td class="p-5 font-bold text-slate-700">${d.name}</td><td class="p-5 text-center font-bold text-blue-600 text-xl">${Math.round(d.amt).toLocaleString()} ₪</td><td class="p-5 text-center text-slate-500 font-medium">${diff} ימי פיגור</td><td class="p-5 text-left no-print"><a href="https://wa.me/?text=${encodeURIComponent('שלום ' + d.name + ', רצינו להזכיר לגבי תשלום פתוח על סך ' + Math.round(d.amt).toLocaleString() + ' ₪. תודה!')}" target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-4 py-2 rounded-lg text-xs font-bold hover:bg-green-600 hover:text-white transition shadow-sm inline-block">WhatsApp</a></td></tr>`;
             });
 
-            document.getElementById('totalDebtAmt').innerText = `${Math.round(totalDebt).toLocaleString()} ₪`;
+            document.getElementById('totalDebtAmt').innerText = `${Math.round(totalDebtAmt).toLocaleString()} ₪`;
             document.getElementById('totalCriticalChurn').innerText = critChurns;
             document.getElementById('totalQtyDrop').innerText = drops;
             document.getElementById('churnCount').innerText = `${churns} לקוחות`;
