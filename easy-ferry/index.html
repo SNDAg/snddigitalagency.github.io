@@ -23,10 +23,10 @@
 
     <meta name="robots" content="index, follow">
     <!-- GEO -->
-    <meta name="geo.region" content="IL" />
-    <meta name="geo.placename" content="ישראל" />
-    <meta name="geo.position" content="31.0461;34.8516" />
-    <meta name="ICBM" content="31.0461, 34.8516" />
+<meta name="geo.region" content="TH" />
+    <meta name="geo.placename" content="Thailand" />
+    <meta name="geo.position" content="15.8700;100.9925" />
+    <meta name="ICBM" content="15.8700, 100.9925" />
     <!-- Hreflang -->
     <link rel="alternate" hreflang="he" href="https://snddigitalagency.com/maaboret" />
     <link rel="alternate" hreflang="en" href="https://snddigitalagency.com/easy-ferry" />
@@ -133,7 +133,17 @@
             --logo-blue: #1c445e;
             --logo12go-green: #4DB84D
         }
-
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
         body {
             margin: 0;
             min-height: 100vh;
@@ -1382,7 +1392,7 @@
             <p class="splash-subtitle">Book Thailand Ferries in Minutes</p>
         </div>
     </div>
-    <h1 style="display:none">EasyFerry – Thailand Ferry Booking</h1>
+    <h1 class="visually-hidden">EasyFerry - Compare & Book Ferry Tickets in Thailand Online</h1>
     <div class="overlay">
         <!-- Logo Header -->
         <div class="logo-header">
@@ -1547,6 +1557,25 @@
             </div>
         </div>
         <!-- סיום card -->
+        <section style="font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; max-width: 400px; width: 92%; margin: 0 auto !important; padding: 280px 15px 30px 15px; color: rgba(255,255,255,0.7); text-align: center; font-size: 13px; line-height: 1.6; background: transparent; z-index: 2; position: relative; clear: both;"> 
+        <h3 style="font-size: 14px; margin-top: 0; margin-bottom: 8px; color: var(--orange-2); font-weight: 700;">Book Ferry Tickets in Thailand Online</h3>
+            <p style="margin: 0; margin-bottom: 15px;">
+                Planning your next island-hopping adventure? With EasyFerry, there is no need to wait in long lines at local piers. Easily compare schedules and prices in real-time for the <strong>ferry from Koh Samui to Koh Phangan</strong>, high-speed speedboats from <strong>Phuket to Koh Phi Phi</strong>, Krabi, Koh Lanta, or Koh Tao. In official partnership with 12GO Asia, we provide the most updated timetables, departure pier location details, and secure online bookings.
+            </p>
+
+            <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 12px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px;">
+                <a href="?from=koh-samui&to=koh-phangan" style="color: var(--orange-2); text-decoration: none; font-size: 12px; font-weight: bold; white-space: nowrap;">🚢 Koh Samui to Koh Phangan Ferry</a>
+                <a href="?from=phuket&to=koh-phi-phi" style="color: var(--orange-2); text-decoration: none; font-size: 12px; font-weight: bold; white-space: nowrap;">🚢 Phuket to Koh Phi Phi Ferry</a>
+                <a href="?from=krabi&to=koh-phi-phi" style="color: var(--orange-2); text-decoration: none; font-size: 12px; font-weight: bold; white-space: nowrap;">🚢 Krabi to Koh Phi Phi Ferry</a>
+                <a href="?from=koh-samui&to=koh-tao" style="color: var(--orange-2); text-decoration: none; font-size: 12px; font-weight: bold; white-space: nowrap;">🚢 Koh Samui to Koh Tao Ferry</a>
+            </div>
+
+            <div style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.15); padding-top: 12px;">
+                <a href="https://snddigitalagency.com/maaboret" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+                    🌐 אתר בעברית (Hebrew)
+                </a>
+            </div>
+        </section>
     </div>
     <!-- סיום overlay -->
     <div class="affiliate-footer">
@@ -1961,8 +1990,6 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', updateRandomSeats);
-
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -2004,11 +2031,41 @@
                 document.getElementById('shareMenu').classList.add('hidden');
             });
         }
-        document.addEventListener('click', (e) => {
-            const wrapper = document.querySelector('.share-wrapper');
-            if (!wrapper.contains(e.target)) {
-                document.getElementById('shareMenu')?.classList.add('hidden');
+document.addEventListener('DOMContentLoaded', () => {
+            // 1. הגרלת מקומות פנויים מראש
+            updateRandomSeats();
+
+            // 2. בדיקת פרמטרים גיאוגרפיים בכתובת (SEO GEO Deep-Linking)
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromParam = urlParams.get('from');
+            const toParam = urlParams.get('to');
+
+            if (fromParam && connections[fromParam]) {
+                state.from = fromParam;
+                
+                // עדכון כפתורי היעד בהתאם למוצא שנבחר
+                document.querySelectorAll('#step-to button').forEach(btn => {
+                    btn.style.display = connections[fromParam].includes(btn.dataset.place) ? 'inline-block' : 'none';
+                });
+
+                if (toParam && connections[fromParam].includes(toParam)) {
+                    state.to = toParam;
+                    // דילוג ישיר לשלב 3 (בחירת מספר נוסעים)
+                    document.getElementById('step-from').classList.add('hidden');
+                    document.getElementById('navButtons').style.display = 'flex';
+                    transition('step-to', 'step-people');
+                    maybeShowSocialProof();
+                }
             }
+
+            // 3. ניהול יציאה חלקה של ה-Splash Screen האנימטיבי
+            const splash = document.getElementById('splash-screen');
+            setTimeout(() => {
+                splash.classList.add('splash-exit');
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                }, 700);
+            }, 2100);
         });
         const progressDots = document.getElementById('progressDots');
         const stepToDotMap = {
