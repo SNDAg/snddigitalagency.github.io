@@ -188,11 +188,20 @@
             padding-top: 90px
         }
 
-        h1 {
+        .overlay > h1 {
+            font-size: 18px !important;
+            color: #fff !important;
+            text-align: center;
+            margin-bottom: 15px !important;
+            font-weight: 700;
+        }
+
+        .step h2 {
+            margin-top: 0;
             margin-bottom: 24px;
             color: var(--logo-blue);
             font-size: 24px;
-            font-weight: 700
+            font-weight: 700;
         }
 
         .step {
@@ -1402,12 +1411,16 @@
             <p class="splash-subtitle">הדרך הקלה למעבורות בתאילנד</p>
         </div>
     </div>
-    <h1 style="display:none">MAABORET – הזמנת מעבורת בתאילנד</h1>
+
     <div class="overlay">
-        <!-- Logo Header -->
         <div class="logo-header">
             <img src="../image/MAABORET-LOGO7.jpeg" alt="MAABORET – מעבורות בתאילנד" loading="eager" decoding="async" />
         </div>
+        
+        <h1 style="font-size: 18px; color: #fff; text-align: center; margin-bottom: 15px; font-weight: 700;">
+            הזמנת מעבורות בתאילנד בעברית ובמחירים הזולים ביותר
+        </h1>
+
         <div id="progressDots" class="progress-dots hidden">
             <div class="dot" data-step="1"></div>
             <div class="dot" data-step="2"></div>
@@ -1416,15 +1429,15 @@
             <div class="dot" data-step="5"></div>
             <div class="dot" data-step="6"></div>
         </div>
+        
         <div class="card">
-            <!-- שלב 1 -->
             <div id="step-from" class="step">
                 <div class="step-hook">
                     2 דקות ואתם עם כרטיס ביד ✨
                     <span>בוחרים, משווים, ומזמינים בלי כאב ראש</span>
                 </div>
-                <h1>מאיפה יוצאים?</h1>
-                <div class="options" id="from-options">
+                <h2>מאיפה יוצאים?</h2>
+                    <div class="options" id="from-options">
                     <button onclick="selectFrom('koh-samui')">קוסמוי</button>
                     <button onclick="selectFrom('koh-phangan')">קופנגן</button>
                     <button onclick="selectFrom('koh-tao')">קוטאו</button>
@@ -1433,11 +1446,11 @@
                     <button onclick="selectFrom('ao-nang')">או נאנג</button>
                     <button onclick="selectFrom('koh-phi-phi')">קופיפי</button>
                     <button onclick="selectFrom('koh-lanta')">קו לנטה</button>
-                </div>
+            </div>        
             </div>
             <!-- שלב 2 -->
             <div id="step-to" class="step hidden">
-                <h1>לאן נוסעים?</h1>
+                <h2>לאן נוסעים?</h2>
                 <div class="options" id="to-options">
                     <button data-place="koh-samui" onclick="selectTo('koh-samui')">קוסמוי</button>
                     <button data-place="koh-phangan" onclick="selectTo('koh-phangan')">קופנגן</button>
@@ -1454,7 +1467,7 @@
             </div>
             <!-- שלב 3 -->
             <div id="step-people" class="step hidden">
-                <h1>כמה נוסעים אתם?</h1>
+                <h2>כמה נוסעים אתם?</h2>
                 <div class="options">
                     <button onclick="selectPeople(1)">1</button>
                     <button onclick="selectPeople(2)">2</button>
@@ -1478,7 +1491,7 @@
             </div>
             <!-- שלב 4 -->
             <div id="step-date" class="step hidden">
-                <h1>באיזה תאריך?</h1>
+                <h2>באיזה תאריך?</h2>
                 <div class="options" id="dynamic-date-options">
                     <button id="todayBtn" onclick="selectDate('today')"></button>
                     <button id="tomorrowBtn" onclick="selectDate('tomorrow')"></button>
@@ -1490,7 +1503,7 @@
             </div>
             <!-- שלב 5 -->
             <div id="step-dep-time" class="step hidden">
-                <h1>באיזו שעה נוח לכם?</h1>
+                <h2>באיזו שעה נוח לכם?</h2>
                 <div class="options">
                     <button onclick="selectDepTime('early')">מוקדם</button>
                     <button onclick="selectDepTime('late')">מאוחר</button>
@@ -1499,7 +1512,7 @@
             </div>
             <!-- סיכום -->
             <div id="step-summary" class="step hidden">
-                <h1>המסלול שלכם מוכן 🚤</h1>
+                <h2>המסלול שלכם מוכן 🚤</h2>
 
                 <div class="routeNote" id="routeNote" style="margin-bottom: 20px;">
                 </div>
