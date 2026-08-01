@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>סדנת הכנה לראיונות עבודה בעידן ה-AI</title>
+<title>סדנת הכנה לראיונות עבודה בעידן הAI</title>
 <!-- Open Graph / WhatsApp / Facebook / LinkedIn -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://snddigitalagency.com/ai-interview-workshop">
-<meta property="og:title" content="סדנת הכנה לראיונות עבודה בעידן ה-AI">
+<meta property="og:title" content="סדנת הכנה לראיונות עבודה בעידן הAI">
 <meta property="og:description" content="למפתחות ומפתחי תוכנה. השיטה המעשית למעבר ראיונות טכניים ובינאישיים בשוק ההייטק הנוכחי.">
 <meta property="og:image" content="https://snddigitalagency.com/image/ai-interview.jpeg">
 <meta property="og:image:width" content="1200">
@@ -15,7 +15,7 @@
 <meta property="og:image:type" content="image/jpeg">
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="סדנת הכנה לראיונות עבודה בעידן ה-AI">
+<meta name="twitter:title" content="סדנת הכנה לראיונות עבודה בעידן הAI">
 <meta name="twitter:description" content="למפתחות ומפתחי תוכנה. השיטה המעשית למעבר ראיונות טכניים ובינאישיים בשוק ההייטק הנוכחי.">
 <meta name="twitter:image" content="https://snddigitalagency.com/image/ai-interview.jpeg">
 <!-- Google Fonts: Heebo -->
@@ -196,6 +196,104 @@
         color: var(--text-main);
     }
     .intro-card p:last-child { margin: 0; }
+
+    .intro-card .lead {
+        font-size: 1.03rem;
+        color: var(--text-main);
+        line-height: 1.75;
+    }
+
+    .benefits-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .benefit-card {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 12px;
+        text-align: center;
+    }
+
+    .benefit-card strong {
+        display: block;
+        color: var(--text-main);
+        margin-bottom: 4px;
+        font-size: 0.95rem;
+    }
+
+    .benefit-card span {
+        color: var(--text-sub);
+        font-size: 0.82rem;
+        line-height: 1.5;
+    }
+
+    .social-proof {
+        padding: 16px;
+    }
+
+    .proof-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .proof-item {
+        background: rgba(56, 189, 248, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.15);
+        border-radius: var(--radius-sm);
+        padding: 10px 8px;
+        text-align: center;
+    }
+
+    .proof-item strong {
+        display: block;
+        color: var(--primary);
+        font-size: 0.95rem;
+        margin-bottom: 3px;
+    }
+
+    .proof-item span {
+        color: var(--text-sub);
+        font-size: 0.78rem;
+        line-height: 1.45;
+    }
+
+    .faq-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 12px;
+    }
+
+    .faq-item {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: rgba(255,255,255,0.02);
+        overflow: hidden;
+    }
+
+    .faq-item summary {
+        cursor: pointer;
+        padding: 12px 14px;
+        list-style: none;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .faq-item summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .faq-item p {
+        margin: 0;
+        padding: 0 14px 14px;
+        color: var(--text-sub);
+        font-size: 0.9rem;
+        line-height: 1.7;
+    }
 
     /* Interactive Segmented Control */
     .segment-title {
@@ -489,6 +587,51 @@
         opacity: 1;
         transform: translateY(0);
     }
+
+    @media (max-width: 640px) {
+        .container {
+            padding: 0 12px;
+        }
+
+        .hero {
+            padding: 30px 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 1.7rem;
+        }
+
+        .hero p.subtitle {
+            font-size: 0.95rem;
+        }
+
+        .metrics-grid,
+        .benefits-grid,
+        .proof-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .contact-row {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-link {
+            justify-content: center;
+            font-size: 0.92rem;
+        }
+
+        .sticky-content {
+            flex-wrap: wrap;
+        }
+
+        .sticky-bar .btn-primary {
+            width: 100%;
+        }
+    }
 </style>
 </head>
 <body>
@@ -552,7 +695,7 @@
                 <button class="segment-btn" onclick="setSegment(2)">מחפשי/ות עבודה</button>
             </div>
             <div class="segment-content active" id="segment-0">
-                מעבר של מסנן ה-ATS האוטומטי, בניית פרופיל LinkedIn ו-GitHub מושך, ורכישת ביטחון בלייב קודינג.
+                מעבר של מסנן קורות החיים האוטומטי, בניית פרופיל LinkedIn ו-GitHub מושך, ורכישת ביטחון בלייב קודינג.
             </div>
             <div class="segment-content" id="segment-1">
                 תרגום הידע התיאורטי מהתואר לפרקטיקה של ראיון עבודה, הצגת פרויקטים בצורה ארכיטקטונית ומעבר ראיונות HR.
@@ -580,7 +723,42 @@
                 </div>
                 <div class="spec-item">
                     <span class="label">מתכונת</span>
-                    <span class="value">לא באים רק להקשיב. באים לתרגל, לטעות, להשתפר ולנצח.</span>
+                    <span class="value">מפגשים בזום בשעות הערב</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reveal social-proof">
+            <div class="proof-grid">
+                <div class="proof-item">
+                    <strong>קבוצה קטנה</strong>
+                    <span>פידבק אישי וממוקד</span>
+                </div>
+                <div class="proof-item">
+                    <strong>תרגול בסגנון אמיתי</strong>
+                    <span>סימולציות שמדמות ראיון בשטח</span>
+                </div>
+                <div class="proof-item">
+                    <strong>מוכוונת לתוצאה</strong>
+                    <span>הכנה לראיונות, משא ומתן ודיוק בהצגה</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reveal">
+            <div class="segment-title" style="margin: 0 0 14px;">מה תקבלו בסדנה?</div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <strong>הצגה עצמית</strong>
+                    <span>איך לתאר את עצמכם בצורה ברורה, חכמה ובטוחה</span>
+                </div>
+                <div class="benefit-card">
+                    <strong>מענה לראיונות</strong>
+                    <span>שאלות טכניות, התנהגותיות ו-HR עם תרגול מעשי</span>
+                </div>
+                <div class="benefit-card">
+                    <strong>שיפור בביטחון</strong>
+                    <span>להרגיש מוכנים יותר, גם כשמגיעים לראיונות</span>
                 </div>
             </div>
         </div>
@@ -690,6 +868,20 @@
                 ראיון אחד מוצלח שווה עשרות אלפי שקלים בשנה. הוא מייצר <strong>אפקט ריבית דה ריבית</strong> - גם בנקודת הזינוק של השכר לשנים קדימה, וגם בסוג החברות והתפקידים שיפתחו בפניכם בהמשך.<br><br>
                 ההשקעה הכי טובה שאתם יכולים לעשות היום, היא בלהביא את <strong style="color: var(--primary);">הגרסה הכי טובה שלכם</strong> לחדר הראיונות.
             </p>
+        </div>
+
+        <div class="card reveal">
+            <div class="segment-title" style="margin: 0 0 8px;">שאלות נפוצות</div>
+            <div class="faq-list">
+                <details class="faq-item">
+                    <summary>האם מתאים גם למתחילים?</summary>
+                    <p>כן. הסדנה בנויה כך שתתאים גם למי שמתחיל את הדרך וגם למפתחים מנוסים שרוצים לשפר את יכולות הראיונות שלהם.</p>
+                </details>
+                <details class="faq-item">
+                    <summary>האם זה כולל תרגול מעשי?</summary>
+                    <p>בהחלט. התרגול הוא חלק מרכזי מהתוכנית, כולל סימולציות, ניסוח תשובות והכנה לראיונות אמיתיים.</p>
+                </details>
+            </div>
         </div>
 
         <!-- Footer CTA & Contact -->
