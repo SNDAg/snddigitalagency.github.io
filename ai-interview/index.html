@@ -71,6 +71,130 @@
         padding: 0 16px;
     }
 
+    .mobile-opening {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 1200;
+        align-items: center;
+        justify-content: center;
+        padding: 24px 18px;
+        background:
+            linear-gradient(180deg, rgba(2, 8, 23, 0.18) 0%, rgba(2, 8, 23, 0.72) 100%),
+            url('/image/ai-interview.jpg') center/cover no-repeat;
+        overflow: hidden;
+    }
+
+    .mobile-opening::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at top, rgba(56, 189, 248, 0.25), transparent 60%);
+        pointer-events: none;
+    }
+
+    .mobile-opening__content {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 360px);
+        text-align: center;
+        animation: openingReveal 0.8s ease both;
+    }
+
+    .mobile-opening__badge {
+        margin-bottom: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(8, 15, 30, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        backdrop-filter: blur(10px);
+    }
+
+    .mobile-opening__title {
+        margin: 0 0 10px;
+        font-size: 1.7rem;
+        line-height: 1.18;
+        font-weight: 800;
+        color: #f8fafc;
+        text-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+    }
+
+    .mobile-opening__subtitle {
+        margin: 0 0 18px;
+        color: rgba(248, 250, 252, 0.92);
+        font-size: 0.98rem;
+        line-height: 1.65;
+    }
+
+    .mobile-opening__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 999px;
+        background: var(--primary-gradient);
+        color: #03111d;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 10px 28px rgba(56, 189, 248, 0.26);
+        margin-bottom: 16px;
+    }
+
+    .mobile-opening__hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: rgba(248, 250, 252, 0.8);
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+
+    .mobile-opening__hint .arrow {
+        display: inline-flex;
+        animation: openingHint 1.2s ease-in-out infinite;
+        color: var(--primary);
+    }
+
+    .mobile-opening.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .mobile-opening.is-hidden .mobile-opening__content {
+        transform: translateY(10px) scale(0.98);
+        transition: transform 0.45s ease;
+    }
+
+    @keyframes openingReveal {
+        from {
+            opacity: 0;
+            transform: translateY(14px) scale(0.98);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @keyframes openingHint {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(6px);
+        }
+    }
+
     /* Top Status Bar */
     .status-badge {
         display: inline-flex;
@@ -110,6 +234,7 @@
 
     .hero h1 .highlight {
         background: linear-gradient(135deg, #f8fafc 30%, #38bdf8 100%);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -918,6 +1043,22 @@
 </head>
 <body>
 
+    <div class="mobile-opening" id="mobileOpening" aria-hidden="true">
+        <div class="mobile-opening__content">
+            <div class="mobile-opening__badge">
+                <span class="dot"></span>
+                <span>סדנת הכנה לראיונות עבודה</span>
+            </div>
+            <h2 class="mobile-opening__title">הקריירה הבאה שלכם<br>מתחילה כאן</h2>
+            <p class="mobile-opening__subtitle">הכנה מעשית לראיונות טכניים, בינאישיים ומשא ומתן בעידן ה-AI.</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="mobile-opening__cta" target="_blank">להרשמה עכשיו</a>
+            <div class="mobile-opening__hint">
+                <span>גלול להמשך</span>
+                <span class="arrow" aria-hidden="true">↓</span>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
 
         <!-- Hero Section -->
@@ -1322,6 +1463,24 @@
         }, { threshold: 0.08 });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Mobile opening screen
+        const mobileOpening = document.getElementById('mobileOpening');
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (mobileOpening && window.innerWidth <= 640 && !prefersReducedMotion) {
+            document.body.classList.add('mobile-opening-active');
+            mobileOpening.style.display = 'flex';
+            mobileOpening.setAttribute('aria-hidden', 'false');
+
+            window.setTimeout(() => {
+                mobileOpening.classList.add('is-hidden');
+                document.body.classList.remove('mobile-opening-active');
+                mobileOpening.setAttribute('aria-hidden', 'true');
+            }, 2800);
+        } else if (mobileOpening) {
+            mobileOpening.style.display = 'none';
+        }
 
         // Sticky Bottom Bar visibility
         const stickyBar = document.getElementById('stickyBar');
