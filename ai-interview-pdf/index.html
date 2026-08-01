@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    @page {
+        size: A4;
+        margin: 15mm 15mm;
+        background-color: #f8fafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Heebo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, Arial;
+        color: #1e293b;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        font-size: 11.5pt;
+    }
+    h1, h2, h3, h4, p, ul, li { text-align: right; margin-top: 0; }
+    
+    /* Hero Section - Gradient & Premium Feel */
+    .hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #ffffff;
+        margin: -15mm -15mm 25px -15mm;
+        padding: 25mm 15mm 20mm 15mm;
+        text-align: center;
+        border-bottom: 6px solid #38bdf8;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .hero h1 { text-align: center; color: #f8fafc; font-size: 28pt; margin-bottom: 15px; line-height: 1.2; font-weight: 800; }
+    .hero p { text-align: center; font-size: 15pt; color: #93c5fd; font-weight: 600; margin-bottom: 0; }
+    .hero .highlight { color: #38bdf8; font-weight: 800; }
+
+    /* Intro Block - Increased trust and readability */
+    .intro-box {
+        background: #ffffff;
+        border-right: 6px solid #f59e0b;
+        padding: 22px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        font-size: 12pt;
+    }
+    .intro-box p { margin-bottom: 12px; }
+    .intro-box p:last-child { margin-bottom: 0; }
+    .intro-box strong { color: #0f172a; font-weight: 800; background: rgba(245, 158, 11, 0.1); padding: 0 4px; border-radius: 4px; }
+
+    /* Technical Details - Cleaner layout */
+    .tech-details {
+        background: linear-gradient(to left, #1e293b, #0f172a);
+        color: #f8fafc;
+        padding: 20px 25px;
+        border-radius: 10px;
+        margin-bottom: 35px;
+        page-break-inside: avoid;
+        box-shadow: 0 6px 15px rgba(15, 23, 42, 0.15);
+    }
+    .tech-details h2 { color: #38bdf8; font-size: 16pt; margin-bottom: 15px; font-weight: 800; }
+    .tech-details ul { list-style-type: none; padding: 0; margin: 0; }
+    .tech-details li { margin-bottom: 10px; font-size: 12.5pt; display: flex; align-items: baseline; }
+    .tech-details strong { color: #fcd34d; margin-left: 8px; font-weight: 600; width: 65px; display: inline-block; }
+
+    /* Syllabus Titles */
+    .section-title {
+        color: #0f172a;
+        font-size: 22pt;
+        margin-top: 35px;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #e2e8f0;
+        padding-bottom: 10px;
+        font-weight: 800;
+    }
+
+    /* Syllabus Cards - Badges & Hover Effects */
+    .week-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+        border-right: 6px solid #38bdf8;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+    }
+    .week-card h3 { color: #0f172a; font-size: 15pt; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; }
+    .week-card h3 span { 
+        background: #e0f2fe; 
+        color: #0369a1; 
+        font-size: 12pt; 
+        font-weight: 800; 
+        padding: 4px 12px; 
+        border-radius: 20px; 
+        margin-left: 12px; 
+        display: inline-block; 
+    }
+    .week-card p { margin-bottom: 8px; color: #334155; font-size: 11.5pt; }
+    .week-card p:last-child { margin-bottom: 0; }
+    .week-card strong { color: #0f172a; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; }
+
+    /* Target Audience */
+    .target-audience {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+        border-right: 6px solid #22c55e;
+        padding: 22px;
+        margin-top: 35px;
+        border-radius: 10px;
+        page-break-inside: avoid;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.08);
+    }
+    .target-audience h3 { color: #15803d; font-size: 16pt; margin-bottom: 15px; font-weight: 800; }
+    .target-audience ul { margin: 0; padding-right: 25px; color: #166534; font-size: 12pt; line-height: 1.6; }
+    .target-audience li { margin-bottom: 12px; }
+
+    /* Value Proposition Box - The "Guarantee/ROI" look */
+    .value-prop {
+        font-size: 13pt;
+        color: #451a03;
+        background: linear-gradient(135deg, #fffbeb, #fef3c7);
+        padding: 22px;
+        border-radius: 10px;
+        margin: 35px 0;
+        border: 2px solid #fbbf24;
+        border-right: 8px solid #f59e0b;
+        page-break-inside: avoid;
+        text-align: center;
+        line-height: 1.6;
+        box-shadow: 0 6px 15px rgba(245, 158, 11, 0.1);
+    }
+    .value-prop strong { color: #b45309; font-weight: 800; font-size: 14pt; }
+
+    /* Call to Action Section - Maximum Conversion Focus */
+    .cta-section {
+        background: linear-gradient(135deg, #0f172a, #1e293b);
+        color: #ffffff;
+        text-align: center;
+        padding: 35px 25px;
+        margin-top: 40px;
+        border-radius: 12px;
+        page-break-inside: avoid;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.2);
+        border-bottom: 6px solid #f59e0b;
+    }
+    .cta-section h2 { text-align: center; color: #fcd34d; font-size: 20pt; margin-bottom: 15px; font-weight: 800; }
+    
+    /* Scarcity highlight */
+    .scarcity-text { 
+        display: inline-block;
+        background-color: rgba(239, 68, 68, 0.2);
+        color: #fca5a5;
+        padding: 6px 15px;
+        border-radius: 6px;
+        font-weight: 600;
+        margin-bottom: 25px;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .cta-section p { text-align: center; font-size: 13pt; margin-bottom: 25px; color: #e2e8f0; }
+    
+    /* The high-converting button */
+    .btn {
+        display: inline-block;
+        background: linear-gradient(to left, #f59e0b, #ea580c);
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 17pt;
+        padding: 16px 40px;
+        text-decoration: none;
+        border-radius: 50px;
+        margin-bottom: 25px;
+        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
+    }
+    
+    .contact {
+        text-align: center;
+        font-size: 12pt;
+        color: #94a3b8;
+        background: rgba(255,255,255,0.05);
+        padding: 15px;
+        border-radius: 8px;
+        display: inline-block;
+    }
+    .contact p { margin-bottom: 5px; font-size: 11pt; color: #cbd5e1; }
+    .contact p:last-child { margin-bottom: 0; font-size: 13pt; font-weight: 600; color: #e2e8f0; }
+    .contact a { color: #38bdf8; text-decoration: none; font-weight: 600; }
+</style>
+</head>
+<body>
+
+    <div class="hero">
+        <h1>סדנת הכנה לראיונות עבודה בעידן ה-AI<br><span class="highlight">למפתחות ומפתחי תוכנה</span></h1>
+        <p>אוגוסט - ספטמבר 2026</p>
+    </div>
+<div class="intro-box">
+        <p>ב-2026, לדעת לכתוב קוד זה כבר פשוט לא מספיק. <strong>גם ה-AI יודע לכתוב קוד.</strong></p>
+        <p>כדי להתקבל לעבודה הבאה שלכם - <strong>צריך לדעת איך להתראיין.</strong> השוק של היום מרגיש כמו שדה קרב. משרות נסגרות מהר, התחרות בשיאה, ויש פיל אחד גדול בחדר: מהפכת ה-AI שגורמת להרבה מפתחות ומפתחים בתחילת דרכם לחשוש לעתידם.</p>
+        <p>אבל האמת היא שמעסיקים לא מחפשים רובוטים. הם מחפשים מפתחים שיודעים לחשוב, לפתור בעיות מורכבות, לעבוד בצוות, ולהשתמש ב-AI ככלי, לא כתחליף.</p>
+        <p>העבודה הבאה שלכם היא לא עוד משרה, היא המנוע של הקריירה שלכם. כניסה לחברה הנכונה ולתפקיד איכותי עכשיו מייצרת אפקט ריבית דה ריבית: היא מעלה את שווי השוק שלכם, פותחת דלתות זהב ומזניקה את מסלול ההתקדמות והשכר שלכם לשנים קדימה.</p>
+        <p>בסדנה המעשית והאינטנסיבית הזו, אנחנו עומדים לפצח את השיטה יחד.</p>
+        <p>לאורך 6 שבועות נהפוך את חוסר הוודאות, תסמונת המתחזה והלחץ במבחנים - לביטחון עצמי, טכניקה חדה ויתרון אנושי תחרותי שיבליט אתכם מעל עשרות קורות חיים אחרים.</p>
+    </div>
+    <div class="tech-details">
+        <h2>📌 פרטים טכניים</h2>
+        <ul>
+            <li><strong>מתי?</strong> אוגוסט - ספטמבר 2026</li>
+            <li><strong>היקף:</strong> 6 שבועות | פעמיים בשבוע | משך כל מפגש שעתיים</li>
+            <li><strong>מתכונת:</strong> לא באים רק להקשיב. באים לתרגל, לטעות, להשתפר ולנצח.</li>
+        </ul>
+    </div>
+
+    <h2 class="section-title">🎯 הסילבוס שיכניס אתכם לתעשייה</h2>
+
+    <div class="week-card">
+        <h3><span>שבוע 1:</span> לנצח את האלגוריתם - קורות חיים ומיתוג</h3>
+        <p>למה קורות החיים נבלעים ב"חור השחור" של חברות ההייטק?</p>
+        <p>נשדרג את קורות החיים שלכם כך שיעברו את אלגוריתמי הסינון האוטומטיים (ATS) ואת העיניים הביקורתיות של המגייסים ב-6 שניות הראשונות.</p>
+        <p>נלמד איך למנף כלי AI לטובתנו (ולא להיראות כמו בוטים) בכתיבת פרופיל LinkedIn ו-GitHub שפשוט שואב אליו הצעות עבודה יזומות.</p>
+    </div>
+
+    <div class="week-card">
+        <h3><span>שבוע 2:</span> היתרון האנושי ב-3 הדקות הראשונות - הצגה עצמית מנצחת</h3>
+        <p>השאלה "ספר/י לי על עצמך" היא המלכודת הגדולה ביותר - וההזדמנות הגדולה ביותר להראות את מה שאף בינה מלאכותית לא יכולה: האישיות שלנו.</p>
+        <p>נבנה יחד את "נאום המעלית" האישי והמדויק שלכם.</p>
+        <p>נלמד איך לזקק את הניסיון האישי של כל אחת ואחד לסיפור מרתק שמשדר מקצוענות, מנהיגות וביטחון כבר מרגע הפתיחה.</p>
+    </div>
+
+    <div class="week-card">
+        <h3><span>שבוע 3:</span> שלב המבחן הטכני - להפוך את הלחץ ליתרון</h3>
+        <p>לא מחפשים לראות רק שהקוד שכתבנו עובד, מחפשים לראות איך אנחנו חושבות וחושבים.</p>
+        <p>נצלול למתודולוגיה מוכחת לפיצוח שאלות קידוד בלייב (Live Coding / Whiteboard).</p>
+        <p>נלמד איך לתקשר את החשיבה שלנו למראיינים בזמן אמת, ואיך להתמודד עם היתקעות ובלאקאאוט.</p>
+        <p>נלמד איך ניגשים לשאלות ארכיטקטורה ו-System design בצורה אסטרטגית, ואיך לשדר שליטה מלאה.</p>
+    </div>
+
+    <div class="week-card">
+        <h3><span>שבוע 4:</span> שאלות אישיות וראיון ה-HR - לפצח את הקוד האנושי</h3>
+        <p>איך עונים על "מה החולשה שלך?" בלי לירות לעצמנו ברגל?</p>
+        <p>נלמד את הפריימוורק הסודי לתשובות לשאלות התנהגותיות ושאלות "מכשילות".</p>
+        <p>נבין מה מגייסות ומנהלים באמת מחפשים לשמוע בין השורות, ואיך להפוך פערים בניסיון או תקופות ארוכות של חיפוש עבודה לסיפור של עוצמה והתמדה.</p>
+    </div>
+
+    <div class="week-card">
+        <h3><span>שבוע 5:</span> הצגת פרויקט בראיון - המעבדה המעשית</h3>
+        <p>השבוע שבו התיאוריה פוגשת את המציאות, כדי שבראיון האמיתי שום דבר לא יפתיע אותך.</p>
+        <p>נלמד איך להציג את פרויקט הדגל שלכם בצורה שמראה עומק ארכיטקטוני והבנה אמיתית.</p>
+        <p><strong>מעבדת סימולציות:</strong> נערוך סימולציות ראיון Mock Interviews עם פידבק מיידי וכנה. נחווה את התרחישים הגרועים ביותר יחד, כדי שברגע האמת תגיעו רגועים ומוכנים.</p>
+    </div>
+
+    <div class="week-card">
+        <h3><span>שבוע 6:</span> סגירת החוזה, מו"מ וטקטיקות של מנצחים</h3>
+        <p>עברתם את הראיונות? מעולה. השבוע הזה לבדו יחזיר לכם את ההשקעה בסדנה פי כמה וכמה.</p>
+        <p>נלמד איך לנהל משא ומתן חכם על שכר ותנאים, ולהעלות את שווי ההצעה שלכם מבלי לשרוף קשרים.</p>
+        <p>נקבל ארגז כלים מנטלי לניהול תקופת החיפוש, שאלות חובה שאתם חייבים לשאול את המראיינים שלכם כדי להראות רצינות, וטיפי זהב שיסגרו לכם את החוזה.</p>
+    </div>
+
+    <div class="target-audience">
+        <h3>💡 עבור מי הסדנה הזו נוצרה?</h3>
+        <ul>
+            <li>מפתחות ומפתחים בתחילת הדרך / ג'וניורים שמרגישים שהם שולחים עשרות קורות חיים ונופלים בין הכיסאות.</li>
+            <li>בוגרות ובוגרי תארים ומסלולי הכשרה שחייבים דריסת רגל ראשונה מהירה לפני שהידע יתקרר.</li>
+            <li>מפתחים/ות שחוששים שהשוק או ה-AI השאירו אותם מאחור, ורוצים לרכוש את "שריר הראיונות" שרלוונטי בדיוק לעכשיו.</li>
+        </ul>
+    </div>
+
+    <div class="value-prop">
+        🔥 <strong>אל תשאירו את הקריירה שלכם ליד המקרה.</strong> ראיון אחד מוצלח שווה עשרות אלפי שקלים בשנה.<br>
+        אבל יותר מכך, הוא מייצר אפקט ריבית דה ריבית: גם בנקודת הזינוק של השכר לשנים קדימה, וגם בסוג החברות והתפקידים שיפתחו בפניכם בהמשך.<br>
+        ההשקעה הכי טובה שאתם יכולים לעשות היום, היא בלהביא את הגרסה הכי טובה שלכם לחדר הראיונות.
+    </div>
+
+    <div class="cta-section">
+        <h2>📩 מוכנים להפסיק להתפשר על הקריירה שלכם?</h2>
+        <p class="scarcity-text">בגלל אופי התרגול האישי והסימולציות, מספר המקומות בסדנה מוגבל בקפידה.</p>
+        <br>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn">להרשמה והבטחת מקום לחצו כאן</a>
+        <br>
+        <div class="contact">
+            <p>לפרטים נוספים וליצירת קשר:</p>
+            <p>📞 שחף: 050-6986298 | ✉️ <a href="mailto:shahaf579@gmail.com">shahaf579@gmail.com</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
