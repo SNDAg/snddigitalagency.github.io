@@ -413,6 +413,14 @@
         font-size: 0.98rem;
         font-weight: 500;
         transition: background 0.2s;
+        min-height: 48px;
+        white-space: nowrap;
+    }
+
+    .contact-link .contact-icon {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
     }
 
     /* WhatsApp Custom Button */
@@ -498,7 +506,7 @@
             <p class="subtitle">השיטה המעשית למעבר ראיונות טכניים ובינאישיים בשוק ההייטק הנוכחי.</p>
 
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank">
-                להרשמה והבטחת מקום ↵
+                להשארת פרטים והרשמה <span aria-hidden="true">←</span>
             </a>
 
             <!-- Metrics -->
@@ -525,13 +533,13 @@
             <p>מעסיקים מחפשים מפתחות ומפתחים שיודעים לחשוב, לפתור בעיות מורכבות, לעבוד בצוות ולנצל את ה-AI ככלי עבודה עוצמתי.</p>
             
             <p style="margin-top: 18px; line-height: 1.75; font-size: 1.02rem;">
-                העבודה הבאה שלכם היא <strong style="color: var(--text-main);">לא עוד משרה</strong> — היא <strong style="color: var(--primary);">המנוע של הקריירה שלכם.</strong><br>
+                העבודה הבאה שלכם היא <strong style="color: var(--text-main);">לא עוד משרה</strong> - היא <strong style="color: var(--primary);">המנוע של הקריירה שלכם.</strong><br>
                 כניסה לחברה הנכונה ולתפקיד איכותי עכשיו מייצרת <strong style="color: var(--accent-amber);">אפקט ריבית דה ריבית:</strong> היא מעלה את שווי השוק שלכם, פותחת דלתות זהב ומזניקה את מסלול ההתקדמות והשכר לשנים קדימה.
             </p>
 
             <p style="margin-top: 14px; line-height: 1.75; font-size: 1.02rem;">
                 בסדנה המעשית והאינטנסיבית הזו, <strong style="color: var(--text-main);">אנחנו עומדים לפצח את השיטה יחד.</strong><br>
-                לאורך 6 שבועות נהפוך את חוסר הוודאות, <span style="color: var(--primary); font-weight: 700; border-bottom: 1px dashed var(--primary);">תסמונת המתחזה</span> והלחץ במבחנים — ל<strong style="color: var(--text-main);">ביטחון עצמי, טכניקה חדה ויתרון אנושי תחרותי</strong> שיבליט אתכם מעל עשרות קורות חיים אחרים.
+                לאורך 6 שבועות נהפוך את חוסר הוודאות, <span style="color: var(--primary); font-weight: 700; border-bottom: 1px dashed var(--primary);">תסמונת המתחזה</span> והלחץ במבחנים - ל<strong style="color: var(--text-main);">ביטחון עצמי, טכניקה חדה ויתרון אנושי תחרותי</strong> שיבליט אתכם מעל עשרות קורות חיים אחרים.
             </p>
         </div>
 
@@ -669,7 +677,7 @@
         <div class="card target-card reveal" style="margin-top: 24px;">
             <h3>💡 עבור מי הסדנה נוצרה?</h3>
             <ul>
-                <li>מפתחות ומפתחים בתחילת הדרך / ג'וניורים שרוצים לקצר את זמן חיפוש העבודה.</li>
+                <li>מפתחות ומפתחים בתחילת הדרך שרוצים לקצר את זמן חיפוש העבודה.</li>
                 <li>בוגרות ובוגרי תארים ומסלולי הכשרה שזקוקים לדריסת רגל ראשונה בהייטק.</li>
                 <li>מפתחות ומפתחים שרוצים לשפר את מיומנות הראיונות שלהם בעולם ה-AI.</li>
             </ul>
@@ -679,28 +687,35 @@
         <div class="card reveal" style="border-right: 4px solid var(--accent-amber); background: rgba(245, 158, 11, 0.05);">
             <p style="margin: 0; font-size: 1.02rem; line-height: 1.75; color: var(--text-main);">
                 🔥 <strong style="color: var(--accent-amber);">אל תשאירו את הקריירה שלכם ליד המקרה.</strong><br>
-                ראיון אחד מוצלח שווה עשרות אלפי שקלים בשנה. הוא מייצר <strong>אפקט ריבית דה ריבית</strong> — גם בנקודת הזינוק של השכר לשנים קדימה, וגם בסוג החברות והתפקידים שיפתחו בפניכם בהמשך.<br><br>
+                ראיון אחד מוצלח שווה עשרות אלפי שקלים בשנה. הוא מייצר <strong>אפקט ריבית דה ריבית</strong> - גם בנקודת הזינוק של השכר לשנים קדימה, וגם בסוג החברות והתפקידים שיפתחו בפניכם בהמשך.<br><br>
                 ההשקעה הכי טובה שאתם יכולים לעשות היום, היא בלהביא את <strong style="color: var(--primary);">הגרסה הכי טובה שלכם</strong> לחדר הראיונות.
             </p>
         </div>
 
         <!-- Footer CTA & Contact -->
         <div class="card reveal" style="text-align: center; padding: 28px 20px;">
-            <h3 style="margin: 0 0 8px; font-size: 1.2rem;">להרשמה לסדנה הקרובה</h3>
+            <h3 style="margin: 0 0 8px; font-size: 1.2rem;">להרשמה לסדנא הקרובה</h3>
             <p style="color: var(--text-sub); font-size: 0.9rem; margin: 0 0 20px;">מספר המקומות מוגבל לשמירה על איכות התרגול האישי.</p>
             
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="margin-bottom: 16px;">
-                להרשמה והבטחת מקום ↵
+                להשארת פרטים והרשמה <span aria-hidden="true">←</span>
             </a>
 
             <!-- Contact Buttons Grid -->
             <div class="contact-grid">
-                <a href="https://wa.me/972506986298?text=%D7%94%D7%99%D7%99%20%D7%A9%D7%97%D7%A3%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A9%D7%9D%D7%95%D7%A2%20%D7%A4%D7%A8%D7%90%D7%99%D7%9D%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%94%D7%A1%D7%93%D7%A0%D7%94" class="contact-link btn-whatsapp" target="_blank">
-                      לפרטים - WhatsApp💬 
+                <a href="https://wa.me/972506986298?text=%D7%94%D7%99%D7%99%2C%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A9%D7%9E%D7%95%D7%A2%20%D7%A4%D7%A8%D7%98%D7%99%D7%9D%20%D7%A0%D7%95%D7%A1%D7%A4%D7%99%D7%9D%20%D7%A2%D7%95%D7%95%D7%A1%D7%A0%D7%95%D7%95%D7%95%D7%9C%20%D7%9C%D7%A8%D7%90%D7%99%D7%90%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%9D%20%D7%9C%D7%A8%D7%90%D7%99%D7%90%D7%95%D7%95%D7%95%D7%99%D7%95%D7%A6%D7%95%D7%94%20%D7%A2%D7%95%D7%90%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%A2%20%D7%9C%D7%A8%D7%90%D7%99%D7%90%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%95%D7%A2" class="contact-link btn-whatsapp" target="_blank" rel="noopener noreferrer">
+                    <img src="https://img.icons8.com/ios-filled/24/25D366/whatsapp.png" alt="WhatsApp" style="width: 18px; height: 18px;">
+                    <span>ליצירת קשר ופרטים נוספים</span>
                 </a>
                 <div class="contact-row">
-                    <a href="tel:0506986298" class="contact-link">📞 שחף: 050-6986298</a>
-                    <a href="mailto:shahaf579@gmail.com" class="contact-link">✉ Mail</a>
+                    <a href="tel:0506986298" class="contact-link" aria-label="התקשר לשחף">
+                        <img src="https://img.icons8.com/ios-filled/24/ffffff/phone.png" alt="Phone" class="contact-icon">
+                        <span>050-6986298</span>
+                    </a>
+                    <a href="mailto:shahaf579@gmail.com" class="contact-link" aria-label="שלח אימייל">
+                        <img src="https://img.icons8.com/ios-filled/24/ffffff/email.png" alt="Mail" class="contact-icon">
+                        <span>Mail</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -715,7 +730,7 @@
                 <span>אוגוסט - ספטמבר 2026</span>
             </div>
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="width: auto; min-height: 40px; padding: 0 16px; font-size: 0.9rem;">
-                להרשמה ↵
+                להרשמה <span aria-hidden="true">←</span>
             </a>
         </div>
     </div>
