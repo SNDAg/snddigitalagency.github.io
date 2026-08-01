@@ -821,6 +821,42 @@
         transform: translateY(0);
     }
 
+    .scroll-hint {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin-top: 16px;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        opacity: 1;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .scroll-hint.hidden {
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+    }
+
+    .scroll-arrow {
+        display: inline-flex;
+        animation: scroll-bounce 1.4s ease-in-out infinite;
+        font-size: 1.05rem;
+        color: var(--primary);
+    }
+
+    @keyframes scroll-bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(6px);
+        }
+    }
+
     @media (max-width: 640px) {
         .container {
             padding: 0 12px;
@@ -912,6 +948,11 @@
                     <span class="metric-value">קבוצה קטנה</span>
                     <span class="metric-label">מספר מקומות מוגבל</span>
                 </div>
+            </div>
+
+            <div class="scroll-hint" id="scrollHint" aria-label="גלול למטה">
+                <span>גלול למטה</span>
+                <span class="scroll-arrow" aria-hidden="true">↓</span>
             </div>
         </div>
 
@@ -1284,13 +1325,26 @@
 
         // Sticky Bottom Bar visibility
         const stickyBar = document.getElementById('stickyBar');
-        window.addEventListener('scroll', () => {
+        const scrollHint = document.getElementById('scrollHint');
+
+        const toggleStickyBar = () => {
             if (window.scrollY > 280) {
                 stickyBar.classList.add('visible');
             } else {
                 stickyBar.classList.remove('visible');
             }
-        });
+
+            if (scrollHint) {
+                if (window.scrollY > 40) {
+                    scrollHint.classList.add('hidden');
+                } else {
+                    scrollHint.classList.remove('hidden');
+                }
+            }
+        };
+
+        window.addEventListener('scroll', toggleStickyBar, { passive: true });
+        toggleStickyBar();
     </script>
 </body>
 </html>
