@@ -485,6 +485,66 @@
         margin-bottom: 8px;
     }
 
+    .about-card {
+        padding: 24px;
+    }
+
+    .about-content {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .about-text p {
+        margin: 0 0 10px;
+        color: var(--text-sub);
+        font-size: 0.95rem;
+        line-height: 1.75;
+    }
+
+    .about-text p:last-child {
+        margin: 0;
+    }
+
+    .about-badge {
+        display: inline-block;
+        margin-bottom: 10px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.1);
+        color: var(--primary);
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+    }
+
+    .about-list {
+        margin: 12px 0 0;
+        padding-right: 18px;
+        color: var(--text-sub);
+        font-size: 0.93rem;
+        line-height: 1.7;
+    }
+
+    .about-list li {
+        margin-bottom: 8px;
+    }
+
+    .about-photo-wrap {
+        display: flex;
+        justify-content: center;
+    }
+
+    .about-photo {
+        width: 100%;
+        max-width: 220px;
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        object-fit: cover;
+    }
+
     /* Contact Links Section */
     .contact-grid {
         display: grid;
@@ -615,6 +675,15 @@
 
         .card {
             padding: 18px;
+        }
+
+        .about-content {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .about-photo {
+            max-width: 180px;
         }
 
         .contact-row {
@@ -861,6 +930,28 @@
                 <li>בוגרות ובוגרי תארים ומסלולי הכשרה שזקוקים לדריסת רגל ראשונה בהייטק.</li>
                 <li>מפתחות ומפתחים שרוצים לשפר את מיומנות הראיונות שלהם בעולם ה-AI.</li>
             </ul>
+        </div>
+
+        <div class="card reveal about-card">
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="about-badge">מי אני?</div>
+                    <div class="segment-title" style="margin: 0 0 8px;">שחף פרידלנדר</div>
+                    <p><strong>היי, אני שחף פרידלנדר.</strong></p>
+                    <p>מהנדסת תוכנה בכירה עם כמעט עשור בתעשייה, ומנטורית לחיפוש עבודה למתכנתים.</p>
+                    <p>במהלך השנים ראיתי המון ג'וניורים מוכשרים עם ידע טכני מעולה שנפלו בראיונות עבודה פשוט כי הם לא ידעו איך להציג את עצמם.</p>
+                    <p>האמת? לדעת לקודד זה רק חצי מהעניין. החצי השני הוא להבין מה מייחד אתכם, איך לספר את הניסיון שלכם בביטחון, ואיך לגרום למראיין בצד השני של השולחן להבין בדיוק מה אתם שווים.</p>
+                    <p>בסדנא שלי אני משלבת ניסיון מעשי מעולם הפיתוח, חשיבה ארכיטקטונית ודיוק מקצועי. אנחנו לא נדבר על סיסמאות, אלא על איך לתרגם את הידע שלכם לתקשורת נכונה, לעבור ראיונות בביטחון ולבלוט מעל מאות מועמדים אחרים.</p>
+                    <p style="margin-top: 12px;">
+                        <a href="https://snddigitalagency.com/shahaf/" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: 700;">עמוד עסקי</a>
+                        &nbsp;•&nbsp;
+                        <a href="https://www.linkedin.com/in/shahaf-friedlander-65564a121/" target="_blank" rel="noopener noreferrer" style="color: var(--primary); font-weight: 700;">LinkedIn</a>
+                    </p>
+                </div>
+                <div class="about-photo-wrap">
+                    <img src="/image/shahaf.png" alt="שחף פרידלנדר" class="about-photo" loading="lazy">
+                </div>
+            </div>
         </div>
 
         <!-- Value Proposition Banner -->
