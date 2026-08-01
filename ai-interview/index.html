@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>סדנת הכנה לראיונות עבודה בעידן ה-AI</title>
+
+<!-- Google Fonts: Heebo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --bg: #090d16;
+        --surface: #111827;
+        --surface-card: rgba(17, 24, 39, 0.7);
+        --border: rgba(255, 255, 255, 0.08);
+        --border-focus: rgba(56, 189, 248, 0.4);
+        
+        --primary: #38bdf8;
+        --primary-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        --accent-green: #10b981;
+        --whatsapp-green: #25d366;
+        
+        --text-main: #f8fafc;
+        --text-sub: #94a3b8;
+        --text-muted: #64748b;
+        
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: var(--bg);
+        color: var(--text-main);
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+        direction: rtl;
+        padding-bottom: 95px;
+        overflow-x: hidden;
+    }
+
+    .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 0 16px;
+    }
+
+    /* Top Status Bar */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(56, 189, 248, 0.08);
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 20px;
+    }
+
+    .dot {
+        width: 6px;
+        height: 6px;
+        background-color: var(--primary);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--primary);
+    }
+
+    /* Hero Section */
+    .hero {
+        padding: 40px 0 25px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 2.1rem;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        margin: 0 0 12px;
+    }
+
+    .hero h1 .highlight {
+        background: linear-gradient(135deg, #f8fafc 30%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero p.subtitle {
+        font-size: 1.05rem;
+        color: var(--text-sub);
+        margin: 0 0 24px;
+        font-weight: 400;
+    }
+
+    /* Buttons */
+    .btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        min-height: 52px;
+        background: var(--primary-gradient);
+        color: #040914;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        box-shadow: 0 4px 20px rgba(56, 189, 248, 0.25);
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 10px rgba(56, 189, 248, 0.2);
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        margin: 28px 0;
+    }
+
+    .metric-card {
+        background: var(--surface-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 14px 8px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+    }
+
+    .metric-value {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--text-main);
+        display: block;
+        line-height: 1.2;
+    }
+
+    .metric-label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-top: 4px;
+    }
+
+    /* Cards General */
+    .card {
+        background: var(--surface-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 22px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(12px);
+    }
+
+    /* Intro Card */
+    .intro-card p {
+        margin: 0 0 12px;
+        font-size: 0.98rem;
+        color: var(--text-sub);
+    }
+    .intro-card p strong {
+        color: var(--text-main);
+    }
+    .intro-card p:last-child { margin: 0; }
+
+    /* Interactive Segmented Control */
+    .segment-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 0 0 14px;
+        color: var(--text-main);
+    }
+
+    .segmented-control {
+        display: flex;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 4px;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border);
+        margin-bottom: 14px;
+        gap: 2px;
+    }
+
+    .segment-btn {
+        flex: 1;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 8px 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: inherit;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .segment-btn.active {
+        background: var(--surface);
+        color: var(--primary);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        border: 1px solid var(--border);
+    }
+
+    .segment-content {
+        display: none;
+        font-size: 0.92rem;
+        color: var(--text-sub);
+        line-height: 1.5;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: var(--radius-sm);
+        border-right: 3px solid var(--primary);
+    }
+
+    .segment-content.active {
+        display: block;
+    }
+
+    /* Specs Grid */
+    .specs-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .spec-item {
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border);
+        padding: 12px;
+        border-radius: var(--radius-md);
+    }
+
+    .spec-item .label {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .spec-item .value {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    /* Accordion Syllabus */
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        margin: 32px 0 16px;
+        text-align: center;
+        letter-spacing: -0.01em;
+    }
+
+    .accordion-item {
+        background: var(--surface-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .accordion-header {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .accordion-title-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .week-chip {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--primary);
+        background: rgba(56, 189, 248, 0.1);
+        padding: 3px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+    .accordion-header h3 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-main);
+    }
+
+    .accordion-chevron {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        transition: transform 0.3s ease;
+    }
+
+    .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s cubic-bezier(0, 1, 0, 1), padding 0.3s;
+        background: rgba(0, 0, 0, 0.25);
+        padding: 0 16px;
+    }
+
+    .accordion-item.active {
+        border-color: var(--border-focus);
+    }
+
+    .accordion-item.active .accordion-chevron {
+        transform: rotate(180deg);
+        color: var(--primary);
+    }
+
+    .accordion-item.active .accordion-body {
+        padding: 16px;
+        max-height: 800px;
+    }
+
+    .accordion-body p {
+        margin: 0 0 10px;
+        font-size: 0.9rem;
+        color: var(--text-sub);
+    }
+    .accordion-body p:last-child { margin: 0; }
+
+    /* Target Audience */
+    .target-card {
+        border-right: 4px solid var(--accent-green);
+    }
+
+    .target-card h3 {
+        color: var(--accent-green);
+        margin: 0 0 12px;
+        font-size: 1.05rem;
+    }
+
+    .target-card ul {
+        margin: 0;
+        padding-right: 18px;
+        color: var(--text-sub);
+        font-size: 0.92rem;
+    }
+
+    .target-card li {
+        margin-bottom: 8px;
+    }
+
+    /* Contact Links Section */
+    .contact-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    .contact-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .contact-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--text-main);
+        text-decoration: none;
+        font-size: 0.98rem;
+        font-weight: 500;
+        transition: background 0.2s;
+    }
+
+    /* WhatsApp Custom Button */
+    .contact-link.btn-whatsapp {
+        background: rgba(37, 211, 102, 0.12);
+        border: 1px solid rgba(37, 211, 102, 0.35);
+        color: var(--whatsapp-green);
+        font-weight: 700;
+    }
+
+    .contact-link.btn-whatsapp:active {
+        background: rgba(37, 211, 102, 0.25);
+    }
+
+    /* Sticky Mobile Bottom Bar */
+    .sticky-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(9, 13, 22, 0.92);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+        z-index: 999;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .sticky-bar.visible {
+        transform: translateY(0);
+    }
+
+    .sticky-content {
+        max-width: 500px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .sticky-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sticky-text strong {
+        font-size: 0.88rem;
+        color: var(--text-main);
+    }
+
+    .sticky-text span {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="status-badge">
+                <span class="dot"></span>
+                <span>הרשמה פתוחה לסבב אוגוסט - ספטמבר 2026</span>
+            </div>
+
+            <h1>סדנת הכנה לראיונות עבודה<br><span class="highlight">למפתחות ומפתחי תוכנה</span></h1>
+            <p class="subtitle">השיטה המעשית למעבר ראיונות טכניים ובינאישיים בשוק ההייטק הנוכחי.</p>
+
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank">
+                להרשמה והבטחת מקום ↵
+            </a>
+
+            <!-- Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-value">6 שבועות</span>
+                    <span class="metric-label">הכנה מקיפה</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">מםגשים בזום</span>
+                    <span class="metric-label"> שעות הערב</span>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-value">קבוצה קטנה</span>
+                    <span class="metric-label">מספר מקומות מוגבל</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intro Card -->
+        <div class="card intro-card reveal">
+            <p>ב-2026, לדעת לכתוב קוד זה כבר פשוט לא מספיק. <strong>גם ה-AI יודע לכתוב קוד.</strong></p>
+            <p>כדי להתקבל לעבודה הבאה שלכם/ן - <strong>צריך לדעת איך להתראיין.</strong> השוק של היום מציב רף גבוה, משרות נסגרות מהר, והתחרות בשיאה.</p>
+            <p>מעסיקים מחפשים מפתחות ומפתחים שיודעים/ות לחשוב, לפתור בעיות מורכבות, לעבוד בצוות ולנצל את ה-AI ככלי עבודה עוצמתי.</p>
+        </div>
+
+        <!-- Segmented Control Widget -->
+        <div class="card reveal">
+            <div class="segment-title">🎯 למי הסדנה תיתן ערך מקסימלי?</div>
+            <div class="segmented-control">
+                <button class="segment-btn active" onclick="setSegment(0)">ג'וניורים/ות</button>
+                <button class="segment-btn" onclick="setSegment(1)">בוגרי/ות תארים</button>
+                <button class="segment-btn" onclick="setSegment(2)">מחפשי/ות עבודה</button>
+            </div>
+            <div class="segment-content active" id="segment-0">
+                מעבר של מסנן ה-ATS האוטומטי, בניית פרופיל LinkedIn ו-GitHub מושך, ורכישת ביטחון בלייב קודינג.
+            </div>
+            <div class="segment-content" id="segment-1">
+                תרגום הידע התיאורטי מהתואר לפרקטיקה של ראיון עבודה, הצגת פרויקטים בצורה ארכיטקטונית ומעבר ראיונות HR.
+            </div>
+            <div class="segment-content" id="segment-2">
+                פיצוח הסיבות לעיכובים בראיונות קודמים, סימולציות Mock בזמן אמת וטקטיקות לניהול משא ומתן על שכר.
+            </div>
+        </div>
+
+        <!-- Technical Specs -->
+        <div class="card reveal">
+            <div class="segment-title" style="margin-bottom:10px;">📌 פרטי הסדנה</div>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <span class="label">מועד פתיחה</span>
+                    <span class="value">אוגוסט - ספטמבר 2026</span>
+                </div>
+                <div class="spec-item">
+                    <span class="label">מבנה המפגשים</span>
+                    <span class="value">6 שבועות | פעמיים בשבוע</span>
+                </div>
+                <div class="spec-item">
+                    <span class="label">משך כל מפגש</span>
+                    <span class="value">שעתיים </span>
+                </div>
+                <div class="spec-item">
+                    <span class="label">מתכונת</span>
+                    <span class="value">תרגול אקטיבי ופידבק</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Syllabus -->
+        <div class="section-title reveal">תכנית הלימודים</div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 1</span>
+                    <h3>קורות חיים, ATS ומיתוג אישי</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• התאמת קורות החיים למערכות סינון אוטומטיות (ATS) ולמגייסים בלייב.</p>
+                <p>• מינוף כלי AI לכתיבת פרופיל LinkedIn ו-GitHub המייצרים פניות יזומות.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 2</span>
+                    <h3>הצגה עצמית ונאום מעלית</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• פיצוח השאלה "ספר/י לי על עצמך" והצגת יתרון אנושי בולט.</p>
+                <p>• זיקוק הניסיון והפרויקטים של כל אחת ואחד לסיפור מקצועי שמשדר מנהיגות וביטחון.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 3</span>
+                    <h3>המבחן הטכני ו-System Design</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• מתודולוגיה מוכחת לפיצוח שאלות Live Coding / Whiteboard בזמן אמת.</p>
+                <p>• תקשור תהליך החשיבה למראיין והתמודדות עם מצבי היתקעות ובלאקאאוט.</p>
+                <p>• גישה אסטרטגית לשאלות ארכיטקטורה ו-System Design.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 4</span>
+                    <h3>שאלות התנהגותיות וראיון HR</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• מענה מדויק על שאלות "מכשילות" ושאלות חולשה ללא פגיעה בסיכויים.</p>
+                <p>• פריימוורק לתשובות התנהגותיות והצגת פערים בניסיון כנקודות חוזקה.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 5</span>
+                    <h3>מעבדת סימולציות Mock Interviews</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• הצגת פרויקט הדגל באופן שמבליט עומק טכנולוגי.</p>
+                <p>• סימולציות ראיון בלייב עם פידבק כנה ומיידי להסרת הלחץ ברגע האמת.</p>
+            </div>
+        </div>
+
+        <div class="accordion-item reveal">
+            <div class="accordion-header">
+                <div class="accordion-title-group">
+                    <span class="week-chip">שבוע 6</span>
+                    <h3>משא ומתן וסגירת חוזה</h3>
+                </div>
+                <span class="accordion-chevron">▼</span>
+            </div>
+            <div class="accordion-body">
+                <p>• טקטיקות לניהול משא ומתן על שכר ותנאים בצורה מקצועית.</p>
+                <p>• ארגז כלים מנטלי ושאלות מפתח שחובה לשאול את המראיינים.</p>
+            </div>
+        </div>
+
+        <!-- Target Audience Card -->
+        <div class="card target-card reveal" style="margin-top: 24px;">
+            <h3>💡 עבור מי הסדנה נוצרה?</h3>
+            <ul>
+                <li>מפתחות ומפתחים בתחילת הדרך / ג'וניורים שרוצים/ות לקצר את זמן חיפוש העבודה.</li>
+                <li>בוגרות ובוגרי תארים ומסלולי הכשרה שזקוקים/ות לדריסת רגל ראשונה בהייטק.</li>
+                <li>מפתחות ומפתחים שרוצים/ות לשפר את מיומנות הראיונות שלהם/ן בעולם ה-AI.</li>
+            </ul>
+        </div>
+
+        <!-- Footer CTA & Contact -->
+        <div class="card reveal" style="text-align: center; padding: 28px 20px;">
+            <h3 style="margin: 0 0 8px; font-size: 1.2rem;">להרשמה לסדנה הקרובה</h3>
+            <p style="color: var(--text-sub); font-size: 0.9rem; margin: 0 0 20px;">מספר המקומות מוגבל לשמירה על איכות התרגול האישי.</p>
+            
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="margin-bottom: 16px;">
+                להרשמה והבטחת מקום ↵
+            </a>
+
+            <!-- Contact Buttons Grid -->
+            <div class="contact-grid">
+                <a href="https://wa.me/972506986298?text=%D7%94%D7%99%D7%99%20%D7%A9%D7%97%D7%A3%2C%20%D7%90%D7%A0%D7%99%20%D7%A8%D7%95%D7%A6%D7%94%20%D7%9C%D7%A9%D7%9D%D7%95%D7%A2%20%D7%A4%D7%A8%D7%90%D7%99%D7%9D%20%D7%A2%D7%95%D7%91%D7%93%D7%99%D7%9D%20%D7%A2%D7%9C%20%D7%94%D7%A1%D7%93%D7%A0%D7%94" class="contact-link btn-whatsapp" target="_blank">
+                      לפרטים - WhatsApp💬 
+                </a>
+                <div class="contact-row">
+                    <a href="tel:0506986298" class="contact-link">📞 שחף: 050-6986298</a>
+                    <a href="mailto:shahaf579@gmail.com" class="contact-link">✉ Mail </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sticky Mobile Bottom Bar -->
+    <div class="sticky-bar" id="stickyBar">
+        <div class="sticky-content">
+            <div class="sticky-text">
+                <strong>סדנת הכנה לראיונות</strong>
+                <span>אוגוסט - ספטמבר 2026</span>
+            </div>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="width: auto; min-height: 40px; padding: 0 16px; font-size: 0.9rem;">
+                להרשמה ↵
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Accordion Interactivity
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const isActive = item.classList.contains('active');
+
+                document.querySelectorAll('.accordion-item').forEach(el => el.classList.remove('active'));
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Segmented Control Switcher
+        function setSegment(index) {
+            document.querySelectorAll('.segment-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.segment-content').forEach((content, i) => {
+                content.classList.toggle('active', i === index);
+            });
+        }
+
+        // Scroll Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.08 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Sticky Bottom Bar visibility
+        const stickyBar = document.getElementById('stickyBar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 280) {
+                stickyBar.classList.add('visible');
+            } else {
+                stickyBar.classList.remove('visible');
+            }
+        });
+    </script>
+</body>
+</html>
