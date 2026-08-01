@@ -545,6 +545,177 @@
         object-fit: cover;
     }
 
+    .pricing-card {
+        padding: 20px;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.14), rgba(16, 185, 129, 0.08));
+        border: 1px solid rgba(56, 189, 248, 0.2);
+    }
+
+    .pricing-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 12px;
+        align-items: stretch;
+    }
+
+    .pricing-box {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 16px;
+        min-height: 100%;
+        height: 100%;
+    }
+
+    .pricing-box--featured {
+        border-color: rgba(56, 189, 248, 0.45);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2), 0 10px 30px rgba(56, 189, 248, 0.16);
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(16, 185, 129, 0.08));
+    }
+
+    .pricing-box h4 {
+        margin: 0 0 10px;
+        font-size: 0.98rem;
+        color: var(--text-main);
+    }
+
+    .price-top {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .price-main {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        display: block;
+    }
+
+    .price-sub {
+        font-size: 0.84rem;
+        color: var(--text-sub);
+        line-height: 1.65;
+        margin-top: 4px;
+    }
+
+    .price-strike {
+        display: inline-block;
+        text-decoration: line-through;
+        color: rgba(255,255,255,0.6);
+        font-size: 0.92rem;
+        margin-bottom: 8px;
+    }
+
+    .price-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.16);
+        color: #a7f3d0;
+        font-size: 0.72rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .pricing-badge-featured {
+        position: absolute;
+        top: 6px;
+        left: 10px;
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: linear-gradient(135deg, #38bdf8, #0284c7);
+        color: #03111d;
+        font-size: 0.73rem;
+        font-weight: 800;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+        margin-top: 0;
+    }
+
+    .pricing-list {
+        margin: 6px 0 0;
+        padding-right: 18px;
+        color: var(--text-sub);
+        font-size: 0.84rem;
+        line-height: 1.7;
+    }
+
+    .pricing-list li {
+        margin-bottom: 6px;
+    }
+
+    .pricing-actions {
+        margin-top: auto;
+        padding-top: 12px;
+    }
+
+    .btn-secondary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.04);
+        color: var(--text-main);
+        font-size: 0.95rem;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .btn-secondary:active {
+        transform: scale(0.98);
+    }
+
+    .btn-primary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        min-height: 46px;
+        padding: 0 16px;
+        background: var(--primary-gradient);
+        color: #03111d;
+        font-size: 0.95rem;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        box-shadow: 0 6px 18px rgba(56, 189, 248, 0.2);
+        transition: all 0.2s ease;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .btn-primary:active {
+        transform: scale(0.98);
+        box-shadow: 0 3px 10px rgba(56, 189, 248, 0.16);
+    }
+
+    .pricing-note {
+        margin-top: 12px;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        line-height: 1.7;
+        text-align: center;
+    }
+
     /* Contact Links Section */
     .contact-grid {
         display: grid;
@@ -686,6 +857,10 @@
             max-width: 180px;
         }
 
+        .pricing-grid {
+            grid-template-columns: 1fr;
+        }
+
         .contact-row {
             grid-template-columns: 1fr;
         }
@@ -742,9 +917,9 @@
 
         <!-- Intro Card -->
         <div class="card intro-card reveal">
-            <p>ב-2026, לדעת לכתוב קוד זה כבר פשוט לא מספיק. <strong>גם ה-AI יודע לכתוב קוד.</strong></p>
+            <p>ב-2026, לדעת לכתוב קוד זה כבר פשוט לא מספיק. <strong>גם הAI יודע לכתוב קוד.</strong></p>
             <p>כדי להתקבל לעבודה הבאה שלכם - <strong>צריך לדעת איך להתראיין.</strong> השוק של היום מציב רף גבוה, משרות נסגרות מהר, והתחרות בשיאה.</p>
-            <p>מעסיקים מחפשים מפתחות ומפתחים שיודעים לחשוב, לפתור בעיות מורכבות, לעבוד בצוות ולנצל את ה-AI ככלי עבודה עוצמתי.</p>
+            <p>מעסיקים מחפשים מפתחות ומפתחים שיודעים לחשוב, לפתור בעיות מורכבות, לעבוד בצוות ולנצל את הAI ככלי עבודה עוצמתי.</p>
             
             <p style="margin-top: 18px; line-height: 1.75; font-size: 1.02rem;">
                 העבודה הבאה שלכם היא <strong style="color: var(--text-main);">לא עוד משרה</strong> - היא <strong style="color: var(--primary);">המנוע של הקריירה שלכם.</strong><br>
@@ -796,6 +971,53 @@
                     <span class="label">מתכונת</span>
                     <span class="value">מפגשים בזום בשעות הערב</span>
                 </div>
+            </div>
+        </div>
+
+        <div class="card reveal pricing-card">
+            <div class="segment-title" style="margin: 0 0 8px;">💸 המחיר</div>
+            <p style="margin: 0 0 10px; color: var(--text-sub); line-height: 1.7;">
+                בוחרים את המסלול המדויק עבורכם ויוצאים לדרך
+            </p>
+            <div class="pricing-grid">
+                <div class="pricing-box">
+                    <div>
+                        <h4>שיעור בודד</h4>
+                        <div class="price-top">
+                            <span class="price-main">180 ₪</span>
+                        </div>
+                        <div class="price-sub">
+                            רוצים קודם לראות איך זה עובד? אפשר להגיע למפגש ראשון ללא התחייבות לסדנה המלאה. נכיר, ונבדוק יחד אם הגישה שלי מדויקת עבורכם.
+                        </div>
+                    </div>
+                    <div class="pricing-actions">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-secondary" target="_blank">להרשמה לשיעור בודד</a>
+                    </div>
+                </div>
+                <div class="pricing-box pricing-box--featured">
+                    <span class="pricing-badge-featured">מומלץ</span>
+                    <div>
+                        <h4>הסדנה המלאה</h4>
+                        <div class="price-top">
+                            <span class="price-main">620 ₪</span>
+                            <span class="price-badge">הנחה אחרונה</span>
+                        </div>
+                        <div class="price-sub">
+                            <span class="price-strike">700 ₪</span>
+                            <ul class="pricing-list">
+                                <li>6 שבועות של ליווי והכנה מעשית</li>
+                                <li>תרגול ראיונות עם פידבק ישיר</li>
+                                <li>הכוונה לעבר תהליך גיוס אמיתי</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pricing-actions">
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank">להרשמה לסדנה המלאה</a>
+                    </div>
+                </div>
+            </div>
+            <div class="pricing-note">
+                הסדנה המלאה היא המסלול הכי מקיף ומשתלם שיתן לכם את כל המעטפת לראיונות. רוצים להתחיל בהדרגה ולבדוק את החיבור בינינו? אפשר לקבוע שיעור בודד ולצאת לדרך.
             </div>
         </div>
 
@@ -928,7 +1150,7 @@
             <ul>
                 <li>מפתחות ומפתחים בתחילת הדרך שרוצים לקצר את זמן חיפוש העבודה.</li>
                 <li>בוגרות ובוגרי תארים ומסלולי הכשרה שזקוקים לדריסת רגל ראשונה בהייטק.</li>
-                <li>מפתחות ומפתחים שרוצים לשפר את מיומנות הראיונות שלהם בעולם ה-AI.</li>
+                <li>מפתחות ומפתחים שרוצים לשפר את מיומנות הראיונות שלהם בעולם הAI.</li>
             </ul>
         </div>
 
