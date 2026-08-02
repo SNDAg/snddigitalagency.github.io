@@ -103,7 +103,7 @@
         align-items: center;
         text-align: center;
         gap: 12px;
-        animation: openingReveal 0.8s ease both;
+        animation: openingReveal 0.3s ease both;
     }
 
     .mobile-opening__badge {
@@ -166,7 +166,7 @@
 
     .mobile-opening__hint .arrow {
         display: inline-flex;
-        animation: openingHint 1.2s ease-in-out infinite;
+        animation: openingHint 0.8s ease-in-out infinite;
         color: var(--primary);
     }
 
@@ -174,12 +174,12 @@
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        transition: opacity 0.45s ease, visibility 0.45s ease;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
     }
 
     .mobile-opening.is-hidden .mobile-opening__content {
         transform: translateY(10px) scale(0.98);
-        transition: transform 0.45s ease;
+        transition: transform 0.2s ease;
     }
 
     @keyframes openingReveal {
