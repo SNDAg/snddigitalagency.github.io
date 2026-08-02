@@ -2,7 +2,7 @@
 <html dir="rtl" lang="he">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>סדנת הכנה לראיונות עבודה בעידן הAI</title>
 <link rel="icon" href="https://img.icons8.com/ios-filled/50/000000/laptop.png" type="image/png">
 <!-- Open Graph / WhatsApp / Facebook / LinkedIn -->
@@ -42,7 +42,7 @@
         
         --text-main: #f8fafc;
         --text-sub: #94a3b8;
-        --text-muted: #64748b;
+        --text-muted: #94a3b8;
         
         --radius-lg: 16px;
         --radius-md: 12px;
@@ -280,9 +280,10 @@
         gap: 8px;
         width: 100%;
         min-height: 52px;
+        padding: 0 16px;
         background: var(--primary-gradient);
-        color: #040914;
-        font-size: 1.1rem;
+        color: #03111d;
+        font-size: 0.95rem;
         font-weight: 700;
         text-decoration: none;
         border-radius: var(--radius-md);
@@ -290,6 +291,9 @@
         transition: all 0.2s ease;
         border: none;
         cursor: pointer;
+        line-height: 1.2;
+        text-align: center;
+        white-space: nowrap;
     }
 
     .btn-primary:active {
@@ -926,7 +930,7 @@
         background: rgba(9, 13, 22, 0.92);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        padding: 12px 16px;
+        padding: 10px 12px;
         border-top: 1px solid var(--border);
         z-index: 999;
         transform: translateY(100%);
@@ -943,13 +947,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 10px;
     }
 
-    .sticky-text {
+    .sticky-price {
         display: flex;
-        flex-direction: column;
-        gap: 4px;
+        align-items: center;
         min-width: 0;
     }
 
@@ -969,14 +972,14 @@
     }
 
     .current-price {
-        font-size: clamp(1.05rem, 1.35vw, 1.25rem);
+        font-size: clamp(1.02rem, 1.3vw, 1.16rem);
         font-weight: 800;
         color: #ffffff;
         letter-spacing: -0.01em;
     }
 
     .original-price {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: rgba(255, 255, 255, 0.65);
         text-decoration: line-through;
         opacity: 0.9;
@@ -1107,7 +1110,7 @@
         }
 
         .sticky-content {
-            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .sticky-bar .btn-primary {
@@ -1123,11 +1126,11 @@
         }
 
         .current-price {
-            font-size: 1.02rem;
+            font-size: 1rem;
         }
 
         .original-price {
-            font-size: 0.8rem;
+            font-size: 0.76rem;
         }
     }
 </style>
@@ -1493,7 +1496,7 @@
         <!-- Footer CTA & Contact -->
         <div class="card reveal" style="text-align: center; padding: 28px 20px;">
             <h3 style="margin: 0 0 8px; font-size: 1.2rem;">להרשמה לסדנא הקרובה</h3>
-            <p style="color: var(--text-sub); font-size: 0.9rem; margin: 0 0 20px;">מספר המקומות מוגבל לשמירה על איכות התרגול האישי.</p>
+            <p style="color: var(--text-sub); font-size: 0.9rem; margin: 0 0 20px;">מספר המקומות מוגבל לשמירה על איכות הסדנא.</p>
             
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener noreferrer" style="margin-bottom: 16px;">
                 להשארת פרטים והרשמה <span aria-hidden="true">←</span>
