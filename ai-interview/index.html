@@ -145,13 +145,16 @@
         justify-content: center;
         min-height: 48px;
         padding: 0 20px;
+        border: none;
         border-radius: 999px;
         background: var(--primary-gradient);
         color: #03111d;
+        font-family: inherit;
         font-weight: 800;
         text-decoration: none;
         box-shadow: 0 10px 28px rgba(56, 189, 248, 0.26);
         margin-bottom: 2px;
+        cursor: pointer;
     }
 
     .mobile-opening__hint {
@@ -1139,7 +1142,7 @@
             </div>
             <h2 class="mobile-opening__title">הקריירה הבאה שלכם<br>מתחילה כאן</h2>
             <p class="mobile-opening__subtitle">הכנה מעשית לראיונות טכניים, בינאישיים ומשא ומתן בעידן ה-AI.</p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="mobile-opening__cta" target="_blank">להרשמה עכשיו</a>
+            <button type="button" class="mobile-opening__cta" onclick="document.getElementById('mobileOpening').classList.add('is-hidden')">לגלות עוד</button>
             <div class="mobile-opening__hint">
                 <span>המשך</span>
                 <span class="arrow" aria-hidden="true">↓</span>
@@ -1159,7 +1162,7 @@
             <h1>סדנת הכנה לראיונות עבודה<br><span class="highlight">למפתחות ומפתחי תוכנה</span></h1>
             <p class="subtitle">השיטה המעשית למעבר ראיונות טכניים ובינאישיים בשוק ההייטק הנוכחי.</p>
 
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener noreferrer">
                 להשארת פרטים והרשמה <span aria-hidden="true">←</span>
             </a>
 
@@ -1267,7 +1270,7 @@
                         </div>
                     </div>
                     <div class="pricing-actions">
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-secondary" target="_blank">להרשמה לשיעור בודד</a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-secondary" target="_blank" rel="noopener noreferrer">להרשמה לשיעור בודד</a>
                     </div>
                 </div>
                 <div class="pricing-box pricing-box--featured">
@@ -1289,7 +1292,7 @@
                         </div>
                     </div>
                     <div class="pricing-actions">
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank">להרשמה לסדנה המלאה</a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener noreferrer">להרשמה לסדנה המלאה</a>
                     </div>
                 </div>
             </div>
@@ -1339,7 +1342,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 1</span>
+                    <span class="week-chip">מפגש 1</span>
                     <h3>קורות חיים, ATS ומיתוג אישי</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1354,7 +1357,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 2</span>
+                    <span class="week-chip">מפגש 2</span>
                     <h3>הצגה עצמית ונאום מעלית</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1369,7 +1372,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 3</span>
+                    <span class="week-chip">מפגש 3</span>
                     <h3>המבחן הטכני ו-System Design</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1384,7 +1387,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 4</span>
+                    <span class="week-chip">מפגש 4</span>
                     <h3>שאלות התנהגותיות וראיון HR</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1399,7 +1402,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 5</span>
+                    <span class="week-chip">מפגש 5</span>
                     <h3>מאסטר-קלאס פרויקט הדגל ופיצוח ראיונות</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1413,7 +1416,7 @@
         <div class="accordion-item reveal">
             <div class="accordion-header">
                 <div class="accordion-title-group">
-                    <span class="week-chip">שבוע 6</span>
+                    <span class="week-chip">מפגש 6</span>
                     <h3>משא ומתן וסגירת חוזה</h3>
                 </div>
                 <span class="accordion-chevron">▼</span>
@@ -1469,6 +1472,10 @@
             <div class="segment-title" style="margin: 0 0 8px;">שאלות נפוצות</div>
             <div class="faq-list">
                 <details class="faq-item">
+                    <summary>האם מתאים גם למתחילים?</summary>
+                    <p>כן. הסדנה בנויה כך שתתאים גם למי שמתחיל את הדרך וגם למפתחים מנוסים שרוצים לשפר את יכולות הראיונות שלהם.</p>
+                </details>
+                <details class="faq-item">
                     <summary>איך נקבעים ימי ושעות המפגשים?</summary>
                     <p>המפגשים מתקיימים בזום בשעות הערב. בטופס ההרשמה תוכלו לסמן את הימים והשעות המועדפים עליכם, והסדנא תיקבע לפי הרוב.</p>
                 </details>
@@ -1488,7 +1495,7 @@
             <h3 style="margin: 0 0 8px; font-size: 1.2rem;">להרשמה לסדנא הקרובה</h3>
             <p style="color: var(--text-sub); font-size: 0.9rem; margin: 0 0 20px;">מספר המקומות מוגבל לשמירה על איכות התרגול האישי.</p>
             
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="margin-bottom: 16px;">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener noreferrer" style="margin-bottom: 16px;">
                 להשארת פרטים והרשמה <span aria-hidden="true">←</span>
             </a>
 
@@ -1523,7 +1530,7 @@
                     <span class="original-price">1,200 ₪</span>
                 </div>
             </div>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" style="width: auto; min-height: 40px; padding: 0 16px; font-size: 0.9rem;">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-primary" target="_blank" rel="noopener noreferrer" style="width: auto; min-height: 40px; padding: 0 16px; font-size: 0.9rem;">
                 להרשמה <span aria-hidden="true">←</span>
             </a>
         </div>
