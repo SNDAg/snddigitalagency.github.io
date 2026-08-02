@@ -72,7 +72,7 @@
     }
 
     .mobile-opening {
-        display: none;
+        display: flex;
         position: fixed;
         inset: 0;
         z-index: 1200;
@@ -81,7 +81,7 @@
         padding: 24px 18px;
         background:
             linear-gradient(180deg, rgba(2, 8, 23, 0.18) 0%, rgba(2, 8, 23, 0.72) 100%),
-            url('/image/ai-interview.jpg') center/cover no-repeat;
+            url('/image/ai-interview.jpg') 72% center / 120% auto no-repeat;
         overflow: hidden;
     }
 
@@ -1053,7 +1053,7 @@
             <p class="mobile-opening__subtitle">הכנה מעשית לראיונות טכניים, בינאישיים ומשא ומתן בעידן ה-AI.</p>
             <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="mobile-opening__cta" target="_blank">להרשמה עכשיו</a>
             <div class="mobile-opening__hint">
-                <span>גלול להמשך</span>
+                <span>המשך</span>
                 <span class="arrow" aria-hidden="true">↓</span>
             </div>
         </div>
@@ -1468,7 +1468,7 @@
         const mobileOpening = document.getElementById('mobileOpening');
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        if (mobileOpening && window.innerWidth <= 640 && !prefersReducedMotion) {
+        if (mobileOpening && !prefersReducedMotion) {
             document.body.classList.add('mobile-opening-active');
             mobileOpening.style.display = 'flex';
             mobileOpening.setAttribute('aria-hidden', 'false');
