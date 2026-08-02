@@ -210,6 +210,22 @@
         margin-bottom: 20px;
     }
 
+    .schedule-note {
+        margin: 0 auto 24px;
+        max-width: 520px;
+        padding: 16px 18px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--text-main);
+        font-size: 0.95rem;
+        line-height: 1.75;
+        border-radius: 14px;
+    }
+
+    .schedule-note strong {
+        color: var(--text-main);
+    }
+
     .dot {
         width: 6px;
         height: 6px;
@@ -1114,6 +1130,10 @@
             </p>
         </div>
 
+        <div class="schedule-note">
+            סבב אוגוסט-ספטמבר יוצא לדרך! בשל הביקוש והשמירה על קבוצות קטנות, תאריכי המפגשים המדויקים יישלחו לנרשמים מראש. הירשמו עכשיו להבטחת מקומכם.
+        </div>
+
         <!-- Segmented Control Widget -->
         <div class="card reveal">
             <div class="segment-title">🎯 למי הסדנה תיתן ערך מקסימלי?</div>
@@ -1140,6 +1160,7 @@
                 <div class="spec-item">
                     <span class="label">מועד פתיחה</span>
                     <span class="value">אוגוסט - ספטמבר 2026</span>
+                    <span class="value" style="display:block; color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">תאריכים מדויקים יפורסמו לאחר איסוף הרשמות</span>
                 </div>
                 <div class="spec-item">
                     <span class="label">מבנה המפגשים</span>
