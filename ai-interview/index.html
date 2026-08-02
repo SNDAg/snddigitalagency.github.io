@@ -946,16 +946,19 @@
     .sticky-text {
         display: flex;
         flex-direction: column;
+        gap: 3px;
     }
 
     .sticky-text strong {
-        font-size: 0.88rem;
+        font-size: clamp(1rem, 1.3vw, 1.2rem);
         color: var(--text-main);
+        line-height: 1.2;
     }
 
     .sticky-text span {
-        font-size: 0.75rem;
+        font-size: clamp(0.88rem, 1vw, 1rem);
         color: var(--text-muted);
+        line-height: 1.3;
     }
 
     .reveal {
@@ -1088,6 +1091,14 @@
 
         .sticky-bar .btn-primary {
             width: 100%;
+        }
+
+        .sticky-text strong {
+            font-size: 1.05rem;
+        }
+
+        .sticky-text span {
+            font-size: 0.96rem;
         }
     }
 </style>
