@@ -78,7 +78,7 @@
         z-index: 1200;
         align-items: center;
         justify-content: center;
-        padding: 24px 18px;
+        padding: clamp(20px, 4vw, 32px) 18px;
         background:
             linear-gradient(180deg, rgba(2, 8, 23, 0.18) 0%, rgba(2, 8, 23, 0.72) 100%),
             url('/image/ai-interview.jpg') 72% center / 120% auto no-repeat;
@@ -97,12 +97,16 @@
         position: relative;
         z-index: 1;
         width: min(100%, 360px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         text-align: center;
+        gap: 12px;
         animation: openingReveal 0.8s ease both;
     }
 
     .mobile-opening__badge {
-        margin-bottom: 14px;
+        margin-bottom: 0;
         display: inline-flex;
         align-items: center;
         gap: 8px;
@@ -118,8 +122,8 @@
     }
 
     .mobile-opening__title {
-        margin: 0 0 10px;
-        font-size: 1.7rem;
+        margin: 0;
+        font-size: clamp(1.38rem, 4.2vw, 1.7rem);
         line-height: 1.18;
         font-weight: 800;
         color: #f8fafc;
@@ -127,9 +131,10 @@
     }
 
     .mobile-opening__subtitle {
-        margin: 0 0 18px;
+        margin: 0;
+        max-width: 30ch;
         color: rgba(248, 250, 252, 0.92);
-        font-size: 0.98rem;
+        font-size: clamp(0.9rem, 3.2vw, 0.98rem);
         line-height: 1.65;
     }
 
@@ -145,13 +150,14 @@
         font-weight: 800;
         text-decoration: none;
         box-shadow: 0 10px 28px rgba(56, 189, 248, 0.26);
-        margin-bottom: 16px;
+        margin-bottom: 2px;
     }
 
     .mobile-opening__hint {
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        margin-top: 4px;
         color: rgba(248, 250, 252, 0.8);
         font-size: 0.82rem;
         font-weight: 600;
@@ -1013,6 +1019,34 @@
 
         .hero p.subtitle {
             font-size: 0.95rem;
+        }
+
+        .mobile-opening {
+            padding: 20px 14px;
+        }
+
+        .mobile-opening__content {
+            width: min(100%, 320px);
+            gap: 10px;
+        }
+
+        .mobile-opening__title {
+            font-size: 1.35rem;
+        }
+
+        .mobile-opening__subtitle {
+            font-size: 0.9rem;
+            max-width: 28ch;
+        }
+
+        .mobile-opening__cta {
+            min-height: 46px;
+            padding: 0 18px;
+        }
+
+        .mobile-opening__hint {
+            margin-top: 2px;
+            font-size: 0.78rem;
         }
 
         .metrics-grid,
