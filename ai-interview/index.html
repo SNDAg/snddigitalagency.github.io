@@ -1255,7 +1255,7 @@
 
             <p style="margin-top: 14px; line-height: 1.75; font-size: 1.02rem;">
                 בסדנה המעשית והאינטנסיבית הזו, <strong style="color: var(--text-main);">אנחנו עומדים לפצח את השיטה יחד.</strong><br>
-                לאורך 6 שבועות נהפוך את חוסר הוודאות, <span style="color: var(--primary); font-weight: 700; border-bottom: 1px dashed var(--primary);">תסמונת המתחזה</span> והלחץ במבחנים - ל<strong style="color: var(--text-main);">ביטחון עצמי, טכניקה חדה ויתרון אנושי תחרותי</strong> שיבליט אתכם מעל עשרות קורות חיים אחרים.
+                לאורך 3 שבועות נהפוך את חוסר הוודאות, <span style="color: var(--primary); font-weight: 700; border-bottom: 1px dashed var(--primary);">תסמונת המתחזה</span> והלחץ במבחנים - ל<strong style="color: var(--text-main);">ביטחון עצמי, טכניקה חדה ויתרון אנושי תחרותי</strong> שיבליט אתכם מעל עשרות קורות חיים אחרים.
             </p>
         </div>
 
@@ -1351,7 +1351,7 @@
             <div class="pricing-grid">
                 <div class="pricing-box">
                     <div>
-                        <h4>שיעור בודד</h4>
+                        <h4>מפגש נסיון</h4>
                         <div class="price-top">
                             <span class="price-main">180 ₪</span>
                         </div>
@@ -1360,7 +1360,7 @@
                         </div>
                     </div>
                     <div class="pricing-actions">
-                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-secondary" target="_blank" rel="noopener noreferrer">להרשמה לשיעור בודד</a>
+                        <a href="https://docs.google.com/forms/d/e/1FAIpQLScWok2EBlqZbhiUBcjRIzWaWA-ZEicTrQFZhihy0LOOSHLyxA/viewform?usp=publish-editor" class="btn-secondary" target="_blank" rel="noopener noreferrer">להרשמה למפגש נסיון</a>
                     </div>
                 </div>
                 <div class="pricing-box pricing-box--featured">
@@ -1666,35 +1666,34 @@
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // Mobile opening screen
-        const mobileOpening = document.getElementById('mobileOpening');
-        const mobileOpeningCta = document.querySelector('.mobile-opening__cta');
-        const mobileOpeningHint = document.querySelector('.mobile-opening__hint');
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+       // Mobile opening screen - Quick & Smooth Intro
+const mobileOpening = document.getElementById('mobileOpening');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        const dismissMobileOpening = () => {
-            if (!mobileOpening) return;
+const dismissMobileOpening = () => {
+    if (!mobileOpening || mobileOpening.classList.contains('is-hidden')) return;
 
-            mobileOpening.classList.add('is-hidden');
-            document.body.classList.remove('mobile-opening-active');
-            mobileOpening.setAttribute('aria-hidden', 'true');
-        };
+    mobileOpening.classList.add('is-hidden');
+    document.body.classList.remove('mobile-opening-active');
+    mobileOpening.setAttribute('aria-hidden', 'true');
+};
 
-        if (mobileOpening && !prefersReducedMotion) {
-            document.body.classList.add('mobile-opening-active');
-            mobileOpening.style.display = 'flex';
-            mobileOpening.setAttribute('aria-hidden', 'false');
-        } else if (mobileOpening) {
-            mobileOpening.style.display = 'none';
-        }
+if (mobileOpening && !prefersReducedMotion) {
+    document.body.classList.add('mobile-opening-active');
+    mobileOpening.style.display = 'flex';
+    mobileOpening.setAttribute('aria-hidden', 'false');
 
-        if (mobileOpeningCta) {
-            mobileOpeningCta.addEventListener('click', dismissMobileOpening);
-        }
+    // 1. נעלם אוטומטית אחרי 1.8 שניות
+    const autoDismissTimer = setTimeout(dismissMobileOpening, 1800);
 
-        if (mobileOpeningHint) {
-            mobileOpeningHint.addEventListener('click', dismissMobileOpening);
-        }
+    // 2. לחיצה בכל מקום במסך סוגרת אותו מיידית
+    mobileOpening.addEventListener('click', () => {
+        clearTimeout(autoDismissTimer);
+        dismissMobileOpening();
+    });
+} else if (mobileOpening) {
+    mobileOpening.style.display = 'none';
+}
 
         // Sticky Bottom Bar visibility
         const stickyBar = document.getElementById('stickyBar');
