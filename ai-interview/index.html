@@ -1145,7 +1145,7 @@
             </div>
             <h2 class="mobile-opening__title">הקריירה הבאה שלכם<br>מתחילה כאן</h2>
             <p class="mobile-opening__subtitle">הכנה מעשית לראיונות טכניים, בינאישיים ומשא ומתן בעידן ה-AI.</p>
-            <button type="button" class="mobile-opening__cta" onclick="document.getElementById('mobileOpening').classList.add('is-hidden')">לגלות עוד</button>
+            <button type="button" class="mobile-opening__cta">לגלות עוד</button>
             <div class="mobile-opening__hint">
                 <span>המשך</span>
                 <span class="arrow" aria-hidden="true">↓</span>
@@ -1577,20 +1577,32 @@
 
         // Mobile opening screen
         const mobileOpening = document.getElementById('mobileOpening');
+        const mobileOpeningCta = document.querySelector('.mobile-opening__cta');
+        const mobileOpeningHint = document.querySelector('.mobile-opening__hint');
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        const dismissMobileOpening = () => {
+            if (!mobileOpening) return;
+
+            mobileOpening.classList.add('is-hidden');
+            document.body.classList.remove('mobile-opening-active');
+            mobileOpening.setAttribute('aria-hidden', 'true');
+        };
 
         if (mobileOpening && !prefersReducedMotion) {
             document.body.classList.add('mobile-opening-active');
             mobileOpening.style.display = 'flex';
             mobileOpening.setAttribute('aria-hidden', 'false');
-
-            window.setTimeout(() => {
-                mobileOpening.classList.add('is-hidden');
-                document.body.classList.remove('mobile-opening-active');
-                mobileOpening.setAttribute('aria-hidden', 'true');
-            }, 2800);
         } else if (mobileOpening) {
             mobileOpening.style.display = 'none';
+        }
+
+        if (mobileOpeningCta) {
+            mobileOpeningCta.addEventListener('click', dismissMobileOpening);
+        }
+
+        if (mobileOpeningHint) {
+            mobileOpeningHint.addEventListener('click', dismissMobileOpening);
         }
 
         // Sticky Bottom Bar visibility
