@@ -509,28 +509,79 @@
     /* Specs Grid */
     .specs-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
     }
 
     .spec-item {
-        background: rgba(255,255,255,0.02);
-        border: 1px solid var(--border);
-        padding: 12px;
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(255,255,255,0.02));
+        border: 1px solid rgba(56, 189, 248, 0.16);
+        padding: 14px 14px 12px;
         border-radius: var(--radius-md);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-height: 140px;
+    }
+
+    .spec-item__icon {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        background: rgba(56, 189, 248, 0.12);
+        color: var(--primary);
+        margin-bottom: 2px;
     }
 
     .spec-item .label {
         font-size: 0.75rem;
         color: var(--text-muted);
         display: block;
-        margin-bottom: 2px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
     }
 
     .spec-item .value {
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 600;
         color: var(--text-main);
+        line-height: 1.35;
+    }
+
+    .spec-item .value--primary {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #f8fafc;
+    }
+
+    .spec-item .supporting-text {
+        font-size: 0.84rem;
+        color: var(--text-sub);
+        line-height: 1.5;
+        margin-top: 2px;
+    }
+
+    .urgency-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 12px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(16, 185, 129, 0.14);
+        border: 1px solid rgba(16, 185, 129, 0.24);
+        color: #d1fae5;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    @media (max-width: 640px) {
+        .specs-grid {
+            grid-template-columns: 1fr;
+        }
     }
 
     /* Accordion Syllabus */
@@ -1208,9 +1259,10 @@
             </p>
         </div>
 
-        <div class="schedule-note">
-            הרשמה פתוחה לסבב אוגוסט - ספטמבר! ימי ושעות המפגשים (בשעות הערב) ייקבעו לפי העדפות הנרשמים - מלאו את הטופס והשפיעו על הלו"ז.
-        </div>
+<div class="schedule-note">
+    <strong>הבטיחו את מקומכם בסבב אוגוסט–ספטמבר!</strong><br>
+    מתחילים ב-23.8 | ימי ראשון ורביעי | 18:30–20:30
+</div>
 
         <!-- Segmented Control Widget -->
         <div class="card reveal">
@@ -1236,23 +1288,58 @@
             <div class="segment-title" style="margin-bottom:10px;">📌 פרטי הסדנה</div>
             <div class="specs-grid">
                 <div class="spec-item">
+                    <div class="spec-item__icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="4" width="18" height="17" rx="2"></rect>
+                            <path d="M16 2v4"></path>
+                            <path d="M8 2v4"></path>
+                            <path d="M3 10h18"></path>
+                        </svg>
+                    </div>
                     <span class="label">מועד פתיחה</span>
-                    <span class="value">אוגוסט 2026</span>
-                    <span class="value" style="display:block; color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">תאריכים מדויקים יפורסמו לאחר איסוף הרשמות</span>
+                    <span class="value value--primary">23.8.2026</span>
+                    <span class="supporting-text">6 מפגשים בלייב</span>
                 </div>
                 <div class="spec-item">
+                    <div class="spec-item__icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 7v5l3 2"></path>
+                        </svg>
+                    </div>
                     <span class="label">משך הסדנה</span>
-                    <span class="value"> 3 שבועות</span>
-                    <span class="value" style="display:block; color: var(--text-muted); font-size: 0.82rem; margin-top: 6px;">6 מפגשים מרוכזים | פעמיים בשבוע</span>
+                    <span class="value value--primary">3 שבועות</span>
+                    <span class="supporting-text">ימי ראשון ורביעי</span>
                 </div>
                 <div class="spec-item">
+                    <div class="spec-item__icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 7h16"></path>
+                            <path d="M7 11h10"></path>
+                            <path d="M9 15h6"></path>
+                            <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                        </svg>
+                    </div>
                     <span class="label">אורך כל מפגש</span>
-                    <span class="value">שעתיים</span>
+                    <span class="value value--primary">שעתיים</span>
+                    <span class="supporting-text">18:30–20:30</span>
                 </div>
                 <div class="spec-item">
-                    <span class="label">מתכונת</span>
-                    <span class="value">מפגשים בזום בשעות הערב</span>
+                    <div class="spec-item__icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 10V6a3 3 0 0 0-3-3H8a3 3 0 0 0-3 3v4"></path>
+                            <rect x="5" y="10" width="10" height="8" rx="2"></rect>
+                            <path d="M14 18v2"></path>
+                            <path d="M8 18v2"></path>
+                        </svg>
+                    </div>
+                    <span class="label">פורמט הלמידה</span>
+                    <span class="value value--primary">אונליין בזום</span>
+                    <span class="supporting-text">תרגול מעשי בלייב</span>
                 </div>
+            </div>
+            <div style="text-align:center;">
+                <span class="urgency-badge">מהרו! מספר המקומות מוגבל</span>
             </div>
         </div>
 
@@ -1478,10 +1565,14 @@
                     <summary>האם מתאים גם למתחילים?</summary>
                     <p>כן. הסדנה בנויה כך שתתאים גם למי שמתחיל את הדרך וגם למפתחים מנוסים שרוצים לשפר את יכולות הראיונות שלהם.</p>
                 </details>
-                <details class="faq-item">
-                    <summary>איך נקבעים ימי ושעות המפגשים?</summary>
-                    <p>המפגשים מתקיימים בזום בשעות הערב. בטופס ההרשמה תוכלו לסמן את הימים והשעות המועדפים עליכם, והסדנא תיקבע לפי הרוב.</p>
-                </details>
+<details class="faq-item">
+    <summary>באילו ימים ושעות מתקיימים המפגשים?</summary>
+    <p>המפגשים יתקיימו בזום בימי ראשון ורביעי, בשעות 18:30–20:30. הסדנה תתחיל ביום ראשון, ה-23.8.</p>
+</details>
+<details class="faq-item">
+    <summary>מה קורה אם מפספסים מפגש?</summary>
+    <p>הסדנה קורת בלייב בלבד כדי לשמור על קצב טוב, תרגול אמיתי ושיח פתוח. פקד אתכם בלתו"ם? הכל טוב. תקבלו את חומרי הלימוד והמצגת, ותוכלו להשלים את המפגש בחינם בסבב הבא שלנו.</p>
+</details>
                 <details class="faq-item">
                     <summary>האם זה כולל תרגול מעשי?</summary>
                     <p>כן! בכל מפגש יש חלק של הרצאה וחלק של תרגול מעשי יישומי עם תבניות ונוסחאות עבודה מוכנות.</p>
