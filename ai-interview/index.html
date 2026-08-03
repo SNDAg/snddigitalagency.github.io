@@ -1087,6 +1087,54 @@
             color: var(--primary);
         }
 
+        /* Testimonial Card - Dark Mode Style */
+        .testimonial-card {
+            background: var(--surface-card);
+            border: 1px solid var(--border);
+            border-right: 4px solid var(--primary);
+            /* הפס הציאן הבולט של הדף */
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        .testimonial-text {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: var(--text-main);
+            margin: 0 0 14px 0;
+            position: relative;
+            quotes: "“" "”";
+        }
+
+        .testimonial-text::before {
+            content: open-quote;
+            font-size: 2.5rem;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+            top: -15px;
+            right: -10px;
+            line-height: 1;
+        }
+
+        .testimonial-author {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            text-align: left;
+            /* שומר על דיוק עיצובי - השם בצד שמאל למטה */
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+        }
+
+        .testimonial-author strong {
+            color: var(--primary);
+            /* השם יבלוט בכחול-ציאן */
+            font-weight: 700;
+        }
+
         @keyframes scroll-bounce {
 
             0%,
@@ -1564,6 +1612,17 @@
                 <div class="about-photo-wrap">
                     <img src="/image/shahaf.png" alt="שחף פרידלנדר" class="about-photo" loading="lazy">
                 </div>
+            </div>
+        </div>
+        <!-- Testimonial Section -->
+        <div class="card testimonial-card reveal">
+            <blockquote class="testimonial-text">
+                "שחף ממש עזרה לי לראות מעבר לתסכול ולהבין מה באמת נכון לי מקצועית.
+                היא עושה את זה בצורה מאוד נעימה, חכמה ולא שיפוטית - ונותנת כלים פרקטיים שאפשר ממש ליישם.
+                ממליץ מאוד לכל מי שמרגיש תקוע או רוצה לדייק את הכיוון שלו."
+            </blockquote>
+            <div class="testimonial-author">
+                <strong>ירון</strong> • מפתח Fullstack
             </div>
         </div>
 
