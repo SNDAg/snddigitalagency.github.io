@@ -43,7 +43,7 @@
   --fav:#f43f5e;
   --theatre:#ec4899; --cinema:#06b6d4; --music:#10b981;
   --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
-  --imdb:#d9a838; --imdb-dark:#a97f28; --imdb-rgb:217,168,56;
+  --imdb:#c2a35b; --imdb-dark:#8f7440; --imdb-rgb:194,163,91;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Rubik',system-ui,sans-serif}
 body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color:var(--text-main);min-height:100vh;padding:16px;position:relative;overflow-x:hidden}
@@ -156,10 +156,9 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .time-popover-box h3{justify-content:center}
 .time-popover-inputs{justify-content:center;margin-top:14px}
 
-/* רמז "יש עוד נתונים לטעון" - אייקון פועם על תגיות טווח שמרחיבות את הטעינה */
-.expand-hint{display:inline-flex;color:var(--accent);font-size:.75rem;animation:hintPulse 1.8s ease-in-out infinite}
-@keyframes hintPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
-@media (prefers-reduced-motion: reduce){.expand-hint{animation:none}}
+/* רמז "יש עוד נתונים לטעון" - אייקון סטטי (בלי הבהוב) על תגיות טווח שמרחיבות את הטעינה.
+   בלי אנימציה בכוונה - הבהוב על אייקון הורדה נראה כאילו קובץ בהורדה פעילה, מטעה. */
+.expand-hint{display:inline-flex;color:var(--accent);font-size:.75rem}
 
 /* תיבת סימון מותאמת אישית - משמשת גם לסינון מקומות וגם לבחירה מרובה */
 .custom-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:rgba(15,23,42,.5);border:1px solid var(--border);padding:7px 14px 7px 10px;border-radius:30px;font-size:.85rem;transition:border-color .2s,opacity .2s}
@@ -210,6 +209,7 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 button.imdb-badge{cursor:pointer;color:var(--text-muted);background:rgba(255,255,255,.06);border-color:var(--border)}
 button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);background:rgba(var(--imdb-rgb),.1)}
 .imdb-badge.pending{color:var(--text-muted);cursor:default}
+.imdb-badge.not-found{color:var(--text-muted);background:rgba(255,255,255,.05);border-color:var(--border);cursor:help}
 .event-title{font-size:1.15rem;font-weight:700;margin-bottom:12px;line-height:1.3}
 .event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
 .event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -476,8 +476,9 @@ footer a{color:var(--accent)}
       <div class="chips-row">
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בית ליסין" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בית ליסין</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="הבימה" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
-        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
-        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
+        <label class="custom-check pending" id="cinemaMasterWrapper" title="בחירה כאן מסמנת/מבטלת גם את קולנוע לב וגם את רב חן יחד"><input type="checkbox" id="cinemaMasterCheckbox" disabled onchange="onCinemaMasterChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע (הכל)</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter cinema-sub" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter cinema-sub" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בארבי" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
       </div>
       <p class="filter-hint">מקום מסומן באפור עדיין לא נטען - התיבה תיסמן אוטומטית ברגע שהנתונים יגיעו.</p>
@@ -487,7 +488,7 @@ footer a{color:var(--accent)}
 
   <div class="loading-banner" id="loadingBanner" style="display:none">
     <i class="fa-solid fa-circle-notch fa-spin"></i>
-    <span id="loadingBannerText">טוען תוצאות...</span>
+    <span id="loadingBannerText">טוען תוצאות:</span>
     <span class="dots"><span>.</span><span>.</span><span>.</span></span>
   </div>
 
@@ -558,7 +559,7 @@ footer a{color:var(--accent)}
     <p class="muted" style="margin-top:-8px">בחרו את טווח השעות שמעניין אתכם, ולחצו "החל".</p>
     <div class="inputs-row time-popover-inputs">
       <label>משעה <input type="time" id="timePopoverStart" value="09:00"></label>
-      <label>עד שעה <input type="time" id="timePopoverEnd" value="23:59"></label>
+      <label>עד שעה <input type="time" id="timePopoverEnd" value="23:30"></label>
     </div>
     <div class="modal-actions" style="margin-top:16px">
       <button class="secondary" onclick="resetTimeFilter()">איפוס (כל היום)</button>
@@ -663,7 +664,13 @@ let selectedType = 'all';
 let sourceState = {};
 let userToggledVenues = new Set();   // מקומות שהמשתמש עצמו שינה - לא לדרוס את הבחירה שלו אוטומטית
 let everFinishedSources = new Set(); // מקורות שסיימו להיטען לפחות פעם אחת - רענון ברקע לא "יכבה" אותם שוב
-let cinemaExpanded = false;          // האם המשתמש כבר ביקש טווח מעל 3 ימים (חושף גם קולנוע לב/רב חן וגם את כל מה שכבר נשאב ממקורות אחרים)
+let cinemaMasterEverReady = false;   // האם תיבת-העל "קולנוע (הכל)" כבר הפכה זמינה לפחות פעם אחת
+/* טעינה מורחבת (מעל ברירת המחדל של 3 ימים) מפוצלת לדגלים נפרדים ללב ולרב חן - כדי
+   שלחיצה על "השבוע הקרוב" תשאב בפועל עוד נתונים רק עבור בית קולנוע שבאמת מסומן ב-וי,
+   ולא תבזבז בקשות רשת על מקום שהמשתמש כלל לא ביקש לראות. */
+let anyExpansionRequested = false;   // האם המשתמש ביקש אי-פעם טווח מעל 3 ימים - חושף מיד נתונים שכבר נשאבו ממקורות לא-קולנוע (בלי עלות רשת נוספת)
+let levExpanded = false;             // האם בפועל שאבנו מלב את שכבת הימים/סרטים המורחבת
+let ravhenExpanded = false;          // אותו דבר עבור רב חן
 let initialLoadSettled = false;      // האם הטעינה הראשונית (פס ההתקדמות העליון) כבר הסתיימה
 
 /* דירוגי IMDB (אופציונלי - דורש מפתח OMDb API אישי וחינמי, ר' הגדרות) */
@@ -1088,29 +1095,35 @@ async function fetchBarby(){
 
 /* ===================== Orchestration ===================== */
 
-/* lev/ravhen בוחרים את היקף הטעינה (מצומצם/מורחב) בזמן הקריאה עצמה, לפי cinemaExpanded -
-   כך שכל נתיב טעינה (ראשונית, לחיצה על תג, "רענן הכל") מתנהג עקבי אוטומטית. */
+/* lev/ravhen בוחרים את היקף הטעינה (מצומצם/מורחב) בזמן הקריאה עצמה, כל אחד לפי הדגל
+   שלו בנפרד (levExpanded/ravhenExpanded) - כך שנתיב טעינה מרחיב רק את מה שבאמת ביקשו. */
 const SOURCE_FETCHERS = {
   lessin: fetchLessin,
   habima: fetchHabima,
-  lev: (onProgress) => fetchLevAll(onProgress, cinemaExpanded ? LEV_MOVIE_CAP_EXTENDED : LEV_MOVIE_CAP_INITIAL),
-  ravhen: (onProgress) => fetchRavHenAll(onProgress, cinemaExpanded ? RAVHEN_DAYS_EXTENDED : RAVHEN_DAYS_INITIAL),
+  lev: (onProgress) => fetchLevAll(onProgress, levExpanded ? LEV_MOVIE_CAP_EXTENDED : LEV_MOVIE_CAP_INITIAL),
+  ravhen: (onProgress) => fetchRavHenAll(onProgress, ravhenExpanded ? RAVHEN_DAYS_EXTENDED : RAVHEN_DAYS_INITIAL),
   barby: fetchBarby
 };
 
-/* בונים מחדש את allEvents מתוך rawEventsBySource. כברירת מחדל חותכים ל-3 ימים
-   קדימה בלבד (ביצועים - פחות כרטיסים ל-DOM), ולאחר שהמשתמש ביקש טווח רחב יותר
-   (cinemaExpanded) חושפים את כל מה שכל מקור בפועל שאב, בלי לשאוב שום דבר נוסף. */
+/* בונים מחדש את allEvents מתוך rawEventsBySource. כברירת מחדל חותכים כל מקור ל-3 ימים
+   קדימה בלבד (ביצועים - פחות כרטיסים ל-DOM). לב ורב חן נחשפים במלואם רק כשהדגל שלהם
+   עצמו פעיל (כלומר המקום הזה בפועל מסומן ב-וי כשהמשתמש ביקש טווח רחב); שאר המקורות
+   (תיאטרון) אין להם שכבת "מצומצם/מורחב" משלהם - הם נחשפים במלואם ברגע שהתבקש טווח רחב
+   כלשהו (anyExpansionRequested), כי זה כבר נשאב במלואו ואין עלות רשת נוספת בחשיפתו. */
 function rebuildAllEvents(){
-  const merged = Object.values(rawEventsBySource).flat();
-  if (cinemaExpanded){
-    allEvents = merged;
-    return;
-  }
   const cutoff = new Date(today);
   cutoff.setDate(cutoff.getDate() + DEFAULT_INGEST_DAYS);
   cutoff.setHours(23,59,59,999);
-  allEvents = merged.filter(e => e.date <= cutoff);
+  const merged = [];
+  Object.keys(rawEventsBySource).forEach(key => {
+    const events = rawEventsBySource[key] || [];
+    let reveal;
+    if (key === 'lev') reveal = levExpanded;
+    else if (key === 'ravhen') reveal = ravhenExpanded;
+    else reveal = anyExpansionRequested;
+    merged.push(...(reveal ? events : events.filter(e => e.date <= cutoff)));
+  });
+  allEvents = merged;
 }
 
 async function loadSourceInto(key, fn){
@@ -1149,17 +1162,38 @@ function loadSingleSource(key){
 /* מפעילים כאשר המשתמש מבקש טווח רחב מ-3 ימים (תגית "השבוע"/"3 השבועות") - טוענים
    בפועל עוד ימים/סרטים מקולנוע לב ורב חן, פעם אחת בלבד לכל טעינת עמוד. */
 async function expandCinemaSources(){
-  if (cinemaExpanded) return;
-  cinemaExpanded = true;
   document.querySelectorAll('.expand-hint').forEach(el => el.remove());
+  anyExpansionRequested = true;
   // חושפים מיד את מה שכל שאר המקורות כבר שאבו (בית ליסין/הבימה/בארבי) - בלי לחכות לרשת
   rebuildAllEvents();
   filterEvents();
-  // ורק קולנוע לב/רב חן צריכים בפועל עוד בקשות רשת כדי לכסות טווח רחב יותר
-  await Promise.allSettled([
-    loadSourceInto('lev', SOURCE_FETCHERS.lev),
-    loadSourceInto('ravhen', SOURCE_FETCHERS.ravhen),
-  ]);
+  // קולנוע לב/רב חן שואבים בפועל עוד נתונים ברשת רק אם המקום שלהם באמת מסומן ב-וי כרגע -
+  // אין טעם לבזבז בקשות רשת על בית קולנוע שהמשתמש כלל לא ביקש לראות
+  const checkedVenues = new Set(Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value));
+  const tasks = [];
+  if (checkedVenues.has('קולנוע לב') && !levExpanded){
+    levExpanded = true;
+    tasks.push(loadSourceInto('lev', SOURCE_FETCHERS.lev));
+  }
+  if (checkedVenues.has('רב חן') && !ravhenExpanded){
+    ravhenExpanded = true;
+    tasks.push(loadSourceInto('ravhen', SOURCE_FETCHERS.ravhen));
+  }
+  await Promise.allSettled(tasks);
+}
+
+/* אם המשתמש מסמן ב-וי מקום קולנוע בזמן שהתצוגה כבר בטווח מורחב (anyExpansionRequested),
+   צריך למשוך גם עבורו את השכבה המורחבת - אחרת הוא יראה רק את 3 הימים הראשונים שלו
+   בטעות, למרות שסימן אותו אחרי שכבר ביקש טווח רחב יותר. */
+function maybeExpandVenueOnCheck(value){
+  if (!anyExpansionRequested) return;
+  if (value === 'קולנוע לב' && !levExpanded){
+    levExpanded = true;
+    loadSourceInto('lev', SOURCE_FETCHERS.lev);
+  } else if (value === 'רב חן' && !ravhenExpanded){
+    ravhenExpanded = true;
+    loadSourceInto('ravhen', SOURCE_FETCHERS.ravhen);
+  }
 }
 
 /* טעינה ראשונית: רק המקורות המהירים והרלוונטיים ביותר (קולנוע). השאר ממתינים
@@ -1205,8 +1239,7 @@ function renderStatusBar(){
     const showBanner = anyLoading && initialLoadSettled;
     banner.style.display = showBanner ? 'flex' : 'none';
     if (showBanner){
-      const loadingLabels = Object.keys(sourceState).filter(k => sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
-      document.getElementById('loadingBannerText').innerText = `עוד תוצאות נטענות... ${loadingLabels.join(', ')}`;
+      document.getElementById('loadingBannerText').innerText = 'טוענים עוד מופעים...';
     }
   }
 
@@ -1311,11 +1344,50 @@ function syncVenueCheckboxes(){
     // אם המקור כבר נטען בעבר וכרגע רק מתרענן ברקע - לא נוגעים בתיבה, כדי לא לדרוס
     // בטעות בחירה קיימת של המשתמש בזמן שהנתונים הישנים עדיין מוצגים.
   });
+
+  // תיבת-העל "קולנוע (הכל)" זמינה רק כששני מקורות הקולנוע (לב ורב חן) כבר סיימו
+  // להיטען לפחות פעם אחת - ואז משתחררת ומשקפת את מצב שני התתי-מקומות באותו רגע.
+  const masterCb = document.getElementById('cinemaMasterCheckbox');
+  if (masterCb){
+    const wrapper = document.getElementById('cinemaMasterWrapper');
+    const bothCinemaReady = everFinishedSources.has('lev') && everFinishedSources.has('ravhen');
+    if (bothCinemaReady){
+      cinemaMasterEverReady = true;
+      if (masterCb.disabled){
+        masterCb.disabled = false;
+        if (wrapper) wrapper.classList.remove('pending');
+        if (!userToggledVenues.has('__cinemaMaster__')){
+          const lev = document.querySelector('.venue-filter[value="קולנוע לב"]');
+          const ravhen = document.querySelector('.venue-filter[value="רב חן"]');
+          masterCb.checked = !!(lev && lev.checked) && !!(ravhen && ravhen.checked);
+        }
+      }
+    } else if (!cinemaMasterEverReady){
+      masterCb.disabled = true;
+      masterCb.checked = false;
+      if (wrapper) wrapper.classList.add('pending');
+    }
+  }
+}
+
+/* סימון/ביטול "קולנוע (הכל)" מסמן/מבטל יחד את שני התתי-מקומות (קולנוע לב, רב חן) -
+   רק אם הם כבר זמינים (לא pending). לא בונים מצב indeterminate מורכב - זו סנכרון
+   כיוון-אחד פשוט מההורה לילדים, וכל תתי-מקום עדיין ניתן לשינוי ידני בנפרד. */
+function onCinemaMasterChange(cb){
+  userToggledVenues.add('__cinemaMaster__');
+  document.querySelectorAll('.venue-filter.cinema-sub').forEach(child => {
+    if (child.disabled) return;
+    child.checked = cb.checked;
+    userToggledVenues.add(child.value);
+    if (cb.checked) maybeExpandVenueOnCheck(child.value);
+  });
+  filterEvents();
 }
 
 function onVenueCheckboxChange(cb){
   userToggledVenues.add(cb.value);
   filterEvents();
+  if (cb.checked) maybeExpandVenueOnCheck(cb.value);
 }
 
 /* ===================== Filtering & Rendering ===================== */
@@ -1378,7 +1450,7 @@ function onCustomDateChange(){
    בתוך הפופאובר עצמו לעולם לא מפעיל סינון או קריאת רשת. */
 function openTimePopover(){
   document.getElementById('timePopoverStart').value = '09:00';
-  document.getElementById('timePopoverEnd').value = '23:59';
+  document.getElementById('timePopoverEnd').value = '23:30';
   document.getElementById('timePopoverOverlay').style.display = 'flex';
 }
 
@@ -1589,9 +1661,11 @@ function omdbKeyErrorMessage(result){
   return `המפתח לא אושר על-ידי OMDb${result.apiError ? (': ' + result.apiError) : ''}.`;
 }
 
-/* מנסים קודם לפי הכותרת המוצגת (עברית, לרוב), ואם לא נמצא ויש רמז אנגלי זמין
-   (למשל סלאג מרב חן) - מנסים גם אותו לפני שמוותרים. תוצאת "לא נמצא" נשמרת במטמון
-   כדי שלא ננסה שוב על אותה הצגה/סרט בכל רינדור. */
+/* חיפוש דו-לשוני: OMDb מאונדקס כמעט תמיד לפי שם לועזי/אנגלי, אז כשיש רמז אנגלי
+   (סלאג מרב חן, שם אנגלי מלב וכו') מנסים אותו קודם - הסיכוי להצליח גבוה משמעותית.
+   רק אם זה נכשל (או שאין רמז כלל) מנסים גם לפי הכותרת המוצגת (בעברית, לרוב) - חשוב
+   בעיקר לסרטים ישראליים/מקומיים שבהם לפעמים כן מופיע שם עברי ב-OMDb. תוצאת "לא נמצא"
+   (בשתי השפות) נשמרת במטמון כדי שלא ננסה שוב על אותה הצגה/סרט בכל רינדור. */
 async function fetchImdbScore(title, hint){
   if (imdbCache[title] !== undefined) return imdbCache[title];
   if (imdbFetchInFlight.has(title)) return undefined;
@@ -1599,8 +1673,8 @@ async function fetchImdbScore(title, hint){
   if (!apiKey) return null;
   imdbFetchInFlight.add(title);
   try{
-    let result = await omdbLookup(apiKey, title);
-    if (!result && hint && hint.toLowerCase() !== title.toLowerCase()) result = await omdbLookup(apiKey, hint);
+    let result = hint ? await omdbLookup(apiKey, hint) : null;
+    if (!result && (!hint || hint.toLowerCase() !== title.toLowerCase())) result = await omdbLookup(apiKey, title);
     imdbCache[title] = result;
     try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
     return result;
@@ -1644,17 +1718,20 @@ function imdbBadgeHtml(ev){
   const cached = imdbCache[ev.title];
   if (cached){
     const link = cached.imdbId ? `https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/` : null;
-    const inner = `<i class="fa-brands fa-imdb"></i> ${escapeHtml(cached.rating)}`;
+    const inner = `<i class="fa-brands fa-imdb"></i> IMDb ${escapeHtml(cached.rating)}`;
     return link
       ? `<a class="imdb-badge" href="${link}" target="_blank" rel="noopener" title="לדף הסרט ב-IMDB" onclick="event.stopPropagation()">${inner}</a>`
       : `<span class="imdb-badge" title="דירוג IMDB">${inner}</span>`;
   }
-  if (hasKey && cached === null) return ''; // נבדק מול OMDb בעבר ולא נמצא - אין מה להציע
+  // נבדק מול OMDb בעבר ולא נמצא - נשאר גלוי (לא נעלם!) עם הודעה ידידותית, במקום כפתור פעיל
+  if (hasKey && cached === null){
+    return `<span class="imdb-badge not-found" title="לא מצאנו ציון לסרט הזה 🎬"><i class="fa-brands fa-imdb"></i> IMDb</span>`;
+  }
   if (hasKey && imdbFetchInFlight.has(ev.title)){
-    return `<span class="imdb-badge pending" title="בודקים דירוג..."><i class="fa-brands fa-imdb fa-fade"></i></span>`;
+    return `<span class="imdb-badge pending" title="בודקים דירוג..."><i class="fa-brands fa-imdb fa-fade"></i> IMDb</span>`;
   }
   const title = hasKey ? 'בדקו דירוג IMDB' : 'הפעילו דירוגי IMDB';
-  return `<button type="button" class="imdb-badge" title="${title}" onclick="event.stopPropagation();handleImdbIconClick('${ev.id}')"><i class="fa-brands fa-imdb"></i></button>`;
+  return `<button type="button" class="imdb-badge" title="${title}" onclick="event.stopPropagation();handleImdbIconClick('${ev.id}')"><i class="fa-brands fa-imdb"></i> IMDb</button>`;
 }
 
 function handleImdbIconClick(id){
