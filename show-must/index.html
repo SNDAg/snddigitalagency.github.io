@@ -8,7 +8,7 @@
 
 <!-- תצוגה מקדימה בשיתוף (וואטסאפ, פייסבוק וכו') -->
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://snddigitalagency.com/App/">
+<meta property="og:url" content="https://snddigitalagency.com/show-must/">
 <meta property="og:title" content="SHOWMUST | Show Must Go On | מה עושים הלילה?">
 <meta property="og:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים, בלי שרת">
 <meta property="og:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
@@ -219,13 +219,22 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
 .event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .event-details i{color:var(--accent);width:16px;text-align:center}
+
+/* תקציר עלילה - מוגבל ל-2 שורות כברירת מחדל, עם toggle "קרא עוד/פחות" שלא דורש רינדור מחדש */
+.event-synopsis-wrap{margin-bottom:16px}
+.event-synopsis{color:var(--text-muted);font-size:.83rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.event-synopsis.expanded{-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}
+.synopsis-toggle{background:none;border:none;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;padding:4px 0;margin-top:2px}
+.synopsis-toggle:hover{text-decoration:underline}
+
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
 .btn{flex:1;min-width:90px;padding:10px;border-radius:8px;text-decoration:none;text-align:center;font-size:.82rem;font-weight:600;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:transform .15s,filter .15s}
 .btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
 .btn-primary{background:var(--accent)}
 .btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .btn-cal{background:var(--music)}
-.btn-trailer{background:#c0392b}
+.btn-trailer{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.35);color:#fca5a5;backdrop-filter:blur(6px)}
+.btn-trailer:hover{background:rgba(239,68,68,.24);filter:none}
 
 .fav-icon{position:absolute;top:16px;left:16px;z-index:2;color:#fff;cursor:pointer;font-size:1.1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s}
 .fav-icon:hover{transform:scale(1.08)}
@@ -304,6 +313,15 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .wizard-next-btn{flex:1;background:var(--accent);color:#fff;border:none;padding:11px 16px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
 .wizard-back-btn{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text-muted);padding:11px 16px;border-radius:9px;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:6px}
 @media (prefers-reduced-motion: reduce){.imdb-banner,.wizard-panel{animation:none}}
+
+/* מודל ההמלצה החכמה ("רוצים לשמוע מה דעתי?") */
+.reco-box{max-width:460px;position:relative;text-align:center}
+.reco-icon{font-size:2.2rem;margin-bottom:8px;line-height:1}
+.reco-box h3{margin-bottom:14px}
+.reco-body{color:var(--text-main);font-size:.95rem;line-height:1.75;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:14px;padding:18px;text-align:right}
+.reco-body strong{color:#c4b5fd}
+.toolbar-btn.reco-btn{background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(192,132,252,.18));border-color:rgba(192,132,252,.4)}
+.toolbar-btn.reco-btn:hover{background:linear-gradient(135deg,var(--accent),#c084fc)}
 
 footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
 footer a{color:var(--accent)}
@@ -447,8 +465,8 @@ footer a{color:var(--accent)}
       <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
         <i class="fa-solid fa-heart"></i> <span class="fav-label">מועדפים</span> <span id="favCount">0</span>
       </button>
-      <button class="fav-toggle selected-toggle" id="selectedFilterBtn" onclick="toggleSelectedOnlyFilter(this)" title="הצג רק את הפריטים שסימנתי לבחירה">
-        <i class="fa-solid fa-check-double"></i> <span class="fav-label">מסומנים</span> <span id="selectedFilterCount">0</span>
+      <button class="fav-toggle selected-toggle" id="selectedFilterBtn" onclick="toggleSelectedOnlyFilter(this)" title="השוו בין הפריטים שסימנתם לבחירה">
+        <i class="fa-solid fa-code-compare"></i> <span class="fav-label">השוו בחירות</span> <span id="selectedFilterCount">0</span>
       </button>
     </div>
 
@@ -489,9 +507,8 @@ footer a{color:var(--accent)}
       <div class="chips-row">
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בית ליסין" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בית ליסין</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="הבימה" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
-        <label class="custom-check pending" id="cinemaMasterWrapper" title="בחירה כאן מסמנת/מבטלת גם את קולנוע לב וגם את רב חן יחד"><input type="checkbox" id="cinemaMasterCheckbox" disabled onchange="onCinemaMasterChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע (הכל)</label>
-        <label class="custom-check pending"><input type="checkbox" class="venue-filter cinema-sub" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
-        <label class="custom-check pending"><input type="checkbox" class="venue-filter cinema-sub" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בארבי" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
       </div>
       <p class="filter-hint">מקום מסומן באפור עדיין לא נטען - התיבה תיסמן אוטומטית ברגע שהנתונים יגיעו.</p>
@@ -527,8 +544,11 @@ footer a{color:var(--accent)}
       <button class="toolbar-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled>
         <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
       </button>
-      <button class="toolbar-btn whatsapp-btn" id="whatsappSelectedBtn" onclick="shareSelectedToWhatsapp()" disabled>
-        <i class="fa-brands fa-whatsapp"></i> שיתוף בוואטסאפ
+      <button class="toolbar-btn whatsapp-btn" id="whatsappSelectedBtn" onclick="handleWhatsappShareClick()">
+        <i class="fa-brands fa-whatsapp"></i> <span id="whatsappSelectedBtnLabel">שתף את האתר ב-WhatsApp</span>
+      </button>
+      <button class="toolbar-btn reco-btn" id="recoBtn" onclick="openRecoModal()" style="display:none">
+        <i class="fa-solid fa-robot"></i> רוצים לשמוע מה דעתי? 🤖💡
       </button>
     </div>
   </div>
@@ -628,6 +648,19 @@ footer a{color:var(--accent)}
   </div>
 </div>
 
+<div id="recoModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeRecoModal()">
+  <div class="modal-box reco-box">
+    <button class="wizard-close-x" onclick="closeRecoModal()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+    <div class="reco-icon">🤖💡</div>
+    <h3>רוצים לשמוע מה דעתי?</h3>
+    <div id="recoModalBody" class="reco-body"></div>
+    <div class="modal-actions" style="margin-top:18px">
+      <button id="recoModalCta" onclick="recoModalGo()"><i class="fa-solid fa-arrow-left"></i> סגור וקח אותי לשם</button>
+      <button class="secondary" onclick="closeRecoModal()">אולי אחר כך</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===================== קונפיגורציה ===================== */
 const JINA_BASE = 'https://r.jina.ai/';
@@ -681,7 +714,6 @@ let selectedType = 'all';
 let sourceState = {};
 let userToggledVenues = new Set();   // מקומות שהמשתמש עצמו שינה - לא לדרוס את הבחירה שלו אוטומטית
 let everFinishedSources = new Set(); // מקורות שסיימו להיטען לפחות פעם אחת - רענון ברקע לא "יכבה" אותם שוב
-let cinemaMasterEverReady = false;   // האם תיבת-העל "קולנוע (הכל)" כבר הפכה זמינה לפחות פעם אחת
 /* טעינה מורחבת (מעל ברירת המחדל של 3 ימים) מפוצלת לדגלים נפרדים ללב ולרב חן - כדי
    שלחיצה על "השבוע הקרוב" תשאב בפועל עוד נתונים רק עבור בית קולנוע שבאמת מסומן ב-וי,
    ולא תבזבז בקשות רשת על מקום שהמשתמש כלל לא ביקש לראות. */
@@ -804,6 +836,34 @@ function extractImageUrl(imgEl){
   return src;
 }
 
+/* טריילר: מנסים למצוא קישור YouTube ישיר בתוך דף שכבר בכל מקרה נשאב (בלי בקשת רשת
+   נוספת). קולנוע לב שם iframe עם class ייעודי (featureTrailerLinkVisible) - נבדק
+   ואומת בפועל; שאר האתרים לא נבדקו כמכילים טריילר משובץ, אז fallback כללי לכל קישור/
+   iframe שמצביע ל-YouTube, ו-null אם אין כלום (הכרטיס יפול אז ל-fallback של חיפוש). */
+function extractYoutubeTrailerFromDoc(doc){
+  const iframe = doc.querySelector('iframe.featureTrailerLinkVisible, iframe[src*="youtube.com/embed"]');
+  if (iframe){
+    const src = iframe.getAttribute('src') || '';
+    const m = src.match(/embed\/([a-zA-Z0-9_-]{6,})/);
+    if (m) return `https://www.youtube.com/watch?v=${m[1]}`;
+  }
+  const link = doc.querySelector('a[href*="youtube.com/watch"], a[href*="youtu.be/"]');
+  if (link) return link.href;
+  return null;
+}
+
+/* תקציר עלילה: og:description על דף הסרט של קולנוע לב הוא בפועל תקציר עלילה אמיתי
+   (נבדק ידנית מול האתר) - לא כל אתר כתוב כך (אצל אחרים זה טקסט שיווקי גנרי), אז
+   הפונקציה הזו נקראת רק היכן שאומת שהתוכן רלוונטי. חותכים אורך למניעת קלף ענק על הכרטיס. */
+function extractOgDescription(doc, maxLen=320){
+  const meta = doc.querySelector('meta[property="og:description"]') || doc.querySelector('meta[name="description"]');
+  const content = meta ? meta.getAttribute('content') : null;
+  if (!content) return null;
+  const trimmed = content.replace(/\s+/g,' ').trim();
+  if (!trimmed) return null;
+  return trimmed.length > maxLen ? trimmed.slice(0, maxLen).trim() + '…' : trimmed;
+}
+
 async function fetchLessin(){
   const html = await jinaFetch('https://www.lessin.co.il/%D7%94%D7%A6%D7%92%D7%95%D7%AA/', 'html');
   const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -888,6 +948,10 @@ async function attachCastInBackground(events, sourceKey){
         const html = await jinaFetch(url, 'html');
         const doc = new DOMParser().parseFromString(html, 'text/html');
         let changed = false;
+        // דף ההצגה כבר נשאב כאן ממילא (לצוות/תמונה) - בודקים גם טריילר "בחינם", בלי בקשת
+        // רשת נוספת. לא אומת שתיאטרון בית ליסין/הבימה בפועל משבצים טריילר בדף ההצגה, אז
+        // זו בדיקת fallback כללית (כל iframe/קישור YouTube) - אם אין, פשוט נשאר null.
+        const trailerUrl = extractYoutubeTrailerFromDoc(doc);
         if (sourceKey === 'lessin'){
           const og = doc.querySelector('meta[property="og:image"]');
           const image = og ? og.getAttribute('content') : null;
@@ -895,11 +959,16 @@ async function attachCastInBackground(events, sourceKey){
           events.filter(e => e.showPageUrl === url).forEach(e => {
             if (image) { e.image = image; changed = true; }
             if (cast.length) { e.cast = cast; changed = true; }
+            if (trailerUrl) { e.trailerUrl = trailerUrl; changed = true; }
           });
         } else if (sourceKey === 'habima'){
           const cast = extractHabimaCast(doc);
           if (cast.length){
             events.filter(e => e.showPageUrl === url).forEach(e => { e.cast = cast; });
+            changed = true;
+          }
+          if (trailerUrl){
+            events.filter(e => e.showPageUrl === url).forEach(e => { e.trailerUrl = trailerUrl; });
             changed = true;
           }
         }
@@ -974,6 +1043,10 @@ async function fetchLevMovieList(){
 async function fetchLevMovieShowtimes(movie){
   const html = await jinaFetch(movie.href, 'html');
   const doc = new DOMParser().parseFromString(html, 'text/html');
+  // אותו דף שממילא נשאב לשעות הקרנה מכיל גם את הטריילר (iframe) ואת תקציר העלילה
+  // (og:description) - חילוץ "בחינם", בלי בקשת רשת נוספת.
+  const trailerUrl = extractYoutubeTrailerFromDoc(doc);
+  const synopsis = extractOgDescription(doc);
   const blocks = [...doc.querySelectorAll('.movie_shows')].filter(el => {
     const style = el.getAttribute('style') || '';
     return !/display\s*:\s*none/i.test(style);
@@ -996,7 +1069,8 @@ async function fetchLevMovieShowtimes(movie){
           const date = inferDate(dm[1], dm[2], tm[1], tm[2]);
           events.push({
             id: makeId('lev', movie.title + '-' + locName, date), source:'lev', venue:'קולנוע לב', type:'cinema',
-            title: movie.title, date, link: a.href, extra: locName, image: movie.image || null, imdbHint: movie.imdbHint || null
+            title: movie.title, date, link: a.href, extra: locName, image: movie.image || null, imdbHint: movie.imdbHint || null,
+            trailerUrl, synopsis
           });
         });
       });
@@ -1054,10 +1128,48 @@ async function fetchRavHenDay(dateStr){
     events.push({
       id: makeId('ravhen', film.name, date), source:'ravhen', venue:'רב חן', type:'cinema',
       title: film.name, date, link: ev.bookingLink || film.link, extra: 'רב חן דיזנגוף',
-      image: film.posterLink || null, imdbHint: slugToImdbHint(film.link)
+      image: film.posterLink || null, imdbHint: slugToImdbHint(film.link),
+      trailerUrl: film.videoLink || null, filmPageUrl: film.link || null
     });
   });
   return events;
+}
+
+/* תקציר עלילה לסרטי רב-חן: ה-API של לוח ההקרנות (fetchRavHenDay) לא כולל תקציר בכלל -
+   הוא חבוי בתוך script מוטמע בדף הפרטים של הסרט עצמו (film.link), כ-JSON לא-מפוענח
+   ("synopsis":"..."). זו בקשת רשת נוספת, אז מריצים ברקע אחרי שהלוח כבר מוצג, פעם אחת
+   לכל סרט ייחודי (לא לכל הקרנה) ומוגבל למספר קטן - בדיוק כמו attachCastInBackground. */
+const RAVHEN_SYNOPSIS_FETCH_CAP = 8;
+const RAVHEN_SYNOPSIS_CONCURRENCY = 2;
+
+function extractRavHenSynopsis(html){
+  const m = html.match(/"synopsis":"((?:[^"\\]|\\.)*)"/);
+  if (!m) return null;
+  try{
+    const val = JSON.parse('"' + m[1] + '"').replace(/\s+/g,' ').trim();
+    if (!val) return null;
+    return val.length > 320 ? val.slice(0, 320).trim() + '…' : val;
+  }catch(e){ return null; }
+}
+
+async function attachRavHenSynopsisInBackground(events){
+  const uniqueUrls = [...new Set(events.map(e => e.filmPageUrl).filter(Boolean))].slice(0, RAVHEN_SYNOPSIS_FETCH_CAP);
+  if (!uniqueUrls.length) return;
+  let idx = 0;
+  async function worker(){
+    while (idx < uniqueUrls.length){
+      const url = uniqueUrls[idx++];
+      try{
+        const html = await jinaFetch(url, 'html');
+        const synopsis = extractRavHenSynopsis(html);
+        if (synopsis){
+          events.filter(e => e.filmPageUrl === url).forEach(e => { e.synopsis = synopsis; });
+          filterEvents();
+        }
+      }catch(e){ console.error('ravhen synopsis fetch failed:', url, e); }
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(RAVHEN_SYNOPSIS_CONCURRENCY, uniqueUrls.length)}, worker));
 }
 
 async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
@@ -1076,6 +1188,7 @@ async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
     }
   }
   await Promise.all(Array.from({length: Math.min(RAVHEN_CONCURRENCY, days.length || 1)}, worker));
+  attachRavHenSynopsisInBackground(events); // לא await בכוונה - לא מעכבים את הצגת הלוח
   return events;
 }
 
@@ -1364,44 +1477,6 @@ function syncVenueCheckboxes(){
     // אם המקור כבר נטען בעבר וכרגע רק מתרענן ברקע - לא נוגעים בתיבה, כדי לא לדרוס
     // בטעות בחירה קיימת של המשתמש בזמן שהנתונים הישנים עדיין מוצגים.
   });
-
-  // תיבת-העל "קולנוע (הכל)" זמינה רק כששני מקורות הקולנוע (לב ורב חן) כבר סיימו
-  // להיטען לפחות פעם אחת - ואז משתחררת ומשקפת את מצב שני התתי-מקומות באותו רגע.
-  const masterCb = document.getElementById('cinemaMasterCheckbox');
-  if (masterCb){
-    const wrapper = document.getElementById('cinemaMasterWrapper');
-    const bothCinemaReady = everFinishedSources.has('lev') && everFinishedSources.has('ravhen');
-    if (bothCinemaReady){
-      cinemaMasterEverReady = true;
-      if (masterCb.disabled){
-        masterCb.disabled = false;
-        if (wrapper) wrapper.classList.remove('pending');
-        if (!userToggledVenues.has('__cinemaMaster__')){
-          const lev = document.querySelector('.venue-filter[value="קולנוע לב"]');
-          const ravhen = document.querySelector('.venue-filter[value="רב חן"]');
-          masterCb.checked = !!(lev && lev.checked) && !!(ravhen && ravhen.checked);
-        }
-      }
-    } else if (!cinemaMasterEverReady){
-      masterCb.disabled = true;
-      masterCb.checked = false;
-      if (wrapper) wrapper.classList.add('pending');
-    }
-  }
-}
-
-/* סימון/ביטול "קולנוע (הכל)" מסמן/מבטל יחד את שני התתי-מקומות (קולנוע לב, רב חן) -
-   רק אם הם כבר זמינים (לא pending). לא בונים מצב indeterminate מורכב - זו סנכרון
-   כיוון-אחד פשוט מההורה לילדים, וכל תתי-מקום עדיין ניתן לשינוי ידני בנפרד. */
-function onCinemaMasterChange(cb){
-  userToggledVenues.add('__cinemaMaster__');
-  document.querySelectorAll('.venue-filter.cinema-sub').forEach(child => {
-    if (child.disabled) return;
-    child.checked = cb.checked;
-    userToggledVenues.add(child.value);
-    if (cb.checked) maybeExpandVenueOnCheck(child.value);
-  });
-  filterEvents();
 }
 
 function onVenueCheckboxChange(cb){
@@ -1531,13 +1606,6 @@ function syncVenuesToType(type){
     }
     userToggledVenues.add(cb.value);
   });
-  const master = document.getElementById('cinemaMasterCheckbox');
-  if (master && !master.disabled){
-    const lev = document.querySelector('.venue-filter[value="קולנוע לב"]');
-    const ravhen = document.querySelector('.venue-filter[value="רב חן"]');
-    master.checked = !!(lev && lev.checked) && !!(ravhen && ravhen.checked);
-    userToggledVenues.add('__cinemaMaster__');
-  }
 }
 
 function setType(type, btn){
@@ -1587,11 +1655,18 @@ function updateSelectionUI(){
   const count = selectedIds.size;
   const countEl = document.getElementById('selectedCount');
   const dlBtn = document.getElementById('downloadSelectedBtn');
-  const waBtn = document.getElementById('whatsappSelectedBtn');
+  const waLabelEl = document.getElementById('whatsappSelectedBtnLabel');
+  const recoBtn = document.getElementById('recoBtn');
   const selectedFilterCountEl = document.getElementById('selectedFilterCount');
   if (countEl) countEl.innerText = `(${count})`;
   if (dlBtn) dlBtn.disabled = count === 0;
-  if (waBtn) waBtn.disabled = count === 0;
+  // כפתור הוואטסאפ תמיד פעיל - בלי בחירה הוא משתף את האתר עצמו, עם בחירה את הפריטים שנבחרו
+  if (waLabelEl){
+    waLabelEl.textContent = count === 0
+      ? 'שתף את האתר ב-WhatsApp'
+      : count === 1 ? 'שתף אירוע אחד ב-WhatsApp' : `שתף ${count} אירועים ב-WhatsApp`;
+  }
+  if (recoBtn) recoBtn.style.display = (showOnlySelected && count >= 2) ? 'inline-flex' : 'none';
   if (selectedFilterCountEl) selectedFilterCountEl.innerText = count;
   const selectAllCb = document.getElementById('selectAllCheckbox');
   if (selectAllCb){
@@ -1637,23 +1712,23 @@ function downloadSelected(){
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-const SHOWMUST_URL = 'https://snddigitalagency.com/App/';
+const SHOWMUST_URL = 'https://snddigitalagency.com/show-must/';
 
 /* ===================== שיתוף בוואטסאפ ===================== */
 
-function buildWhatsappBlockForEvent(ev){
+function buildWhatsappBlockForEvent(ev, index){
   const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
   const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
   const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
   const cached = imdbCache[ev.title];
   const imdbLine = ev.type === 'cinema' && cached && cached.rating ? `\n⭐ IMDb: ${cached.rating}` : '';
   const locationLine = `${ev.venue}${ev.extra ? ' - ' + ev.extra : ''}`;
-  return `🎭 *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 ${dayName}, ${dateStr}\n🕒 ${timeStr}\n🎫 ${ev.link}`;
+  return `${index}. *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 יום ${dayName}, ${dateStr} בשעה ${timeStr}\n🎟️ כרטיסים: ${ev.link}`;
 }
 
 function buildWhatsappMessageForEvents(events){
-  const blocks = events.map(buildWhatsappBlockForEvent).join('\n\n');
-  return `*ה-Lineup שלי מ-SHOWMUST* 🎬\n\n${blocks}\n\nעוד מופעים ל-SHOWMUST - Show Must Go On 👉 ${SHOWMUST_URL}`;
+  const blocks = events.map((ev, i) => buildWhatsappBlockForEvent(ev, i + 1)).join('\n\n');
+  return `*ה-Lineup שלי מ-SHOWMUST* 🎬🍿\n\n${blocks}\n\n--\nעוד מופעים ב-SHOWMUST - Show Must Go On:\n${SHOWMUST_URL}`;
 }
 
 function shareSelectedToWhatsapp(){
@@ -1663,9 +1738,91 @@ function shareSelectedToWhatsapp(){
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
 }
 
+/* כפתור הוואטסאפ בסרגל התוצאות מתנהג בהקשר: בלי בחירה משתף את האתר עצמו, עם בחירה
+   משתף את ה-lineup שנבחר - התווית ב-updateSelectionUI כבר משקפת את זה מראש. */
+function handleWhatsappShareClick(){
+  if (selectedIds.size === 0) shareAppToWhatsapp();
+  else shareSelectedToWhatsapp();
+}
+
 function shareAppToWhatsapp(){
   const message = `🎭 *SHOWMUST* - Show Must Go On!\nתיאטרון, קולנוע והופעות בתל אביב - נתונים חיים מהאתרים הרשמיים, בלי שרת.\n\nמה עושים הלילה? תגלו כאן 👇\n${SHOWMUST_URL}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+}
+
+/* ===================== "רוצים לשמוע מה דעתי?" - המלצה חכמה על הבחירות =====================
+   פועלת על הפריטים המסומנים בלבד (2+, במצב "השוו בחירות"). הלוגיקה משווה לפי סוג:
+   תיאטרון מול קולנוע מעדיפה חוויה חיה, אלא אם לסרט יש דירוג IMDB חריג (>8.2); קולנוע
+   מול קולנוע ממליצה על הדירוג הגבוה יותר; הופעה חיה בבארבי מקבלת קדימות תמידית - שום
+   מסך לא מתחרה בחוויה חיה. recoPick נשמר כדי שכפתור הפעולה יידע לאן לקחת את המשתמש. */
+let recoPick = null;
+
+function buildSmartRecommendation(events){
+  const uniq = [];
+  const seenTitles = new Set();
+  events.forEach(e => { if (!seenTitles.has(e.title)){ seenTitles.add(e.title); uniq.push(e); } });
+
+  const ratingOf = ev => { const c = imdbCache[ev.title]; return (c && c.rating) ? parseFloat(c.rating) : null; };
+  const music = uniq.filter(e => e.type === 'music');
+  const cinema = uniq.filter(e => e.type === 'cinema');
+  const theatre = uniq.filter(e => e.type === 'theatre');
+
+  if (music.length){
+    const pick = music[0];
+    return { pick, html: `🎸 <strong>${escapeHtml(pick.title)}</strong> בבארבי!<br>הופעה חיה בבארבי זו האנרגיה המדויקת להתחיל איתה את השבוע! שום מסך לא מחליף רחבה רועשת ובאס שרוטט בחזה.` };
+  }
+
+  if (theatre.length && cinema.length){
+    const bestCinema = cinema.reduce((best,e) => (ratingOf(e)||0) > (ratingOf(best)||0) ? e : best, cinema[0]);
+    const bestRating = ratingOf(bestCinema);
+    if (bestRating && bestRating > 8.2){
+      return { pick: bestCinema, html: `🎬 הפעם הקולנוע מנצח! <strong>${escapeHtml(bestCinema.title)}</strong> מחזיק ציון IMDb מטורף של ${bestRating} - כזה סרט לא מוותרים עליו בשביל שום דבר.` };
+    }
+    const pick = theatre[0];
+    return { pick, html: `🎭 תיאטרון זה אקשן חי על הבמה! סרט תמיד אפשר לראות בסוף, אבל <strong>${escapeHtml(pick.title)}</strong> זו חוויה חיה וייחודית לערב הזה בלבד.` };
+  }
+
+  if (cinema.length >= 2){
+    const sorted = [...cinema].sort((a,b) => (ratingOf(b)||0) - (ratingOf(a)||0));
+    const [a,b] = sorted;
+    const ra = ratingOf(a);
+    if (ra){
+      return { pick:a, html: `🍿 אם אתם מחפשים הימור בטוח לערב - <strong>${escapeHtml(a.title)}</strong> לוקח בענק עם ציון IMDb של ${ra}. אם בא לכם משהו קליל יותר - <strong>${escapeHtml(b.title)}</strong> סוגר פינה.` };
+    }
+    return { pick:a, html: `🍿 שני הסרטים נראים מעולים - <strong>${escapeHtml(a.title)}</strong> ו-<strong>${escapeHtml(b.title)}</strong>. אין עדיין דירוגים זמינים, אז זה הימור טהור - תבחרו לפי הבטן.` };
+  }
+
+  if (cinema.length === 1){
+    const pick = cinema[0];
+    const r = ratingOf(pick);
+    return { pick, html: `🍿 <strong>${escapeHtml(pick.title)}</strong>${r ? ` עם ציון IMDb של ${r}` : ''} - נראה כמו בחירה מוצקה לערב.` };
+  }
+
+  if (theatre.length === 1){
+    const pick = theatre[0];
+    return { pick, html: `🎭 <strong>${escapeHtml(pick.title)}</strong> - הצגה חיה תמיד משאירה חוויה שסרט לא יכול לתת.` };
+  }
+
+  const pick = uniq[0];
+  return { pick, html: `✨ <strong>${escapeHtml(pick.title)}</strong> נראה כמו האפשרות המנצחת מבין הבחירות שלכם הערב.` };
+}
+
+function openRecoModal(){
+  const selected = allEvents.filter(ev => selectedIds.has(ev.id)).sort((a,b) => a.date - b.date);
+  if (selected.length < 2) return;
+  const { pick, html } = buildSmartRecommendation(selected);
+  recoPick = pick;
+  document.getElementById('recoModalBody').innerHTML = html;
+  document.getElementById('recoModal').style.display = 'flex';
+}
+
+function closeRecoModal(){
+  document.getElementById('recoModal').style.display = 'none';
+}
+
+function recoModalGo(){
+  if (recoPick) window.open(recoPick.link, '_blank', 'noopener');
+  closeRecoModal();
 }
 
 function quickExpand(range){
@@ -1719,8 +1876,33 @@ function filterEvents(){
    בתי קולנוע) - ואז רק ל-3 הכרטיסים הראשונים. בכל מקרה אחר (או מעבר ל-3 הראשונים)
    מוצג אייקון קטן על הכרטיס ללחיצה ידנית. הכל מותנה במפתח OMDb אישי בהגדרות. */
 
-/* חיפוש יחיד מול OMDb. מחזיר {rating,imdbId} כשנמצא, null כשלא נמצא (לא זריקה -
-   "לא נמצא" הוא תוצאה תקינה, לא תקלה), ולעולם לא משאיר UI שבור. */
+/* מנקים כותרת לפני חיפוש ב-OMDb: מסירים תוכן בסוגריים (שנה/פורמט), מירכאות עבריות,
+   נקודתיים/מקפים ופיסוק שגורם להתאמה מדויקת (t=) להיכשל על כותרות שהן בעצם תקינות -
+   לדוגמה כותרת עם כתובית אחרי מקף ("סוף רחוב האלון - עונה חדשה") נכשלת בחיפוש מדויק
+   אבל מצליחה ברגע שמורידים את הכתובית. */
+function cleanImdbQuery(str){
+  if (!str) return '';
+  return str
+    .replace(/\(.*?\)/g, ' ')     // תוכן בסוגריים (שנה/פורמט הקרנה וכו')
+    .replace(/[׳']/g, '')          // גרש - חלק פנימי מהמילה (למשל "ג'יימס"), מסירים בלי רווח
+    .replace(/[:"״]/g, ' ')        // נקודתיים/גרשיים כפולים - אלו כן מפרידים בין מילים
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+/* וריאציות חיפוש לכותרת נתונה: המנוקה במלואה, ואם יש כתובית אחרי מקף/נקודתיים -
+   גם הגרסה בלי הכתובית (לרוב שם הסרט/ההצגה האמיתי). */
+function imdbQueryVariants(title){
+  const cleaned = cleanImdbQuery(title);
+  const variants = [];
+  if (cleaned) variants.push(cleaned);
+  const noSubtitle = cleaned.split(/\s[-–—]\s/)[0].trim();
+  if (noSubtitle && noSubtitle !== cleaned) variants.push(noSubtitle);
+  return variants;
+}
+
+/* חיפוש יחיד מול OMDb לפי התאמה מדויקת (t=). מחזיר {rating,imdbId} כשנמצא, null
+   כשלא נמצא (לא זריקה - "לא נמצא" הוא תוצאה תקינה, לא תקלה), ולעולם לא משאיר UI שבור. */
 async function omdbLookup(apiKey, query){
   if (!query) return null;
   try{
@@ -1733,6 +1915,32 @@ async function omdbLookup(apiKey, query){
     return null;
   }catch(e){
     console.error('OMDb lookup failed:', query, e);
+    return null;
+  }
+}
+
+/* חיפוש "מטושטש" מול OMDb (s=) - מחזיר רשימת תוצאות קרובות במקום דורש התאמה מדויקת.
+   משמש כמוצא אחרון: לוקחים את התוצאה הראשונה ומביאים לה פרטים מלאים (i=) כדי לוודא
+   שיש לה בכלל דירוג IMDB. שימושי בעיקר לכותרות עם רעש (פורמט הקרנה, שנה בסוגריים וכו')
+   שגם אחרי ניקוי עדיין לא תואמות בדיוק את השם ב-OMDb. */
+async function omdbSearchFallback(apiKey, query){
+  if (!query) return null;
+  try{
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&s=${encodeURIComponent(query)}&type=movie`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.Response !== 'True' || !Array.isArray(data.Search) || !data.Search.length) return null;
+    const imdbId = data.Search[0].imdbID;
+    if (!imdbId) return null;
+    const detailRes = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&i=${encodeURIComponent(imdbId)}`);
+    if (!detailRes.ok) return null;
+    const detail = await detailRes.json();
+    if (detail.Response === 'True' && detail.imdbRating && detail.imdbRating !== 'N/A'){
+      return { rating: detail.imdbRating, imdbId: detail.imdbID };
+    }
+    return null;
+  }catch(e){
+    console.error('OMDb search fallback failed:', query, e);
     return null;
   }
 }
@@ -1771,8 +1979,19 @@ async function fetchImdbScore(title, hint){
   if (!apiKey) return null;
   imdbFetchInFlight.add(title);
   try{
-    let result = hint ? await omdbLookup(apiKey, hint) : null;
-    if (!result && (!hint || hint.toLowerCase() !== title.toLowerCase())) result = await omdbLookup(apiKey, title);
+    // שרשרת ניסיונות מהזול/מדויק ביותר לזול/גמיש פחות - עוצרים בניסיון הראשון שמצליח.
+    // "לא נמצא" נשמר במטמון רק אחרי שכל הניסיונות נכשלו, כדי לא להשאיר false negative
+    // על כותרת שבעצם כן קיימת אך דרשה ניקוי/וריאציה או חיפוש מטושטש כדי להימצא.
+    const cleanHint = cleanImdbQuery(hint);
+    let result = cleanHint ? await omdbLookup(apiKey, cleanHint) : null;
+    if (!result){
+      for (const variant of imdbQueryVariants(title)){
+        if (variant.toLowerCase() === (cleanHint || '').toLowerCase()) continue;
+        result = await omdbLookup(apiKey, variant);
+        if (result) break;
+      }
+    }
+    if (!result) result = await omdbSearchFallback(apiKey, cleanHint || cleanImdbQuery(title));
     imdbCache[title] = result;
     try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
     return result;
@@ -1839,6 +2058,14 @@ function handleImdbIconClick(id){
   if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
   fetchImdbScore(ev.title, ev.imdbHint).then(() => filterEvents());
   filterEvents(); // imdbFetchInFlight כבר עודכן באופן סנכרוני בתוך fetchImdbScore - מציג מיד מצב "בודקים..."
+}
+
+function toggleSynopsis(btn){
+  const wrap = btn.closest('.event-synopsis-wrap');
+  if (!wrap) return;
+  const p = wrap.querySelector('.event-synopsis');
+  const expanded = p.classList.toggle('expanded');
+  btn.textContent = expanded ? 'פחות' : 'קרא עוד';
 }
 
 function renderSkeletons(count=8){
@@ -1908,7 +2135,10 @@ function renderEvents(events){
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
     const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
     const gCal = createGoogleCalendarLink(ev);
-    const trailerLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(ev.title + ' טריילר')}`;
+    // עדיפות ראשונה: טריילר שנשאב ישירות מדף האתר הרשמי (קולנוע לב/רב חן). כשאין כזה -
+    // נופלים לחיפוש YouTube ממוקד לפי שם הכרטיס.
+    const trailerLink = ev.trailerUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(ev.title + ' טריילר')}`;
+    const trailerTitle = ev.trailerUrl ? 'צפו בטריילר' : 'חיפוש טריילר ב-YouTube';
 
     const imageBlock = ev.image
       ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
@@ -1936,12 +2166,17 @@ function renderEvents(events){
           <div><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</div>
           ${ev.cast && ev.cast.length ? `<div><i class="fa-solid fa-users"></i> בהשתתפות: ${escapeHtml(ev.cast.join(', '))}</div>` : ''}
         </div>
+        ${ev.synopsis ? `
+        <div class="event-synopsis-wrap">
+          <p class="event-synopsis">${escapeHtml(ev.synopsis)}</p>
+          <button type="button" class="synopsis-toggle" onclick="toggleSynopsis(this)">קרא עוד</button>
+        </div>` : ''}
       </div>
       <div class="btn-row">
         <a href="${ev.link}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
         <a href="${navLink(ev)}" target="_blank" rel="noopener" class="btn btn-secondary" title="נווט עם Waze"><i class="fa-solid fa-car"></i> ניווט</a>
         <a href="${gCal}" target="_blank" rel="noopener" class="btn btn-cal"><i class="fa-regular fa-calendar-plus"></i> ליומן</a>
-        <a href="${trailerLink}" target="_blank" rel="noopener" class="btn btn-trailer" title="חיפוש טריילר ב-YouTube"><i class="fa-brands fa-youtube"></i> טריילר</a>
+        <a href="${trailerLink}" target="_blank" rel="noopener" class="btn btn-trailer" title="${trailerTitle}"><i class="fa-brands fa-youtube"></i> טריילר</a>
       </div>
     `;
     container.appendChild(card);
