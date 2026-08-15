@@ -19,8 +19,20 @@
 <meta name="twitter:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים">
 <meta name="twitter:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
 
-<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- חימום חיבורים מוקדם לדומיינים חיצוניים - מקצר את זמן הטעינה הראשוני -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://r.jina.ai">
+<link rel="preconnect" href="https://accounts.google.com">
+
+<!-- טעינת CSS חיצוני בלי לחסום את הרינדור הראשוני של הדף -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<noscript>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</noscript>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <style>
@@ -91,6 +103,24 @@ header p{color:var(--text-muted);font-size:1rem}
 #refreshBtn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:background .2s,transform .15s}
 #refreshBtn:hover:not(:disabled){background:var(--accent-hover);transform:translateY(-1px)}
 #refreshBtn:disabled{opacity:.5;cursor:not-allowed}
+
+/* מסך פתיחה - מוצג רק בטעינה הראשונית, מוחלף בשקט ברגע שהמקורות האוטומטיים מסתיימים */
+.startup-hero{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;padding:32px 24px;margin-bottom:26px;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,.4);animation:heroFadeIn .4s ease both;transition:opacity .4s,transform .4s}
+.startup-hero.hidden-fade{opacity:0;transform:translateY(-10px);pointer-events:none}
+@keyframes heroFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.startup-icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#8b5cf6);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:1.6rem;color:#fff;animation:startupPulse 2s ease-in-out infinite;box-shadow:0 0 30px rgba(99,102,241,.5)}
+@keyframes startupPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.startup-hero h3{font-size:1.25rem;margin-bottom:6px}
+.startup-hero p{color:var(--text-muted);font-size:.88rem;margin-bottom:20px}
+.startup-progress-track{width:100%;max-width:360px;height:8px;background:rgba(255,255,255,.08);border-radius:20px;margin:0 auto 8px;overflow:hidden}
+.startup-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#c084fc);border-radius:20px;transition:width .4s ease;position:relative;overflow:hidden}
+.startup-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmerSweep 1.2s infinite}
+.startup-progress-pct{font-size:.8rem;color:var(--text-muted);margin-bottom:18px;font-weight:600}
+.startup-source-list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.startup-source-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);padding:6px 12px;border-radius:20px;font-size:.78rem;color:var(--text-muted);transition:all .3s}
+.startup-source-chip.done{color:var(--ok);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+.startup-source-chip i{font-size:.7rem}
+@media (prefers-reduced-motion: reduce){.startup-icon{animation:none}.startup-progress-fill::after{animation:none}.startup-hero{animation:none}}
 
 .loading-banner{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.87rem;margin-bottom:16px;padding:10px 16px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.22);border-radius:12px}
 .loading-banner i{color:var(--accent)}
@@ -225,6 +255,47 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .modal-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .muted{color:var(--text-muted);font-size:.8rem;margin-top:14px}
 
+/* באנר הזמנה להפעלת דירוגי IMDB */
+.imdb-banner{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(245,197,24,.12),rgba(245,197,24,.04));border:1px solid rgba(245,197,24,.35);border-radius:16px;padding:16px 20px;margin-bottom:18px;animation:heroFadeIn .4s ease both}
+.imdb-banner-icon{flex:none;width:44px;height:44px;border-radius:50%;background:#f5c518;color:#111;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 20px rgba(245,197,24,.4)}
+.imdb-banner-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.imdb-banner-text strong{font-size:.95rem}
+.imdb-banner-text span{color:var(--text-muted);font-size:.82rem}
+.imdb-banner-actions{flex:none;display:flex;align-items:center;gap:8px}
+.imdb-banner-cta{background:#f5c518;color:#111;border:none;padding:10px 16px;border-radius:9px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:transform .2s}
+.imdb-banner-cta:hover{transform:translateY(-1px)}
+.imdb-banner-dismiss{background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:8px;border-radius:50%;line-height:1}
+.imdb-banner-dismiss:hover{background:rgba(255,255,255,.08);color:#fff}
+
+/* אשף הפעלת IMDB */
+.wizard-box{max-width:440px;position:relative;text-align:center}
+.wizard-close-x{position:absolute;top:14px;left:14px;background:transparent;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:6px;border-radius:50%}
+.wizard-close-x:hover{background:rgba(255,255,255,.08);color:#fff}
+.wizard-steps{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 22px}
+.wizard-step-dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--text-muted);font-weight:700;transition:all .3s}
+.wizard-step-dot.active{background:#f5c518;border-color:#f5c518;color:#111}
+.wizard-step-dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.wizard-step-line{width:36px;height:2px;background:var(--border);transition:background .3s}
+.wizard-step-line.done{background:var(--ok)}
+.wizard-panel{animation:heroFadeIn .35s ease both}
+.wizard-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f5c518,#c99a00);color:#111;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 14px}
+.wizard-icon.success{background:linear-gradient(135deg,var(--ok),#15803d);color:#fff}
+.wizard-panel h3{margin-bottom:8px;font-size:1.15rem}
+.wizard-panel p{color:var(--text-muted);font-size:.87rem;line-height:1.6;margin-bottom:16px}
+.wizard-google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:1px solid var(--border);border-radius:9px;padding:11px;font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:14px}
+.wizard-google-btn img{width:22px;height:22px;border-radius:50%}
+.wizard-divider{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.78rem;margin-bottom:14px}
+.wizard-divider::before,.wizard-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+#wizardEmailInput,#wizardKeyInput{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;margin-bottom:6px}
+.wizard-error{color:#f87171;font-size:.78rem;margin-bottom:10px}
+.wizard-external-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#f5c518;color:#111;text-decoration:none;font-weight:700;padding:11px;border-radius:9px;font-size:.87rem;margin-bottom:12px}
+.wizard-hint{background:rgba(255,255,255,.05);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right}
+.wizard-actions{display:flex;gap:10px;margin-top:16px}
+.wizard-actions.two{justify-content:space-between}
+.wizard-next-btn{flex:1;background:var(--accent);color:#fff;border:none;padding:11px 16px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.wizard-back-btn{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text-muted);padding:11px 16px;border-radius:9px;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:6px}
+@media (prefers-reduced-motion: reduce){.imdb-banner,.wizard-panel{animation:none}}
+
 footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
 footer a{color:var(--accent)}
 
@@ -254,6 +325,12 @@ footer a{color:var(--accent)}
   .pill{font-size:.72rem;padding:7px 11px;min-height:32px}
 
   .loading-banner{font-size:.8rem;padding:9px 12px}
+
+  .startup-hero{padding:24px 16px;margin-bottom:18px}
+  .startup-icon{width:50px;height:50px;font-size:1.35rem}
+  .startup-hero h3{font-size:1.08rem}
+  .startup-hero p{font-size:.82rem;margin-bottom:16px}
+  .startup-source-chip{font-size:.72rem;padding:5px 10px}
 
   .search-row{gap:8px;margin-bottom:14px}
   .search-input{padding:13px 44px 13px 14px;font-size:16px}
@@ -296,6 +373,15 @@ footer a{color:var(--accent)}
   .modal-box h3{font-size:1.05rem}
   .modal-actions{flex-direction:column}
   .modal-actions button{width:100%;padding:12px;min-height:44px}
+
+  .imdb-banner{flex-wrap:wrap;padding:14px 16px}
+  .imdb-banner-text{order:2;flex-basis:100%}
+  .imdb-banner-actions{order:3;flex-basis:100%;justify-content:space-between}
+  .imdb-banner-cta{flex:1;justify-content:center;min-height:44px}
+  .wizard-box{padding:22px 16px}
+  .wizard-actions{flex-direction:column}
+  .wizard-actions.two{flex-direction:column-reverse}
+  .wizard-next-btn,.wizard-back-btn{width:100%;min-height:44px}
 
   footer{font-size:.72rem;padding:0 6px}
 }
@@ -395,10 +481,31 @@ footer a{color:var(--accent)}
 
   </div>
 
+  <div class="startup-hero" id="startupHero">
+    <div class="startup-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+    <h3>טוענים את הערב שלך</h3>
+    <p id="startupHeroText">סורקים אתרים רשמיים בזמן אמת...</p>
+    <div class="startup-progress-track"><div class="startup-progress-fill" id="startupProgressFill"></div></div>
+    <div class="startup-progress-pct" id="startupProgressPct">0%</div>
+    <div class="startup-source-list" id="startupSourceList"></div>
+  </div>
+
   <div class="loading-banner" id="loadingBanner" style="display:none">
     <i class="fa-solid fa-satellite-dish fa-fade"></i>
     <span id="loadingBannerText">סורקים מקורות בזמן אמת</span>
     <span class="dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>
+
+  <div class="imdb-banner" id="imdbBanner" style="display:none">
+    <div class="imdb-banner-icon"><i class="fa-brands fa-imdb"></i></div>
+    <div class="imdb-banner-text">
+      <strong>רוצים לראות דירוגי IMDB על כרטיסי הסרטים?</strong>
+      <span>הפעלה חד-פעמית וחינמית, לוקחת כ-2 דקות</span>
+    </div>
+    <div class="imdb-banner-actions">
+      <button class="imdb-banner-cta" onclick="openImdbWizard()">הפעילו עכשיו <i class="fa-solid fa-arrow-left"></i></button>
+      <button class="imdb-banner-dismiss" onclick="dismissImdbBanner()" title="לא עכשיו" aria-label="סגור באנר"><i class="fa-solid fa-xmark"></i></button>
+    </div>
   </div>
 
   <div class="results-toolbar">
@@ -449,20 +556,69 @@ footer a{color:var(--accent)}
     <hr class="settings-divider">
 
     <h4 class="settings-subtitle"><i class="fa-brands fa-imdb"></i> דירוגי IMDB לסרטים</h4>
-    <p>אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB:</p>
-    <ol>
-      <li>גשו ל-<a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">omdbapi.com/apikey.aspx</a> ובקשו מפתח חינמי (נשלח למייל תוך דקות)</li>
-      <li>העתיקו את המפתח והדביקו כאן:</li>
-    </ol>
+    <p id="omdbStatusText">אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.</p>
+    <div class="modal-actions">
+      <button onclick="openImdbWizard()"><i class="fa-brands fa-imdb"></i> פתחו את אשף ההפעלה</button>
+      <button class="secondary" id="clearOmdbBtnSettings" onclick="clearOmdbKey()" style="display:none">נקה מפתח</button>
+    </div>
+    <p class="muted">כבר יש לכם מפתח? אפשר להדביק אותו ישירות כאן:</p>
     <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4">
     <div class="modal-actions">
       <button onclick="saveOmdbKey()">שמור</button>
-      <button class="secondary" onclick="clearOmdbKey()">נקה</button>
     </div>
     <p class="muted">שימו לב: הסרטים מוצגים באתרים בשם עברי, וחיפוש ה-IMDB מתבצע לפי אותו שם - לכן חלק מהסרטים עלולים לא להימצא.</p>
 
     <div class="modal-actions" style="margin-top:18px">
       <button class="secondary" onclick="closeSettings()">סגור</button>
+    </div>
+  </div>
+</div>
+
+<div id="imdbWizardModal" class="modal-overlay" style="display:none">
+  <div class="modal-box wizard-box">
+    <button class="wizard-close-x" onclick="closeImdbWizard()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+
+    <div class="wizard-steps">
+      <div class="wizard-step-dot active" id="wizardDot1">1</div>
+      <div class="wizard-step-line" id="wizardLine1"></div>
+      <div class="wizard-step-dot" id="wizardDot2">2</div>
+    </div>
+
+    <div class="wizard-panel" id="wizardPanel1">
+      <div class="wizard-icon"><i class="fa-brands fa-imdb"></i></div>
+      <h3>הפעלת דירוגי IMDB</h3>
+      <p>שלב 1 מתוך 2 - למי לשלוח את מפתח ה-API? (שירות חיצוני חינמי בשם OMDb, לא קשור לגוגל שלנו)</p>
+      <button class="wizard-google-btn" id="wizardGoogleBtn" onclick="useGoogleForWizard()" style="display:none">
+        <img id="wizardGoogleAvatar" alt="" referrerpolicy="no-referrer"> <span>המשך בתור <b id="wizardGoogleName"></b></span>
+      </button>
+      <div class="wizard-divider" id="wizardOrDivider" style="display:none"><span>או</span></div>
+      <input type="email" id="wizardEmailInput" placeholder="הכתובת מייל שלכם" inputmode="email">
+      <div class="wizard-actions">
+        <button class="wizard-next-btn" onclick="wizardGoToStep2()">המשך <i class="fa-solid fa-arrow-left"></i></button>
+      </div>
+    </div>
+
+    <div class="wizard-panel" id="wizardPanel2" style="display:none">
+      <div class="wizard-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+      <h3>שלב 2 מתוך 2 - קבלו את המפתח</h3>
+      <p id="wizardStep2Text">לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את כתובת המייל שלכם ובחרו באפשרות ה"Free" (חינמית).</p>
+      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
+      <p class="wizard-hint"><i class="fa-solid fa-circle-info"></i> המפתח יגיע למייל תוך דקות ספורות - כדאי לבדוק גם בתיבת הספאם.</p>
+      <input type="text" id="wizardKeyInput" placeholder="הדביקו כאן את המפתח שקיבלתם במייל">
+      <p class="wizard-error" id="wizardKeyError" style="display:none">צריך להדביק מפתח לפני שממשיכים</p>
+      <div class="wizard-actions two">
+        <button class="wizard-back-btn" onclick="wizardGoToStep1()"><i class="fa-solid fa-arrow-right"></i> חזרה</button>
+        <button class="wizard-next-btn" onclick="wizardFinish()">סיימתי, הפעילו דירוגים <i class="fa-solid fa-check"></i></button>
+      </div>
+    </div>
+
+    <div class="wizard-panel" id="wizardPanelSuccess" style="display:none">
+      <div class="wizard-icon success"><i class="fa-solid fa-check"></i></div>
+      <h3>מעולה, זהו!</h3>
+      <p>דירוגי IMDB יופיעו מעכשיו אוטומטית על כרטיסי הצגות קולנוע.</p>
+      <div class="wizard-actions">
+        <button class="wizard-next-btn" onclick="closeImdbWizard()">סגור</button>
+      </div>
     </div>
   </div>
 </div>
@@ -473,8 +629,12 @@ const JINA_BASE = 'https://r.jina.ai/';
 const CACHE_TTL_MS = 3 * 60 * 60 * 1000; // 3 שעות
 /* קולנוע לב ורב חן נטענים בשתי רמות: טעינה ראשונית קלה (3 ימים/מספר סרטים מצומצם),
    ורמה מורחבת שנטענת רק כשהמשתמש בפועל מבקש טווח רחב יותר (לחיצה על "השבוע"/"3 השבועות"). */
+/* רשימת הסרטים נשלפת כבר מסוננת לסניף תל אביב בלבד (ולא כל רשת "לב" הארצית),
+   כך שכל סרט ברשימה רלוונטי - לכן מכסת ה-EXTENDED (טעינה מורחבת ביוזמת המשתמש) מכסה בפועל
+   את כל מגוון הסרטים בתל אביב. מכסת ה-INITIAL נשארת נמוכה כי טעינת כל דף סרט איטית יחסית
+   (רינדור מלא דרך Jina) והביצועים בטעינה הראשונית הם עדיפות עליונה */
 const LEV_MOVIE_CAP_INITIAL = 4;
-const LEV_MOVIE_CAP_EXTENDED = 8;
+const LEV_MOVIE_CAP_EXTENDED = 30;
 const LEV_CONCURRENCY = 2;
 const RAVHEN_DAYS_INITIAL = 3;
 const RAVHEN_DAYS_EXTENDED = 6;
@@ -775,21 +935,25 @@ async function fetchHabima(){
 }
 
 async function fetchLevMovieList(){
-  const html = await jinaFetch('https://www.lev.co.il/movie/', 'html');
+  // דף הסניף הספציפי לתל אביב מחזיר רק סרטים שאכן מוקרנים שם (במקום כל הרשת הארצית),
+  // וכבונוס גם כולל שם אנגלי לכל סרט - שימושי כרמז חיפוש ל-IMDB
+  const html = await jinaFetch('https://www.lev.co.il/location/telaviv/', 'html');
   const doc = new DOMParser().parseFromString(html, 'text/html');
-  const scope = doc.querySelector('.maintabs1') || doc;
+  const scope = doc.querySelector('#categoryfeatures_portfolio') || doc;
   const links = scope.querySelectorAll('a.movieLink[href*="/movies/"]');
   const seen = new Set(); const movies = [];
   links.forEach(a => {
     const href = a.href;
     if (!href || seen.has(href)) return;
     const nameEl = a.querySelector('.movieName');
+    const englishEl = a.querySelector('.englishName');
     const imgEl = a.querySelector('img');
     let title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
     if (!title) title = imgEl ? (imgEl.alt||'').trim() : '';
     if (!title) return;
     seen.add(href);
-    movies.push({ href, title, image: extractImageUrl(imgEl) });
+    const englishTitle = englishEl ? englishEl.textContent.replace(/\s+/g,' ').trim() : '';
+    movies.push({ href, title, image: extractImageUrl(imgEl), imdbHint: englishTitle || null });
   });
   return movies;
 }
@@ -805,7 +969,8 @@ async function fetchLevMovieShowtimes(movie){
   blocks.forEach(block => {
     block.querySelectorAll('.forloc').forEach(forloc => {
       const h3 = forloc.querySelector('h3');
-      const locName = h3 ? h3.textContent.trim() : 'קולנוע לב';
+      const locName = h3 ? h3.textContent.trim() : '';
+      if (locName !== 'לב תל אביב') return; // האפליקציה מציגה רק את סניף תל אביב, לא שאר סניפי הרשת
       forloc.querySelectorAll('.showlist').forEach(showlist => {
         const span = showlist.querySelector('span');
         const dateText = span ? span.textContent.trim() : '';
@@ -818,7 +983,7 @@ async function fetchLevMovieShowtimes(movie){
           const date = inferDate(dm[1], dm[2], tm[1], tm[2]);
           events.push({
             id: makeId('lev', movie.title + '-' + locName, date), source:'lev', venue:'קולנוע לב', type:'cinema',
-            title: movie.title, date, link: a.href, extra: locName, image: movie.image || null
+            title: movie.title, date, link: a.href, extra: locName, image: movie.image || null, imdbHint: movie.imdbHint || null
           });
         });
       });
@@ -848,6 +1013,18 @@ async function fetchLevAll(onProgress, movieCap = LEV_MOVIE_CAP_EXTENDED){
 /* רב חן: מאותה סיבה כמו הבימה (Jina לא מצליח לרנדר את הווידג'ט, למרות שהוא נטען
    מהר מאוד בדפדפן אמיתי) - קוראים ישירות ל-REST API הפנימי שהאתר עצמו משתמש בו
    להצגת הלוח (התגלה על-ידי מעקב תעבורת רשת אמיתית), במקום להסתמך על רינדור HTML. */
+/* רב חן חושף בכתובת הסרט (film.link) סלאג באנגלית, לדוגמה .../films/hill-338/8403s2r -
+   "hill 338". זה עוזר משמעותית בחיפוש דירוג IMDB, כי הכותרת המוצגת באתר היא בעברית
+   ול-OMDb יש בעיקר כותרות באנגלית. */
+function slugToImdbHint(url){
+  if (!url) return null;
+  const m = url.match(/\/films\/([a-z0-9-]+)\//i);
+  if (!m || !m[1]) return null;
+  const slug = m[1];
+  if (/^\d+$/.test(slug)) return null;
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 async function fetchRavHenDay(dateStr){
   const url = `https://www.rav-hen.co.il/rh/data-api-service/v1/quickbook/10104/film-events/in-cinema/1071/at-date/${dateStr}?attr=&lang=he_IL`;
   const text = await jinaFetch(url, 'markdown');
@@ -864,7 +1041,7 @@ async function fetchRavHenDay(dateStr){
     events.push({
       id: makeId('ravhen', film.name, date), source:'ravhen', venue:'רב חן', type:'cinema',
       title: film.name, date, link: ev.bookingLink || film.link, extra: 'רב חן דיזנגוף',
-      image: film.posterLink || null
+      image: film.posterLink || null, imdbHint: slugToImdbHint(film.link)
     });
   });
   return events;
@@ -1030,11 +1207,14 @@ function renderStatusBar(){
     return `<span class="pill ${cls}" onclick="loadSingleSource('${key}')" ${title}><span class="dot"></span>${escapeHtml(text)}</span>`;
   }).join('');
 
+  /* הבאנר הקטן הזה משמש רק לטעינות נקודתיות אחרי הטעינה הראשונית (למשל לחיצה על
+     תג של מקור בודד) - בטעינה הראשונית עצמה מוצג מסך הפתיחה הגדול (startup-hero) במקום. */
   const anyLoading = Object.values(sourceState).some(s => s.status === 'loading');
   const banner = document.getElementById('loadingBanner');
   if (banner){
-    banner.style.display = anyLoading ? 'flex' : 'none';
-    if (anyLoading){
+    const showBanner = anyLoading && initialLoadSettled;
+    banner.style.display = showBanner ? 'flex' : 'none';
+    if (showBanner){
       const loadingLabels = Object.keys(sourceState).filter(k => sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
       document.getElementById('loadingBannerText').innerText = `סורקים בזמן אמת: ${loadingLabels.join(', ')}`;
     }
@@ -1044,7 +1224,7 @@ function renderStatusBar(){
   syncVenueCheckboxes();
 }
 
-/* ===================== פס התקדמות לטעינה הראשונית ===================== */
+/* ===================== מסך פתיחה ופס התקדמות לטעינה הראשונית ===================== */
 
 function computeInitialProgress(){
   const keys = [...AUTO_LOAD_SOURCES];
@@ -1065,17 +1245,48 @@ function computeInitialProgress(){
   return totalUnits ? Math.min(100, Math.round((doneUnits / totalUnits) * 100)) : 100;
 }
 
+function renderStartupHero(pct){
+  const hero = document.getElementById('startupHero');
+  if (!hero) return;
+  const fill = document.getElementById('startupProgressFill');
+  const pctEl = document.getElementById('startupProgressPct');
+  if (fill) fill.style.width = pct + '%';
+  if (pctEl) pctEl.innerText = pct + '%';
+  const loadingNow = [...AUTO_LOAD_SOURCES].filter(k => sourceState[k] && sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
+  const textEl = document.getElementById('startupHeroText');
+  if (textEl) textEl.innerText = loadingNow.length ? `סורקים: ${loadingNow.join(', ')}...` : 'כמעט מוכן...';
+  const list = document.getElementById('startupSourceList');
+  if (list){
+    list.innerHTML = [...AUTO_LOAD_SOURCES].map(k => {
+      const s = sourceState[k] || {};
+      const done = s.status && s.status !== 'loading' && s.status !== 'idle';
+      const icon = done ? 'fa-solid fa-check' : 'fa-solid fa-circle-notch fa-spin';
+      return `<span class="startup-source-chip ${done ? 'done' : ''}"><i class="${icon}"></i>${escapeHtml(SOURCE_LABELS[k])}</span>`;
+    }).join('');
+  }
+}
+
 function updateTopProgress(){
   if (initialLoadSettled) return;
   const bar = document.getElementById('topProgress');
   const fill = document.getElementById('topProgressFill');
-  if (!bar || !fill) return;
   const pct = computeInitialProgress();
+  renderStartupHero(pct);
+  if (!bar || !fill) return;
   bar.classList.add('active');
   fill.style.width = pct + '%';
   if (pct >= 100){
     initialLoadSettled = true;
-    setTimeout(() => bar.classList.remove('active'), 500);
+    setTimeout(() => {
+      bar.classList.remove('active');
+      const hero = document.getElementById('startupHero');
+      if (hero){
+        hero.classList.add('hidden-fade');
+        setTimeout(() => hero.remove(), 450);
+      }
+      renderStatusBar(); // מציג את הבאנר הקטן מעתה, אם עוד נטען משהו ברקע
+      maybeShowImdbBanner();
+    }, 600);
   }
 }
 
@@ -1264,23 +1475,39 @@ function filterEvents(){
    או שנשארו מסומנים רק בתי קולנוע. בטווח של יותר מיום - שום דבר לא נבדק אוטומטית,
    רק בלחיצה על כפתור ייעודי. כל זה קורה רק אם הוגדר מפתח OMDb אישי בהגדרות. */
 
-async function fetchImdbScore(title){
+/* חיפוש יחיד מול OMDb. מחזיר {rating,imdbId} כשנמצא, null כשלא נמצא (לא זריקה -
+   "לא נמצא" הוא תוצאה תקינה, לא תקלה), ולעולם לא משאיר UI שבור. */
+async function omdbLookup(apiKey, query){
+  if (!query) return null;
+  try{
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(query)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.Response === 'True' && data.imdbRating && data.imdbRating !== 'N/A'){
+      return { rating: data.imdbRating, imdbId: data.imdbID };
+    }
+    return null;
+  }catch(e){
+    console.error('OMDb lookup failed:', query, e);
+    return null;
+  }
+}
+
+/* מנסים קודם לפי הכותרת המוצגת (עברית, לרוב), ואם לא נמצא ויש רמז אנגלי זמין
+   (למשל סלאג מרב חן) - מנסים גם אותו לפני שמוותרים. תוצאת "לא נמצא" נשמרת במטמון
+   כדי שלא ננסה שוב על אותה הצגה/סרט בכל רינדור. */
+async function fetchImdbScore(title, hint){
   if (imdbCache[title] !== undefined) return imdbCache[title];
   if (imdbFetchInFlight.has(title)) return undefined;
   const apiKey = localStorage.getItem('omdb_api_key');
   if (!apiKey) return null;
   imdbFetchInFlight.add(title);
   try{
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(title)}`);
-    const data = await res.json();
-    const result = (data.Response === 'True' && data.imdbRating && data.imdbRating !== 'N/A')
-      ? { rating: data.imdbRating, imdbId: data.imdbID } : null;
+    let result = await omdbLookup(apiKey, title);
+    if (!result && hint && hint.toLowerCase() !== title.toLowerCase()) result = await omdbLookup(apiKey, hint);
     imdbCache[title] = result;
     try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
     return result;
-  }catch(e){
-    console.error('IMDB fetch failed:', title, e);
-    return null;
   }finally{
     imdbFetchInFlight.delete(title);
   }
@@ -1297,9 +1524,9 @@ function isCinemaFocused(){
   return checkedVenues.length > 0 && checkedVenues.every(v => cinemaVenues.includes(v));
 }
 
-function triggerImdbForTitle(title){
-  if (imdbCache[title] !== undefined || imdbFetchInFlight.has(title)) return;
-  fetchImdbScore(title).then(result => { if (result !== undefined) filterEvents(); });
+function triggerImdbForEvent(ev){
+  if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
+  fetchImdbScore(ev.title, ev.imdbHint).then(result => { if (result !== undefined) filterEvents(); });
 }
 
 function toggleImdbLoadButton(show, events){
@@ -1311,10 +1538,14 @@ function toggleImdbLoadButton(show, events){
 
 function loadAllImdbScores(){
   const btn = document.getElementById('loadImdbBtn');
-  const uniqueTitles = [...new Set(pendingImdbEvents.map(e => e.title))].filter(t => imdbCache[t] === undefined);
-  if (!uniqueTitles.length) return;
+  const seen = new Set();
+  const toFetch = pendingImdbEvents.filter(ev => {
+    if (seen.has(ev.title) || imdbCache[ev.title] !== undefined) return false;
+    seen.add(ev.title); return true;
+  });
+  if (!toFetch.length) return;
   if (btn) btn.disabled = true;
-  Promise.all(uniqueTitles.map(t => fetchImdbScore(t))).then(() => {
+  Promise.all(toFetch.map(ev => fetchImdbScore(ev.title, ev.imdbHint))).then(() => {
     filterEvents();
     if (btn) btn.disabled = false;
   });
@@ -1327,7 +1558,8 @@ function maybeHandleImdbScores(events){
   if (isSingleDayView()){
     toggleImdbLoadButton(false);
     const toAuto = isCinemaFocused() ? cinemaEvents : cinemaEvents.slice(0, 3);
-    [...new Set(toAuto.map(e => e.title))].forEach(triggerImdbForTitle);
+    const seen = new Set();
+    toAuto.forEach(ev => { if (!seen.has(ev.title)) { seen.add(ev.title); triggerImdbForEvent(ev); } });
   } else {
     toggleImdbLoadButton(true, cinemaEvents);
   }
@@ -1455,8 +1687,9 @@ function parseJwt(token){
 
 function handleCredentialResponse(response){
   const payload = parseJwt(response.credential);
-  localStorage.setItem('google_user', JSON.stringify({ name: payload.name, picture: payload.picture }));
+  localStorage.setItem('google_user', JSON.stringify({ name: payload.name, picture: payload.picture, email: payload.email || '' }));
   showUser(payload.name, payload.picture);
+  refreshImdbWizardIdentity();
 }
 
 function showUser(name, picture){
@@ -1505,6 +1738,7 @@ function initGoogleSignIn(){
 function openSettings(){
   document.getElementById('clientIdInput').value = localStorage.getItem('google_client_id') || '';
   document.getElementById('omdbKeyInput').value = localStorage.getItem('omdb_api_key') || '';
+  refreshOmdbSettingsStatus();
   document.getElementById('settingsModal').style.display = 'flex';
 }
 function closeSettings(){ document.getElementById('settingsModal').style.display = 'none'; }
@@ -1520,17 +1754,146 @@ function clearClientId(){
   logoutGoogle();
   initGoogleSignIn();
 }
+function refreshOmdbSettingsStatus(){
+  const hasKey = !!localStorage.getItem('omdb_api_key');
+  const statusText = document.getElementById('omdbStatusText');
+  const clearBtn = document.getElementById('clearOmdbBtnSettings');
+  if (statusText) statusText.innerText = hasKey
+    ? 'דירוגי IMDB פעילים - הכרטיסים של הצגות קולנוע מציגים דירוג כשהוא נמצא.'
+    : 'אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.';
+  if (clearBtn) clearBtn.style.display = hasKey ? 'inline-flex' : 'none';
+}
 function saveOmdbKey(){
   const val = document.getElementById('omdbKeyInput').value.trim();
   if (!val) return;
   localStorage.setItem('omdb_api_key', val);
+  imdbCache = {};
+  try{ localStorage.removeItem('imdb_cache'); }catch(e){}
+  hideImdbBanner(true);
+  refreshOmdbSettingsStatus();
   filterEvents();
 }
 function clearOmdbKey(){
   localStorage.removeItem('omdb_api_key');
   document.getElementById('omdbKeyInput').value = '';
+  try{ localStorage.removeItem('imdb_banner_dismissed'); }catch(e){}
   toggleImdbLoadButton(false);
+  refreshOmdbSettingsStatus();
+  maybeShowImdbBanner();
   filterEvents();
+}
+
+/* ===================== אשף הפעלת IMDB (Client-Side בלבד) ===================== */
+function populateWizardGoogleOption(){
+  const btn = document.getElementById('wizardGoogleBtn');
+  const divider = document.getElementById('wizardOrDivider');
+  if (!btn || !divider) return;
+  const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
+  if (savedUser && savedUser.email){
+    document.getElementById('wizardGoogleAvatar').src = savedUser.picture || '';
+    document.getElementById('wizardGoogleName').innerText = savedUser.name || savedUser.email;
+    btn.style.display = 'flex';
+    divider.style.display = 'flex';
+  } else {
+    btn.style.display = 'none';
+    divider.style.display = 'none';
+  }
+}
+
+function refreshImdbWizardIdentity(){
+  populateWizardGoogleOption();
+}
+
+function setWizardStep(step){
+  const dot1 = document.getElementById('wizardDot1');
+  const dot2 = document.getElementById('wizardDot2');
+  const line = document.getElementById('wizardLine1');
+  if (!dot1 || !dot2 || !line) return;
+  dot1.classList.toggle('active', step === 1);
+  dot1.classList.toggle('done', step > 1);
+  dot2.classList.toggle('active', step === 2);
+  line.classList.toggle('done', step > 1);
+}
+
+function openImdbWizard(){
+  document.getElementById('wizardEmailInput').value = '';
+  document.getElementById('wizardKeyInput').value = '';
+  document.getElementById('wizardKeyError').style.display = 'none';
+  populateWizardGoogleOption();
+  document.getElementById('wizardPanel1').style.display = 'block';
+  document.getElementById('wizardPanel2').style.display = 'none';
+  document.getElementById('wizardPanelSuccess').style.display = 'none';
+  document.getElementById('wizardDot2').classList.remove('done');
+  setWizardStep(1);
+  document.getElementById('settingsModal').style.display = 'none';
+  document.getElementById('imdbWizardModal').style.display = 'flex';
+}
+
+function closeImdbWizard(){
+  document.getElementById('imdbWizardModal').style.display = 'none';
+}
+
+function useGoogleForWizard(){
+  const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
+  document.getElementById('wizardEmailInput').value = savedUser && savedUser.email ? savedUser.email : '';
+  wizardGoToStep2();
+}
+
+function wizardGoToStep2(){
+  const emailVal = document.getElementById('wizardEmailInput').value.trim();
+  if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)){
+    document.getElementById('wizardEmailInput').focus();
+    return;
+  }
+  const step2Text = document.getElementById('wizardStep2Text');
+  step2Text.innerHTML = emailVal
+    ? `לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את הכתובת <strong>${escapeHtml(emailVal)}</strong> ובחרו באפשרות ה-"Free" (חינמית).`
+    : `לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את כתובת המייל שלכם ובחרו באפשרות ה-"Free" (חינמית).`;
+  document.getElementById('wizardPanel1').style.display = 'none';
+  document.getElementById('wizardPanel2').style.display = 'block';
+  document.getElementById('wizardKeyError').style.display = 'none';
+  setWizardStep(2);
+  setTimeout(() => { const el = document.getElementById('wizardKeyInput'); if (el) el.focus(); }, 150);
+}
+
+function wizardGoToStep1(){
+  document.getElementById('wizardPanel2').style.display = 'none';
+  document.getElementById('wizardPanel1').style.display = 'block';
+  setWizardStep(1);
+}
+
+function wizardFinish(){
+  const key = document.getElementById('wizardKeyInput').value.trim();
+  if (!key){
+    document.getElementById('wizardKeyError').style.display = 'block';
+    document.getElementById('wizardKeyInput').focus();
+    return;
+  }
+  localStorage.setItem('omdb_api_key', key);
+  imdbCache = {};
+  try{ localStorage.removeItem('imdb_cache'); }catch(e){}
+  document.getElementById('wizardPanel2').style.display = 'none';
+  document.getElementById('wizardPanelSuccess').style.display = 'block';
+  document.getElementById('wizardDot2').classList.add('done');
+  hideImdbBanner(true);
+  refreshOmdbSettingsStatus();
+  filterEvents();
+}
+
+function hideImdbBanner(persistDismiss){
+  const banner = document.getElementById('imdbBanner');
+  if (banner) banner.style.display = 'none';
+  if (persistDismiss){ try{ localStorage.setItem('imdb_banner_dismissed', '1'); }catch(e){} }
+}
+
+function dismissImdbBanner(){ hideImdbBanner(true); }
+
+function maybeShowImdbBanner(){
+  const banner = document.getElementById('imdbBanner');
+  if (!banner) return;
+  if (localStorage.getItem('omdb_api_key')) return;
+  if (localStorage.getItem('imdb_banner_dismissed') === '1') return;
+  banner.style.display = 'flex';
 }
 
 /* ===================== Init ===================== */
