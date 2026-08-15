@@ -6,6 +6,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TLV Nights | מה עושים הלילה בתל אביב?</title>
 
+<!-- תצוגה מקדימה בשיתוף (וואטסאפ, פייסבוק וכו') -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://snddigitalagency.com/App/">
+<meta property="og:title" content="TLV Nights | מה עושים הלילה בתל אביב?">
+<meta property="og:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים, בלי שרת">
+<meta property="og:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TLV Nights | מה עושים הלילה בתל אביב?">
+<meta name="twitter:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים">
+<meta name="twitter:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
+
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -361,6 +374,10 @@ const LEV_CONCURRENCY = 2;
 const RAVHEN_DAYS_INITIAL = 3;
 const RAVHEN_DAYS_EXTENDED = 6;
 const RAVHEN_CONCURRENCY = 2;
+/* לבית ליסין אין תמונות בלוח עצמו, אבל לכל הצגה יש תמונת og:image בדף שלה -
+   מביאים את זה בנפרד, פעם אחת לכל הצגה ייחודית (לא לכל אירוע), כדי לשמור על מספר בקשות נמוך. */
+const LESSIN_IMAGE_CAP = 6;
+const LESSIN_IMAGE_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
 const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen']);
 
@@ -524,10 +541,37 @@ async function fetchLessin(){
     const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
     events.push({
       id: makeId('lessin', title, date), source:'lessin', venue:'בית ליסין', type:'theatre',
-      title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall, image: null
+      title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall, image: null,
+      showPageUrl: titleLink.href
     });
   });
+  attachLessinImagesInBackground(events); // לא await בכוונה - לא רוצים לעכב את הצגת הלוח בגלל תמונות
   return events;
+}
+
+/* מביאים תמונת og:image מדף כל הצגה - פעם אחת לכל הצגה ייחודית (לא לכל אירוע), ומוגבל
+   למספר קטן של הצגות. רץ ברקע בלי לחסום את הצגת הלוח: התמונות "צצות" בהדרגה כשמגיעות,
+   כדי שלא נעכב את המקור המהיר והאמין הזה בגלל תוספת שהיא נחמד-להיות ולא חובה. */
+async function attachLessinImagesInBackground(events){
+  const uniqueUrls = [...new Set(events.map(e => e.showPageUrl).filter(Boolean))].slice(0, LESSIN_IMAGE_CAP);
+  if (!uniqueUrls.length) return;
+  let idx = 0;
+  async function worker(){
+    while (idx < uniqueUrls.length){
+      const url = uniqueUrls[idx++];
+      try{
+        const html = await jinaFetch(url, 'html');
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const og = doc.querySelector('meta[property="og:image"]');
+        const src = og ? og.getAttribute('content') : null;
+        if (src){
+          events.filter(e => e.showPageUrl === url).forEach(e => e.image = src);
+          filterEvents();
+        }
+      }catch(e){ console.error('Lessin image fetch failed:', url, e); }
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(LESSIN_IMAGE_CONCURRENCY, uniqueUrls.length)}, worker));
 }
 
 /* הבימה: לוח ההצגות שלהם הוא רכיב Vue שנטען מאוד מהר בדפדפן אמיתי (פחות משנייה),
