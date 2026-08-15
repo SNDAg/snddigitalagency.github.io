@@ -132,7 +132,7 @@ footer a{color:var(--accent)}
 
   <header>
     <h1>🎭 מה עושים הלילה?</h1>
-    <p>תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים, בלי שרת</p>
+    <p>תיאטרון, קולנוע והופעות בתל אביב</p>
   </header>
 
   <div class="glass-panel">
@@ -180,6 +180,7 @@ footer a{color:var(--accent)}
         <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בית ליסין" checked onchange="filterEvents()"> בית ליסין</label>
         <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="הבימה" checked onchange="filterEvents()"> הבימה</label>
         <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="קולנוע לב" checked onchange="filterEvents()"> קולנוע לב</label>
+        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="רב חן" checked onchange="filterEvents()"> רב חן</label>
         <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בארבי" checked onchange="filterEvents()"> בארבי</label>
       </div>
     </div>
@@ -193,8 +194,8 @@ footer a{color:var(--accent)}
   </main>
 
   <footer>
-    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, בארבי) ועשויים להשתנות או להיכשל מדי פעם.
-    מומלץ לאמת מחיר וזמינות באתר הרשמי לפני רכישה. אפליקציית צד-לקוח בלבד, ללא שרת — כל הנתונים נמשכים ישירות בדפדפן שלכם.
+    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, רב חן דיזנגוף, בארבי) ועשויים להשתנות.
+    מומלץ לאמת מחיר וזמינות באתר הרשמי לפני רכישה.
   </footer>
 
 </div>
@@ -225,14 +226,18 @@ const JINA_BASE = 'https://r.jina.ai/';
 const CACHE_TTL_MS = 3 * 60 * 60 * 1000; // 3 שעות
 const LEV_MOVIE_CAP = 8;
 const LEV_CONCURRENCY = 2;
+const RAVHEN_DAYS_AHEAD = 6;
+const RAVHEN_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
+const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen']);
 
-const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', barby: 'בארבי' };
+const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', ravhen: 'רב חן', barby: 'בארבי' };
 
 const venueInfo = {
   'בית ליסין': { address: 'דיזנגוף 101, תל אביב', navQuery: 'בית ליסין תל אביב' },
   'הבימה':     { address: 'שדרות תרס"ט 2, תל אביב', navQuery: 'תיאטרון הבימה תל אביב' },
   'קולנוע לב': { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'קולנוע לב דיזנגוף סנטר' },
+  'רב חן':     { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'רב חן דיזנגוף תל אביב' },
   'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' }
 };
 
@@ -275,19 +280,44 @@ function makeId(source, title, date){
   return `${source}-${t}-${d}`;
 }
 
+/* שער תעבורה גלובלי: r.jina.ai מוגבל ל-20 בקשות לדקה בשכבה החינמית.
+   מגביל בו-זמנית לכל מקורות הנתונים יחד, כדי שלא ניצור התפרצות שחוצה את המכסה. */
+const GLOBAL_CONCURRENCY = 2;
+const GLOBAL_MIN_GAP_MS = 2500;
+let activeRequests = 0;
+let lastRequestStart = 0;
+function acquireSlot(){
+  return new Promise(resolve => {
+    (function tryStart(){
+      const wait = Math.max(0, lastRequestStart + GLOBAL_MIN_GAP_MS - Date.now());
+      if (activeRequests < GLOBAL_CONCURRENCY && wait === 0){
+        activeRequests++; lastRequestStart = Date.now(); resolve();
+      } else {
+        setTimeout(tryStart, Math.max(wait, 150));
+      }
+    })();
+  });
+}
+function releaseSlot(){ activeRequests = Math.max(0, activeRequests - 1); }
+
 async function jinaFetch(targetUrl, format='html', attempt=0){
-  const controller = new AbortController();
-  const timer = setTimeout(()=>controller.abort(), FETCH_TIMEOUT_MS);
+  await acquireSlot();
   let res;
   try{
-    const headers = {};
-    if (format === 'html') headers['X-Return-Format'] = 'html';
-    res = await fetch(JINA_BASE + targetUrl, { headers, signal: controller.signal });
+    const controller = new AbortController();
+    const timer = setTimeout(()=>controller.abort(), FETCH_TIMEOUT_MS);
+    try{
+      const headers = {};
+      if (format === 'html') headers['X-Return-Format'] = 'html';
+      res = await fetch(JINA_BASE + targetUrl, { headers, signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
   } finally {
-    clearTimeout(timer);
+    releaseSlot();
   }
-  if (res.status === 429 && attempt < 3){
-    const retryAfter = Number(res.headers.get('retry-after')) || (4 + attempt*4);
+  if (res.status === 429 && attempt < 4){
+    const retryAfter = Number(res.headers.get('retry-after')) || (6 + attempt*6);
     await new Promise(r => setTimeout(r, retryAfter*1000));
     return jinaFetch(targetUrl, format, attempt+1);
   }
@@ -443,6 +473,49 @@ async function fetchLevAll(onProgress){
   return events;
 }
 
+async function fetchRavHenDay(dateStr){
+  const url = `https://www.rav-hen.co.il/cinemas/dizengoff/1071%23/buy-tickets-by-cinema?in-cinema=1071&at=${dateStr}&view-mode=list`;
+  const html = await jinaFetch(url, 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const [yyyy, mm, dd] = dateStr.split('-').map(Number);
+  const events = [];
+  doc.querySelectorAll('.movie-row').forEach(row => {
+    const nameEl = row.querySelector('.qb-movie-name');
+    const title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
+    if (!title) return;
+    row.querySelectorAll('a[data-url*="/api/order/"]').forEach(a => {
+      const text = (a.textContent || '').trim();
+      const tm = text.match(/(\d{1,2}):(\d{2})/);
+      if (!tm) return;
+      const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
+      events.push({
+        id: makeId('ravhen', title, date), source:'ravhen', venue:'רב חן', type:'cinema',
+        title, date, link: a.getAttribute('data-url'), extra: 'רב חן דיזנגוף'
+      });
+    });
+  });
+  return events;
+}
+
+async function fetchRavHenAll(onProgress){
+  const days = Array.from({length: RAVHEN_DAYS_AHEAD}, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() + i); return localDateStr(d);
+  });
+  onProgress && onProgress(0, days.length);
+  const events = [];
+  let idx = 0, done = 0;
+  async function worker(){
+    while (idx < days.length){
+      const dateStr = days[idx++];
+      try{ events.push(...await fetchRavHenDay(dateStr)); }
+      catch(e){ console.error('RavHen day failed:', dateStr, e); }
+      done++; onProgress && onProgress(done, days.length);
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(RAVHEN_CONCURRENCY, days.length || 1)}, worker));
+  return events;
+}
+
 async function fetchBarby(){
   const text = await jinaFetch('https://www.barby.co.il/', 'markdown');
   const lines = text.split('\n').map(l => l.trim());
@@ -475,11 +548,11 @@ async function loadSourceInto(key, fn){
   sourceState[key] = { status:'loading' };
   renderStatusBar();
   try{
-    const onProgress = key === 'lev' ? (done,total)=>{
-      sourceState.lev = { status:'loading', progress: `${done}/${total}` };
+    const onProgress = MULTI_REQUEST_SOURCES.has(key) ? (done,total)=>{
+      sourceState[key] = { status:'loading', progress: `${done}/${total}` };
       renderStatusBar();
     } : undefined;
-    const events = key === 'lev' ? await fn(onProgress) : await fn();
+    const events = MULTI_REQUEST_SOURCES.has(key) ? await fn(onProgress) : await fn();
     saveCache(key, events);
     sourceState[key] = { status:'ok', updated: new Date(), count: events.length };
     allEvents = allEvents.filter(e => e.source !== key).concat(events);
@@ -506,7 +579,8 @@ async function loadAllEvents(){
     loadSourceInto('lessin', fetchLessin),
     stagger(400).then(() => loadSourceInto('habima', fetchHabima)),
     stagger(800).then(() => loadSourceInto('lev', fetchLevAll)),
-    stagger(1200).then(() => loadSourceInto('barby', fetchBarby)),
+    stagger(1200).then(() => loadSourceInto('ravhen', fetchRavHenAll)),
+    stagger(1600).then(() => loadSourceInto('barby', fetchBarby)),
   ]);
   refreshBtn.disabled = false;
 }
