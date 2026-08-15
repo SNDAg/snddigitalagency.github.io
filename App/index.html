@@ -122,11 +122,13 @@ header p{color:var(--text-muted);font-size:1rem}
 .startup-source-chip i{font-size:.7rem}
 @media (prefers-reduced-motion: reduce){.startup-icon{animation:none}.startup-progress-fill::after{animation:none}.startup-hero{animation:none}}
 
-.loading-banner{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.87rem;margin-bottom:16px;padding:10px 16px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.22);border-radius:12px}
-.loading-banner i{color:var(--accent)}
+.loading-banner{display:flex;align-items:center;gap:12px;color:#fff;font-size:.9rem;font-weight:600;margin-bottom:16px;padding:12px 16px;background:linear-gradient(90deg,rgba(99,102,241,.22),rgba(99,102,241,.1));border:1px solid rgba(99,102,241,.45);border-radius:12px;position:relative;overflow:hidden;box-shadow:0 4px 14px rgba(99,102,241,.15)}
+.loading-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);animation:shimmerSweep 1.6s infinite}
+.loading-banner i{color:var(--accent);font-size:1.05rem}
 .loading-banner .dots span{animation:dotFade 1.4s infinite;display:inline-block}
 .loading-banner .dots span:nth-child(2){animation-delay:.2s}
 .loading-banner .dots span:nth-child(3){animation-delay:.4s}
+@media (prefers-reduced-motion: reduce){.loading-banner::after{animation:none}}
 @keyframes dotFade{0%,80%,100%{opacity:.15}40%{opacity:1}}
 
 .search-row{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
@@ -202,7 +204,12 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .badge-cinema{background:var(--cinema)}
 .badge-music{background:var(--music)}
 .type-badge{color:var(--text-muted);font-size:.72rem;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:6px}
-.imdb-badge{display:inline-flex;align-items:center;gap:4px;color:#f5c518;font-size:.72rem;font-weight:700;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.3);padding:3px 8px;border-radius:6px}
+.imdb-badge{display:inline-flex;align-items:center;gap:4px;color:#f5c518;font-size:.72rem;font-weight:700;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.3);padding:3px 8px;border-radius:6px;text-decoration:none;cursor:default;font-family:inherit}
+a.imdb-badge{cursor:pointer}
+a.imdb-badge:hover{background:rgba(245,197,24,.22)}
+button.imdb-badge{cursor:pointer;color:var(--text-muted);background:rgba(255,255,255,.06);border-color:var(--border)}
+button.imdb-badge:hover{color:#f5c518;border-color:rgba(245,197,24,.4);background:rgba(245,197,24,.1)}
+.imdb-badge.pending{color:var(--text-muted);cursor:default}
 .event-title{font-size:1.15rem;font-weight:700;margin-bottom:12px;line-height:1.3}
 .event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
 .event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -282,14 +289,11 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .wizard-icon.success{background:linear-gradient(135deg,var(--ok),#15803d);color:#fff}
 .wizard-panel h3{margin-bottom:8px;font-size:1.15rem}
 .wizard-panel p{color:var(--text-muted);font-size:.87rem;line-height:1.6;margin-bottom:16px}
-.wizard-google-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;color:#1f2937;border:1px solid var(--border);border-radius:9px;padding:11px;font-size:.88rem;font-weight:600;cursor:pointer;margin-bottom:14px}
-.wizard-google-btn img{width:22px;height:22px;border-radius:50%}
-.wizard-divider{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.78rem;margin-bottom:14px}
-.wizard-divider::before,.wizard-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-#wizardEmailInput,#wizardKeyInput{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;margin-bottom:6px}
-.wizard-error{color:#f87171;font-size:.78rem;margin-bottom:10px}
+#wizardKeyInput{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;margin-bottom:6px}
+.wizard-error,.field-error{color:#f87171;font-size:.78rem;margin-bottom:10px;line-height:1.5}
 .wizard-external-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:#f5c518;color:#111;text-decoration:none;font-weight:700;padding:11px;border-radius:9px;font-size:.87rem;margin-bottom:12px}
-.wizard-hint{background:rgba(255,255,255,.05);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right}
+.wizard-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#fbbf24 !important}
+.wizard-hint i{margin-inline-end:4px}
 .wizard-actions{display:flex;gap:10px;margin-top:16px}
 .wizard-actions.two{justify-content:space-between}
 .wizard-next-btn{flex:1;background:var(--accent);color:#fff;border:none;padding:11px 16px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -342,6 +346,7 @@ footer a{color:var(--accent)}
   .section-icon{width:23px;height:23px;font-size:.68rem}
   .chip{padding:10px 14px;font-size:.8rem;min-height:40px}
   .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:40px}
+  button.imdb-badge{min-width:40px;min-height:40px;padding:0 10px;font-size:.85rem}
   .filter-hint{font-size:.74rem}
 
   .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
@@ -423,6 +428,15 @@ footer a{color:var(--accent)}
     <p>תיאטרון, קולנוע והופעות בתל אביב</p>
   </header>
 
+  <div class="startup-hero" id="startupHero">
+    <div class="startup-icon"><i class="fa-solid fa-satellite-dish"></i></div>
+    <h3>טוענים את הערב שלך</h3>
+    <p id="startupHeroText">סורקים אתרים רשמיים בזמן אמת...</p>
+    <div class="startup-progress-track"><div class="startup-progress-fill" id="startupProgressFill"></div></div>
+    <div class="startup-progress-pct" id="startupProgressPct">0%</div>
+    <div class="startup-source-list" id="startupSourceList"></div>
+  </div>
+
   <div class="glass-panel">
 
     <div class="status-bar">
@@ -481,18 +495,9 @@ footer a{color:var(--accent)}
 
   </div>
 
-  <div class="startup-hero" id="startupHero">
-    <div class="startup-icon"><i class="fa-solid fa-satellite-dish"></i></div>
-    <h3>טוענים את הערב שלך</h3>
-    <p id="startupHeroText">סורקים אתרים רשמיים בזמן אמת...</p>
-    <div class="startup-progress-track"><div class="startup-progress-fill" id="startupProgressFill"></div></div>
-    <div class="startup-progress-pct" id="startupProgressPct">0%</div>
-    <div class="startup-source-list" id="startupSourceList"></div>
-  </div>
-
   <div class="loading-banner" id="loadingBanner" style="display:none">
-    <i class="fa-solid fa-satellite-dish fa-fade"></i>
-    <span id="loadingBannerText">סורקים מקורות בזמן אמת</span>
+    <i class="fa-solid fa-circle-notch fa-spin"></i>
+    <span id="loadingBannerText">טוען תוצאות...</span>
     <span class="dots"><span>.</span><span>.</span><span>.</span></span>
   </div>
 
@@ -563,8 +568,9 @@ footer a{color:var(--accent)}
     </div>
     <p class="muted">כבר יש לכם מפתח? אפשר להדביק אותו ישירות כאן:</p>
     <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4">
+    <p class="field-error" id="omdbKeyInputError" style="display:none"></p>
     <div class="modal-actions">
-      <button onclick="saveOmdbKey()">שמור</button>
+      <button id="saveOmdbBtn" onclick="saveOmdbKey()"><span id="saveOmdbBtnLabel">שמור</span></button>
     </div>
     <p class="muted">שימו לב: הסרטים מוצגים באתרים בשם עברי, וחיפוש ה-IMDB מתבצע לפי אותו שם - לכן חלק מהסרטים עלולים לא להימצא.</p>
 
@@ -586,29 +592,24 @@ footer a{color:var(--accent)}
 
     <div class="wizard-panel" id="wizardPanel1">
       <div class="wizard-icon"><i class="fa-brands fa-imdb"></i></div>
-      <h3>הפעלת דירוגי IMDB</h3>
-      <p>שלב 1 מתוך 2 - למי לשלוח את מפתח ה-API? (שירות חיצוני חינמי בשם OMDb, לא קשור לגוגל שלנו)</p>
-      <button class="wizard-google-btn" id="wizardGoogleBtn" onclick="useGoogleForWizard()" style="display:none">
-        <img id="wizardGoogleAvatar" alt="" referrerpolicy="no-referrer"> <span>המשך בתור <b id="wizardGoogleName"></b></span>
-      </button>
-      <div class="wizard-divider" id="wizardOrDivider" style="display:none"><span>או</span></div>
-      <input type="email" id="wizardEmailInput" placeholder="הכתובת מייל שלכם" inputmode="email">
+      <h3>שלב 1 מתוך 2 - קבלו מפתח מ-OMDb</h3>
+      <p>OMDb הוא שירות חיצוני חינמי (לא קשור אלינו) שמספק דירוגי IMDB. לחצו על הכפתור, ובאתר שלהם הזינו את <strong>המייל שלכם</strong> (לא שלנו) ובחרו באפשרות ה-"Free".</p>
+      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
+      <p class="wizard-hint"><i class="fa-solid fa-triangle-exclamation"></i> שימו לב: OMDb שולחים מייל עם המפתח <strong>וגם קישור הפעלה נפרד</strong> - חובה ללחוץ גם עליו, אחרת המפתח לא יעבוד. כדאי לבדוק גם בתיבת הספאם.</p>
       <div class="wizard-actions">
-        <button class="wizard-next-btn" onclick="wizardGoToStep2()">המשך <i class="fa-solid fa-arrow-left"></i></button>
+        <button class="wizard-next-btn" onclick="wizardGoToStep2()">קיבלתי מפתח, המשך <i class="fa-solid fa-arrow-left"></i></button>
       </div>
     </div>
 
     <div class="wizard-panel" id="wizardPanel2" style="display:none">
-      <div class="wizard-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
-      <h3>שלב 2 מתוך 2 - קבלו את המפתח</h3>
-      <p id="wizardStep2Text">לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את כתובת המייל שלכם ובחרו באפשרות ה"Free" (חינמית).</p>
-      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
-      <p class="wizard-hint"><i class="fa-solid fa-circle-info"></i> המפתח יגיע למייל תוך דקות ספורות - כדאי לבדוק גם בתיבת הספאם.</p>
+      <div class="wizard-icon"><i class="fa-solid fa-key"></i></div>
+      <h3>שלב 2 מתוך 2 - הדביקו את המפתח</h3>
+      <p>אחרי שקיבלתם את המייל מ-OMDb <strong>ולחצתם על קישור ההפעלה</strong> שבו, העתיקו את המפתח לכאן:</p>
       <input type="text" id="wizardKeyInput" placeholder="הדביקו כאן את המפתח שקיבלתם במייל">
       <p class="wizard-error" id="wizardKeyError" style="display:none">צריך להדביק מפתח לפני שממשיכים</p>
       <div class="wizard-actions two">
         <button class="wizard-back-btn" onclick="wizardGoToStep1()"><i class="fa-solid fa-arrow-right"></i> חזרה</button>
-        <button class="wizard-next-btn" onclick="wizardFinish()">סיימתי, הפעילו דירוגים <i class="fa-solid fa-check"></i></button>
+        <button class="wizard-next-btn" id="wizardFinishBtn" onclick="wizardFinish()"><span id="wizardFinishBtnLabel">סיימתי, הפעילו דירוגים</span> <i class="fa-solid fa-check" id="wizardFinishBtnIcon"></i></button>
       </div>
     </div>
 
@@ -1149,6 +1150,7 @@ async function loadSourceInto(key, fn){
   rebuildAllEvents();
   renderStatusBar();
   filterEvents();
+  if (!initialLoadSettled && allEvents.length > 0) settleInitialLoad();
 }
 
 function loadSingleSource(key){
@@ -1216,7 +1218,7 @@ function renderStatusBar(){
     banner.style.display = showBanner ? 'flex' : 'none';
     if (showBanner){
       const loadingLabels = Object.keys(sourceState).filter(k => sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
-      document.getElementById('loadingBannerText').innerText = `סורקים בזמן אמת: ${loadingLabels.join(', ')}`;
+      document.getElementById('loadingBannerText').innerText = `עוד תוצאות נטענות ברקע: ${loadingLabels.join(', ')}`;
     }
   }
 
@@ -1266,6 +1268,23 @@ function renderStartupHero(pct){
   }
 }
 
+/* מסך הפתיחה יורד ברגע שיש כבר משהו להראות - לא מחכים שכל המקורות יסיימו.
+   מקור אחד איטי (בדרך-כלל קולנוע לב) לא אמור להשאיר את המשתמש "תקוע" מול מסך טעינה
+   כשכרטיסים אמיתיים כבר מוכנים למטה; מה שעוד נטען ממשיך ברקע עם הבאנר הקטן. */
+function settleInitialLoad(){
+  if (initialLoadSettled) return;
+  initialLoadSettled = true;
+  const bar = document.getElementById('topProgress');
+  if (bar) bar.classList.remove('active');
+  const hero = document.getElementById('startupHero');
+  if (hero){
+    hero.classList.add('hidden-fade');
+    setTimeout(() => hero.remove(), 450);
+  }
+  renderStatusBar(); // מציג את הבאנר הקטן מעתה, אם עוד נטען משהו ברקע
+  maybeShowImdbBanner();
+}
+
 function updateTopProgress(){
   if (initialLoadSettled) return;
   const bar = document.getElementById('topProgress');
@@ -1275,19 +1294,7 @@ function updateTopProgress(){
   if (!bar || !fill) return;
   bar.classList.add('active');
   fill.style.width = pct + '%';
-  if (pct >= 100){
-    initialLoadSettled = true;
-    setTimeout(() => {
-      bar.classList.remove('active');
-      const hero = document.getElementById('startupHero');
-      if (hero){
-        hero.classList.add('hidden-fade');
-        setTimeout(() => hero.remove(), 450);
-      }
-      renderStatusBar(); // מציג את הבאנר הקטן מעתה, אם עוד נטען משהו ברקע
-      maybeShowImdbBanner();
-    }, 600);
-  }
+  if (pct >= 100) setTimeout(settleInitialLoad, 600);
 }
 
 /* ===================== סנכרון תיבות הסימון של המקומות עם מצב הטעינה =====================
@@ -1493,6 +1500,28 @@ async function omdbLookup(apiKey, query){
   }
 }
 
+/* בודקים שהמפתח בפועל עובד לפני שנשמר - שליפת מבחן קטנה וידועה מראש ("טיטניק")
+   כדי שלא נגיד "אוקי" ליוזר בזמן שהמפתח בכלל לא תקף (מפתח שגוי, או מפתח שעדיין
+   מחכה להפעלה בקישור מהמייל של OMDb - שגיאה נפוצה). */
+async function validateOmdbKey(key){
+  try{
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(key)}&t=Titanic`);
+    if (res.status === 401) return { valid:false, reason:'invalid_key' };
+    if (!res.ok) return { valid:false, reason:'network_error' };
+    const data = await res.json();
+    if (data && data.Response === 'True' && data.imdbRating) return { valid:true };
+    return { valid:false, reason:'api_error', apiError: data && data.Error };
+  }catch(e){
+    return { valid:false, reason:'network_error' };
+  }
+}
+
+function omdbKeyErrorMessage(result){
+  if (result.reason === 'invalid_key') return 'המפתח לא עובד מול OMDb. ודאו שהעתקתם אותו נכון מהמייל - ושימו לב: לפעמים המייל הראשון הוא רק אישור, וצריך ללחוץ על קישור ההפעלה (Activate Key) שנשלח בנפרד/בהמשך אותו מייל.';
+  if (result.reason === 'network_error') return 'לא הצלחנו לבדוק את המפתח כרגע (בעיית רשת). נסו שוב בעוד רגע.';
+  return `המפתח לא אושר על-ידי OMDb${result.apiError ? (': ' + result.apiError) : ''}.`;
+}
+
 /* מנסים קודם לפי הכותרת המוצגת (עברית, לרוב), ואם לא נמצא ויש רמז אנגלי זמין
    (למשל סלאג מרב חן) - מנסים גם אותו לפני שמוותרים. תוצאת "לא נמצא" נשמרת במטמון
    כדי שלא ננסה שוב על אותה הצגה/סרט בכל רינדור. */
@@ -1567,9 +1596,30 @@ function maybeHandleImdbScores(events){
 
 function imdbBadgeHtml(ev){
   if (ev.type !== 'cinema') return '';
+  const hasKey = !!localStorage.getItem('omdb_api_key');
   const cached = imdbCache[ev.title];
-  if (!cached) return '';
-  return `<span class="imdb-badge" title="דירוג IMDB"><i class="fa-brands fa-imdb"></i> ${escapeHtml(cached.rating)}</span>`;
+  if (cached){
+    const link = cached.imdbId ? `https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/` : null;
+    const inner = `<i class="fa-brands fa-imdb"></i> ${escapeHtml(cached.rating)}`;
+    return link
+      ? `<a class="imdb-badge" href="${link}" target="_blank" rel="noopener" title="לדף הסרט ב-IMDB" onclick="event.stopPropagation()">${inner}</a>`
+      : `<span class="imdb-badge" title="דירוג IMDB">${inner}</span>`;
+  }
+  if (hasKey && cached === null) return ''; // נבדק מול OMDb בעבר ולא נמצא - אין מה להציע
+  if (hasKey && imdbFetchInFlight.has(ev.title)){
+    return `<span class="imdb-badge pending" title="בודקים דירוג..."><i class="fa-brands fa-imdb fa-fade"></i></span>`;
+  }
+  const title = hasKey ? 'בדקו דירוג IMDB' : 'הפעילו דירוגי IMDB';
+  return `<button type="button" class="imdb-badge" title="${title}" onclick="event.stopPropagation();handleImdbIconClick('${ev.id}')"><i class="fa-brands fa-imdb"></i></button>`;
+}
+
+function handleImdbIconClick(id){
+  const ev = currentFiltered.find(e => e.id === id) || allEvents.find(e => e.id === id);
+  if (!ev) return;
+  if (!localStorage.getItem('omdb_api_key')){ openImdbWizard(); return; }
+  if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
+  fetchImdbScore(ev.title, ev.imdbHint).then(() => filterEvents());
+  filterEvents(); // imdbFetchInFlight כבר עודכן באופן סנכרוני בתוך fetchImdbScore - מציג מיד מצב "בודקים..."
 }
 
 function renderSkeletons(count=8){
@@ -1689,7 +1739,6 @@ function handleCredentialResponse(response){
   const payload = parseJwt(response.credential);
   localStorage.setItem('google_user', JSON.stringify({ name: payload.name, picture: payload.picture, email: payload.email || '' }));
   showUser(payload.name, payload.picture);
-  refreshImdbWizardIdentity();
 }
 
 function showUser(name, picture){
@@ -1763,9 +1812,23 @@ function refreshOmdbSettingsStatus(){
     : 'אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.';
   if (clearBtn) clearBtn.style.display = hasKey ? 'inline-flex' : 'none';
 }
-function saveOmdbKey(){
+async function saveOmdbKey(){
   const val = document.getElementById('omdbKeyInput').value.trim();
+  const errorEl = document.getElementById('omdbKeyInputError');
+  errorEl.style.display = 'none';
   if (!val) return;
+  const btn = document.getElementById('saveOmdbBtn');
+  const label = document.getElementById('saveOmdbBtnLabel');
+  btn.disabled = true;
+  label.textContent = 'בודקים את המפתח מול OMDb...';
+  const result = await validateOmdbKey(val);
+  btn.disabled = false;
+  label.textContent = 'שמור';
+  if (!result.valid){
+    errorEl.textContent = omdbKeyErrorMessage(result);
+    errorEl.style.display = 'block';
+    return;
+  }
   localStorage.setItem('omdb_api_key', val);
   imdbCache = {};
   try{ localStorage.removeItem('imdb_cache'); }catch(e){}
@@ -1783,27 +1846,10 @@ function clearOmdbKey(){
   filterEvents();
 }
 
-/* ===================== אשף הפעלת IMDB (Client-Side בלבד) ===================== */
-function populateWizardGoogleOption(){
-  const btn = document.getElementById('wizardGoogleBtn');
-  const divider = document.getElementById('wizardOrDivider');
-  if (!btn || !divider) return;
-  const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
-  if (savedUser && savedUser.email){
-    document.getElementById('wizardGoogleAvatar').src = savedUser.picture || '';
-    document.getElementById('wizardGoogleName').innerText = savedUser.name || savedUser.email;
-    btn.style.display = 'flex';
-    divider.style.display = 'flex';
-  } else {
-    btn.style.display = 'none';
-    divider.style.display = 'none';
-  }
-}
-
-function refreshImdbWizardIdentity(){
-  populateWizardGoogleOption();
-}
-
+/* ===================== אשף הפעלת IMDB (Client-Side בלבד) =====================
+   הערה: לא ניתן למלא מראש את המייל בטופס ההרשמה של OMDb (דף חיצוני, ללא API רשמי
+   לכך) - ולכן האשף לא אוסף מייל בכלל. ביקשנו את זה בעבר וזה בלבל משתמשים (הוזן
+   שוב באתר OMDb בלי קשר), אז הוסר. */
 function setWizardStep(step){
   const dot1 = document.getElementById('wizardDot1');
   const dot2 = document.getElementById('wizardDot2');
@@ -1816,10 +1862,8 @@ function setWizardStep(step){
 }
 
 function openImdbWizard(){
-  document.getElementById('wizardEmailInput').value = '';
   document.getElementById('wizardKeyInput').value = '';
   document.getElementById('wizardKeyError').style.display = 'none';
-  populateWizardGoogleOption();
   document.getElementById('wizardPanel1').style.display = 'block';
   document.getElementById('wizardPanel2').style.display = 'none';
   document.getElementById('wizardPanelSuccess').style.display = 'none';
@@ -1833,22 +1877,7 @@ function closeImdbWizard(){
   document.getElementById('imdbWizardModal').style.display = 'none';
 }
 
-function useGoogleForWizard(){
-  const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
-  document.getElementById('wizardEmailInput').value = savedUser && savedUser.email ? savedUser.email : '';
-  wizardGoToStep2();
-}
-
 function wizardGoToStep2(){
-  const emailVal = document.getElementById('wizardEmailInput').value.trim();
-  if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)){
-    document.getElementById('wizardEmailInput').focus();
-    return;
-  }
-  const step2Text = document.getElementById('wizardStep2Text');
-  step2Text.innerHTML = emailVal
-    ? `לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את הכתובת <strong>${escapeHtml(emailVal)}</strong> ובחרו באפשרות ה-"Free" (חינמית).`
-    : `לחצו על הכפתור כדי לפתוח את דף ההרשמה של OMDb, הזינו שם את כתובת המייל שלכם ובחרו באפשרות ה-"Free" (חינמית).`;
   document.getElementById('wizardPanel1').style.display = 'none';
   document.getElementById('wizardPanel2').style.display = 'block';
   document.getElementById('wizardKeyError').style.display = 'none';
@@ -1862,11 +1891,29 @@ function wizardGoToStep1(){
   setWizardStep(1);
 }
 
-function wizardFinish(){
+async function wizardFinish(){
   const key = document.getElementById('wizardKeyInput').value.trim();
+  const errorEl = document.getElementById('wizardKeyError');
   if (!key){
-    document.getElementById('wizardKeyError').style.display = 'block';
+    errorEl.textContent = 'צריך להדביק מפתח לפני שממשיכים';
+    errorEl.style.display = 'block';
     document.getElementById('wizardKeyInput').focus();
+    return;
+  }
+  const btn = document.getElementById('wizardFinishBtn');
+  const label = document.getElementById('wizardFinishBtnLabel');
+  const icon = document.getElementById('wizardFinishBtnIcon');
+  errorEl.style.display = 'none';
+  btn.disabled = true;
+  label.textContent = 'בודקים את המפתח מול OMDb...';
+  icon.className = 'fa-solid fa-circle-notch fa-spin';
+  const result = await validateOmdbKey(key);
+  btn.disabled = false;
+  label.textContent = 'סיימתי, הפעילו דירוגים';
+  icon.className = 'fa-solid fa-check';
+  if (!result.valid){
+    errorEl.textContent = omdbKeyErrorMessage(result);
+    errorEl.style.display = 'block';
     return;
   }
   localStorage.setItem('omdb_api_key', key);
