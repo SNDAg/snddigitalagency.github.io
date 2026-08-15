@@ -121,7 +121,7 @@ header p{color:var(--text-muted);font-size:1rem}
 .chip:hover{border-color:var(--accent)}
 .chip.active{background:var(--accent);border-color:var(--accent);box-shadow:0 4px 14px rgba(99,102,241,.35)}
 .inputs-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-muted)}
-input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none}
+input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none;font-size:16px;color-scheme:dark}
 .filter-hint{color:var(--text-muted);font-size:.78rem;margin-top:8px}
 
 /* רמז "יש עוד נתונים לטעון" - אייקון פועם על תגיות טווח שמרחיבות את הטעינה */
@@ -172,6 +172,7 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .badge-cinema{background:var(--cinema)}
 .badge-music{background:var(--music)}
 .type-badge{color:var(--text-muted);font-size:.72rem;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:6px}
+.imdb-badge{display:inline-flex;align-items:center;gap:4px;color:#f5c518;font-size:.72rem;font-weight:700;background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.3);padding:3px 8px;border-radius:6px}
 .event-title{font-size:1.15rem;font-weight:700;margin-bottom:12px;line-height:1.3}
 .event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
 .event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
@@ -213,6 +214,8 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal-box{background:var(--glass-solid);border:1px solid var(--border);border-radius:16px;padding:26px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
 .modal-box h3{margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.settings-subtitle{display:flex;align-items:center;gap:8px;font-size:.95rem;margin-bottom:10px}
+.settings-divider{border:none;border-top:1px solid var(--border);margin:20px 0}
 .modal-box p{color:var(--text-muted);font-size:.9rem;margin-bottom:10px;line-height:1.6}
 .modal-box ol{color:var(--text-muted);font-size:.87rem;margin:0 0 14px 0;padding-inline-start:22px;line-height:1.9}
 .modal-box code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px;font-size:.85rem}
@@ -224,6 +227,85 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 
 footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
 footer a{color:var(--accent)}
+
+/* ===================== מובייל ראשית - ברוב זמן השימוש באפליקציה זה ממכשיר נייד ===================== */
+@media (max-width: 640px){
+  body{padding:10px}
+  .container{padding-bottom: env(safe-area-inset-bottom, 0)}
+
+  header{margin:10px 0 18px}
+  header::before{width:220px;height:120px;top:-16px}
+  header h1{font-size:1.65rem;gap:6px}
+  header p{font-size:.82rem}
+
+  .topbar{padding:8px 10px;border-radius:14px;gap:6px}
+  .brand{font-size:.95rem}
+  .brand i{font-size:.9rem}
+  .icon-btn{padding:9px 10px;font-size:.78rem}
+  .auth-area{gap:6px}
+  .user-chip{padding:3px 8px 3px 3px}
+  .user-chip span{font-size:.82rem;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .glass-panel{padding:14px;border-radius:16px;margin-bottom:18px}
+
+  .status-bar{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:14px;padding-bottom:14px}
+  #refreshBtn{width:100%;justify-content:center;padding:12px}
+  .status-pills{justify-content:center}
+  .pill{font-size:.72rem;padding:7px 11px;min-height:32px}
+
+  .loading-banner{font-size:.8rem;padding:9px 12px}
+
+  .search-row{gap:8px;margin-bottom:14px}
+  .search-input{padding:13px 44px 13px 14px;font-size:16px}
+  .fav-toggle{padding:0 14px}
+  .fav-toggle .fav-label{display:none}
+
+  .filter-section{margin-bottom:14px}
+  .filter-section h3{font-size:.87rem;margin-bottom:10px}
+  .section-icon{width:23px;height:23px;font-size:.68rem}
+  .chip{padding:10px 14px;font-size:.8rem;min-height:40px}
+  .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:40px}
+  .filter-hint{font-size:.74rem}
+
+  .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+  .inputs-row label{display:flex;flex-direction:column;gap:5px;width:100%}
+  .inputs-row input{width:100%}
+
+  .results-toolbar{flex-direction:column;align-items:stretch;gap:10px}
+  .bulk-actions{justify-content:space-between;gap:10px}
+  .toolbar-btn{flex:1;justify-content:center;padding:10px 8px;font-size:.78rem}
+
+  .events-grid{grid-template-columns:1fr;gap:16px}
+  .event-card{padding:14px;border-radius:14px}
+  .event-title{font-size:1.08rem}
+  .card-image{margin-bottom:12px}
+  .event-details{font-size:.85rem;margin-bottom:16px}
+
+  .btn-row{gap:6px}
+  .btn{min-width:0;padding:12px 4px;font-size:.76rem;gap:4px}
+
+  .fav-icon{width:40px;height:40px;font-size:1.15rem;top:12px;left:12px}
+  .select-check{top:12px;right:12px}
+  .select-check .check-box{width:36px;height:36px}
+
+  .no-results{padding:30px 16px}
+  .no-results-actions{flex-direction:column;align-items:stretch}
+  .no-results-actions .chip{justify-content:center;min-height:44px}
+
+  .modal-box{padding:18px;border-radius:14px}
+  .modal-box h3{font-size:1.05rem}
+  .modal-actions{flex-direction:column}
+  .modal-actions button{width:100%;padding:12px;min-height:44px}
+
+  footer{font-size:.72rem;padding:0 6px}
+}
+
+/* מסכים צרים במיוחד (טלפונים קטנים) */
+@media (max-width: 360px){
+  header h1{font-size:1.45rem}
+  .btn{font-size:.72rem;padding:11px 2px}
+  .btn i{display:none}
+}
 </style>
 </head>
 <body>
@@ -268,7 +350,7 @@ footer a{color:var(--accent)}
         <input type="text" id="searchInput" class="search-input" placeholder="חפש לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
       </div>
       <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
-        <i class="fa-solid fa-heart"></i> מועדפים <span id="favCount">0</span>
+        <i class="fa-solid fa-heart"></i> <span class="fav-label">מועדפים</span> <span id="favCount">0</span>
       </button>
     </div>
 
@@ -329,6 +411,9 @@ footer a{color:var(--accent)}
       <button class="toolbar-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled>
         <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
       </button>
+      <button class="toolbar-btn" id="loadImdbBtn" onclick="loadAllImdbScores()" style="display:none">
+        <i class="fa-brands fa-imdb"></i> טען דירוגי IMDB
+      </button>
     </div>
   </div>
 
@@ -345,7 +430,9 @@ footer a{color:var(--accent)}
 
 <div id="settingsModal" class="modal-overlay" style="display:none">
   <div class="modal-box">
-    <h3><i class="fa-solid fa-gear"></i> הגדרות התחברות עם Google</h3>
+    <h3><i class="fa-solid fa-gear"></i> הגדרות</h3>
+
+    <h4 class="settings-subtitle"><i class="fa-brands fa-google"></i> התחברות עם Google</h4>
     <p>האפליקציה פועלת כולה בצד-הלקוח, ללא שרת. כדי להפעיל כפתור "התחבר עם Google" צריך Client ID אישי (זה חינמי ולוקח 2 דקות):</p>
     <ol>
       <li>גשו ל-<a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console → Credentials</a></li>
@@ -357,6 +444,24 @@ footer a{color:var(--accent)}
     <div class="modal-actions">
       <button onclick="saveClientId()">שמור</button>
       <button class="secondary" onclick="clearClientId()">נקה</button>
+    </div>
+
+    <hr class="settings-divider">
+
+    <h4 class="settings-subtitle"><i class="fa-brands fa-imdb"></i> דירוגי IMDB לסרטים</h4>
+    <p>אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB:</p>
+    <ol>
+      <li>גשו ל-<a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener">omdbapi.com/apikey.aspx</a> ובקשו מפתח חינמי (נשלח למייל תוך דקות)</li>
+      <li>העתיקו את המפתח והדביקו כאן:</li>
+    </ol>
+    <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4">
+    <div class="modal-actions">
+      <button onclick="saveOmdbKey()">שמור</button>
+      <button class="secondary" onclick="clearOmdbKey()">נקה</button>
+    </div>
+    <p class="muted">שימו לב: הסרטים מוצגים באתרים בשם עברי, וחיפוש ה-IMDB מתבצע לפי אותו שם - לכן חלק מהסרטים עלולים לא להימצא.</p>
+
+    <div class="modal-actions" style="margin-top:18px">
       <button class="secondary" onclick="closeSettings()">סגור</button>
     </div>
   </div>
@@ -374,10 +479,6 @@ const LEV_CONCURRENCY = 2;
 const RAVHEN_DAYS_INITIAL = 3;
 const RAVHEN_DAYS_EXTENDED = 6;
 const RAVHEN_CONCURRENCY = 2;
-/* לבית ליסין אין תמונות בלוח עצמו, אבל לכל הצגה יש תמונת og:image בדף שלה -
-   מביאים את זה בנפרד, פעם אחת לכל הצגה ייחודית (לא לכל אירוע), כדי לשמור על מספר בקשות נמוך. */
-const LESSIN_IMAGE_CAP = 6;
-const LESSIN_IMAGE_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
 const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen']);
 
@@ -399,6 +500,13 @@ const AUTO_LOAD_SOURCES = new Set(['barby', 'lev', 'ravhen', 'lessin']);
 
 /* ===================== State ===================== */
 let allEvents = [];
+/* כל מקור שומר כאן את כל מה ששאב בפועל (גם אם זה מכסה שבועות קדימה). allEvents
+   (המערך שבו הסינון/התצוגה עובדים) נבנה מתוכו מחדש בכל שינוי - חתוך ל-3 ימים כברירת
+   מחדל, וחשוף במלואו רק אחרי שהמשתמש בפועל ביקש טווח רחב יותר. כך אף מקור לא "מציף"
+   את המסך אוטומטית, גם אם השאיבה עצמה (בקשת רשת יחידה, כמו הלוח של בית ליסין) מחזירה
+   הרבה יותר משלושה ימים ממילא. */
+let rawEventsBySource = {};
+const DEFAULT_INGEST_DAYS = 3;
 let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
 let selectedIds = new Set();
 let currentFiltered = [];
@@ -407,8 +515,13 @@ let selectedType = 'all';
 let sourceState = {};
 let userToggledVenues = new Set();   // מקומות שהמשתמש עצמו שינה - לא לדרוס את הבחירה שלו אוטומטית
 let everFinishedSources = new Set(); // מקורות שסיימו להיטען לפחות פעם אחת - רענון ברקע לא "יכבה" אותם שוב
-let cinemaExpanded = false;          // האם כבר בוצעה טעינה מורחבת של מקורות הקולנוע
+let cinemaExpanded = false;          // האם המשתמש כבר ביקש טווח מעל 3 ימים (חושף גם קולנוע לב/רב חן וגם את כל מה שכבר נשאב ממקורות אחרים)
 let initialLoadSettled = false;      // האם הטעינה הראשונית (פס ההתקדמות העליון) כבר הסתיימה
+
+/* דירוגי IMDB (אופציונלי - דורש מפתח OMDb API אישי וחינמי, ר' הגדרות) */
+let imdbCache = JSON.parse(localStorage.getItem('imdb_cache') || '{}'); // כותרת -> {rating, imdbId} | null (לא נמצא)
+let imdbFetchInFlight = new Set();
+let pendingImdbEvents = [];
 
 const today = new Date();
 const maxDate = new Date(); maxDate.setDate(today.getDate() + 21);
@@ -542,18 +655,57 @@ async function fetchLessin(){
     events.push({
       id: makeId('lessin', title, date), source:'lessin', venue:'בית ליסין', type:'theatre',
       title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall, image: null,
-      showPageUrl: titleLink.href
+      cast: null, showPageUrl: titleLink.href
     });
   });
-  attachLessinImagesInBackground(events); // לא await בכוונה - לא רוצים לעכב את הצגת הלוח בגלל תמונות
+  attachCastInBackground(events, 'lessin'); // לא await בכוונה - לא רוצים לעכב את הצגת הלוח
   return events;
 }
 
-/* מביאים תמונת og:image מדף כל הצגה - פעם אחת לכל הצגה ייחודית (לא לכל אירוע), ומוגבל
-   למספר קטן של הצגות. רץ ברקע בלי לחסום את הצגת הלוח: התמונות "צצות" בהדרגה כשמגיעות,
-   כדי שלא נעכב את המקור המהיר והאמין הזה בגלל תוספת שהיא נחמד-להיות ולא חובה. */
-async function attachLessinImagesInBackground(events){
-  const uniqueUrls = [...new Set(events.map(e => e.showPageUrl).filter(Boolean))].slice(0, LESSIN_IMAGE_CAP);
+/* מחלצים רשימת שחקנים מובילים (עד 3) מדף הצגה. בבית ליסין יש שורה מסומנת "משתתפים"
+   בבירור. בהבימה יש בדרך-כלל שתי רשימות (צוות יצירתי, ואז שם-דמות:שם-שחקן) -
+   מעדיפים את האחרונה; אם יש רק רשימה אחת, מסננים תפקידי צוות מוכרים. */
+function extractLessinCast(doc){
+  const rows = doc.querySelectorAll('.details_row');
+  for (const row of rows){
+    const label = row.querySelector('.detail');
+    if (label && /משתתפים/.test(label.textContent)){
+      const names = [...row.querySelectorAll('.dtail_answer a.talent')].map(a => a.textContent.trim()).filter(Boolean);
+      return names.slice(0, 3);
+    }
+  }
+  return [];
+}
+
+const HABIMA_CREW_KEYWORDS = /מאת|נוסח|בימוי|כוריאוגרפיה|ניהול|עיצוב|פאות|הפקה|הצגה|בקסטייג|כתוביות|תפאורה|תלבושות|תאורה|סאונד|וידאו|מוסיקלי|ייצור|אסיסטנט|תכנות|מפיק|עוזר|מנהל|דאנס|קורפ/;
+function extractHabimaCast(doc){
+  const lists = doc.querySelectorAll('.actors-names');
+  if (!lists.length) return [];
+  const target = lists.length > 1 ? lists[lists.length - 1] : lists[0];
+  const names = [];
+  target.querySelectorAll('li').forEach(li => {
+    if (lists.length === 1){
+      const label = (li.textContent.split(':')[0] || '');
+      if (HABIMA_CREW_KEYWORDS.test(label)) return;
+    }
+    const strong = li.querySelector('strong');
+    if (strong){
+      const name = strong.textContent.split('/')[0].split(',')[0].trim();
+      if (name) names.push(name);
+    }
+  });
+  return names.slice(0, 3);
+}
+
+const CAST_FETCH_CAP = 6;
+const CAST_FETCH_CONCURRENCY = 2;
+
+/* מביאים תמונה (רק בית ליסין - להבימה כבר יש מהקובץ) וצוות שחקנים מדף ההצגה - פעם
+   אחת לכל הצגה ייחודית (לא לכל אירוע), ומוגבל למספר קטן של הצגות. רץ ברקע בלי לחסום
+   את הצגת הלוח: התוספות "צצות" בהדרגה כשמגיעות, כדי שלא נעכב מקור מהיר ואמין בגלל
+   תוספת שהיא נחמד-להיות ולא חובה. */
+async function attachCastInBackground(events, sourceKey){
+  const uniqueUrls = [...new Set(events.map(e => e.showPageUrl).filter(Boolean))].slice(0, CAST_FETCH_CAP);
   if (!uniqueUrls.length) return;
   let idx = 0;
   async function worker(){
@@ -562,16 +714,27 @@ async function attachLessinImagesInBackground(events){
       try{
         const html = await jinaFetch(url, 'html');
         const doc = new DOMParser().parseFromString(html, 'text/html');
-        const og = doc.querySelector('meta[property="og:image"]');
-        const src = og ? og.getAttribute('content') : null;
-        if (src){
-          events.filter(e => e.showPageUrl === url).forEach(e => e.image = src);
-          filterEvents();
+        let changed = false;
+        if (sourceKey === 'lessin'){
+          const og = doc.querySelector('meta[property="og:image"]');
+          const image = og ? og.getAttribute('content') : null;
+          const cast = extractLessinCast(doc);
+          events.filter(e => e.showPageUrl === url).forEach(e => {
+            if (image) { e.image = image; changed = true; }
+            if (cast.length) { e.cast = cast; changed = true; }
+          });
+        } else if (sourceKey === 'habima'){
+          const cast = extractHabimaCast(doc);
+          if (cast.length){
+            events.filter(e => e.showPageUrl === url).forEach(e => { e.cast = cast; });
+            changed = true;
+          }
         }
-      }catch(e){ console.error('Lessin image fetch failed:', url, e); }
+        if (changed) filterEvents();
+      }catch(e){ console.error(sourceKey, 'extras fetch failed:', url, e); }
     }
   }
-  await Promise.all(Array.from({length: Math.min(LESSIN_IMAGE_CONCURRENCY, uniqueUrls.length)}, worker));
+  await Promise.all(Array.from({length: Math.min(CAST_FETCH_CONCURRENCY, uniqueUrls.length)}, worker));
 }
 
 /* הבימה: לוח ההצגות שלהם הוא רכיב Vue שנטען מאוד מהר בדפדפן אמיתי (פחות משנייה),
@@ -603,10 +766,11 @@ async function fetchHabima(){
       events.push({
         id: makeId('habima', show.title, date), source:'habima', venue:'הבימה', type:'theatre',
         title: show.title, date, link: `https://tickets.habima.co.il/order/${perf.id}`,
-        extra: venueName, image: show.img || null
+        extra: venueName, image: show.img || null, cast: null, showPageUrl: show.url || null
       });
     });
   });
+  attachCastInBackground(events, 'habima'); // לא await בכוונה - לא מעכבים את הצגת הלוח
   return events;
 }
 
@@ -768,6 +932,21 @@ const SOURCE_FETCHERS = {
   barby: fetchBarby
 };
 
+/* בונים מחדש את allEvents מתוך rawEventsBySource. כברירת מחדל חותכים ל-3 ימים
+   קדימה בלבד (ביצועים - פחות כרטיסים ל-DOM), ולאחר שהמשתמש ביקש טווח רחב יותר
+   (cinemaExpanded) חושפים את כל מה שכל מקור בפועל שאב, בלי לשאוב שום דבר נוסף. */
+function rebuildAllEvents(){
+  const merged = Object.values(rawEventsBySource).flat();
+  if (cinemaExpanded){
+    allEvents = merged;
+    return;
+  }
+  const cutoff = new Date(today);
+  cutoff.setDate(cutoff.getDate() + DEFAULT_INGEST_DAYS);
+  cutoff.setHours(23,59,59,999);
+  allEvents = merged.filter(e => e.date <= cutoff);
+}
+
 async function loadSourceInto(key, fn){
   sourceState[key] = { status:'loading' };
   renderStatusBar();
@@ -779,17 +958,18 @@ async function loadSourceInto(key, fn){
     const events = MULTI_REQUEST_SOURCES.has(key) ? await fn(onProgress) : await fn();
     saveCache(key, events);
     sourceState[key] = { status:'ok', updated: new Date(), count: events.length };
-    allEvents = allEvents.filter(e => e.source !== key).concat(events);
+    rawEventsBySource[key] = events;
   }catch(err){
     console.error(key, err);
     const cached = loadCache(key);
     if (cached && cached.events.length){
       sourceState[key] = { status:'cached', updated: new Date(cached.ts), count: cached.events.length };
-      allEvents = allEvents.filter(e => e.source !== key).concat(cached.events);
+      rawEventsBySource[key] = cached.events;
     }else{
       sourceState[key] = { status:'error', count:0 };
     }
   }
+  rebuildAllEvents();
   renderStatusBar();
   filterEvents();
 }
@@ -805,6 +985,10 @@ async function expandCinemaSources(){
   if (cinemaExpanded) return;
   cinemaExpanded = true;
   document.querySelectorAll('.expand-hint').forEach(el => el.remove());
+  // חושפים מיד את מה שכל שאר המקורות כבר שאבו (בית ליסין/הבימה/בארבי) - בלי לחכות לרשת
+  rebuildAllEvents();
+  filterEvents();
+  // ורק קולנוע לב/רב חן צריכים בפועל עוד בקשות רשת כדי לכסות טווח רחב יותר
   await Promise.allSettled([
     loadSourceInto('lev', SOURCE_FETCHERS.lev),
     loadSourceInto('ravhen', SOURCE_FETCHERS.ravhen),
@@ -1075,6 +1259,87 @@ function filterEvents(){
   renderEvents(filtered);
 }
 
+/* ===================== דירוגי IMDB (אופציונלי) =====================
+   בתצוגת יום בודד: 3 הסרטים הראשונים נבדקים אוטומטית; השאר רק כשמסננים לפי "קולנוע"
+   או שנשארו מסומנים רק בתי קולנוע. בטווח של יותר מיום - שום דבר לא נבדק אוטומטית,
+   רק בלחיצה על כפתור ייעודי. כל זה קורה רק אם הוגדר מפתח OMDb אישי בהגדרות. */
+
+async function fetchImdbScore(title){
+  if (imdbCache[title] !== undefined) return imdbCache[title];
+  if (imdbFetchInFlight.has(title)) return undefined;
+  const apiKey = localStorage.getItem('omdb_api_key');
+  if (!apiKey) return null;
+  imdbFetchInFlight.add(title);
+  try{
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(title)}`);
+    const data = await res.json();
+    const result = (data.Response === 'True' && data.imdbRating && data.imdbRating !== 'N/A')
+      ? { rating: data.imdbRating, imdbId: data.imdbID } : null;
+    imdbCache[title] = result;
+    try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
+    return result;
+  }catch(e){
+    console.error('IMDB fetch failed:', title, e);
+    return null;
+  }finally{
+    imdbFetchInFlight.delete(title);
+  }
+}
+
+function isSingleDayView(){
+  return document.getElementById('startDate').value === document.getElementById('endDate').value;
+}
+
+function isCinemaFocused(){
+  if (selectedType === 'cinema') return true;
+  const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+  const cinemaVenues = ['קולנוע לב', 'רב חן'];
+  return checkedVenues.length > 0 && checkedVenues.every(v => cinemaVenues.includes(v));
+}
+
+function triggerImdbForTitle(title){
+  if (imdbCache[title] !== undefined || imdbFetchInFlight.has(title)) return;
+  fetchImdbScore(title).then(result => { if (result !== undefined) filterEvents(); });
+}
+
+function toggleImdbLoadButton(show, events){
+  const btn = document.getElementById('loadImdbBtn');
+  if (!btn) return;
+  btn.style.display = show ? 'inline-flex' : 'none';
+  if (show) pendingImdbEvents = events;
+}
+
+function loadAllImdbScores(){
+  const btn = document.getElementById('loadImdbBtn');
+  const uniqueTitles = [...new Set(pendingImdbEvents.map(e => e.title))].filter(t => imdbCache[t] === undefined);
+  if (!uniqueTitles.length) return;
+  if (btn) btn.disabled = true;
+  Promise.all(uniqueTitles.map(t => fetchImdbScore(t))).then(() => {
+    filterEvents();
+    if (btn) btn.disabled = false;
+  });
+}
+
+function maybeHandleImdbScores(events){
+  if (!localStorage.getItem('omdb_api_key')){ toggleImdbLoadButton(false); return; }
+  const cinemaEvents = events.filter(e => e.type === 'cinema');
+  if (!cinemaEvents.length){ toggleImdbLoadButton(false); return; }
+  if (isSingleDayView()){
+    toggleImdbLoadButton(false);
+    const toAuto = isCinemaFocused() ? cinemaEvents : cinemaEvents.slice(0, 3);
+    [...new Set(toAuto.map(e => e.title))].forEach(triggerImdbForTitle);
+  } else {
+    toggleImdbLoadButton(true, cinemaEvents);
+  }
+}
+
+function imdbBadgeHtml(ev){
+  if (ev.type !== 'cinema') return '';
+  const cached = imdbCache[ev.title];
+  if (!cached) return '';
+  return `<span class="imdb-badge" title="דירוג IMDB"><i class="fa-brands fa-imdb"></i> ${escapeHtml(cached.rating)}</span>`;
+}
+
 function renderSkeletons(count=8){
   const container = document.getElementById('eventsContainer');
   container.innerHTML = Array.from({length:count}).map(() => `
@@ -1097,6 +1362,7 @@ function renderEvents(events){
   const countEl = document.getElementById('resultsCount');
   document.getElementById('favCount').innerText = favorites.length;
   updateSelectionUI();
+  maybeHandleImdbScores(events);
 
   const anyLoaded = Object.values(sourceState).some(s => s.status && s.status !== 'loading' && s.status !== 'idle');
   const stillLoading = Object.values(sourceState).some(s => s.status === 'loading');
@@ -1143,7 +1409,7 @@ function renderEvents(events){
     const gCal = createGoogleCalendarLink(ev);
 
     const imageBlock = ev.image
-      ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
+      ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
       : `<div class="card-image img-fallback type-${ev.type}"><i class="fa-solid ${typeIcon} fallback-icon"></i></div>`;
 
     const card = document.createElement('div');
@@ -1159,12 +1425,14 @@ function renderEvents(events){
         <div class="card-meta">
           <span class="badge ${badgeClass}">${escapeHtml(ev.venue)}</span>
           <span class="type-badge">${typeLabel}</span>
+          ${imdbBadgeHtml(ev)}
         </div>
         <h2 class="event-title">${escapeHtml(ev.title)}</h2>
         <div class="event-details">
           <div><i class="fa-regular fa-calendar"></i> <strong>${escapeHtml(dayName)}</strong>, ${dateStr}</div>
           <div><i class="fa-regular fa-clock"></i> שעה ${timeStr}</div>
           <div><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</div>
+          ${ev.cast && ev.cast.length ? `<div><i class="fa-solid fa-users"></i> בהשתתפות: ${escapeHtml(ev.cast.join(', '))}</div>` : ''}
         </div>
       </div>
       <div class="btn-row">
@@ -1236,6 +1504,7 @@ function initGoogleSignIn(){
 
 function openSettings(){
   document.getElementById('clientIdInput').value = localStorage.getItem('google_client_id') || '';
+  document.getElementById('omdbKeyInput').value = localStorage.getItem('omdb_api_key') || '';
   document.getElementById('settingsModal').style.display = 'flex';
 }
 function closeSettings(){ document.getElementById('settingsModal').style.display = 'none'; }
@@ -1243,7 +1512,6 @@ function saveClientId(){
   const val = document.getElementById('clientIdInput').value.trim();
   if (!val) return;
   localStorage.setItem('google_client_id', val);
-  closeSettings();
   initGoogleSignIn();
 }
 function clearClientId(){
@@ -1251,6 +1519,18 @@ function clearClientId(){
   document.getElementById('clientIdInput').value = '';
   logoutGoogle();
   initGoogleSignIn();
+}
+function saveOmdbKey(){
+  const val = document.getElementById('omdbKeyInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('omdb_api_key', val);
+  filterEvents();
+}
+function clearOmdbKey(){
+  localStorage.removeItem('omdb_api_key');
+  document.getElementById('omdbKeyInput').value = '';
+  toggleImdbLoadButton(false);
+  filterEvents();
 }
 
 /* ===================== Init ===================== */
