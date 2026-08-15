@@ -545,7 +545,7 @@ footer a{color:var(--accent)}
         <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
       </button>
       <button class="toolbar-btn whatsapp-btn" id="whatsappSelectedBtn" onclick="handleWhatsappShareClick()">
-        <i class="fa-brands fa-whatsapp"></i> <span id="whatsappSelectedBtnLabel">שתף את האתר ב-WhatsApp</span>
+        <i class="fa-brands fa-whatsapp"></i> <span id="whatsappSelectedBtnLabel">  שיתוף ב-WhatsApp</span>
       </button>
       <button class="toolbar-btn reco-btn" id="recoBtn" onclick="openRecoModal()" style="display:none">
         <i class="fa-solid fa-robot"></i> רוצים לשמוע מה דעתי? 🤖💡
@@ -1663,7 +1663,7 @@ function updateSelectionUI(){
   // כפתור הוואטסאפ תמיד פעיל - בלי בחירה הוא משתף את האתר עצמו, עם בחירה את הפריטים שנבחרו
   if (waLabelEl){
     waLabelEl.textContent = count === 0
-      ? 'שתף את האתר ב-WhatsApp'
+      ? ' שיתוף ב-WhatsApp'
       : count === 1 ? 'שתף אירוע אחד ב-WhatsApp' : `שתף ${count} אירועים ב-WhatsApp`;
   }
   if (recoBtn) recoBtn.style.display = (showOnlySelected && count >= 2) ? 'inline-flex' : 'none';
