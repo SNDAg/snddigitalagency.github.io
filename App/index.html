@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TLV Nights | מה עושים הלילה בתל אביב?</title>
@@ -21,16 +22,37 @@
   --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Rubik',system-ui,sans-serif}
-body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color:var(--text-main);min-height:100vh;padding:16px}
-.container{max-width:1200px;margin:0 auto}
+body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color:var(--text-main);min-height:100vh;padding:16px;position:relative;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;position:relative;z-index:1}
 
-header{text-align:center;margin:20px 0 28px}
-header h1{font-size:2.4rem;background:linear-gradient(to left,#a5b4fc,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+.top-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:300;opacity:0;transition:opacity .35s}
+.top-progress.active{opacity:1}
+.top-progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#c084fc);transition:width .4s ease;box-shadow:0 0 10px rgba(99,102,241,.7);position:relative;overflow:hidden}
+.top-progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:shimmerSweep 1.2s infinite}
+@keyframes shimmerSweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@media (prefers-reduced-motion: reduce){.top-progress-fill::after{animation:none}}
+
+.bg-decor{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-decor::before,.bg-decor::after{content:'';position:absolute;width:60vw;height:60vw;max-width:640px;max-height:640px;border-radius:50%;filter:blur(100px);opacity:.22}
+.bg-decor::before{background:radial-gradient(circle,#6366f1,transparent 70%);top:-18%;right:-12%;animation:floatBlob 24s ease-in-out infinite}
+.bg-decor::after{background:radial-gradient(circle,#ec4899,transparent 70%);bottom:-18%;left:-12%;animation:floatBlob 28s ease-in-out infinite reverse}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,8%) scale(1.15)}}
+@media (prefers-reduced-motion: reduce){.bg-decor::before,.bg-decor::after{animation:none}}
+
+header{text-align:center;margin:20px 0 28px;position:relative}
+header::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:360px;height:180px;background:radial-gradient(ellipse,rgba(168,139,250,.28),transparent 70%);filter:blur(35px);z-index:-1;pointer-events:none}
+header h1{font-size:2.4rem;background:linear-gradient(90deg,#a5b4fc,#c084fc,#f472b6,#a5b4fc);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;animation:gradientShift 8s ease infinite}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+header .emoji-accent{display:inline-block;animation:emojiFloat 3s ease-in-out infinite;-webkit-text-fill-color:initial;color:initial}
+@keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-5px) rotate(-6deg)}}
 header p{color:var(--text-muted);font-size:1rem}
+@media (prefers-reduced-motion: reduce){header h1{animation:none}header .emoji-accent{animation:none}}
 
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:16px;padding:10px 18px;backdrop-filter:blur(10px)}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.1rem}
-.brand i{color:var(--accent)}
+.brand i{color:var(--accent);animation:iconGlow 3s ease-in-out infinite}
+@keyframes iconGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(99,102,241,.4))}50%{filter:drop-shadow(0 0 8px rgba(99,102,241,.85))}}
+@media (prefers-reduced-motion: reduce){.brand i{animation:none}}
 .auth-area{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .icon-btn{background:var(--glass);border:1px solid var(--border);color:var(--text-main);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
 .icon-btn:hover{background:var(--accent)}
@@ -50,49 +72,130 @@ header p{color:var(--text-muted);font-size:1rem}
 .pill.cached .dot{background:var(--warn)}
 .pill.error .dot{background:var(--err)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-#refreshBtn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem}
+.pill.idle .dot{background:#64748b}
+.pill{cursor:pointer;transition:background .2s,border-color .2s}
+.pill:hover{border-color:var(--accent)}
+#refreshBtn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:background .2s,transform .15s}
+#refreshBtn:hover:not(:disabled){background:var(--accent-hover);transform:translateY(-1px)}
 #refreshBtn:disabled{opacity:.5;cursor:not-allowed}
 
-.search-box{position:relative;margin-bottom:16px}
-.search-box i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
-.search-input{width:100%;padding:14px 48px 14px 16px;background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:1rem;outline:none}
+.loading-banner{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:.87rem;margin-bottom:16px;padding:10px 16px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.22);border-radius:12px}
+.loading-banner i{color:var(--accent)}
+.loading-banner .dots span{animation:dotFade 1.4s infinite;display:inline-block}
+.loading-banner .dots span:nth-child(2){animation-delay:.2s}
+.loading-banner .dots span:nth-child(3){animation-delay:.4s}
+@keyframes dotFade{0%,80%,100%{opacity:.15}40%{opacity:1}}
 
-.filter-section{margin-bottom:16px}
-.filter-section h3{font-size:.85rem;color:var(--text-muted);margin-bottom:10px;font-weight:500}
+.search-row{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
+.search-box{position:relative;flex:1;margin-bottom:0}
+.search-box i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.search-input{width:100%;height:100%;padding:14px 48px 14px 16px;background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:1rem;outline:none;transition:border-color .2s,box-shadow .2s}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+.fav-toggle{flex-shrink:0;display:flex;align-items:center;gap:8px;background:rgba(15,23,42,.6);border:1px solid var(--border);color:var(--text-main);padding:0 18px;border-radius:12px;cursor:pointer;font-size:.9rem;transition:all .2s}
+.fav-toggle i{transition:transform .2s}
+.fav-toggle:hover{border-color:var(--fav)}
+.fav-toggle.active{background:var(--fav);border-color:var(--fav);color:#fff;box-shadow:0 4px 14px rgba(244,63,94,.35)}
+.fav-toggle.active i{transform:scale(1.1)}
+
+.filter-section{margin-bottom:18px}
+.filter-section h3{display:flex;align-items:center;gap:10px;font-size:.95rem;color:var(--text-main);margin-bottom:12px;font-weight:600}
+.section-icon{width:26px;height:26px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:#fff;flex-shrink:0}
+.section-icon.date-icon{background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+.section-icon.type-icon{background:linear-gradient(135deg,#ec4899,#f43f5e)}
+.section-icon.location-icon{background:linear-gradient(135deg,#06b6d4,#3b82f6)}
 .chips-row{display:flex;flex-wrap:wrap;gap:9px}
-.chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);padding:7px 16px;border-radius:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px}
-.chip.active{background:var(--accent);border-color:var(--accent)}
-.chip.fav-chip.active{background:var(--fav);border-color:var(--fav)}
-.checkbox-chip{display:flex;align-items:center;gap:7px;background:rgba(15,23,42,.5);border:1px solid var(--border);padding:7px 14px;border-radius:30px;cursor:pointer;font-size:.85rem;user-select:none}
-.checkbox-chip input{accent-color:var(--accent)}
+.chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);padding:7px 16px;border-radius:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px;transition:all .2s}
+.chip:hover{border-color:var(--accent)}
+.chip.active{background:var(--accent);border-color:var(--accent);box-shadow:0 4px 14px rgba(99,102,241,.35)}
 .inputs-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-muted)}
 input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none}
+.filter-hint{color:var(--text-muted);font-size:.78rem;margin-top:8px}
 
-.results-info{margin-bottom:14px;color:var(--text-muted);font-size:.9rem}
+/* רמז "יש עוד נתונים לטעון" - אייקון פועם על תגיות טווח שמרחיבות את הטעינה */
+.expand-hint{display:inline-flex;color:var(--accent);font-size:.75rem;animation:hintPulse 1.8s ease-in-out infinite}
+@keyframes hintPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+@media (prefers-reduced-motion: reduce){.expand-hint{animation:none}}
 
-.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
-.event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s}
-.event-card:hover{transform:translateY(-3px)}
+/* תיבת סימון מותאמת אישית - משמשת גם לסינון מקומות וגם לבחירה מרובה */
+.custom-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:rgba(15,23,42,.5);border:1px solid var(--border);padding:7px 14px 7px 10px;border-radius:30px;font-size:.85rem;transition:border-color .2s,opacity .2s}
+.custom-check:hover{border-color:var(--accent)}
+.custom-check.pending{opacity:.45;cursor:not-allowed}
+.custom-check.pending .check-box{border-style:dashed}
+.custom-check input{position:absolute;opacity:0;width:0;height:0}
+.custom-check .check-box{width:18px;height:18px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.6);transition:all .2s cubic-bezier(.4,0,.2,1);flex-shrink:0}
+.custom-check .check-box i{font-size:.6rem;color:#fff;opacity:0;transform:scale(.4);transition:all .2s cubic-bezier(.34,1.56,.64,1)}
+.custom-check input:checked + .check-box{background:linear-gradient(135deg,var(--accent),#8b5cf6);border-color:transparent;box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+.custom-check input:checked + .check-box i{opacity:1;transform:scale(1)}
+.custom-check input:focus-visible + .check-box{outline:2px solid var(--accent);outline-offset:2px}
+
+.results-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.results-count{color:var(--text-muted);font-size:.9rem}
+.results-count strong{color:var(--text-main)}
+.bulk-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.bulk-actions .custom-check{background:transparent;border:none;padding:0}
+.toolbar-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-main);padding:8px 14px;border-radius:10px;font-size:.83rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
+.toolbar-btn:not(:disabled):hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.toolbar-btn:disabled{opacity:.4;cursor:not-allowed}
+
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .35s ease both}
+.event-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.35);border-color:rgba(99,102,241,.4)}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion: reduce){.event-card{animation:none}}
+
+.card-image{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
+.card-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.event-card:hover .card-image img{transform:scale(1.06)}
+.card-image .fallback-icon{display:none;font-size:2.1rem;color:rgba(255,255,255,.85)}
+.card-image.img-fallback .fallback-icon{display:block}
+.card-image.img-fallback.type-theatre{background:linear-gradient(135deg,rgba(236,72,153,.4),rgba(139,92,246,.35))}
+.card-image.img-fallback.type-cinema{background:linear-gradient(135deg,rgba(6,182,212,.4),rgba(99,102,241,.35))}
+.card-image.img-fallback.type-music{background:linear-gradient(135deg,rgba(16,185,129,.4),rgba(6,182,212,.35))}
+.card-image-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,.55),transparent 55%);pointer-events:none}
+
 .card-meta{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .badge{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff}
 .badge-theatre{background:var(--theatre)}
 .badge-cinema{background:var(--cinema)}
 .badge-music{background:var(--music)}
 .type-badge{color:var(--text-muted);font-size:.72rem;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:6px}
-.event-title{font-size:1.2rem;font-weight:700;margin-bottom:12px;padding-left:26px;line-height:1.3}
+.event-title{font-size:1.15rem;font-weight:700;margin-bottom:12px;line-height:1.3}
 .event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
 .event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .event-details i{color:var(--accent);width:16px;text-align:center}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{flex:1;min-width:90px;padding:10px;border-radius:8px;text-decoration:none;text-align:center;font-size:.82rem;font-weight:600;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.btn{flex:1;min-width:90px;padding:10px;border-radius:8px;text-decoration:none;text-align:center;font-size:.82rem;font-weight:600;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
 .btn-primary{background:var(--accent)}
 .btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .btn-cal{background:var(--music)}
-.fav-icon{position:absolute;top:18px;left:18px;color:var(--text-muted);cursor:pointer;font-size:1.25rem;background:none;border:none}
-.fav-icon.active{color:var(--fav)}
+
+.fav-icon{position:absolute;top:16px;left:16px;z-index:2;color:#fff;cursor:pointer;font-size:1.1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s}
+.fav-icon:hover{transform:scale(1.08)}
+.fav-icon:active{transform:scale(.88)}
+.fav-icon.active{color:var(--fav);animation:heartPop .35s cubic-bezier(.34,1.56,.64,1)}
+@keyframes heartPop{0%{transform:scale(1)}45%{transform:scale(1.4)}100%{transform:scale(1)}}
+
+.select-check{position:absolute;top:16px;right:16px;z-index:2}
+.select-check input{position:absolute;opacity:0;width:0;height:0}
+.select-check .check-box{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.4);background:rgba(15,23,42,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;transition:all .2s cubic-bezier(.34,1.56,.64,1);cursor:pointer}
+.select-check .check-box i{font-size:.7rem;color:#fff;opacity:0;transform:scale(.4)}
+.select-check input:checked + .check-box{background:linear-gradient(135deg,var(--accent),#8b5cf6);border-color:transparent;transform:scale(1.08)}
+.select-check input:checked + .check-box i{opacity:1;transform:scale(1)}
 
 .loader-container,.no-results{grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)}
+.no-results i{display:block;font-size:2rem;margin-bottom:12px;color:var(--text-muted)}
+.no-results-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:16px}
 .fa-spinner{color:var(--accent);font-size:1.8rem;margin-bottom:12px}
+
+/* שלד טעינה (skeleton) */
+.skeleton{background:linear-gradient(90deg,rgba(255,255,255,.06) 25%,rgba(255,255,255,.15) 37%,rgba(255,255,255,.06) 63%);background-size:400% 100%;animation:skeletonWave 1.6s ease-in-out infinite;border-radius:8px}
+@keyframes skeletonWave{0%{background-position:100% 50%}100%{background-position:0 50%}}
+.skeleton-card{pointer-events:none}
+.skeleton-image{width:100%;aspect-ratio:16/9;margin-bottom:14px;border-radius:12px}
+.skeleton-line{height:13px;margin-bottom:10px;border-radius:6px}
+.skeleton-btnrow{height:38px;margin-top:10px;border-radius:8px}
+@media (prefers-reduced-motion: reduce){.skeleton{animation:none;opacity:.5}}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal-box{background:var(--glass-solid);border:1px solid var(--border);border-radius:16px;padding:26px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
@@ -111,6 +214,10 @@ footer a{color:var(--accent)}
 </style>
 </head>
 <body>
+
+<div class="top-progress" id="topProgress" aria-hidden="true"><div class="top-progress-fill" id="topProgressFill"></div></div>
+
+<div class="bg-decor" aria-hidden="true"></div>
 
 <div class="container">
 
@@ -131,7 +238,7 @@ footer a{color:var(--accent)}
   </div>
 
   <header>
-    <h1>🎭 מה עושים הלילה?</h1>
+    <h1><span class="emoji-accent">🎭</span> מה עושים הלילה?</h1>
     <p>תיאטרון, קולנוע והופעות בתל אביב</p>
   </header>
 
@@ -139,23 +246,28 @@ footer a{color:var(--accent)}
 
     <div class="status-bar">
       <div class="status-pills" id="statusPills"></div>
-      <button id="refreshBtn" onclick="loadAllEvents()"><i class="fa-solid fa-sync"></i> רענן נתונים</button>
+      <button id="refreshBtn" onclick="loadAllEvents()" title="טוען את כל המקורות, כולל אלו שעדיין לא נטענו"><i class="fa-solid fa-sync"></i> רענן הכל</button>
     </div>
 
-    <div class="search-box">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input type="text" id="searchInput" class="search-input" placeholder="חפש לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
+    <div class="search-row">
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" class="search-input" placeholder="חפש לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
+      </div>
+      <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
+        <i class="fa-solid fa-heart"></i> מועדפים <span id="favCount">0</span>
+      </button>
     </div>
 
     <div class="filter-section">
-      <h3>📅 מתי יוצאים?</h3>
+      <h3><span class="section-icon date-icon"><i class="fa-solid fa-calendar-days"></i></span> מתי יוצאים</h3>
       <div class="chips-row">
-        <button class="chip active" data-range="all" onclick="setQuickDate('all',this)">הכל (3 שבועות)</button>
-        <button class="chip" data-range="today" onclick="setQuickDate('today',this)">רק היום</button>
-        <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 ימים קרובים</button>
-        <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע הקרוב</button>
-        <button class="chip fav-chip" id="favFilterBtn" onclick="toggleFavFilter(this)"><i class="fa-solid fa-heart"></i> מועדפים (<span id="favCount">0</span>)</button>
+        <button class="chip active" data-range="today" onclick="setQuickDate('today',this)"><i class="fa-solid fa-star"></i> היום</button>
+        <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 הימים הקרובים</button>
+        <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע הקרוב <span class="expand-hint" title="לחיצה תטען גם ימים נוספים מקולנוע לב ורב חן"><i class="fa-solid fa-cloud-arrow-down"></i></span></button>
+        <button class="chip" data-range="all" onclick="setQuickDate('all',this)">3 השבועות הקרובים <span class="expand-hint" title="לחיצה תטען גם ימים נוספים מקולנוע לב ורב חן"><i class="fa-solid fa-cloud-arrow-down"></i></span></button>
       </div>
+      <p class="filter-hint">ברירת המחדל מציגה את היום, אבל 3 הימים הקרובים כבר נטענים ברקע - כך שהמעבר ביניהם מיידי.</p>
       <div class="inputs-row" style="margin-top:12px">
         <label>מ- <input type="date" id="startDate" onchange="filterEvents()"></label>
         <label>עד- <input type="date" id="endDate" onchange="filterEvents()"></label>
@@ -165,7 +277,7 @@ footer a{color:var(--accent)}
     </div>
 
     <div class="filter-section">
-      <h3>🎯 סוג</h3>
+      <h3><span class="section-icon type-icon"><i class="fa-solid fa-masks-theater"></i></span> סוג</h3>
       <div class="chips-row" id="typeChips">
         <button class="chip active" data-type="all" onclick="setType('all',this)">הכל</button>
         <button class="chip" data-type="theatre" onclick="setType('theatre',this)">תיאטרון</button>
@@ -175,19 +287,37 @@ footer a{color:var(--accent)}
     </div>
 
     <div class="filter-section">
-      <h3>📍 איפה?</h3>
+      <h3><span class="section-icon location-icon"><i class="fa-solid fa-location-dot"></i></span> איפה</h3>
       <div class="chips-row">
-        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בית ליסין" checked onchange="filterEvents()"> בית ליסין</label>
-        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="הבימה" checked onchange="filterEvents()"> הבימה</label>
-        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="קולנוע לב" checked onchange="filterEvents()"> קולנוע לב</label>
-        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="רב חן" checked onchange="filterEvents()"> רב חן</label>
-        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בארבי" checked onchange="filterEvents()"> בארבי</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בית ליסין" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בית ליסין</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="הבימה" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בארבי" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
       </div>
+      <p class="filter-hint">מקום מסומן באפור עדיין לא נטען - התיבה תיסמן אוטומטית ברגע שהנתונים יגיעו.</p>
     </div>
 
   </div>
 
-  <div class="results-info" id="resultsCount">טוען אירועים...</div>
+  <div class="loading-banner" id="loadingBanner" style="display:none">
+    <i class="fa-solid fa-satellite-dish fa-fade"></i>
+    <span id="loadingBannerText">סורקים מקורות בזמן אמת</span>
+    <span class="dots"><span>.</span><span>.</span><span>.</span></span>
+  </div>
+
+  <div class="results-toolbar">
+    <div class="results-count" id="resultsCount">טוען אירועים...</div>
+    <div class="bulk-actions">
+      <label class="custom-check">
+        <input type="checkbox" id="selectAllCheckbox" onchange="onSelectAllToggle(this)">
+        <span class="check-box"><i class="fa-solid fa-check"></i></span> בחר הכל
+      </label>
+      <button class="toolbar-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled>
+        <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
+      </button>
+    </div>
+  </div>
 
   <main class="events-grid" id="eventsContainer">
     <div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>
@@ -216,7 +346,6 @@ footer a{color:var(--accent)}
       <button class="secondary" onclick="clearClientId()">נקה</button>
       <button class="secondary" onclick="closeSettings()">סגור</button>
     </div>
-    <p class="muted">ההתחברות משמשת להצגת שם ותמונת פרופיל בלבד. ללא שרת אין אימות צד-שרת של הזיהוי, וללא סנכרון בין מכשירים — המועדפים נשמרים בדפדפן הזה בלבד (localStorage).</p>
   </div>
 </div>
 
@@ -224,9 +353,13 @@ footer a{color:var(--accent)}
 /* ===================== קונפיגורציה ===================== */
 const JINA_BASE = 'https://r.jina.ai/';
 const CACHE_TTL_MS = 3 * 60 * 60 * 1000; // 3 שעות
-const LEV_MOVIE_CAP = 8;
+/* קולנוע לב ורב חן נטענים בשתי רמות: טעינה ראשונית קלה (3 ימים/מספר סרטים מצומצם),
+   ורמה מורחבת שנטענת רק כשהמשתמש בפועל מבקש טווח רחב יותר (לחיצה על "השבוע"/"3 השבועות"). */
+const LEV_MOVIE_CAP_INITIAL = 4;
+const LEV_MOVIE_CAP_EXTENDED = 8;
 const LEV_CONCURRENCY = 2;
-const RAVHEN_DAYS_AHEAD = 6;
+const RAVHEN_DAYS_INITIAL = 3;
+const RAVHEN_DAYS_EXTENDED = 6;
 const RAVHEN_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
 const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen']);
@@ -241,17 +374,31 @@ const venueInfo = {
   'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' }
 };
 
+const VENUE_TO_SOURCE = { 'בית ליסין':'lessin', 'הבימה':'habima', 'קולנוע לב':'lev', 'רב חן':'ravhen', 'בארבי':'barby' };
+
+/* מקורות שנטענים אוטומטית עם פתיחת הדף. השאר (הבימה) נטענים על-פי דרישה
+   (לחיצה על תג המקור הלא-פעיל, או "רענן הכל"). */
+const AUTO_LOAD_SOURCES = new Set(['barby', 'lev', 'ravhen', 'lessin']);
+
 /* ===================== State ===================== */
 let allEvents = [];
 let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
+let selectedIds = new Set();
+let currentFiltered = [];
 let showOnlyFavs = false;
 let selectedType = 'all';
 let sourceState = {};
+let userToggledVenues = new Set();   // מקומות שהמשתמש עצמו שינה - לא לדרוס את הבחירה שלו אוטומטית
+let everFinishedSources = new Set(); // מקורות שסיימו להיטען לפחות פעם אחת - רענון ברקע לא "יכבה" אותם שוב
+let cinemaExpanded = false;          // האם כבר בוצעה טעינה מורחבת של מקורות הקולנוע
+let initialLoadSettled = false;      // האם הטעינה הראשונית (פס ההתקדמות העליון) כבר הסתיימה
 
 const today = new Date();
 const maxDate = new Date(); maxDate.setDate(today.getDate() + 21);
+/* התצוגה כברירת מחדל היא "היום" בלבד, אבל הטעינה בפועל (RAVHEN_DAYS_INITIAL וכו') כבר
+   מכינה 3 ימים ברקע - כך שהמעבר ל"3 הימים הקרובים" יהיה מיידי, בלי טעינה נוספת. */
 document.getElementById('startDate').value = localDateStr(today);
-document.getElementById('endDate').value = localDateStr(maxDate);
+document.getElementById('endDate').value = localDateStr(today);
 
 /* ===================== Utilities ===================== */
 function escapeHtml(str){
@@ -347,6 +494,13 @@ function timeAgo(date){
 
 /* ===================== Scrapers ===================== */
 
+function extractImageUrl(imgEl){
+  if (!imgEl) return null;
+  const src = imgEl.getAttribute('data-src') || imgEl.getAttribute('src') || '';
+  if (!src || src.startsWith('data:') || /placeholder/i.test(src)) return null;
+  return src;
+}
+
 async function fetchLessin(){
   const html = await jinaFetch('https://www.lessin.co.il/%D7%94%D7%A6%D7%92%D7%95%D7%AA/', 'html');
   const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -370,7 +524,7 @@ async function fetchLessin(){
     const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
     events.push({
       id: makeId('lessin', title, date), source:'lessin', venue:'בית ליסין', type:'theatre',
-      title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall
+      title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall, image: null
     });
   });
   return events;
@@ -396,7 +550,7 @@ async function fetchHabima(){
       const date = new Date(Number(yyyy), Number(mm)-1, Number(dd), Number(tm[2]), Number(tm[3]));
       events.push({
         id: makeId('habima', title, date), source:'habima', venue:'הבימה', type:'theatre',
-        title, date, link: a.href, extra:'תיאטרון הבימה'
+        title, date, link: a.href, extra:'תיאטרון הבימה', image: null
       });
     });
   });
@@ -413,11 +567,12 @@ async function fetchLevMovieList(){
     const href = a.href;
     if (!href || seen.has(href)) return;
     const nameEl = a.querySelector('.movieName');
+    const imgEl = a.querySelector('img');
     let title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
-    if (!title) { const img = a.querySelector('img'); title = img ? (img.alt||'').trim() : ''; }
+    if (!title) title = imgEl ? (imgEl.alt||'').trim() : '';
     if (!title) return;
     seen.add(href);
-    movies.push({ href, title });
+    movies.push({ href, title, image: extractImageUrl(imgEl) });
   });
   return movies;
 }
@@ -446,7 +601,7 @@ async function fetchLevMovieShowtimes(movie){
           const date = inferDate(dm[1], dm[2], tm[1], tm[2]);
           events.push({
             id: makeId('lev', movie.title + '-' + locName, date), source:'lev', venue:'קולנוע לב', type:'cinema',
-            title: movie.title, date, link: a.href, extra: locName
+            title: movie.title, date, link: a.href, extra: locName, image: movie.image || null
           });
         });
       });
@@ -455,9 +610,9 @@ async function fetchLevMovieShowtimes(movie){
   return events;
 }
 
-async function fetchLevAll(onProgress){
+async function fetchLevAll(onProgress, movieCap = LEV_MOVIE_CAP_EXTENDED){
   const movies = await fetchLevMovieList();
-  const capped = movies.slice(0, LEV_MOVIE_CAP);
+  const capped = movies.slice(0, movieCap);
   onProgress && onProgress(0, capped.length);
   const events = [];
   let idx = 0, done = 0;
@@ -483,6 +638,7 @@ async function fetchRavHenDay(dateStr){
     const nameEl = row.querySelector('.qb-movie-name');
     const title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
     if (!title) return;
+    const image = extractImageUrl(row.querySelector('.movie-poster-container img'));
     row.querySelectorAll('a[data-url*="/api/order/"]').forEach(a => {
       const text = (a.textContent || '').trim();
       const tm = text.match(/(\d{1,2}):(\d{2})/);
@@ -490,15 +646,15 @@ async function fetchRavHenDay(dateStr){
       const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
       events.push({
         id: makeId('ravhen', title, date), source:'ravhen', venue:'רב חן', type:'cinema',
-        title, date, link: a.getAttribute('data-url'), extra: 'רב חן דיזנגוף'
+        title, date, link: a.getAttribute('data-url'), extra: 'רב חן דיזנגוף', image
       });
     });
   });
   return events;
 }
 
-async function fetchRavHenAll(onProgress){
-  const days = Array.from({length: RAVHEN_DAYS_AHEAD}, (_, i) => {
+async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
+  const days = Array.from({length: daysAhead}, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() + i); return localDateStr(d);
   });
   onProgress && onProgress(0, days.length);
@@ -533,16 +689,31 @@ async function fetchBarby(){
       break;
     }
     if (!title) continue;
+    let image = null;
+    for (let j = i-1; j >= Math.max(0, i-8); j--){
+      const imgm = lines[j] && lines[j].match(/!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/);
+      if (imgm) { image = imgm[1]; break; }
+    }
     const date = inferDate(dd, mm, hh, min);
     events.push({
       id: makeId('barby', title, date), source:'barby', venue:'בארבי', type:'music',
-      title, date, link: 'https://www.barby.co.il/', extra: 'מועדון הבארבי'
+      title, date, link: 'https://www.barby.co.il/', extra: 'מועדון הבארבי', image
     });
   }
   return events;
 }
 
 /* ===================== Orchestration ===================== */
+
+/* lev/ravhen בוחרים את היקף הטעינה (מצומצם/מורחב) בזמן הקריאה עצמה, לפי cinemaExpanded -
+   כך שכל נתיב טעינה (ראשונית, לחיצה על תג, "רענן הכל") מתנהג עקבי אוטומטית. */
+const SOURCE_FETCHERS = {
+  lessin: fetchLessin,
+  habima: fetchHabima,
+  lev: (onProgress) => fetchLevAll(onProgress, cinemaExpanded ? LEV_MOVIE_CAP_EXTENDED : LEV_MOVIE_CAP_INITIAL),
+  ravhen: (onProgress) => fetchRavHenAll(onProgress, cinemaExpanded ? RAVHEN_DAYS_EXTENDED : RAVHEN_DAYS_INITIAL),
+  barby: fetchBarby
+};
 
 async function loadSourceInto(key, fn){
   sourceState[key] = { status:'loading' };
@@ -570,39 +741,144 @@ async function loadSourceInto(key, fn){
   filterEvents();
 }
 
+function loadSingleSource(key){
+  if (sourceState[key] && sourceState[key].status === 'loading') return;
+  loadSourceInto(key, SOURCE_FETCHERS[key]);
+}
+
+/* מפעילים כאשר המשתמש מבקש טווח רחב מ-3 ימים (תגית "השבוע"/"3 השבועות") - טוענים
+   בפועל עוד ימים/סרטים מקולנוע לב ורב חן, פעם אחת בלבד לכל טעינת עמוד. */
+async function expandCinemaSources(){
+  if (cinemaExpanded) return;
+  cinemaExpanded = true;
+  document.querySelectorAll('.expand-hint').forEach(el => el.remove());
+  await Promise.allSettled([
+    loadSourceInto('lev', SOURCE_FETCHERS.lev),
+    loadSourceInto('ravhen', SOURCE_FETCHERS.ravhen),
+  ]);
+}
+
+/* טעינה ראשונית: רק המקורות המהירים והרלוונטיים ביותר (קולנוע). השאר ממתינים
+   ללחיצה - כך שהמסך הראשון נטען מהר ולא מציף במידע ממקורות שלא ביקשו. */
+async function loadInitialEvents(){
+  Object.keys(SOURCE_LABELS).forEach(k => { sourceState[k] = AUTO_LOAD_SOURCES.has(k) ? { status:'loading' } : { status:'idle' }; });
+  renderStatusBar();
+  renderSkeletons(8);
+  const stagger = ms => new Promise(r => setTimeout(r, ms));
+  const autoKeys = [...AUTO_LOAD_SOURCES];
+  await Promise.allSettled(autoKeys.map((k,i) => stagger(i*400).then(() => loadSourceInto(k, SOURCE_FETCHERS[k]))));
+}
+
 async function loadAllEvents(){
   const refreshBtn = document.getElementById('refreshBtn');
   refreshBtn.disabled = true;
-  document.getElementById('eventsContainer').innerHTML = `<div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>`;
   const stagger = ms => new Promise(r => setTimeout(r, ms));
-  await Promise.allSettled([
-    loadSourceInto('lessin', fetchLessin),
-    stagger(400).then(() => loadSourceInto('habima', fetchHabima)),
-    stagger(800).then(() => loadSourceInto('lev', fetchLevAll)),
-    stagger(1200).then(() => loadSourceInto('ravhen', fetchRavHenAll)),
-    stagger(1600).then(() => loadSourceInto('barby', fetchBarby)),
-  ]);
+  const keys = Object.keys(SOURCE_FETCHERS);
+  await Promise.allSettled(keys.map((k,i) => stagger(i*400).then(() => loadSourceInto(k, SOURCE_FETCHERS[k]))));
   refreshBtn.disabled = false;
 }
 
 function renderStatusBar(){
   const el = document.getElementById('statusPills');
   el.innerHTML = Object.keys(SOURCE_LABELS).map(key => {
-    const s = sourceState[key] || { status:'loading' };
+    const s = sourceState[key] || { status:'idle' };
     const label = SOURCE_LABELS[key];
-    let text = label, cls = s.status || 'loading';
+    let text = label, cls = s.status || 'idle';
     if (s.status === 'loading') text = `${label}${s.progress ? ' ('+s.progress+')' : ''}`;
     else if (s.status === 'ok') text = `${label} · ${s.count}`;
     else if (s.status === 'cached') text = `${label} · מטמון (${timeAgo(s.updated)})`;
-    else if (s.status === 'error') text = `${label} · נכשל`;
-    return `<span class="pill ${cls}"><span class="dot"></span>${escapeHtml(text)}</span>`;
+    else if (s.status === 'error') text = `${label} · נכשל, לחצו לנסות שוב`;
+    else if (s.status === 'idle') text = `${label} · לחצו לטעינה`;
+    const title = s.status === 'loading' ? '' : `title="לחצו כדי לטעון/לרענן את ${escapeHtml(label)}"`;
+    return `<span class="pill ${cls}" onclick="loadSingleSource('${key}')" ${title}><span class="dot"></span>${escapeHtml(text)}</span>`;
   }).join('');
+
+  const anyLoading = Object.values(sourceState).some(s => s.status === 'loading');
+  const banner = document.getElementById('loadingBanner');
+  if (banner){
+    banner.style.display = anyLoading ? 'flex' : 'none';
+    if (anyLoading){
+      const loadingLabels = Object.keys(sourceState).filter(k => sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
+      document.getElementById('loadingBannerText').innerText = `סורקים בזמן אמת: ${loadingLabels.join(', ')}`;
+    }
+  }
+
+  updateTopProgress();
+  syncVenueCheckboxes();
+}
+
+/* ===================== פס התקדמות לטעינה הראשונית ===================== */
+
+function computeInitialProgress(){
+  const keys = [...AUTO_LOAD_SOURCES];
+  let doneUnits = 0, totalUnits = 0;
+  keys.forEach(k => {
+    const s = sourceState[k];
+    if (!s || s.status === 'idle'){ totalUnits += 1; return; }
+    if (s.status === 'loading'){
+      totalUnits += 1;
+      if (s.progress){
+        const [d, t] = s.progress.split('/').map(Number);
+        if (t) doneUnits += d / t;
+      }
+    } else {
+      doneUnits += 1; totalUnits += 1;
+    }
+  });
+  return totalUnits ? Math.min(100, Math.round((doneUnits / totalUnits) * 100)) : 100;
+}
+
+function updateTopProgress(){
+  if (initialLoadSettled) return;
+  const bar = document.getElementById('topProgress');
+  const fill = document.getElementById('topProgressFill');
+  if (!bar || !fill) return;
+  const pct = computeInitialProgress();
+  bar.classList.add('active');
+  fill.style.width = pct + '%';
+  if (pct >= 100){
+    initialLoadSettled = true;
+    setTimeout(() => bar.classList.remove('active'), 500);
+  }
+}
+
+/* ===================== סנכרון תיבות הסימון של המקומות עם מצב הטעינה =====================
+   תיבה של מקום שעדיין לא סיים לטעון (idle/loading) לא יכולה להיות מסומנת - זה מטעה,
+   כי אין בפועל אירועים מאותו מקור שמיוצגים על-ידה. ברגע שהמקור מסיים לטעון (בהצלחה
+   או בכישלון) התיבה משתחררת ומסומנת אוטומטית, אלא אם המשתמש כבר שינה אותה ידנית. */
+function syncVenueCheckboxes(){
+  document.querySelectorAll('.venue-filter').forEach(cb => {
+    const key = VENUE_TO_SOURCE[cb.value];
+    const s = sourceState[key];
+    const finished = !!s && s.status !== 'loading' && s.status !== 'idle';
+    const wrapper = cb.closest('.custom-check');
+    if (finished){
+      everFinishedSources.add(key);
+      if (cb.disabled){
+        cb.disabled = false;
+        if (wrapper) wrapper.classList.remove('pending');
+        if (!userToggledVenues.has(cb.value)) cb.checked = true;
+      }
+    } else if (!everFinishedSources.has(key)){
+      // עדיין לא נטען אף פעם - התיבה נשארת כבויה ולא מסומנת עד שיגיעו נתונים בפועל
+      cb.disabled = true;
+      cb.checked = false;
+      if (wrapper) wrapper.classList.add('pending');
+    }
+    // אם המקור כבר נטען בעבר וכרגע רק מתרענן ברקע - לא נוגעים בתיבה, כדי לא לדרוס
+    // בטעות בחירה קיימת של המשתמש בזמן שהנתונים הישנים עדיין מוצגים.
+  });
+}
+
+function onVenueCheckboxChange(cb){
+  userToggledVenues.add(cb.value);
+  filterEvents();
 }
 
 /* ===================== Filtering & Rendering ===================== */
 
 function setQuickDate(range, btn){
-  document.querySelectorAll('.chips-row .chip').forEach(b => { if (!b.classList.contains('fav-chip')) b.classList.remove('active'); });
+  document.querySelectorAll('.chips-row .chip[data-range]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   let start = new Date(), end = new Date();
   if (range === '3days') end.setDate(today.getDate()+3);
@@ -611,6 +887,7 @@ function setQuickDate(range, btn){
   document.getElementById('startDate').value = localDateStr(start);
   document.getElementById('endDate').value = localDateStr(range === 'today' ? start : end);
   filterEvents();
+  if (range === 'week' || range === 'all') expandCinemaSources();
 }
 
 function setType(type, btn){
@@ -626,11 +903,81 @@ function toggleFavFilter(btn){
   filterEvents();
 }
 
-function toggleFav(id){
+function toggleFav(id, btn){
   if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
   else favorites.push(id);
   localStorage.setItem('tlv_favs', JSON.stringify(favorites));
-  filterEvents();
+  document.getElementById('favCount').innerText = favorites.length;
+  if (btn) btn.classList.toggle('active', favorites.includes(id));
+  if (showOnlyFavs) filterEvents(); // ברשימת "מועדפים בלבד" הכרטיס צריך להיעלם
+}
+
+/* ===================== בחירה מרובה + הורדה ליומן ===================== */
+
+function toggleSelect(id){
+  if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+  updateSelectionUI();
+}
+
+function onSelectAllToggle(cb){
+  if (cb.checked) currentFiltered.forEach(ev => selectedIds.add(ev.id));
+  else currentFiltered.forEach(ev => selectedIds.delete(ev.id));
+  renderEvents(currentFiltered);
+}
+
+function updateSelectionUI(){
+  const count = selectedIds.size;
+  const countEl = document.getElementById('selectedCount');
+  const dlBtn = document.getElementById('downloadSelectedBtn');
+  if (countEl) countEl.innerText = `(${count})`;
+  if (dlBtn) dlBtn.disabled = count === 0;
+  const selectAllCb = document.getElementById('selectAllCheckbox');
+  if (selectAllCb){
+    const allVisibleSelected = currentFiltered.length > 0 && currentFiltered.every(ev => selectedIds.has(ev.id));
+    selectAllCb.checked = allVisibleSelected;
+    selectAllCb.indeterminate = !allVisibleSelected && currentFiltered.some(ev => selectedIds.has(ev.id));
+  }
+}
+
+function pad2(n){ return String(n).padStart(2,'0'); }
+function icsDate(d){ return `${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}T${pad2(d.getHours())}${pad2(d.getMinutes())}00`; }
+function escapeICS(s){ return String(s).replace(/\\/g,'\\\\').replace(/[,;]/g, m => '\\'+m).replace(/\n/g,'\\n'); }
+
+function buildICS(events){
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//TLV Nights//HE','CALSCALE:GREGORIAN'];
+  events.forEach(ev => {
+    const start = ev.date;
+    const end = new Date(start.getTime() + 2*60*60*1000);
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:' + ev.id.replace(/[^a-zA-Z0-9-]/g,'') + '@tlvnights');
+    lines.push('DTSTAMP:' + icsDate(new Date()));
+    lines.push('DTSTART:' + icsDate(start));
+    lines.push('DTEND:' + icsDate(end));
+    lines.push('SUMMARY:' + escapeICS(`${ev.title} - ${ev.venue}`));
+    lines.push('LOCATION:' + escapeICS(`${ev.venue}${ev.extra ? ', ' + ev.extra : ''}`));
+    lines.push('DESCRIPTION:' + escapeICS(`כרטיסים ופרטים: ${ev.link}`));
+    lines.push('URL:' + ev.link);
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  return lines.join('\r\n');
+}
+
+function downloadSelected(){
+  const selected = allEvents.filter(ev => selectedIds.has(ev.id));
+  if (!selected.length) return;
+  const ics = buildICS(selected);
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `tlv-nights-${localDateStr(new Date())}.ics`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function quickExpand(range){
+  const btn = document.querySelector(`.chip[data-range="${range}"]`);
+  if (btn) setQuickDate(range, btn);
 }
 
 function createGoogleCalendarLink(ev){
@@ -675,37 +1022,87 @@ function filterEvents(){
   renderEvents(filtered);
 }
 
+function renderSkeletons(count=8){
+  const container = document.getElementById('eventsContainer');
+  container.innerHTML = Array.from({length:count}).map(() => `
+    <div class="event-card skeleton-card">
+      <div class="skeleton skeleton-image"></div>
+      <div class="skeleton skeleton-line" style="width:40%"></div>
+      <div class="skeleton skeleton-line" style="width:80%;height:19px;margin-top:4px"></div>
+      <div class="skeleton skeleton-line" style="width:55%"></div>
+      <div class="skeleton skeleton-line" style="width:65%"></div>
+      <div class="skeleton skeleton-btnrow"></div>
+    </div>
+  `).join('');
+}
+
+const TYPE_ICON = { theatre: 'fa-masks-theater', cinema: 'fa-film', music: 'fa-music' };
+
 function renderEvents(events){
+  currentFiltered = events;
   const container = document.getElementById('eventsContainer');
   const countEl = document.getElementById('resultsCount');
   document.getElementById('favCount').innerText = favorites.length;
+  updateSelectionUI();
 
-  const anyLoaded = Object.values(sourceState).some(s => s.status && s.status !== 'loading');
+  const anyLoaded = Object.values(sourceState).some(s => s.status && s.status !== 'loading' && s.status !== 'idle');
+  const stillLoading = Object.values(sourceState).some(s => s.status === 'loading');
+  const anySucceeded = Object.values(sourceState).some(s => s.status === 'ok' || s.status === 'cached');
+
   if (events.length === 0){
-    countEl.innerText = anyLoaded ? 'נמצאו 0 אירועים' : 'טוען אירועים...';
-    container.innerHTML = anyLoaded
-      ? `<div class="no-results">לא נמצאו אירועים לפי הסינון שנבחר.</div>`
-      : `<div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>`;
+    if (stillLoading && !anyLoaded){
+      countEl.innerText = 'טוען אירועים...';
+      renderSkeletons(8);
+      return;
+    }
+    countEl.innerText = 'נמצאו 0 אירועים';
+    container.innerHTML = anySucceeded ? `
+      <div class="no-results">
+        <i class="fa-solid fa-calendar-xmark"></i>
+        <p>לא נמצאו אירועים בטווח שנבחר. אפשר להרחיב את הטווח, או לטעון עוד מקורות מהתגיות למעלה.</p>
+        <div class="no-results-actions">
+          <button class="chip" onclick="quickExpand('week')">הצג את השבוע הקרוב</button>
+          <button class="chip" onclick="quickExpand('all')">הצג את 3 השבועות הקרובים</button>
+        </div>
+      </div>` : `
+      <div class="no-results">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p>לא הצלחנו לטעון נתונים כרגע. בדקו את החיבור לאינטרנט ונסו שוב.</p>
+        <div class="no-results-actions">
+          <button class="chip" onclick="loadAllEvents()">נסו שוב · רענן הכל</button>
+        </div>
+      </div>`;
     return;
   }
 
-  countEl.innerText = `נמצאו ${events.length} אירועים`;
+  countEl.innerHTML = `נמצאו <strong>${events.length}</strong> אירועים`;
   container.innerHTML = '';
 
   events.forEach(ev => {
     const isFav = favorites.includes(ev.id);
+    const isSelected = selectedIds.has(ev.id);
     const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
     const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
     const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
     const badgeClass = ev.type === 'theatre' ? 'badge-theatre' : ev.type === 'cinema' ? 'badge-cinema' : 'badge-music';
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
+    const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
     const gCal = createGoogleCalendarLink(ev);
+
+    const imageBlock = ev.image
+      ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
+      : `<div class="card-image img-fallback type-${ev.type}"><i class="fa-solid ${typeIcon} fallback-icon"></i></div>`;
 
     const card = document.createElement('div');
     card.className = 'event-card';
     card.innerHTML = `
-      <button class="fav-icon ${isFav ? 'active' : ''}" onclick="toggleFav('${ev.id}')" title="הוסף למועדפים"><i class="fa-solid fa-heart"></i></button>
+      <label class="select-check" title="בחר לצורך הורדה">
+        <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${ev.id}')">
+        <span class="check-box"><i class="fa-solid fa-check"></i></span>
+      </label>
+      <button class="fav-icon ${isFav ? 'active' : ''}" onclick="toggleFav('${ev.id}', this)" title="הוסף למועדפים"><i class="fa-solid fa-heart"></i></button>
       <div>
+        ${imageBlock}
         <div class="card-meta">
           <span class="badge ${badgeClass}">${escapeHtml(ev.venue)}</span>
           <span class="type-badge">${typeLabel}</span>
@@ -808,9 +1205,7 @@ const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
 if (savedUser) showUser(savedUser.name, savedUser.picture);
 initGoogleSignIn();
 
-Object.keys(SOURCE_LABELS).forEach(k => sourceState[k] = { status:'loading' });
-renderStatusBar();
-loadAllEvents();
+loadInitialEvents();
 </script>
 </body>
 </html>
