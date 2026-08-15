@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TLV Nights | מה עושים הלילה בתל אביב?</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+:root{
+  --bg:#0f172a; --bg2:#1e1b4b;
+  --glass:rgba(30,41,59,.7); --glass-solid:#1e293b;
+  --border:rgba(255,255,255,.1);
+  --text-main:#f8fafc; --text-muted:#94a3b8;
+  --accent:#6366f1; --accent-hover:#4f46e5;
+  --fav:#f43f5e;
+  --theatre:#ec4899; --cinema:#06b6d4; --music:#10b981;
+  --ok:#22c55e; --warn:#f59e0b; --err:#ef4444;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Rubik',system-ui,sans-serif}
+body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color:var(--text-main);min-height:100vh;padding:16px}
+.container{max-width:1200px;margin:0 auto}
+
+header{text-align:center;margin:20px 0 28px}
+header h1{font-size:2.4rem;background:linear-gradient(to left,#a5b4fc,#c084fc);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+header p{color:var(--text-muted);font-size:1rem}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.1rem}
+.brand i{color:var(--accent)}
+.auth-area{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.icon-btn{background:var(--glass);border:1px solid var(--border);color:var(--text-main);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
+.icon-btn:hover{background:var(--accent)}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--glass);border:1px solid var(--border);border-radius:30px;padding:4px 10px 4px 4px}
+.user-chip img{width:30px;height:30px;border-radius:50%;border:2px solid var(--accent)}
+.user-chip button{background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:.9rem}
+.user-chip button:hover{color:var(--fav)}
+
+.glass-panel{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:26px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+
+.status-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.status-pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-size:.75rem;padding:5px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid var(--border)}
+.pill .dot{width:7px;height:7px;border-radius:50%}
+.pill.ok .dot{background:var(--ok)}
+.pill.loading .dot{background:var(--accent);animation:pulse 1s infinite}
+.pill.cached .dot{background:var(--warn)}
+.pill.error .dot{background:var(--err)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+#refreshBtn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem}
+#refreshBtn:disabled{opacity:.5;cursor:not-allowed}
+
+.search-box{position:relative;margin-bottom:16px}
+.search-box i{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.search-input{width:100%;padding:14px 48px 14px 16px;background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:12px;color:#fff;font-size:1rem;outline:none}
+
+.filter-section{margin-bottom:16px}
+.filter-section h3{font-size:.85rem;color:var(--text-muted);margin-bottom:10px;font-weight:500}
+.chips-row{display:flex;flex-wrap:wrap;gap:9px}
+.chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);padding:7px 16px;border-radius:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px}
+.chip.active{background:var(--accent);border-color:var(--accent)}
+.chip.fav-chip.active{background:var(--fav);border-color:var(--fav)}
+.checkbox-chip{display:flex;align-items:center;gap:7px;background:rgba(15,23,42,.5);border:1px solid var(--border);padding:7px 14px;border-radius:30px;cursor:pointer;font-size:.85rem;user-select:none}
+.checkbox-chip input{accent-color:var(--accent)}
+.inputs-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-muted)}
+input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none}
+
+.results-info{margin-bottom:14px;color:var(--text-muted);font-size:.9rem}
+
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px}
+.event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:20px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s}
+.event-card:hover{transform:translateY(-3px)}
+.card-meta{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff}
+.badge-theatre{background:var(--theatre)}
+.badge-cinema{background:var(--cinema)}
+.badge-music{background:var(--music)}
+.type-badge{color:var(--text-muted);font-size:.72rem;background:rgba(255,255,255,.1);padding:4px 8px;border-radius:6px}
+.event-title{font-size:1.2rem;font-weight:700;margin-bottom:12px;padding-left:26px;line-height:1.3}
+.event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
+.event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.event-details i{color:var(--accent);width:16px;text-align:center}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{flex:1;min-width:90px;padding:10px;border-radius:8px;text-decoration:none;text-align:center;font-size:.82rem;font-weight:600;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.btn-primary{background:var(--accent)}
+.btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
+.btn-cal{background:var(--music)}
+.fav-icon{position:absolute;top:18px;left:18px;color:var(--text-muted);cursor:pointer;font-size:1.25rem;background:none;border:none}
+.fav-icon.active{color:var(--fav)}
+
+.loader-container,.no-results{grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)}
+.fa-spinner{color:var(--accent);font-size:1.8rem;margin-bottom:12px}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal-box{background:var(--glass-solid);border:1px solid var(--border);border-radius:16px;padding:26px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
+.modal-box h3{margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.modal-box p{color:var(--text-muted);font-size:.9rem;margin-bottom:10px;line-height:1.6}
+.modal-box ol{color:var(--text-muted);font-size:.87rem;margin:0 0 14px 0;padding-inline-start:22px;line-height:1.9}
+.modal-box code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:4px;font-size:.85rem}
+.modal-box input[type="text"]{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;margin-bottom:14px;outline:none}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.modal-actions button{padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.85rem;color:#fff;background:var(--accent)}
+.modal-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
+.muted{color:var(--text-muted);font-size:.8rem;margin-top:14px}
+
+footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
+footer a{color:var(--accent)}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="topbar">
+    <div class="brand"><i class="fa-solid fa-satellite-dish"></i> TLV Nights</div>
+    <div class="auth-area">
+      <div id="signedOut">
+        <div id="gsiButtonContainer"></div>
+        <button class="icon-btn" id="noClientIdBtn" style="display:none" onclick="openSettings()"><i class="fa-brands fa-google"></i> התחבר עם Google</button>
+      </div>
+      <div id="signedIn" class="user-chip" style="display:none">
+        <img id="userImg" alt="פרופיל">
+        <span id="userName"></span>
+        <button onclick="logoutGoogle()" title="התנתק"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+      <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
+    </div>
+  </div>
+
+  <header>
+    <h1>🎭 מה עושים הלילה?</h1>
+    <p>תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים, בלי שרת</p>
+  </header>
+
+  <div class="glass-panel">
+
+    <div class="status-bar">
+      <div class="status-pills" id="statusPills"></div>
+      <button id="refreshBtn" onclick="loadAllEvents()"><i class="fa-solid fa-sync"></i> רענן נתונים</button>
+    </div>
+
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" class="search-input" placeholder="חפש לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
+    </div>
+
+    <div class="filter-section">
+      <h3>📅 מתי יוצאים?</h3>
+      <div class="chips-row">
+        <button class="chip active" data-range="all" onclick="setQuickDate('all',this)">הכל (3 שבועות)</button>
+        <button class="chip" data-range="today" onclick="setQuickDate('today',this)">רק היום</button>
+        <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 ימים קרובים</button>
+        <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע הקרוב</button>
+        <button class="chip fav-chip" id="favFilterBtn" onclick="toggleFavFilter(this)"><i class="fa-solid fa-heart"></i> מועדפים (<span id="favCount">0</span>)</button>
+      </div>
+      <div class="inputs-row" style="margin-top:12px">
+        <label>מ- <input type="date" id="startDate" onchange="filterEvents()"></label>
+        <label>עד- <input type="date" id="endDate" onchange="filterEvents()"></label>
+        <label>משעה <input type="time" id="startTime" value="00:00" onchange="filterEvents()"></label>
+        <label>עד שעה <input type="time" id="endTime" value="23:59" onchange="filterEvents()"></label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <h3>🎯 סוג</h3>
+      <div class="chips-row" id="typeChips">
+        <button class="chip active" data-type="all" onclick="setType('all',this)">הכל</button>
+        <button class="chip" data-type="theatre" onclick="setType('theatre',this)">תיאטרון</button>
+        <button class="chip" data-type="cinema" onclick="setType('cinema',this)">קולנוע</button>
+        <button class="chip" data-type="music" onclick="setType('music',this)">מוזיקה</button>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <h3>📍 איפה?</h3>
+      <div class="chips-row">
+        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בית ליסין" checked onchange="filterEvents()"> בית ליסין</label>
+        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="הבימה" checked onchange="filterEvents()"> הבימה</label>
+        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="קולנוע לב" checked onchange="filterEvents()"> קולנוע לב</label>
+        <label class="checkbox-chip"><input type="checkbox" class="venue-filter" value="בארבי" checked onchange="filterEvents()"> בארבי</label>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="results-info" id="resultsCount">טוען אירועים...</div>
+
+  <main class="events-grid" id="eventsContainer">
+    <div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>
+  </main>
+
+  <footer>
+    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, בארבי) ועשויים להשתנות או להיכשל מדי פעם.
+    מומלץ לאמת מחיר וזמינות באתר הרשמי לפני רכישה. אפליקציית צד-לקוח בלבד, ללא שרת — כל הנתונים נמשכים ישירות בדפדפן שלכם.
+  </footer>
+
+</div>
+
+<div id="settingsModal" class="modal-overlay" style="display:none">
+  <div class="modal-box">
+    <h3><i class="fa-solid fa-gear"></i> הגדרות התחברות עם Google</h3>
+    <p>האפליקציה פועלת כולה בצד-הלקוח, ללא שרת. כדי להפעיל כפתור "התחבר עם Google" צריך Client ID אישי (זה חינמי ולוקח 2 דקות):</p>
+    <ol>
+      <li>גשו ל-<a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener">Google Cloud Console → Credentials</a></li>
+      <li>לחצו Create Credentials → OAuth client ID → סוג Web application</li>
+      <li>תחת Authorized JavaScript origins הוסיפו: <code>https://snddigitalagency.com</code> (ואם בודקים מקומית גם <code>http://localhost</code> עם הפורט שלכם)</li>
+      <li>העתיקו את ה-Client ID שנוצר והדביקו כאן:</li>
+    </ol>
+    <input type="text" id="clientIdInput" placeholder="123456789-xxxx.apps.googleusercontent.com">
+    <div class="modal-actions">
+      <button onclick="saveClientId()">שמור</button>
+      <button class="secondary" onclick="clearClientId()">נקה</button>
+      <button class="secondary" onclick="closeSettings()">סגור</button>
+    </div>
+    <p class="muted">ההתחברות משמשת להצגת שם ותמונת פרופיל בלבד. ללא שרת אין אימות צד-שרת של הזיהוי, וללא סנכרון בין מכשירים — המועדפים נשמרים בדפדפן הזה בלבד (localStorage).</p>
+  </div>
+</div>
+
+<script>
+/* ===================== קונפיגורציה ===================== */
+const JINA_BASE = 'https://r.jina.ai/';
+const CACHE_TTL_MS = 3 * 60 * 60 * 1000; // 3 שעות
+const LEV_MOVIE_CAP = 8;
+const LEV_CONCURRENCY = 2;
+const FETCH_TIMEOUT_MS = 30000;
+
+const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', barby: 'בארבי' };
+
+const venueInfo = {
+  'בית ליסין': { address: 'דיזנגוף 101, תל אביב', navQuery: 'בית ליסין תל אביב' },
+  'הבימה':     { address: 'שדרות תרס"ט 2, תל אביב', navQuery: 'תיאטרון הבימה תל אביב' },
+  'קולנוע לב': { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'קולנוע לב דיזנגוף סנטר' },
+  'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' }
+};
+
+/* ===================== State ===================== */
+let allEvents = [];
+let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
+let showOnlyFavs = false;
+let selectedType = 'all';
+let sourceState = {};
+
+const today = new Date();
+const maxDate = new Date(); maxDate.setDate(today.getDate() + 21);
+document.getElementById('startDate').value = localDateStr(today);
+document.getElementById('endDate').value = localDateStr(maxDate);
+
+/* ===================== Utilities ===================== */
+function escapeHtml(str){
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+
+function localDateStr(d){
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function inferDate(day, month, hour=0, minute=0){
+  day=Number(day); month=Number(month); hour=Number(hour)||0; minute=Number(minute)||0;
+  const now = new Date();
+  let year = now.getFullYear();
+  let d = new Date(year, month-1, day, hour, minute, 0, 0);
+  const cutoff = new Date(now); cutoff.setDate(cutoff.getDate()-3);
+  if (d < cutoff) d = new Date(year+1, month-1, day, hour, minute, 0, 0);
+  return d;
+}
+
+function makeId(source, title, date){
+  const t = (title||'').replace(/\s+/g,'_').slice(0,40);
+  const d = (date instanceof Date && !isNaN(date)) ? date.toISOString().slice(0,16) : 'na';
+  return `${source}-${t}-${d}`;
+}
+
+async function jinaFetch(targetUrl, format='html', attempt=0){
+  const controller = new AbortController();
+  const timer = setTimeout(()=>controller.abort(), FETCH_TIMEOUT_MS);
+  let res;
+  try{
+    const headers = {};
+    if (format === 'html') headers['X-Return-Format'] = 'html';
+    res = await fetch(JINA_BASE + targetUrl, { headers, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+  if (res.status === 429 && attempt < 3){
+    const retryAfter = Number(res.headers.get('retry-after')) || (4 + attempt*4);
+    await new Promise(r => setTimeout(r, retryAfter*1000));
+    return jinaFetch(targetUrl, format, attempt+1);
+  }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.text();
+}
+
+function loadCache(key){
+  try{
+    const raw = localStorage.getItem('cache_' + key);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    obj.events.forEach(e => e.date = new Date(e.date));
+    return obj;
+  }catch(e){ return null; }
+}
+function saveCache(key, events){
+  try{ localStorage.setItem('cache_' + key, JSON.stringify({ events, ts: Date.now() })); }catch(e){}
+}
+
+function timeAgo(date){
+  const s = Math.floor((Date.now() - date.getTime())/1000);
+  if (s < 60) return 'ממש עכשיו';
+  if (s < 3600) return `לפני ${Math.floor(s/60)} דק'`;
+  return `לפני ${Math.floor(s/3600)} שע'`;
+}
+
+/* ===================== Scrapers ===================== */
+
+async function fetchLessin(){
+  const html = await jinaFetch('https://www.lessin.co.il/%D7%94%D7%A6%D7%92%D7%95%D7%AA/', 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const rows = doc.querySelectorAll('tr.showlistitem[data-date]');
+  const events = [];
+  rows.forEach(row => {
+    const dateAttr = row.getAttribute('data-date'); // "14-08-2026"
+    const parts = dateAttr.split('-');
+    if (parts.length !== 3) return;
+    const [dd, mm, yyyy] = parts.map(Number);
+    const tds = row.querySelectorAll('td');
+    if (tds.length < 6) return;
+    const timeText = (tds[2].textContent || '').trim();
+    const tm = timeText.match(/(\d{1,2}):(\d{2})/);
+    if (!tm) return;
+    const hall = (tds[3].textContent || '').trim();
+    const titleLink = tds[5].querySelector('a');
+    if (!titleLink) return;
+    const title = titleLink.textContent.trim();
+    const orderLink = row.querySelector('a.orderbtn');
+    const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
+    events.push({
+      id: makeId('lessin', title, date), source:'lessin', venue:'בית ליסין', type:'theatre',
+      title, date, link: orderLink ? orderLink.href : titleLink.href, extra: hall
+    });
+  });
+  return events;
+}
+
+async function fetchHabima(){
+  const html = await jinaFetch('https://www.habima.co.il/presentations/', 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const cells = doc.querySelectorAll('td.calendar-day');
+  const events = [];
+  cells.forEach(cell => {
+    const dateBtn = cell.querySelector('button.date[aria-label], span.date[aria-label]');
+    if (!dateBtn) return;
+    const label = dateBtn.getAttribute('aria-label') || '';
+    const m = label.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (!m) return;
+    const [, dd, mm, yyyy] = m;
+    cell.querySelectorAll('li.item a').forEach(a => {
+      const text = (a.textContent || '').replace(/\s+/g,' ').trim();
+      const tm = text.match(/^(.*?)\s*-\s*(\d{1,2}):(\d{2})/);
+      if (!tm) return;
+      const title = tm[1].trim();
+      const date = new Date(Number(yyyy), Number(mm)-1, Number(dd), Number(tm[2]), Number(tm[3]));
+      events.push({
+        id: makeId('habima', title, date), source:'habima', venue:'הבימה', type:'theatre',
+        title, date, link: a.href, extra:'תיאטרון הבימה'
+      });
+    });
+  });
+  return events;
+}
+
+async function fetchLevMovieList(){
+  const html = await jinaFetch('https://www.lev.co.il/movie/', 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const scope = doc.querySelector('.maintabs1') || doc;
+  const links = scope.querySelectorAll('a.movieLink[href*="/movies/"]');
+  const seen = new Set(); const movies = [];
+  links.forEach(a => {
+    const href = a.href;
+    if (!href || seen.has(href)) return;
+    const nameEl = a.querySelector('.movieName');
+    let title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
+    if (!title) { const img = a.querySelector('img'); title = img ? (img.alt||'').trim() : ''; }
+    if (!title) return;
+    seen.add(href);
+    movies.push({ href, title });
+  });
+  return movies;
+}
+
+async function fetchLevMovieShowtimes(movie){
+  const html = await jinaFetch(movie.href, 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const blocks = [...doc.querySelectorAll('.movie_shows')].filter(el => {
+    const style = el.getAttribute('style') || '';
+    return !/display\s*:\s*none/i.test(style);
+  });
+  const events = [];
+  blocks.forEach(block => {
+    block.querySelectorAll('.forloc').forEach(forloc => {
+      const h3 = forloc.querySelector('h3');
+      const locName = h3 ? h3.textContent.trim() : 'קולנוע לב';
+      forloc.querySelectorAll('.showlist').forEach(showlist => {
+        const span = showlist.querySelector('span');
+        const dateText = span ? span.textContent.trim() : '';
+        const dm = dateText.match(/(\d{1,2})\/(\d{1,2})/);
+        if (!dm) return;
+        showlist.querySelectorAll('a.mobilelink').forEach(a => {
+          const timeText = (a.textContent || '').trim();
+          const tm = timeText.match(/(\d{1,2}):(\d{2})/);
+          if (!tm) return;
+          const date = inferDate(dm[1], dm[2], tm[1], tm[2]);
+          events.push({
+            id: makeId('lev', movie.title + '-' + locName, date), source:'lev', venue:'קולנוע לב', type:'cinema',
+            title: movie.title, date, link: a.href, extra: locName
+          });
+        });
+      });
+    });
+  });
+  return events;
+}
+
+async function fetchLevAll(onProgress){
+  const movies = await fetchLevMovieList();
+  const capped = movies.slice(0, LEV_MOVIE_CAP);
+  onProgress && onProgress(0, capped.length);
+  const events = [];
+  let idx = 0, done = 0;
+  async function worker(){
+    while (idx < capped.length){
+      const movie = capped[idx++];
+      try{ events.push(...await fetchLevMovieShowtimes(movie)); }
+      catch(e){ console.error('Lev movie failed:', movie.title, e); }
+      done++; onProgress && onProgress(done, capped.length);
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(LEV_CONCURRENCY, capped.length || 1)}, worker));
+  return events;
+}
+
+async function fetchBarby(){
+  const text = await jinaFetch('https://www.barby.co.il/', 'markdown');
+  const lines = text.split('\n').map(l => l.trim());
+  const events = [];
+  for (let i = 0; i < lines.length; i++){
+    const m = lines[i].match(/^דלתות:\s*(\d{1,2}):(\d{2})\s*\|\s*(\d{1,2})\/(\d{1,2})/);
+    if (!m) continue;
+    const [, hh, min, dd, mm] = m;
+    let title = null;
+    for (let j = i-1; j >= Math.max(0, i-5); j--){
+      const cand = lines[j];
+      if (!cand) continue;
+      if (/^!|כרטיסים|לרכישת|^Image \d|^\[?Image/.test(cand)) continue;
+      title = cand.replace(/^\[|\]$/g,'').trim();
+      break;
+    }
+    if (!title) continue;
+    const date = inferDate(dd, mm, hh, min);
+    events.push({
+      id: makeId('barby', title, date), source:'barby', venue:'בארבי', type:'music',
+      title, date, link: 'https://www.barby.co.il/', extra: 'מועדון הבארבי'
+    });
+  }
+  return events;
+}
+
+/* ===================== Orchestration ===================== */
+
+async function loadSourceInto(key, fn){
+  sourceState[key] = { status:'loading' };
+  renderStatusBar();
+  try{
+    const onProgress = key === 'lev' ? (done,total)=>{
+      sourceState.lev = { status:'loading', progress: `${done}/${total}` };
+      renderStatusBar();
+    } : undefined;
+    const events = key === 'lev' ? await fn(onProgress) : await fn();
+    saveCache(key, events);
+    sourceState[key] = { status:'ok', updated: new Date(), count: events.length };
+    allEvents = allEvents.filter(e => e.source !== key).concat(events);
+  }catch(err){
+    console.error(key, err);
+    const cached = loadCache(key);
+    if (cached && cached.events.length){
+      sourceState[key] = { status:'cached', updated: new Date(cached.ts), count: cached.events.length };
+      allEvents = allEvents.filter(e => e.source !== key).concat(cached.events);
+    }else{
+      sourceState[key] = { status:'error', count:0 };
+    }
+  }
+  renderStatusBar();
+  filterEvents();
+}
+
+async function loadAllEvents(){
+  const refreshBtn = document.getElementById('refreshBtn');
+  refreshBtn.disabled = true;
+  document.getElementById('eventsContainer').innerHTML = `<div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>`;
+  const stagger = ms => new Promise(r => setTimeout(r, ms));
+  await Promise.allSettled([
+    loadSourceInto('lessin', fetchLessin),
+    stagger(400).then(() => loadSourceInto('habima', fetchHabima)),
+    stagger(800).then(() => loadSourceInto('lev', fetchLevAll)),
+    stagger(1200).then(() => loadSourceInto('barby', fetchBarby)),
+  ]);
+  refreshBtn.disabled = false;
+}
+
+function renderStatusBar(){
+  const el = document.getElementById('statusPills');
+  el.innerHTML = Object.keys(SOURCE_LABELS).map(key => {
+    const s = sourceState[key] || { status:'loading' };
+    const label = SOURCE_LABELS[key];
+    let text = label, cls = s.status || 'loading';
+    if (s.status === 'loading') text = `${label}${s.progress ? ' ('+s.progress+')' : ''}`;
+    else if (s.status === 'ok') text = `${label} · ${s.count}`;
+    else if (s.status === 'cached') text = `${label} · מטמון (${timeAgo(s.updated)})`;
+    else if (s.status === 'error') text = `${label} · נכשל`;
+    return `<span class="pill ${cls}"><span class="dot"></span>${escapeHtml(text)}</span>`;
+  }).join('');
+}
+
+/* ===================== Filtering & Rendering ===================== */
+
+function setQuickDate(range, btn){
+  document.querySelectorAll('.chips-row .chip').forEach(b => { if (!b.classList.contains('fav-chip')) b.classList.remove('active'); });
+  btn.classList.add('active');
+  let start = new Date(), end = new Date();
+  if (range === '3days') end.setDate(today.getDate()+3);
+  else if (range === 'week') end.setDate(today.getDate()+7);
+  else if (range === 'all') end.setDate(today.getDate()+21);
+  document.getElementById('startDate').value = localDateStr(start);
+  document.getElementById('endDate').value = localDateStr(range === 'today' ? start : end);
+  filterEvents();
+}
+
+function setType(type, btn){
+  document.querySelectorAll('#typeChips .chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedType = type;
+  filterEvents();
+}
+
+function toggleFavFilter(btn){
+  showOnlyFavs = !showOnlyFavs;
+  btn.classList.toggle('active', showOnlyFavs);
+  filterEvents();
+}
+
+function toggleFav(id){
+  if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
+  else favorites.push(id);
+  localStorage.setItem('tlv_favs', JSON.stringify(favorites));
+  filterEvents();
+}
+
+function createGoogleCalendarLink(ev){
+  const start = ev.date;
+  const end = new Date(start.getTime() + 2*60*60*1000);
+  const fmt = d => d.toISOString().replace(/-|:|\.\d\d\d/g,'');
+  const title = encodeURIComponent(`${ev.title} - ${ev.venue}`);
+  const details = encodeURIComponent(`כרטיסים ופרטים: ${ev.link}`);
+  const location = encodeURIComponent(`${ev.venue}${ev.extra ? ', '+ev.extra : ''}`);
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&details=${details}&location=${location}`;
+}
+
+function navLink(ev){
+  const info = venueInfo[ev.venue];
+  const q = ev.venue === 'קולנוע לב' && ev.extra ? ev.extra : (info ? info.navQuery : ev.venue);
+  return `https://waze.com/ul?q=${encodeURIComponent(q)}`;
+}
+
+function filterEvents(){
+  const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  const startDateVal = document.getElementById('startDate').value;
+  const endDateVal = document.getElementById('endDate').value;
+  const startTimeVal = document.getElementById('startTime').value;
+  const endTimeVal = document.getElementById('endTime').value;
+  const selectedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+
+  const filtered = allEvents.filter(ev => {
+    const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm);
+    const matchesVenue = selectedVenues.includes(ev.venue);
+    const matchesType = selectedType === 'all' || ev.type === selectedType;
+    const dateStr = localDateStr(ev.date);
+    const matchesDate = (!startDateVal || dateStr >= startDateVal) && (!endDateVal || dateStr <= endDateVal);
+    const hh = String(ev.date.getHours()).padStart(2,'0');
+    const mm = String(ev.date.getMinutes()).padStart(2,'0');
+    const timeStr = `${hh}:${mm}`;
+    const matchesTime = timeStr >= startTimeVal && timeStr <= endTimeVal;
+    const matchesFav = !showOnlyFavs || favorites.includes(ev.id);
+    return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav;
+  });
+
+  filtered.sort((a,b) => a.date - b.date);
+  renderEvents(filtered);
+}
+
+function renderEvents(events){
+  const container = document.getElementById('eventsContainer');
+  const countEl = document.getElementById('resultsCount');
+  document.getElementById('favCount').innerText = favorites.length;
+
+  const anyLoaded = Object.values(sourceState).some(s => s.status && s.status !== 'loading');
+  if (events.length === 0){
+    countEl.innerText = anyLoaded ? 'נמצאו 0 אירועים' : 'טוען אירועים...';
+    container.innerHTML = anyLoaded
+      ? `<div class="no-results">לא נמצאו אירועים לפי הסינון שנבחר.</div>`
+      : `<div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>שואב נתונים חיים מהאתרים הרשמיים...</p></div>`;
+    return;
+  }
+
+  countEl.innerText = `נמצאו ${events.length} אירועים`;
+  container.innerHTML = '';
+
+  events.forEach(ev => {
+    const isFav = favorites.includes(ev.id);
+    const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
+    const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+    const badgeClass = ev.type === 'theatre' ? 'badge-theatre' : ev.type === 'cinema' ? 'badge-cinema' : 'badge-music';
+    const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
+    const gCal = createGoogleCalendarLink(ev);
+
+    const card = document.createElement('div');
+    card.className = 'event-card';
+    card.innerHTML = `
+      <button class="fav-icon ${isFav ? 'active' : ''}" onclick="toggleFav('${ev.id}')" title="הוסף למועדפים"><i class="fa-solid fa-heart"></i></button>
+      <div>
+        <div class="card-meta">
+          <span class="badge ${badgeClass}">${escapeHtml(ev.venue)}</span>
+          <span class="type-badge">${typeLabel}</span>
+        </div>
+        <h2 class="event-title">${escapeHtml(ev.title)}</h2>
+        <div class="event-details">
+          <div><i class="fa-regular fa-calendar"></i> <strong>${escapeHtml(dayName)}</strong>, ${dateStr}</div>
+          <div><i class="fa-regular fa-clock"></i> שעה ${timeStr}</div>
+          <div><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <a href="${ev.link}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
+        <a href="${navLink(ev)}" target="_blank" rel="noopener" class="btn btn-secondary" title="נווט עם Waze"><i class="fa-solid fa-car"></i> ניווט</a>
+        <a href="${gCal}" target="_blank" rel="noopener" class="btn btn-cal"><i class="fa-regular fa-calendar-plus"></i> ליומן</a>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+/* ===================== Google Sign-In (צד-לקוח בלבד) ===================== */
+
+function parseJwt(token){
+  const base64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+  const json = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+  return JSON.parse(json);
+}
+
+function handleCredentialResponse(response){
+  const payload = parseJwt(response.credential);
+  localStorage.setItem('google_user', JSON.stringify({ name: payload.name, picture: payload.picture }));
+  showUser(payload.name, payload.picture);
+}
+
+function showUser(name, picture){
+  document.getElementById('signedOut').style.display = 'none';
+  document.getElementById('signedIn').style.display = 'flex';
+  document.getElementById('userName').innerText = name;
+  document.getElementById('userImg').src = picture;
+}
+
+function logoutGoogle(){
+  localStorage.removeItem('google_user');
+  document.getElementById('signedOut').style.display = 'block';
+  document.getElementById('signedIn').style.display = 'none';
+  if (window.google && google.accounts && google.accounts.id) google.accounts.id.disableAutoSelect();
+}
+
+let gsiInitialized = false;
+function waitForGoogle(cb, tries=60){
+  if (window.google && google.accounts && google.accounts.id) return cb();
+  if (tries <= 0) return;
+  setTimeout(() => waitForGoogle(cb, tries-1), 100);
+}
+
+function initGoogleSignIn(){
+  const clientId = localStorage.getItem('google_client_id');
+  const gsiContainer = document.getElementById('gsiButtonContainer');
+  const noIdBtn = document.getElementById('noClientIdBtn');
+  if (!clientId){
+    gsiContainer.style.display = 'none';
+    noIdBtn.style.display = 'inline-flex';
+    return;
+  }
+  noIdBtn.style.display = 'none';
+  gsiContainer.style.display = 'block';
+  gsiInitialized = false;
+  waitForGoogle(() => {
+    try{
+      google.accounts.id.initialize({ client_id: clientId, callback: handleCredentialResponse, auto_select:false });
+      gsiContainer.innerHTML = '';
+      google.accounts.id.renderButton(gsiContainer, { theme:'filled_blue', type:'standard', shape:'pill', locale:'iw' });
+      gsiInitialized = true;
+    }catch(e){ console.error('Google Sign-In init failed', e); }
+  });
+}
+
+function openSettings(){
+  document.getElementById('clientIdInput').value = localStorage.getItem('google_client_id') || '';
+  document.getElementById('settingsModal').style.display = 'flex';
+}
+function closeSettings(){ document.getElementById('settingsModal').style.display = 'none'; }
+function saveClientId(){
+  const val = document.getElementById('clientIdInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('google_client_id', val);
+  closeSettings();
+  initGoogleSignIn();
+}
+function clearClientId(){
+  localStorage.removeItem('google_client_id');
+  document.getElementById('clientIdInput').value = '';
+  logoutGoogle();
+  initGoogleSignIn();
+}
+
+/* ===================== Init ===================== */
+const savedUser = JSON.parse(localStorage.getItem('google_user') || 'null');
+if (savedUser) showUser(savedUser.name, savedUser.picture);
+initGoogleSignIn();
+
+Object.keys(SOURCE_LABELS).forEach(k => sourceState[k] = { status:'loading' });
+renderStatusBar();
+loadAllEvents();
+</script>
+</body>
+</html>
