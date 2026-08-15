@@ -4,18 +4,18 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍿</text></svg>">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TLV Nights | מה עושים הלילה בתל אביב?</title>
+<title>SHOWMUST | Show Must Go On | מה עושים הלילה?</title>
 
 <!-- תצוגה מקדימה בשיתוף (וואטסאפ, פייסבוק וכו') -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://snddigitalagency.com/App/">
-<meta property="og:title" content="TLV Nights | מה עושים הלילה בתל אביב?">
+<meta property="og:title" content="SHOWMUST | Show Must Go On | מה עושים הלילה?">
 <meta property="og:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים, בלי שרת">
 <meta property="og:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
 <meta property="og:image:width" content="1024">
 <meta property="og:image:height" content="1024">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="TLV Nights | מה עושים הלילה בתל אביב?">
+<meta name="twitter:title" content="SHOWMUST | Show Must Go On | מה עושים הלילה?">
 <meta name="twitter:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים">
 <meta name="twitter:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
 
@@ -73,6 +73,7 @@ header p{color:var(--text-muted);font-size:1rem}
 @media (prefers-reduced-motion: reduce){header h1{animation:none}header .emoji-accent{animation:none}}
 
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:16px;padding:10px 18px;backdrop-filter:blur(10px)}
+.topbar-actions{display:flex;align-items:center;gap:8px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.1rem}
 .brand i{color:var(--accent);animation:iconGlow 3s ease-in-out infinite}
 @keyframes iconGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(99,102,241,.4))}50%{filter:drop-shadow(0 0 8px rgba(99,102,241,.85))}}
@@ -135,6 +136,8 @@ header p{color:var(--text-muted);font-size:1rem}
 .fav-toggle:hover{border-color:var(--fav)}
 .fav-toggle.active{background:var(--fav);border-color:var(--fav);color:#fff;box-shadow:0 4px 14px rgba(244,63,94,.35)}
 .fav-toggle.active i{transform:scale(1.1)}
+.selected-toggle:hover{border-color:var(--accent)}
+.selected-toggle.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(99,102,241,.35)}
 
 .filter-section{margin-bottom:18px}
 .filter-section h3{display:flex;align-items:center;gap:10px;font-size:.95rem;color:var(--text-main);margin-bottom:12px;font-weight:600}
@@ -180,6 +183,8 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .toolbar-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-main);padding:8px 14px;border-radius:10px;font-size:.83rem;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s}
 .toolbar-btn:not(:disabled):hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
 .toolbar-btn:disabled{opacity:.4;cursor:not-allowed}
+.toolbar-btn.whatsapp-btn:not(:disabled):hover{background:#25d366;border-color:#25d366}
+.icon-btn.whatsapp-btn:hover{background:#25d366;border-color:#25d366}
 
 .events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
 .event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .35s ease both}
@@ -220,6 +225,7 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .btn-primary{background:var(--accent)}
 .btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .btn-cal{background:var(--music)}
+.btn-trailer{background:#c0392b}
 
 .fav-icon{position:absolute;top:16px;left:16px;z-index:2;color:#fff;cursor:pointer;font-size:1.1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s}
 .fav-icon:hover{transform:scale(1.08)}
@@ -332,9 +338,10 @@ footer a{color:var(--accent)}
   .startup-hero p{font-size:.82rem;margin-bottom:16px}
   .startup-source-chip{font-size:.72rem;padding:5px 10px}
 
-  .search-row{gap:8px;margin-bottom:14px}
+  .search-row{gap:8px;margin-bottom:14px;flex-wrap:wrap}
   .search-input{padding:13px 44px 13px 14px;font-size:16px}
-  .fav-toggle{padding:0 14px}
+  .search-box{flex-basis:100%}
+  .fav-toggle{padding:0 14px;min-height:40px;flex:1;justify-content:center}
   .fav-toggle .fav-label{display:none}
 
   .filter-section{margin-bottom:14px}
@@ -404,13 +411,16 @@ footer a{color:var(--accent)}
 <div class="container">
 
   <div class="topbar">
-    <div class="brand"><i class="fa-solid fa-satellite-dish"></i> TLV Nights</div>
-    <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
+    <div class="brand"><i class="fa-solid fa-satellite-dish"></i> SHOWMUST</div>
+    <div class="topbar-actions">
+      <button class="icon-btn whatsapp-btn" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST בוואטסאפ"><i class="fa-brands fa-whatsapp"></i></button>
+      <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
+    </div>
   </div>
 
   <header>
-    <h1><span class="emoji-accent">🎭</span> מה עושים הלילה?</h1>
-    <p>תיאטרון, קולנוע והופעות בתל אביב</p>
+    <h1><span class="emoji-accent">🎭</span> SHOWMUST</h1>
+    <p class="tagline">Show Must Go On | מה עושים הלילה?</p>
   </header>
 
   <div class="startup-hero" id="startupHero">
@@ -436,6 +446,9 @@ footer a{color:var(--accent)}
       </div>
       <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
         <i class="fa-solid fa-heart"></i> <span class="fav-label">מועדפים</span> <span id="favCount">0</span>
+      </button>
+      <button class="fav-toggle selected-toggle" id="selectedFilterBtn" onclick="toggleSelectedOnlyFilter(this)" title="הצג רק את הפריטים שסימנתי לבחירה">
+        <i class="fa-solid fa-check-double"></i> <span class="fav-label">מסומנים</span> <span id="selectedFilterCount">0</span>
       </button>
     </div>
 
@@ -513,6 +526,9 @@ footer a{color:var(--accent)}
       </label>
       <button class="toolbar-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled>
         <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
+      </button>
+      <button class="toolbar-btn whatsapp-btn" id="whatsappSelectedBtn" onclick="shareSelectedToWhatsapp()" disabled>
+        <i class="fa-brands fa-whatsapp"></i> שיתוף בוואטסאפ
       </button>
     </div>
   </div>
@@ -660,6 +676,7 @@ let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
 let selectedIds = new Set();
 let currentFiltered = [];
 let showOnlyFavs = false;
+let showOnlySelected = false;
 let selectedType = 'all';
 let sourceState = {};
 let userToggledVenues = new Set();   // מקומות שהמשתמש עצמו שינה - לא לדרוס את הבחירה שלו אוטומטית
@@ -1239,7 +1256,7 @@ function renderStatusBar(){
     const showBanner = anyLoading && initialLoadSettled;
     banner.style.display = showBanner ? 'flex' : 'none';
     if (showBanner){
-      document.getElementById('loadingBannerText').innerText = 'טוענים עוד מופעים...';
+      document.getElementById('loadingBannerText').innerText = 'טוען תוצאות:';
     }
   }
 
@@ -1333,7 +1350,10 @@ function syncVenueCheckboxes(){
       if (cb.disabled){
         cb.disabled = false;
         if (wrapper) wrapper.classList.remove('pending');
-        if (!userToggledVenues.has(cb.value)) cb.checked = true;
+        // אם מקום מסיים להיטען בזמן שסוג-ז'אנר פעיל שכבר לא כולל אותו (למשל הבימה
+        // מסיימת להיטען כשהתצוגה על "קולנוע") - לא מסמנים אותו ב-וי סתם כי הוא זמין;
+        // מכבדים את הסינון הנוכחי, אחרת חוזרת בדיוק התקלה שהמקומות "לא נכונים".
+        if (!userToggledVenues.has(cb.value)) cb.checked = isVenueRelevantToCurrentType(cb.value);
       }
     } else if (!everFinishedSources.has(key)){
       // עדיין לא נטען אף פעם - התיבה נשארת כבויה ולא מסומנת עד שיגיעו נתונים בפועל
@@ -1486,16 +1506,57 @@ function resetTimeFilter(){
   filterEvents();
 }
 
+/* איזה מקומות רלוונטיים לכל סוג - כשבוחרים סוג ספציפי, תיבות המקומות הלא-רלוונטיים
+   צריכות להיות מסומנות בהתאם, אחרת ה-"וי" על המקומות מטעה (מראה מקום מסומן שבפועל
+   לא תורם אף אירוע לתצוגה הנוכחית). 'all' (הכל) לא מוגדר כאן בכוונה - כולם רלוונטיים. */
+const TYPE_TO_VENUES = {
+  theatre: ['בית ליסין', 'הבימה'],
+  cinema: ['קולנוע לב', 'רב חן'],
+  music: ['בארבי'],
+};
+
+function isVenueRelevantToCurrentType(value){
+  const relevant = TYPE_TO_VENUES[selectedType];
+  return !relevant || relevant.includes(value);
+}
+
+function syncVenuesToType(type){
+  const relevantVenues = TYPE_TO_VENUES[type];
+  document.querySelectorAll('.venue-filter').forEach(cb => {
+    if (cb.disabled) return; // עדיין לא נטען - syncVenueCheckboxes ידאג לזה כשהמקור בפועל יסיים
+    const shouldCheck = !relevantVenues || relevantVenues.includes(cb.value);
+    if (cb.checked !== shouldCheck){
+      cb.checked = shouldCheck;
+      if (shouldCheck) maybeExpandVenueOnCheck(cb.value);
+    }
+    userToggledVenues.add(cb.value);
+  });
+  const master = document.getElementById('cinemaMasterCheckbox');
+  if (master && !master.disabled){
+    const lev = document.querySelector('.venue-filter[value="קולנוע לב"]');
+    const ravhen = document.querySelector('.venue-filter[value="רב חן"]');
+    master.checked = !!(lev && lev.checked) && !!(ravhen && ravhen.checked);
+    userToggledVenues.add('__cinemaMaster__');
+  }
+}
+
 function setType(type, btn){
   document.querySelectorAll('#typeChips .chip').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedType = type;
+  syncVenuesToType(type);
   filterEvents();
 }
 
 function toggleFavFilter(btn){
   showOnlyFavs = !showOnlyFavs;
   btn.classList.toggle('active', showOnlyFavs);
+  filterEvents();
+}
+
+function toggleSelectedOnlyFilter(btn){
+  showOnlySelected = !showOnlySelected;
+  btn.classList.toggle('active', showOnlySelected);
   filterEvents();
 }
 
@@ -1513,20 +1574,25 @@ function toggleFav(id, btn){
 function toggleSelect(id){
   if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
   updateSelectionUI();
+  if (showOnlySelected) filterEvents(); // ברשימת "מסומנים בלבד" הכרטיס צריך להיעלם ברגע שמבטלים את הסימון
 }
 
 function onSelectAllToggle(cb){
   if (cb.checked) currentFiltered.forEach(ev => selectedIds.add(ev.id));
   else currentFiltered.forEach(ev => selectedIds.delete(ev.id));
-  renderEvents(currentFiltered);
+  if (showOnlySelected) filterEvents(); else renderEvents(currentFiltered);
 }
 
 function updateSelectionUI(){
   const count = selectedIds.size;
   const countEl = document.getElementById('selectedCount');
   const dlBtn = document.getElementById('downloadSelectedBtn');
+  const waBtn = document.getElementById('whatsappSelectedBtn');
+  const selectedFilterCountEl = document.getElementById('selectedFilterCount');
   if (countEl) countEl.innerText = `(${count})`;
   if (dlBtn) dlBtn.disabled = count === 0;
+  if (waBtn) waBtn.disabled = count === 0;
+  if (selectedFilterCountEl) selectedFilterCountEl.innerText = count;
   const selectAllCb = document.getElementById('selectAllCheckbox');
   if (selectAllCb){
     const allVisibleSelected = currentFiltered.length > 0 && currentFiltered.every(ev => selectedIds.has(ev.id));
@@ -1540,12 +1606,12 @@ function icsDate(d){ return `${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.g
 function escapeICS(s){ return String(s).replace(/\\/g,'\\\\').replace(/[,;]/g, m => '\\'+m).replace(/\n/g,'\\n'); }
 
 function buildICS(events){
-  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//TLV Nights//HE','CALSCALE:GREGORIAN'];
+  const lines = ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//SHOWMUST//HE','CALSCALE:GREGORIAN'];
   events.forEach(ev => {
     const start = ev.date;
     const end = new Date(start.getTime() + 2*60*60*1000);
     lines.push('BEGIN:VEVENT');
-    lines.push('UID:' + ev.id.replace(/[^a-zA-Z0-9-]/g,'') + '@tlvnights');
+    lines.push('UID:' + ev.id.replace(/[^a-zA-Z0-9-]/g,'') + '@showmust');
     lines.push('DTSTAMP:' + icsDate(new Date()));
     lines.push('DTSTART:' + icsDate(start));
     lines.push('DTEND:' + icsDate(end));
@@ -1566,9 +1632,40 @@ function downloadSelected(){
   const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url; a.download = `tlv-nights-${localDateStr(new Date())}.ics`;
+  a.href = url; a.download = `showmust-${localDateStr(new Date())}.ics`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+const SHOWMUST_URL = 'https://snddigitalagency.com/App/';
+
+/* ===================== שיתוף בוואטסאפ ===================== */
+
+function buildWhatsappBlockForEvent(ev){
+  const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
+  const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
+  const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+  const cached = imdbCache[ev.title];
+  const imdbLine = ev.type === 'cinema' && cached && cached.rating ? `\n⭐ IMDb: ${cached.rating}` : '';
+  const locationLine = `${ev.venue}${ev.extra ? ' - ' + ev.extra : ''}`;
+  return `🎭 *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 ${dayName}, ${dateStr}\n🕒 ${timeStr}\n🎫 ${ev.link}`;
+}
+
+function buildWhatsappMessageForEvents(events){
+  const blocks = events.map(buildWhatsappBlockForEvent).join('\n\n');
+  return `*ה-Lineup שלי מ-SHOWMUST* 🎬\n\n${blocks}\n\nעוד מופעים ל-SHOWMUST - Show Must Go On 👉 ${SHOWMUST_URL}`;
+}
+
+function shareSelectedToWhatsapp(){
+  const selected = allEvents.filter(ev => selectedIds.has(ev.id)).sort((a,b) => a.date - b.date);
+  if (!selected.length) return;
+  const message = buildWhatsappMessageForEvents(selected);
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+}
+
+function shareAppToWhatsapp(){
+  const message = `🎭 *SHOWMUST* - Show Must Go On!\nתיאטרון, קולנוע והופעות בתל אביב - נתונים חיים מהאתרים הרשמיים, בלי שרת.\n\nמה עושים הלילה? תגלו כאן 👇\n${SHOWMUST_URL}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
 }
 
 function quickExpand(range){
@@ -1609,7 +1706,8 @@ function filterEvents(){
     const timeStr = `${hh}:${mm}`;
     const matchesTime = timeStr >= appliedStartTime && timeStr <= appliedEndTime;
     const matchesFav = !showOnlyFavs || favorites.includes(ev.id);
-    return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav;
+    const matchesSelected = !showOnlySelected || selectedIds.has(ev.id);
+    return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav && matchesSelected;
   });
 
   filtered.sort((a,b) => a.date - b.date);
@@ -1810,6 +1908,7 @@ function renderEvents(events){
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
     const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
     const gCal = createGoogleCalendarLink(ev);
+    const trailerLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(ev.title + ' טריילר')}`;
 
     const imageBlock = ev.image
       ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
@@ -1842,6 +1941,7 @@ function renderEvents(events){
         <a href="${ev.link}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
         <a href="${navLink(ev)}" target="_blank" rel="noopener" class="btn btn-secondary" title="נווט עם Waze"><i class="fa-solid fa-car"></i> ניווט</a>
         <a href="${gCal}" target="_blank" rel="noopener" class="btn btn-cal"><i class="fa-regular fa-calendar-plus"></i> ליומן</a>
+        <a href="${trailerLink}" target="_blank" rel="noopener" class="btn btn-trailer" title="חיפוש טריילר ב-YouTube"><i class="fa-brands fa-youtube"></i> טריילר</a>
       </div>
     `;
     container.appendChild(card);
