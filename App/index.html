@@ -530,27 +530,36 @@ async function fetchLessin(){
   return events;
 }
 
+/* הבימה: לוח ההצגות שלהם הוא רכיב Vue שנטען מאוד מהר בדפדפן אמיתי (פחות משנייה),
+   אבל ה-snapshot של Jina כל פעם קופא במסך "טוען..." - לא בעיה של timeout אלא כנראה
+   זיהוי בוט/רינדור שונה אצל ג'ינה עצמו. הפתרון: לדלג על ה-JS ולקרוא ישירות לקובץ ה-JSON
+   הסטטי שממנו הרכיב שואב את הנתונים - קצר, אמין, ולא תלוי ברינדור בכלל. */
+function extractJsonFromJina(text){
+  const idx = text.indexOf('{');
+  if (idx === -1) return null;
+  try { return JSON.parse(text.slice(idx)); } catch(e) { return null; }
+}
+
 async function fetchHabima(){
-  const html = await jinaFetch('https://www.habima.co.il/presentations/', 'html');
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const cells = doc.querySelectorAll('td.calendar-day');
+  const text = await jinaFetch('https://www.habima.co.il/wp-content/themes/tyco-wp/cache/allData.json', 'markdown');
+  const data = extractJsonFromJina(text);
+  if (!data) return [];
+  const shows = (data.shows && data.shows.he) || {};
+  const venues = (data.venues && data.venues.he) || {};
+  const presentations = (data.presentations && data.presentations.he) || {};
   const events = [];
-  cells.forEach(cell => {
-    const dateBtn = cell.querySelector('button.date[aria-label], span.date[aria-label]');
-    if (!dateBtn) return;
-    const label = dateBtn.getAttribute('aria-label') || '';
-    const m = label.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-    if (!m) return;
-    const [, dd, mm, yyyy] = m;
-    cell.querySelectorAll('li.item a').forEach(a => {
-      const text = (a.textContent || '').replace(/\s+/g,' ').trim();
-      const tm = text.match(/^(.*?)\s*-\s*(\d{1,2}):(\d{2})/);
-      if (!tm) return;
-      const title = tm[1].trim();
-      const date = new Date(Number(yyyy), Number(mm)-1, Number(dd), Number(tm[2]), Number(tm[3]));
+  Object.keys(presentations).forEach(showKey => {
+    const show = shows[showKey];
+    if (!show || !show.title) return;
+    (presentations[showKey] || []).forEach(perf => {
+      if (!perf.time) return;
+      const date = new Date(perf.time * 1000);
+      if (isNaN(date)) return;
+      const venueName = venues[perf.venue_id] || 'תיאטרון הבימה';
       events.push({
-        id: makeId('habima', title, date), source:'habima', venue:'הבימה', type:'theatre',
-        title, date, link: a.href, extra:'תיאטרון הבימה', image: null
+        id: makeId('habima', show.title, date), source:'habima', venue:'הבימה', type:'theatre',
+        title: show.title, date, link: `https://tickets.habima.co.il/order/${perf.id}`,
+        extra: venueName, image: show.img || null
       });
     });
   });
@@ -628,26 +637,26 @@ async function fetchLevAll(onProgress, movieCap = LEV_MOVIE_CAP_EXTENDED){
   return events;
 }
 
+/* רב חן: מאותה סיבה כמו הבימה (Jina לא מצליח לרנדר את הווידג'ט, למרות שהוא נטען
+   מהר מאוד בדפדפן אמיתי) - קוראים ישירות ל-REST API הפנימי שהאתר עצמו משתמש בו
+   להצגת הלוח (התגלה על-ידי מעקב תעבורת רשת אמיתית), במקום להסתמך על רינדור HTML. */
 async function fetchRavHenDay(dateStr){
-  const url = `https://www.rav-hen.co.il/cinemas/dizengoff/1071%23/buy-tickets-by-cinema?in-cinema=1071&at=${dateStr}&view-mode=list`;
-  const html = await jinaFetch(url, 'html');
-  const doc = new DOMParser().parseFromString(html, 'text/html');
-  const [yyyy, mm, dd] = dateStr.split('-').map(Number);
+  const url = `https://www.rav-hen.co.il/rh/data-api-service/v1/quickbook/10104/film-events/in-cinema/1071/at-date/${dateStr}?attr=&lang=he_IL`;
+  const text = await jinaFetch(url, 'markdown');
+  const data = extractJsonFromJina(text);
+  if (!data || !data.body) return [];
+  const films = {};
+  (data.body.films || []).forEach(f => { films[f.id] = f; });
   const events = [];
-  doc.querySelectorAll('.movie-row').forEach(row => {
-    const nameEl = row.querySelector('.qb-movie-name');
-    const title = nameEl ? nameEl.textContent.replace(/\s+/g,' ').trim() : '';
-    if (!title) return;
-    const image = extractImageUrl(row.querySelector('.movie-poster-container img'));
-    row.querySelectorAll('a[data-url*="/api/order/"]').forEach(a => {
-      const text = (a.textContent || '').trim();
-      const tm = text.match(/(\d{1,2}):(\d{2})/);
-      if (!tm) return;
-      const date = new Date(yyyy, mm-1, dd, Number(tm[1]), Number(tm[2]));
-      events.push({
-        id: makeId('ravhen', title, date), source:'ravhen', venue:'רב חן', type:'cinema',
-        title, date, link: a.getAttribute('data-url'), extra: 'רב חן דיזנגוף', image
-      });
+  (data.body.events || []).forEach(ev => {
+    const film = films[ev.filmId];
+    if (!film || !ev.eventDateTime) return;
+    const date = new Date(ev.eventDateTime);
+    if (isNaN(date)) return;
+    events.push({
+      id: makeId('ravhen', film.name, date), source:'ravhen', venue:'רב חן', type:'cinema',
+      title: film.name, date, link: ev.bookingLink || film.link, extra: 'רב חן דיזנגוף',
+      image: film.posterLink || null
     });
   });
   return events;
