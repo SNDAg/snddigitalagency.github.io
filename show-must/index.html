@@ -149,6 +149,7 @@ header p{color:var(--text-muted);font-size:1rem}
 .chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);padding:7px 16px;border-radius:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px;transition:all .2s}
 .chip:hover{border-color:var(--accent)}
 .chip.active{background:var(--accent);border-color:var(--accent);box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.chip-date-suffix{opacity:.8;font-size:.85em}
 .inputs-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-muted)}
 input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none;font-size:16px;color-scheme:dark}
 .filter-hint{color:var(--text-muted);font-size:.78rem;margin-top:8px}
@@ -323,6 +324,22 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .toolbar-btn.reco-btn{background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(192,132,252,.18));border-color:rgba(192,132,252,.4)}
 .toolbar-btn.reco-btn:hover{background:linear-gradient(135deg,var(--accent),#c084fc)}
 
+/* כותרות קיבוץ לפי יום בתוך רשת הכרטיסים - שורה מלאה (grid-column) בין קבוצות תאריכים */
+.date-group-header{grid-column:1/-1;display:flex;align-items:center;gap:8px;color:var(--text-main);font-weight:700;font-size:1.02rem;margin-top:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.date-group-header:first-child{margin-top:0}
+.date-group-header i{color:var(--accent)}
+
+/* פילטר דירוג IMDB מינימלי - מוצג רק כשהתצוגה ממוקדת קולנוע טהור */
+.section-icon.imdb-icon{background:linear-gradient(135deg,var(--imdb),var(--imdb-dark));color:#111}
+
+/* טריילר מוטבע באפליקציה - מודל עם iframe רספונסיבי (16:9), או מסך fallback ידידותי */
+.trailer-box{max-width:720px;width:100%;padding:20px}
+.trailer-frame-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.trailer-frame-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.trailer-fallback{text-align:center;padding:36px 16px}
+.trailer-fallback i{font-size:2.2rem;color:var(--text-muted);margin-bottom:12px;display:block}
+.trailer-fallback p{color:var(--text-muted);margin-bottom:16px}
+
 footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
 footer a{color:var(--accent)}
 
@@ -473,7 +490,7 @@ footer a{color:var(--accent)}
     <div class="filter-section">
       <h3><span class="section-icon date-icon"><i class="fa-solid fa-calendar-days"></i></span> מתי יוצאים</h3>
       <div class="chips-row" id="dateChips">
-        <button class="chip active" data-range="today" onclick="setQuickDate('today',this)"><i class="fa-solid fa-star"></i> היום</button>
+        <button class="chip active" data-range="today" onclick="setQuickDate('today',this)"><i class="fa-solid fa-star"></i> היום <span id="todayDateSuffix" class="chip-date-suffix"></span></button>
         <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 הימים הקרובים</button>
         <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע הקרוב <span class="expand-hint" title="לחיצה תטען גם ימים נוספים מקולנוע לב ורב חן"><i class="fa-solid fa-cloud-arrow-down"></i></span></button>
         <button class="chip" data-range="2weeks" onclick="setQuickDate('2weeks',this)">השבועיים הקרובים <span class="expand-hint" title="לחיצה תטען גם ימים נוספים מקולנוע לב ורב חן"><i class="fa-solid fa-cloud-arrow-down"></i></span></button>
@@ -502,6 +519,17 @@ footer a{color:var(--accent)}
       </div>
     </div>
 
+    <div class="filter-section" id="imdbRatingFilterSection" style="display:none">
+      <h3><span class="section-icon imdb-icon"><i class="fa-brands fa-imdb"></i></span> ציון IMDb מינימלי</h3>
+      <div class="chips-row" id="imdbRatingChips">
+        <button class="chip active" data-min="0" onclick="setImdbRatingFilter(0,this)">הכל</button>
+        <button class="chip" data-min="6" onclick="setImdbRatingFilter(6,this)">6+</button>
+        <button class="chip" data-min="7" onclick="setImdbRatingFilter(7,this)">7+</button>
+        <button class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5,this)">7.5+</button>
+        <button class="chip" data-min="8" onclick="setImdbRatingFilter(8,this)">8+</button>
+      </div>
+    </div>
+
     <div class="filter-section">
       <h3><span class="section-icon location-icon"><i class="fa-solid fa-location-dot"></i></span> איפה</h3>
       <div class="chips-row">
@@ -509,6 +537,7 @@ footer a{color:var(--accent)}
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="הבימה" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="קולנוע לב" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="פלאנט איילון" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> פלאנט איילון</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בארבי" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
       </div>
       <p class="filter-hint">מקום מסומן באפור עדיין לא נטען - התיבה תיסמן אוטומטית ברגע שהנתונים יגיעו.</p>
@@ -558,7 +587,7 @@ footer a{color:var(--accent)}
   </main>
 
   <footer>
-    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, רב חן דיזנגוף, בארבי) ועשויים להשתנות.
+    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, רב חן דיזנגוף, פלאנט איילון, בארבי) ועשויים להשתנות.
     מומלץ לאמת מחיר וזמינות באתר הרשמי לפני רכישה.
   </footer>
 
@@ -661,6 +690,13 @@ footer a{color:var(--accent)}
   </div>
 </div>
 
+<div id="trailerModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeTrailerModal()">
+  <div class="modal-box trailer-box">
+    <button class="wizard-close-x" onclick="closeTrailerModal()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+    <div id="trailerModalBody"></div>
+  </div>
+</div>
+
 <script>
 /* ===================== קונפיגורציה ===================== */
 const JINA_BASE = 'https://r.jina.ai/';
@@ -678,21 +714,22 @@ const RAVHEN_DAYS_INITIAL = 3;
 const RAVHEN_DAYS_EXTENDED = 6;
 const RAVHEN_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
-const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen']);
+const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen', 'planet']);
 
-const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', ravhen: 'רב חן', barby: 'בארבי' };
+const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', ravhen: 'רב חן', barby: 'בארבי', planet: 'פלאנט איילון' };
 
 const venueInfo = {
   'בית ליסין': { address: 'דיזנגוף 101, תל אביב', navQuery: 'בית ליסין תל אביב' },
   'הבימה':     { address: 'שדרות תרס"ט 2, תל אביב', navQuery: 'תיאטרון הבימה תל אביב' },
   'קולנוע לב': { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'קולנוע לב דיזנגוף סנטר' },
   'רב חן':     { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'רב חן דיזנגוף תל אביב' },
-  'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' }
+  'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' },
+  'פלאנט איילון': { address: 'קניון איילון, אבא הלל סילבר 301, רמת גן', navQuery: 'פלאנט קולנוע איילון רמת גן' }
 };
 
-const VENUE_TO_SOURCE = { 'בית ליסין':'lessin', 'הבימה':'habima', 'קולנוע לב':'lev', 'רב חן':'ravhen', 'בארבי':'barby' };
+const VENUE_TO_SOURCE = { 'בית ליסין':'lessin', 'הבימה':'habima', 'קולנוע לב':'lev', 'רב חן':'ravhen', 'בארבי':'barby', 'פלאנט איילון':'planet' };
 
-/* מקורות שנטענים אוטומטית עם פתיחת הדף. השאר (הבימה) נטענים על-פי דרישה
+/* מקורות שנטענים אוטומטית עם פתיחת הדף. השאר (הבימה, פלאנט איילון) נטענים על-פי דרישה
    (לחיצה על תג המקור הלא-פעיל, או "רענן הכל"). */
 const AUTO_LOAD_SOURCES = new Set(['barby', 'lev', 'ravhen', 'lessin']);
 
@@ -708,6 +745,7 @@ const DEFAULT_INGEST_DAYS = 3;
 let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
 let selectedIds = new Set();
 let currentFiltered = [];
+let minImdbRating = 0; // 0 = כבוי. פעיל רק כשהתצוגה ממוקדת קולנוע טהור (ר' isCinemaFocused)
 let showOnlyFavs = false;
 let showOnlySelected = false;
 let selectedType = 'all';
@@ -734,6 +772,19 @@ document.getElementById('endDate').value = localDateStr(today);
 let appliedStartTime = '00:00';
 let appliedEndTime = '23:59';
 const MAX_CUSTOM_RANGE_DAYS = 14;
+let currentQuickRange = 'today'; // עוקב אחרי טווח התאריכים המהיר הפעיל, לצורך "ברירת מחדל" בפופאובר השעות
+
+/* תאריך "היום" מוצג במפורש ליד הכפתור (יום בשבוע + תאריך) - כדי שגלישה אחרי חצות
+   תהיה חד-משמעית לגבי איזה יום בפועל מוצג. מחושב פעם אחת בטעינה, כי היום לא משתנה
+   תוך כדי שהדף פתוח. */
+(function initTodayDateLabel(){
+  const el = document.getElementById('todayDateSuffix');
+  if (!el) return;
+  const dayName = today.toLocaleDateString('he-IL', { weekday: 'long' });
+  const dd = String(today.getDate()).padStart(2,'0');
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  el.textContent = `(${dayName}, ${dd}.${mm})`;
+})();
 
 /* ===================== Utilities ===================== */
 function escapeHtml(str){
@@ -744,6 +795,21 @@ function sameDay(a,b){ return a.getFullYear()===b.getFullYear() && a.getMonth()=
 
 function localDateStr(d){
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+/* כותרת קיבוץ ידידותית ליום נתון: היום/מחר/מחרתיים לשלושת הימים הקרובים ביותר,
+   ואחריהם יום בשבוע + תאריך מלא. */
+function dateGroupLabel(date){
+  const d0 = new Date(today); d0.setHours(0,0,0,0);
+  const d1 = new Date(d0); d1.setDate(d1.getDate()+1);
+  const d2 = new Date(d0); d2.setDate(d2.getDate()+2);
+  const evDay = new Date(date); evDay.setHours(0,0,0,0);
+  if (evDay.getTime() === d0.getTime()) return 'היום';
+  if (evDay.getTime() === d1.getTime()) return 'מחר';
+  if (evDay.getTime() === d2.getTime()) return 'מחרתיים';
+  const dd = String(evDay.getDate()).padStart(2,'0');
+  const mm = String(evDay.getMonth()+1).padStart(2,'0');
+  return `${evDay.toLocaleDateString('he-IL', { weekday:'long' })}, ${dd}.${mm}`;
 }
 
 function inferDate(day, month, hour=0, minute=0){
@@ -1112,8 +1178,18 @@ function slugToImdbHint(url){
   return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
 
-async function fetchRavHenDay(dateStr){
-  const url = `https://www.rav-hen.co.il/rh/data-api-service/v1/quickbook/10104/film-events/in-cinema/1071/at-date/${dateStr}?attr=&lang=he_IL`;
+/* רב חן ופלאנט איילון רצים על אותה פלטפורמת הזמנות (Vista) - זוהה לפי אותה גרסת נכסים
+   בדיוק (v2.8.106-dirty) ואותו מבנה API זהה לחלוטין, רק עם tenantId/מזהה-קולנוע/דומיין/
+   prefix שונים לכל רשת (אומת בפועל מול שני האתרים). פונקציה משותפת אחת חוסכת שכפול
+   מלא של לוגיקת הסקרייפינג, כולל תקציר העלילה שמשתמש באותו path בדיוק בשתיהן. */
+const VISTA_CINEMAS = {
+  ravhen: { tenantId:'10104', cinemaId:'1071', domain:'www.rav-hen.co.il',      apiPrefix:'rh', venue:'רב חן',        extra:'רב חן דיזנגוף' },
+  planet: { tenantId:'10100', cinemaId:'1025', domain:'www.planetcinema.co.il', apiPrefix:'il', venue:'פלאנט איילון', extra:'פלאנט איילון, רמת גן' }
+};
+
+async function fetchVistaCinemaDay(sourceKey, dateStr){
+  const cfg = VISTA_CINEMAS[sourceKey];
+  const url = `https://${cfg.domain}/${cfg.apiPrefix}/data-api-service/v1/quickbook/${cfg.tenantId}/film-events/in-cinema/${cfg.cinemaId}/at-date/${dateStr}?attr=&lang=he_IL`;
   const text = await jinaFetch(url, 'markdown');
   const data = extractJsonFromJina(text);
   if (!data || !data.body) return [];
@@ -1126,8 +1202,8 @@ async function fetchRavHenDay(dateStr){
     const date = new Date(ev.eventDateTime);
     if (isNaN(date)) return;
     events.push({
-      id: makeId('ravhen', film.name, date), source:'ravhen', venue:'רב חן', type:'cinema',
-      title: film.name, date, link: ev.bookingLink || film.link, extra: 'רב חן דיזנגוף',
+      id: makeId(sourceKey, film.name, date), source:sourceKey, venue:cfg.venue, type:'cinema',
+      title: film.name, date, link: ev.bookingLink || film.link, extra: cfg.extra,
       image: film.posterLink || null, imdbHint: slugToImdbHint(film.link),
       trailerUrl: film.videoLink || null, filmPageUrl: film.link || null
     });
@@ -1135,14 +1211,14 @@ async function fetchRavHenDay(dateStr){
   return events;
 }
 
-/* תקציר עלילה לסרטי רב-חן: ה-API של לוח ההקרנות (fetchRavHenDay) לא כולל תקציר בכלל -
-   הוא חבוי בתוך script מוטמע בדף הפרטים של הסרט עצמו (film.link), כ-JSON לא-מפוענח
-   ("synopsis":"..."). זו בקשת רשת נוספת, אז מריצים ברקע אחרי שהלוח כבר מוצג, פעם אחת
-   לכל סרט ייחודי (לא לכל הקרנה) ומוגבל למספר קטן - בדיוק כמו attachCastInBackground. */
-const RAVHEN_SYNOPSIS_FETCH_CAP = 8;
-const RAVHEN_SYNOPSIS_CONCURRENCY = 2;
+/* תקציר עלילה: ה-API של לוח ההקרנות לא כולל תקציר בכלל - הוא חבוי בתוך script מוטמע
+   בדף הפרטים של הסרט עצמו (film.link), כ-JSON לא-מפוענח ("synopsis":"..."). זו בקשת
+   רשת נוספת, אז מריצים ברקע אחרי שהלוח כבר מוצג, פעם אחת לכל סרט ייחודי (לא לכל
+   הקרנה) ומוגבל למספר קטן - בדיוק כמו attachCastInBackground. */
+const VISTA_SYNOPSIS_FETCH_CAP = 8;
+const VISTA_SYNOPSIS_CONCURRENCY = 2;
 
-function extractRavHenSynopsis(html){
+function extractVistaSynopsis(html){
   const m = html.match(/"synopsis":"((?:[^"\\]|\\.)*)"/);
   if (!m) return null;
   try{
@@ -1152,8 +1228,8 @@ function extractRavHenSynopsis(html){
   }catch(e){ return null; }
 }
 
-async function attachRavHenSynopsisInBackground(events){
-  const uniqueUrls = [...new Set(events.map(e => e.filmPageUrl).filter(Boolean))].slice(0, RAVHEN_SYNOPSIS_FETCH_CAP);
+async function attachVistaSynopsisInBackground(events){
+  const uniqueUrls = [...new Set(events.map(e => e.filmPageUrl).filter(Boolean))].slice(0, VISTA_SYNOPSIS_FETCH_CAP);
   if (!uniqueUrls.length) return;
   let idx = 0;
   async function worker(){
@@ -1161,18 +1237,18 @@ async function attachRavHenSynopsisInBackground(events){
       const url = uniqueUrls[idx++];
       try{
         const html = await jinaFetch(url, 'html');
-        const synopsis = extractRavHenSynopsis(html);
+        const synopsis = extractVistaSynopsis(html);
         if (synopsis){
           events.filter(e => e.filmPageUrl === url).forEach(e => { e.synopsis = synopsis; });
           filterEvents();
         }
-      }catch(e){ console.error('ravhen synopsis fetch failed:', url, e); }
+      }catch(e){ console.error('vista synopsis fetch failed:', url, e); }
     }
   }
-  await Promise.all(Array.from({length: Math.min(RAVHEN_SYNOPSIS_CONCURRENCY, uniqueUrls.length)}, worker));
+  await Promise.all(Array.from({length: Math.min(VISTA_SYNOPSIS_CONCURRENCY, uniqueUrls.length)}, worker));
 }
 
-async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
+async function fetchVistaCinemaAll(sourceKey, onProgress, daysAhead){
   const days = Array.from({length: daysAhead}, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() + i); return localDateStr(d);
   });
@@ -1182,14 +1258,25 @@ async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
   async function worker(){
     while (idx < days.length){
       const dateStr = days[idx++];
-      try{ events.push(...await fetchRavHenDay(dateStr)); }
-      catch(e){ console.error('RavHen day failed:', dateStr, e); }
+      try{ events.push(...await fetchVistaCinemaDay(sourceKey, dateStr)); }
+      catch(e){ console.error(sourceKey, 'day failed:', dateStr, e); }
       done++; onProgress && onProgress(done, days.length);
     }
   }
   await Promise.all(Array.from({length: Math.min(RAVHEN_CONCURRENCY, days.length || 1)}, worker));
-  attachRavHenSynopsisInBackground(events); // לא await בכוונה - לא מעכבים את הצגת הלוח
+  attachVistaSynopsisInBackground(events); // לא await בכוונה - לא מעכבים את הצגת הלוח
   return events;
+}
+
+async function fetchRavHenAll(onProgress, daysAhead = RAVHEN_DAYS_EXTENDED){
+  return fetchVistaCinemaAll('ravhen', onProgress, daysAhead);
+}
+
+/* פלאנט איילון נטען strictly on-demand (לא חלק מ-AUTO_LOAD_SOURCES, בדיוק כמו הבימה) -
+   אז אין צורך בשכבת "מצומצם מול מורחב" כמו בלב/רב חן: בכל טעינה שואבים ישר את הטווח
+   המורחב, כי אין עלות "טעינה ראשונית" להגן עליה - המקור הזה לעולם לא נטען אוטומטית. */
+async function fetchPlanetAll(onProgress){
+  return fetchVistaCinemaAll('planet', onProgress, RAVHEN_DAYS_EXTENDED);
 }
 
 async function fetchBarby(){
@@ -1232,7 +1319,8 @@ const SOURCE_FETCHERS = {
   habima: fetchHabima,
   lev: (onProgress) => fetchLevAll(onProgress, levExpanded ? LEV_MOVIE_CAP_EXTENDED : LEV_MOVIE_CAP_INITIAL),
   ravhen: (onProgress) => fetchRavHenAll(onProgress, ravhenExpanded ? RAVHEN_DAYS_EXTENDED : RAVHEN_DAYS_INITIAL),
-  barby: fetchBarby
+  barby: fetchBarby,
+  planet: fetchPlanetAll
 };
 
 /* בונים מחדש את allEvents מתוך rawEventsBySource. כברירת מחדל חותכים כל מקור ל-3 ימים
@@ -1353,7 +1441,7 @@ function renderStatusBar(){
     const label = SOURCE_LABELS[key];
     let text = label, cls = s.status || 'idle';
     if (s.status === 'loading') text = `${label}${s.progress ? ' ('+s.progress+')' : ''}`;
-    else if (s.status === 'ok') text = `${label} · ${s.count}`;
+    else if (s.status === 'ok') text = label;
     else if (s.status === 'cached') text = `${label} · מטמון (${timeAgo(s.updated)})`;
     else if (s.status === 'error') text = `${label} · נכשל, לחצו לנסות שוב`;
     else if (s.status === 'idle') text = `${label} · לחצו לטעינה`;
@@ -1369,7 +1457,8 @@ function renderStatusBar(){
     const showBanner = anyLoading && initialLoadSettled;
     banner.style.display = showBanner ? 'flex' : 'none';
     if (showBanner){
-      document.getElementById('loadingBannerText').innerText = 'טוען תוצאות:';
+      const loadingLabels = Object.keys(sourceState).filter(k => sourceState[k].status === 'loading').map(k => SOURCE_LABELS[k]);
+      document.getElementById('loadingBannerText').innerText = loadingLabels.length ? `טוענים מ${loadingLabels.join(', ')}` : 'טוען תוצאות:';
     }
   }
 
@@ -1491,6 +1580,7 @@ function setQuickDate(range, btn){
   document.querySelectorAll('#dateChips .chip[data-range]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('customDateError').style.display = 'none';
+  currentQuickRange = range;
 
   if (range === 'custom'){
     // מנקים את ה-inline style (ולא כופים 'flex') כדי שברוחב מובייל ה-CSS הרגיל של
@@ -1540,11 +1630,19 @@ function onCustomDateChange(){
   if (end > ingestCutoff) expandCinemaSources();
 }
 
+/* השעה הנוכחית לפי שעון ישראל (לא שעון המכשיר) - מעוגלת מטה לשעה העגולה. משמשת כברירת
+   מחדל בפופאובר השעות כש"היום" פעיל, כדי לא להציע למשתמש שעות שכבר עברו. */
+function currentIsraelHour(){
+  return Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', hour12: false }).format(new Date()));
+}
+
 /* פופאובר טווח שעות: הערכים בתוך הפופאובר הם רק "טיוטה" - הסינון בפועל (appliedStartTime/
    appliedEndTime) מתעדכן ומרונדר מחדש פעם אחת בלבד, רק בלחיצה על "החל". שינוי הערכים
-   בתוך הפופאובר עצמו לעולם לא מפעיל סינון או קריאת רשת. */
+   בתוך הפופאובר עצמו לעולם לא מפעיל סינון או קריאת רשת. כש"היום" פעיל, שעת ההתחלה
+   המוצעת היא השעה העגולה הנוכחית - אין טעם להציע למשתמש טווח שמתחיל בעבר. */
 function openTimePopover(){
-  document.getElementById('timePopoverStart').value = '09:00';
+  const startVal = currentQuickRange === 'today' ? `${String(currentIsraelHour()).padStart(2,'0')}:00` : '09:00';
+  document.getElementById('timePopoverStart').value = startVal;
   document.getElementById('timePopoverEnd').value = '23:30';
   document.getElementById('timePopoverOverlay').style.display = 'flex';
 }
@@ -1584,9 +1682,10 @@ function resetTimeFilter(){
 /* איזה מקומות רלוונטיים לכל סוג - כשבוחרים סוג ספציפי, תיבות המקומות הלא-רלוונטיים
    צריכות להיות מסומנות בהתאם, אחרת ה-"וי" על המקומות מטעה (מראה מקום מסומן שבפועל
    לא תורם אף אירוע לתצוגה הנוכחית). 'all' (הכל) לא מוגדר כאן בכוונה - כולם רלוונטיים. */
+const CINEMA_VENUES = ['קולנוע לב', 'רב חן', 'פלאנט איילון'];
 const TYPE_TO_VENUES = {
   theatre: ['בית ליסין', 'הבימה'],
-  cinema: ['קולנוע לב', 'רב חן'],
+  cinema: CINEMA_VENUES,
   music: ['בארבי'],
 };
 
@@ -1825,6 +1924,47 @@ function recoModalGo(){
   closeRecoModal();
 }
 
+/* ===================== טריילר מוטבע באפליקציה (במקום לצאת ל-YouTube) =====================
+   עדיפות ראשונה: ev.trailerUrl - קישור YouTube ישיר שנשאב מדף האתר הרשמי (קולנוע לב/
+   רב חן/פלאנט איילון). כשיש כזה, מטביעים אותו ב-iframe עם autoplay.
+   כשאין - הבדיקה בפועל (לא רק הנחה) הראתה שאין דרך אמינה להטביע "תוצאות חיפוש" חיות
+   של YouTube בתוך iframe (הפרמטר הישן listType=search מחזיר היום שגיאת נגן 153 -
+   חסום ע"י יוטיוב) - אז מציגים הודעה ברורה עם כפתור לחיפוש בטאב חדש, במקום נגן שבור. */
+function extractYoutubeId(url){
+  if (!url) return null;
+  const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{6,})/);
+  return m ? m[1] : null;
+}
+
+function openTrailerModal(id){
+  const ev = currentFiltered.find(e => e.id === id) || allEvents.find(e => e.id === id);
+  if (!ev) return;
+  const body = document.getElementById('trailerModalBody');
+  const videoId = extractYoutubeId(ev.trailerUrl);
+  if (videoId){
+    body.innerHTML = `
+      <h3><i class="fa-brands fa-youtube"></i> ${escapeHtml(ev.title)}</h3>
+      <div class="trailer-frame-wrap"><iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0" title="טריילר" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe></div>
+    `;
+  } else {
+    const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(ev.title + ' טריילר')}`;
+    body.innerHTML = `
+      <h3><i class="fa-brands fa-youtube"></i> ${escapeHtml(ev.title)}</h3>
+      <div class="trailer-fallback">
+        <i class="fa-solid fa-clapperboard"></i>
+        <p>לא מצאנו טריילר ישיר באתר הרשמי. אפשר לחפש ביוטיוב:</p>
+        <a href="${searchUrl}" target="_blank" rel="noopener" class="btn btn-primary" style="display:inline-flex;flex:none;padding:10px 22px"><i class="fa-brands fa-youtube"></i> חפשו ביוטיוב</a>
+      </div>
+    `;
+  }
+  document.getElementById('trailerModal').style.display = 'flex';
+}
+
+function closeTrailerModal(){
+  document.getElementById('trailerModal').style.display = 'none';
+  document.getElementById('trailerModalBody').innerHTML = ''; // מסיר את ה-iframe בפועל, כדי לעצור ניגון ברקע
+}
+
 function quickExpand(range){
   const btn = document.querySelector(`.chip[data-range="${range}"]`);
   if (btn) setQuickDate(range, btn);
@@ -1846,7 +1986,17 @@ function navLink(ev){
   return `https://waze.com/ul?q=${encodeURIComponent(q)}`;
 }
 
+/* פילטר דירוג IMDB: כרטיס שעדיין לא נבדק (undefined) לא מוסתר בטרם עת - ברגע שהדירוג
+   יגיע filterEvents ירוץ שוב ויסנן נכון. רק "נבדק ואין דירוג שעונה לסף" מוסתר בפועל. */
+function imdbRatingPasses(ev){
+  const c = imdbCache[ev.title];
+  if (c === undefined) return true;
+  if (!c || !c.rating) return false;
+  return parseFloat(c.rating) >= minImdbRating;
+}
+
 function filterEvents(){
+  refreshImdbRatingFilterSection();
   const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
   const startDateVal = document.getElementById('startDate').value;
   const endDateVal = document.getElementById('endDate').value;
@@ -1864,7 +2014,8 @@ function filterEvents(){
     const matchesTime = timeStr >= appliedStartTime && timeStr <= appliedEndTime;
     const matchesFav = !showOnlyFavs || favorites.includes(ev.id);
     const matchesSelected = !showOnlySelected || selectedIds.has(ev.id);
-    return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav && matchesSelected;
+    const matchesImdbRating = minImdbRating <= 0 || ev.type !== 'cinema' || imdbRatingPasses(ev);
+    return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav && matchesSelected && matchesImdbRating;
   });
 
   filtered.sort((a,b) => a.date - b.date);
@@ -2003,8 +2154,7 @@ async function fetchImdbScore(title, hint){
 function isCinemaFocused(){
   if (selectedType === 'cinema') return true;
   const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
-  const cinemaVenues = ['קולנוע לב', 'רב חן'];
-  return checkedVenues.length > 0 && checkedVenues.every(v => cinemaVenues.includes(v));
+  return checkedVenues.length > 0 && checkedVenues.every(v => CINEMA_VENUES.includes(v));
 }
 
 function triggerImdbForEvent(ev){
@@ -2026,6 +2176,42 @@ function maybeHandleImdbScores(events){
     if (seen.has(ev.title)) continue;
     seen.add(ev.title);
     triggerImdbForEvent(ev);
+  }
+}
+
+function setImdbRatingFilter(min, btn){
+  minImdbRating = min;
+  document.querySelectorAll('#imdbRatingChips .chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (min > 0) fetchImdbForAllVisibleCinema();
+  filterEvents();
+}
+
+/* בניגוד ל-maybeHandleImdbScores (שמביא דירוג רק ל-3 הכרטיסים הראשונים כברירת מחדל),
+   כשסינון לפי דירוג מינימלי פעיל צריך לדעת את הדירוג של כל סרטי הקולנוע כדי לסנן נכון -
+   אז מביאים לכולם (בלי הגבלת 3), עדיין מדודפל לפי כותרת ייחודית בלבד. */
+function fetchImdbForAllVisibleCinema(){
+  if (!localStorage.getItem('omdb_api_key')) return;
+  const seen = new Set();
+  allEvents.filter(e => e.type === 'cinema').forEach(ev => {
+    if (seen.has(ev.title)) return;
+    seen.add(ev.title);
+    triggerImdbForEvent(ev);
+  });
+}
+
+/* פילטר דירוג ה-IMDB מוצג רק כשהתצוגה ממוקדת קולנוע טהור וכשיש מפתח OMDb פעיל (בלי
+   מפתח אין דירוגים לסנן לפיהם). אם התצוגה מפסיקה להיות ממוקדת-קולנוע (למשל המשתמש
+   עבר ל"הכל") מאפסים את הסינון - כדי לא להשאיר תצוגה "תקועה" עם סף שהמשתמש כבר לא
+   רואה איך לשנות. */
+function refreshImdbRatingFilterSection(){
+  const section = document.getElementById('imdbRatingFilterSection');
+  if (!section) return;
+  const show = isCinemaFocused() && !!localStorage.getItem('omdb_api_key');
+  section.style.display = show ? 'block' : 'none';
+  if (!show && minImdbRating > 0){
+    minImdbRating = 0;
+    document.querySelectorAll('#imdbRatingChips .chip').forEach(b => b.classList.toggle('active', b.dataset.min === '0'));
   }
 }
 
@@ -2125,7 +2311,19 @@ function renderEvents(events){
   countEl.innerHTML = `נמצאו <strong>${events.length}</strong> אירועים`;
   container.innerHTML = '';
 
+  let lastGroupKey = null;
   events.forEach(ev => {
+    // כותרת קיבוץ לפי יום - events כבר ממוין לפי תאריך (filterEvents), אז מספיק לזהות
+    // מעבר בין יום ליום ברצף כדי לדעת מתי לפתוח קבוצה חדשה.
+    const groupKey = localDateStr(ev.date);
+    if (groupKey !== lastGroupKey){
+      lastGroupKey = groupKey;
+      const header = document.createElement('div');
+      header.className = 'date-group-header';
+      header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(dateGroupLabel(ev.date))}`;
+      container.appendChild(header);
+    }
+
     const isFav = favorites.includes(ev.id);
     const isSelected = selectedIds.has(ev.id);
     const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
@@ -2135,10 +2333,6 @@ function renderEvents(events){
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
     const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
     const gCal = createGoogleCalendarLink(ev);
-    // עדיפות ראשונה: טריילר שנשאב ישירות מדף האתר הרשמי (קולנוע לב/רב חן). כשאין כזה -
-    // נופלים לחיפוש YouTube ממוקד לפי שם הכרטיס.
-    const trailerLink = ev.trailerUrl || `https://www.youtube.com/results?search_query=${encodeURIComponent(ev.title + ' טריילר')}`;
-    const trailerTitle = ev.trailerUrl ? 'צפו בטריילר' : 'חיפוש טריילר ב-YouTube';
 
     const imageBlock = ev.image
       ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
@@ -2176,7 +2370,7 @@ function renderEvents(events){
         <a href="${ev.link}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
         <a href="${navLink(ev)}" target="_blank" rel="noopener" class="btn btn-secondary" title="נווט עם Waze"><i class="fa-solid fa-car"></i> ניווט</a>
         <a href="${gCal}" target="_blank" rel="noopener" class="btn btn-cal"><i class="fa-regular fa-calendar-plus"></i> ליומן</a>
-        <a href="${trailerLink}" target="_blank" rel="noopener" class="btn btn-trailer" title="${trailerTitle}"><i class="fa-brands fa-youtube"></i> טריילר</a>
+        <button type="button" onclick="openTrailerModal('${ev.id}')" class="btn btn-trailer"><i class="fa-brands fa-youtube"></i> טריילר</button>
       </div>
     `;
     container.appendChild(card);
