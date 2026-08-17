@@ -8,7 +8,14 @@ crons = ["0 */3 * * *"]
 
 [[kv_namespaces]]
 binding = "SHOWMUST_KV"
-id = "SHOWMUST_KV"
+id = "d60268811209470f8e9db1452cf3ae8b"
 
-# No secrets needed - IMDb ratings are resolved client-side per user (see index.html),
-# not by this worker.
+# No secrets required to run - IMDb ratings are resolved client-side per user (see
+# index.html), not by this worker.
+#
+# Optional: JINA_API_KEY. Barby is the one source proxied through Jina (SPA + WAF-blocked
+# API), and Jina's free anonymous tier shares its rate limit across all Workers' outbound
+# IPs - so Barby can get stuck on 429s that have nothing to do with this app's own traffic.
+# A free key from https://jina.ai moves it onto its own account quota. Works without one,
+# just as unreliably as before.
+# wrangler secret put JINA_API_KEY

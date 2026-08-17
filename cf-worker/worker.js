@@ -452,27 +452,30 @@ function parseBarbyMarkdown(text) {
   return events;
 }
 
-/* Jina's free anonymous tier is rate-limited by IP - and Cloudflare Workers' outbound IPs
+/* Jina's free ANONYMOUS tier is rate-limited by IP - and Cloudflare Workers' outbound IPs
    are shared across many unrelated Workers, so a 429 here can happen even though this app
    only makes one Jina request per 3h cron cycle; it's someone else's traffic exhausting the
-   shared quota, not ours. The original client-side jinaFetch() retried on 429 using the
-   Retry-After header (falling back to a growing delay) - that logic got dropped when this
-   was ported server-side, so a single unlucky 429 was silently killing Barby for the whole
-   cache cycle. Restored here, capped at 3 attempts (waiting on a fetch doesn't count against
-   the Workers CPU-time limit, only actual JS execution does, so this is safe to await). */
-async function fetchBarbyMarkdown(attempt = 0) {
-  const res = await fetch(JINA_BASE + BARBY_URL);
+   shared quota, not ours, and it can stay exhausted for longer than any reasonable retry
+   window (observed: still 429 after 3 retries spanning ~30s). The original client-side
+   jinaFetch() retried on 429 using the Retry-After header - kept below for genuinely brief
+   blips - but the real fix is authenticating: passing JINA_API_KEY (a free key from
+   https://jina.ai, set via `wrangler secret put JINA_API_KEY`) moves the quota off the
+   shared-IP pool and onto the key's own account allowance. Works fine without a key too,
+   just as unreliably as before. */
+async function fetchBarbyMarkdown(env, attempt = 0) {
+  const headers = env.JINA_API_KEY ? { Authorization: `Bearer ${env.JINA_API_KEY}` } : {};
+  const res = await fetch(JINA_BASE + BARBY_URL, { headers });
   if (res.status === 429 && attempt < 3) {
     const retryAfter = Number(res.headers.get('retry-after')) || (5 + attempt * 5);
     await new Promise((r) => setTimeout(r, retryAfter * 1000));
-    return fetchBarbyMarkdown(attempt + 1);
+    return fetchBarbyMarkdown(env, attempt + 1);
   }
   if (!res.ok) throw new Error('barby (jina) HTTP ' + res.status);
   return res.text();
 }
 
-async function fetchBarby() {
-  return parseBarbyMarkdown(await fetchBarbyMarkdown());
+async function fetchBarby(env) {
+  return parseBarbyMarkdown(await fetchBarbyMarkdown(env));
 }
 
 // ============================================================================
@@ -673,7 +676,7 @@ async function refreshEvents(env) {
     lev: fetchLev(),
     ravhen: fetchVistaCinema('ravhen', vistaDates),
     planet: fetchVistaCinema('planet', vistaDates),
-    barby: fetchBarby(),
+    barby: fetchBarby(env),
     tarbut: fetchTarbut(),
   };
 
