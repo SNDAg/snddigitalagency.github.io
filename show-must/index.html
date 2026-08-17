@@ -290,7 +290,21 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .wizard-icon.success{background:linear-gradient(135deg,var(--ok),#15803d);color:#fff}
 .wizard-panel h3{margin-bottom:8px;font-size:1.15rem}
 .wizard-panel p{color:var(--text-muted);font-size:.87rem;line-height:1.6;margin-bottom:16px}
-#wizardKeyInput{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;margin-bottom:6px}
+.modal-box input[type="text"]{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;transition:border-color .2s,box-shadow .2s}
+.modal-box input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
+
+/* עטיפת שדה מפתח OMDb (בהגדרות ובאשף) - עם אייקון וצבע גבול שמשקפים בזמן אמת אם המפתח
+   בבדיקה/תקין/שגוי, במקום תיבת טקסט "שקטה" שלא אומרת כלום עד לחיצה על שמור. */
+.key-input-wrap{position:relative;margin-bottom:10px}
+.key-input-wrap input[type="text"]{padding-right:42px;margin-bottom:0}
+.key-input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.95rem;pointer-events:none;transition:color .2s}
+.key-input-wrap.checking input[type="text"]{border-color:var(--accent)}
+.key-input-wrap.checking .key-input-icon{color:var(--accent)}
+.key-input-wrap.valid input[type="text"]{border-color:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.14)}
+.key-input-wrap.valid .key-input-icon{color:var(--ok)}
+.key-input-wrap.invalid input[type="text"]{border-color:var(--err);box-shadow:0 0 0 3px rgba(239,68,68,.14)}
+.key-input-wrap.invalid .key-input-icon{color:var(--err)}
+.field-success{color:var(--ok);font-size:.78rem;margin-bottom:10px;line-height:1.5;display:flex;align-items:center;gap:6px}
 .wizard-external-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--imdb);color:#111;text-decoration:none;font-weight:700;padding:11px;border-radius:9px;font-size:.87rem;margin-bottom:12px}
 .wizard-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#fbbf24 !important}
 .wizard-hint i{margin-inline-end:4px}
@@ -453,15 +467,15 @@ footer a{color:var(--accent)}
 
     <div class="status-bar">
       <div class="status-note"><i class="fa-solid fa-circle-check"></i> <span id="statusNoteText">נתונים חיים מהאתרים הרשמיים</span></div>
-      <button id="refreshBtn" onclick="loadAllEvents()" title="רענון נתונים"><i class="fa-solid fa-sync"></i><i class="fa-solid fa-circle-notch fa-spin"></i> רענן</button>
+      <button id="refreshBtn" onclick="loadAllEvents()" title="רענון נתונים"><i class="fa-solid fa-sync"></i><i class="fa-solid fa-circle-notch fa-spin"></i> רעננו</button>
     </div>
 
     <div class="search-row">
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input type="text" id="searchInput" class="search-input" placeholder="חפש לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
+        <input type="text" id="searchInput" class="search-input" placeholder="חפשו לפי שם הצגה, סרט, אמן..." oninput="filterEvents()">
       </div>
-      <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
+      <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הציגו רק מועדפים">
         <i class="fa-solid fa-heart"></i> <span class="fav-label">מועדפים</span> <span id="favCount">0</span>
       </button>
     </div>
@@ -531,7 +545,7 @@ footer a{color:var(--accent)}
     </div>
     <div class="imdb-banner-actions">
       <button class="imdb-banner-cta" onclick="openImdbWizard()">הפעילו עכשיו <i class="fa-solid fa-arrow-left"></i></button>
-      <button class="imdb-banner-dismiss" onclick="dismissImdbBanner()" title="לא עכשיו" aria-label="סגור באנר"><i class="fa-solid fa-xmark"></i></button>
+      <button class="imdb-banner-dismiss" onclick="dismissImdbBanner()" title="לא עכשיו" aria-label="סגירת באנר"><i class="fa-solid fa-xmark"></i></button>
     </div>
   </div>
 
@@ -540,7 +554,7 @@ footer a{color:var(--accent)}
     <div class="bulk-actions">
       <label class="custom-check">
         <input type="checkbox" id="selectAllCheckbox" onchange="onSelectAllToggle(this)">
-        <span class="check-box"><i class="fa-solid fa-check"></i></span> בחר הכל
+        <span class="check-box"><i class="fa-solid fa-check"></i></span> בחרו הכל
       </label>
       <button class="toolbar-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled>
         <i class="fa-solid fa-download"></i> הורדה ליומן <span id="selectedCount">(0)</span>
@@ -570,28 +584,28 @@ footer a{color:var(--accent)}
 
 <div id="timePopoverOverlay" class="modal-overlay time-popover-overlay" style="display:none" onclick="if(event.target===this) closeTimePopover()">
   <div class="modal-box time-popover-box">
-    <button class="wizard-close-x" onclick="closeTimePopover()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+    <button class="wizard-close-x" onclick="closeTimePopover()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
     <h3><i class="fa-solid fa-clock"></i> טווח שעות</h3>
-    <p class="muted" style="margin-top:-8px">בחרו את טווח השעות שמעניין אתכם, ולחצו "החל".</p>
+    <p class="muted" style="margin-top:-8px">בחרו את טווח השעות שמעניין אתכם, ולחצו "החילו".</p>
     <div class="inputs-row time-popover-inputs">
       <label>משעה <input type="time" id="timePopoverStart" value="09:00"></label>
       <label>עד שעה <input type="time" id="timePopoverEnd" value="23:30"></label>
     </div>
     <div class="modal-actions" style="margin-top:16px">
       <button class="secondary" onclick="resetTimeFilter()">איפוס (כל היום)</button>
-      <button onclick="applyTimeFilter()"><i class="fa-solid fa-check"></i> החל</button>
+      <button onclick="applyTimeFilter()"><i class="fa-solid fa-check"></i> החילו</button>
     </div>
   </div>
 </div>
 
 <div id="recoModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeRecoModal()">
   <div class="modal-box reco-box">
-    <button class="wizard-close-x" onclick="closeRecoModal()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+    <button class="wizard-close-x" onclick="closeRecoModal()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
     <div class="reco-icon">🤖💡</div>
     <h3>רוצים לשמוע מה דעתי?</h3>
     <div id="recoModalBody" class="reco-body"></div>
     <div class="modal-actions" style="margin-top:18px">
-      <button id="recoModalCta" onclick="recoModalGo()"><i class="fa-solid fa-arrow-left"></i> סגור וקח אותי לשם</button>
+      <button id="recoModalCta" onclick="recoModalGo()"><i class="fa-solid fa-arrow-left"></i> סגרו וקחו אותי לשם</button>
       <button class="secondary" onclick="closeRecoModal()">אולי אחר כך</button>
     </div>
   </div>
@@ -611,25 +625,25 @@ footer a{color:var(--accent)}
     <p id="omdbStatusText">אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.</p>
     <div class="modal-actions">
       <button onclick="openImdbWizard()"><i class="fa-brands fa-imdb"></i> פתחו את אשף ההפעלה</button>
-      <button class="secondary" id="clearOmdbBtnSettings" onclick="clearOmdbKey()" style="display:none">נקה מפתח</button>
+      <button class="secondary" id="clearOmdbBtnSettings" onclick="clearOmdbKey()" style="display:none">נקו מפתח</button>
     </div>
     <p class="muted">כבר יש לכם מפתח? אפשר להדביק אותו ישירות כאן:</p>
-    <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4">
-    <p class="field-error" id="omdbKeyInputError" style="display:none"></p>
-    <div class="modal-actions">
-      <button id="saveOmdbBtn" onclick="saveOmdbKey()"><span id="saveOmdbBtnLabel">שמור</span></button>
+    <div class="key-input-wrap" id="omdbKeyInputWrap">
+      <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4" autocomplete="off" spellcheck="false" oninput="onOmdbKeyInputChange()">
+      <i class="fa-solid fa-key key-input-icon" id="omdbKeyInputIcon"></i>
     </div>
-    <p class="muted">שימו לב: הסרטים מוצגים באתרים בשם עברי, וחיפוש ה-IMDB מתבצע לפי אותו שם - לכן חלק מהסרטים עלולים לא להימצא.</p>
-
+    <p class="field-error" id="omdbKeyInputError" style="display:none"></p>
+    <p class="field-success" id="omdbKeyInputSuccess" style="display:none"><i class="fa-solid fa-circle-check"></i> המפתח פעיל - דירוגי IMDB יופיעו על כרטיסי קולנוע</p>
     <div class="modal-actions" style="margin-top:18px">
-      <button class="secondary" onclick="closeSettings()">סגור</button>
+      <button id="saveOmdbBtn" onclick="saveOmdbKey()"><span id="saveOmdbBtnLabel">שמירה וסגירה</span></button>
+      <button class="secondary" onclick="closeSettings()">סגירה</button>
     </div>
   </div>
 </div>
 
 <div id="imdbWizardModal" class="modal-overlay" style="display:none">
   <div class="modal-box wizard-box">
-    <button class="wizard-close-x" onclick="closeImdbWizard()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+    <button class="wizard-close-x" onclick="closeImdbWizard()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
 
     <div class="wizard-steps">
       <div class="wizard-step-dot active" id="wizardDot1">1</div>
@@ -644,7 +658,7 @@ footer a{color:var(--accent)}
       <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
       <p class="wizard-hint"><i class="fa-solid fa-triangle-exclamation"></i> שימו לב: OMDb שולחים מייל עם המפתח <strong>וגם קישור הפעלה נפרד</strong> - חובה ללחוץ גם עליו, אחרת המפתח לא יעבוד. כדאי לבדוק גם בתיבת הספאם.</p>
       <div class="wizard-actions">
-        <button class="wizard-next-btn" onclick="wizardGoToStep2()">קיבלתי מפתח, המשך <i class="fa-solid fa-arrow-left"></i></button>
+        <button class="wizard-next-btn" onclick="wizardGoToStep2()">קיבלתי מפתח, המשיכו <i class="fa-solid fa-arrow-left"></i></button>
       </div>
     </div>
 
@@ -652,7 +666,10 @@ footer a{color:var(--accent)}
       <div class="wizard-icon"><i class="fa-solid fa-key"></i></div>
       <h3>שלב 2 מתוך 2 - הדביקו את המפתח</h3>
       <p>אחרי שקיבלתם את המייל מ-OMDb <strong>ולחצתם על קישור ההפעלה</strong> שבו, העתיקו את המפתח לכאן:</p>
-      <input type="text" id="wizardKeyInput" placeholder="הדביקו כאן את המפתח שקיבלתם במייל">
+      <div class="key-input-wrap" id="wizardKeyInputWrap">
+        <input type="text" id="wizardKeyInput" placeholder="הדביקו כאן את המפתח שקיבלתם במייל" autocomplete="off" spellcheck="false" oninput="onWizardKeyInputChange()">
+        <i class="fa-solid fa-key key-input-icon" id="wizardKeyInputIcon"></i>
+      </div>
       <p class="wizard-error" id="wizardKeyError" style="display:none">צריך להדביק מפתח לפני שממשיכים</p>
       <div class="wizard-actions two">
         <button class="wizard-back-btn" onclick="wizardGoToStep1()"><i class="fa-solid fa-arrow-right"></i> חזרה</button>
@@ -665,7 +682,7 @@ footer a{color:var(--accent)}
       <h3>מעולה, זהו!</h3>
       <p>דירוגי IMDB יופיעו מעכשיו אוטומטית על כרטיסי הצגות קולנוע.</p>
       <div class="wizard-actions">
-        <button class="wizard-next-btn" onclick="closeImdbWizard()">סגור</button>
+        <button class="wizard-next-btn" onclick="closeImdbWizard()">סגירה</button>
       </div>
     </div>
   </div>
@@ -770,7 +787,7 @@ async function loadAllEvents(){
     allEvents = (data.events || []).map(e => ({ ...e, date: new Date(e.date) }));
     lastLoadFailed = false;
     const statusNote = document.getElementById('statusNoteText');
-    if (statusNote) statusNote.innerText = `נתונים חיים מהאתרים הרשמיים · עודכן ${new Date(data.meta && data.meta.generatedAt || Date.now()).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' })}`;
+    if (statusNote) statusNote.innerText = `נתונים בזמן אמת · עודכן ${new Date(data.meta && data.meta.generatedAt || Date.now()).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' })}`;
   }catch(e){
     console.error('load failed:', e);
     allEvents = [];
@@ -903,8 +920,26 @@ function setType(type, btn){
   filterEvents();
 }
 
+/* היחס בין תגיות ה"סוג" לתיבות ה"איפה" הוא חד-כיווני עד כה (setType -> syncVenuesToType
+   דורס את התיבות), אבל בכיוון ההפוך צריך גם: אם המשתמש מסמן ידנית מקום שלא שייך לסוג
+   הפעיל (למשל בחרו "קולנוע" - קולנוע לב/רב חן/פלאנט מסומנים - ואז סימנו גם את "הבימה"),
+   הסוג חייב לחזור ל"הכל" אוטומטית. אחרת התיבה "הבימה" נראית מסומנת אבל matchesType
+   בפועל מסנן את כל אירועי התיאטרון בשקט - תיבות הסימון צריכות להיות מקור האמת היחיד
+   למה שמוצג, לא להידרס על-ידי סוג שנבחר לפני כן. אין תגובה בכיוון ההפוך (לא מנחשים סוג
+   מתוך שילוב תיבות) - זו הרחבה גדולה יותר שלא התבקשה. */
+function reconcileTypeWithVenues(){
+  if (selectedType === 'all') return;
+  const relevant = TYPE_TO_VENUES[selectedType];
+  const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+  const hasOutOfTypeVenue = checkedVenues.some(v => !relevant.includes(v));
+  if (!hasOutOfTypeVenue) return;
+  selectedType = 'all';
+  document.querySelectorAll('#typeChips .chip').forEach(b => b.classList.toggle('active', b.dataset.type === 'all'));
+}
+
 function onVenueCheckboxChange(cb){
   userToggledVenues.add(cb.value);
+  reconcileTypeWithVenues();
   filterEvents();
 }
 
@@ -956,7 +991,7 @@ function updateSelectionUI(){
   if (waLabelEl){
     waLabelEl.textContent = count === 0
       ? ' שיתוף ב-WhatsApp'
-      : count === 1 ? 'שתף אירוע אחד ב-WhatsApp' : `שתף ${count} אירועים ב-WhatsApp`;
+      : count === 1 ? 'שתפו אירוע אחד ב-WhatsApp' : `שתפו ${count} אירועים ב-WhatsApp`;
   }
   if (recoBtn) recoBtn.style.display = (showOnlySelected && count >= 2) ? 'inline-flex' : 'none';
   if (selectedFilterCountEl) selectedFilterCountEl.innerText = count;
@@ -1137,7 +1172,7 @@ function openTrailerModal(id){
   const header = `
     <div class="trailer-header">
       <h3><i class="fa-brands fa-youtube"></i> ${escapeHtml(ev.title)}</h3>
-      <button type="button" class="trailer-close-btn" onclick="closeTrailerModal()" aria-label="סגור"><i class="fa-solid fa-xmark"></i></button>
+      <button type="button" class="trailer-close-btn" onclick="closeTrailerModal()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
     </div>`;
   if (videoId){
     body.innerHTML = `
@@ -1410,8 +1445,34 @@ function handleImdbIconClick(id){
 /* ===================== הגדרות + אשף הפעלת IMDB =====================
    הערה: לא ניתן למלא מראש את המייל בטופס ההרשמה של OMDb (דף חיצוני, ללא API רשמי לכך) -
    ולכן האשף לא אוסף מייל בכלל. */
+/* מצב חזותי לשדה מפתח OMDb (בהגדרות ובאשף כאחד) - גבול+אייקון שמשקפים checking/valid/
+   invalid, כדי שהמשתמש יידע מיד אם המפתח שהדביק תקין בלי לחכות לטקסט שגיאה בלבד. */
+function setKeyInputState(wrapId, iconId, state){
+  const wrap = document.getElementById(wrapId);
+  const icon = document.getElementById(iconId);
+  if (!wrap || !icon) return;
+  wrap.classList.remove('checking', 'valid', 'invalid');
+  if (state) wrap.classList.add(state);
+  icon.className = 'key-input-icon ' + (
+    state === 'checking' ? 'fa-solid fa-circle-notch fa-spin' :
+    state === 'valid' ? 'fa-solid fa-circle-check' :
+    state === 'invalid' ? 'fa-solid fa-circle-xmark' :
+    'fa-solid fa-key'
+  );
+}
+
+function onOmdbKeyInputChange(){
+  document.getElementById('omdbKeyInputError').style.display = 'none';
+  document.getElementById('omdbKeyInputSuccess').style.display = 'none';
+  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null);
+}
+
 function openSettings(){
-  document.getElementById('omdbKeyInput').value = localStorage.getItem('omdb_api_key') || '';
+  const key = localStorage.getItem('omdb_api_key') || '';
+  document.getElementById('omdbKeyInput').value = key;
+  document.getElementById('omdbKeyInputError').style.display = 'none';
+  document.getElementById('omdbKeyInputSuccess').style.display = key ? 'flex' : 'none';
+  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', key ? 'valid' : null);
   refreshOmdbSettingsStatus();
   document.getElementById('settingsModal').style.display = 'flex';
 }
@@ -1428,30 +1489,42 @@ function refreshOmdbSettingsStatus(){
 async function saveOmdbKey(){
   const val = document.getElementById('omdbKeyInput').value.trim();
   const errorEl = document.getElementById('omdbKeyInputError');
+  const successEl = document.getElementById('omdbKeyInputSuccess');
   errorEl.style.display = 'none';
-  if (!val) return;
+  successEl.style.display = 'none';
+  if (!val){ setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null); return; }
   const btn = document.getElementById('saveOmdbBtn');
   const label = document.getElementById('saveOmdbBtnLabel');
   btn.disabled = true;
   label.textContent = 'בודקים את המפתח מול OMDb...';
+  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'checking');
   const result = await validateOmdbKey(val);
   btn.disabled = false;
-  label.textContent = 'שמור';
+  label.textContent = 'שמירה וסגירה';
   if (!result.valid){
+    setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'invalid');
     errorEl.textContent = omdbKeyErrorMessage(result);
     errorEl.style.display = 'block';
     return;
   }
+  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'valid');
+  successEl.style.display = 'flex';
   localStorage.setItem('omdb_api_key', val);
   imdbCache = {};
   try{ localStorage.removeItem('imdb_cache'); }catch(e){}
   hideImdbBanner(true);
   refreshOmdbSettingsStatus();
   filterEvents();
+  // משאירים את אישור ה-"פעיל ✓" הירוק גלוי לרגע לפני הסגירה, כדי שהמשתמש בפועל יראה
+  // שהמפתח נשמר בהצלחה - שמירה וסגירה מיידית לגמרי הייתה מסתירה את המשוב הזה.
+  setTimeout(closeSettings, 900);
 }
 function clearOmdbKey(){
   localStorage.removeItem('omdb_api_key');
   document.getElementById('omdbKeyInput').value = '';
+  document.getElementById('omdbKeyInputError').style.display = 'none';
+  document.getElementById('omdbKeyInputSuccess').style.display = 'none';
+  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null);
   try{ localStorage.removeItem('imdb_banner_dismissed'); }catch(e){}
   refreshOmdbSettingsStatus();
   maybeShowImdbBanner();
@@ -1469,9 +1542,15 @@ function setWizardStep(step){
   line.classList.toggle('done', step > 1);
 }
 
+function onWizardKeyInputChange(){
+  document.getElementById('wizardKeyError').style.display = 'none';
+  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', null);
+}
+
 function openImdbWizard(){
   document.getElementById('wizardKeyInput').value = '';
   document.getElementById('wizardKeyError').style.display = 'none';
+  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', null);
   document.getElementById('wizardPanel1').style.display = 'block';
   document.getElementById('wizardPanel2').style.display = 'none';
   document.getElementById('wizardPanelSuccess').style.display = 'none';
@@ -1515,15 +1594,18 @@ async function wizardFinish(){
   btn.disabled = true;
   label.textContent = 'בודקים את המפתח מול OMDb...';
   icon.className = 'fa-solid fa-circle-notch fa-spin';
+  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'checking');
   const result = await validateOmdbKey(key);
   btn.disabled = false;
   label.textContent = 'סיימתי, הפעילו דירוגים';
   icon.className = 'fa-solid fa-check';
   if (!result.valid){
+    setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'invalid');
     errorEl.textContent = omdbKeyErrorMessage(result);
     errorEl.style.display = 'block';
     return;
   }
+  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'valid');
   localStorage.setItem('omdb_api_key', key);
   imdbCache = {};
   try{ localStorage.removeItem('imdb_cache'); }catch(e){}
@@ -1666,7 +1748,7 @@ function renderEvents(events){
           <i class="fa-solid fa-triangle-exclamation"></i>
           <p>לא הצלחנו לטעון נתונים כרגע. בדקו את החיבור לאינטרנט ונסו שוב.</p>
           <div class="no-results-actions">
-            <button class="chip" onclick="loadAllEvents()">נסו שוב · רענן</button>
+            <button class="chip" onclick="loadAllEvents()">נסו שוב · רעננו</button>
           </div>
         </div>`;
       return;
@@ -1677,8 +1759,8 @@ function renderEvents(events){
         <i class="fa-solid fa-calendar-xmark"></i>
         <p>לא נמצאו אירועים בטווח שנבחר. אפשר להרחיב את הטווח או לשנות את הסינון.</p>
         <div class="no-results-actions">
-          <button class="chip" onclick="quickExpand('week')">הצג את השבוע הקרוב</button>
-          <button class="chip" onclick="quickExpand('2weeks')">הצג את השבועיים הקרובים</button>
+          <button class="chip" onclick="quickExpand('week')">הציגו את השבוע הקרוב</button>
+          <button class="chip" onclick="quickExpand('2weeks')">הציגו את השבועיים הקרובים</button>
         </div>
       </div>`;
     return;
@@ -1735,11 +1817,11 @@ function renderEvents(events){
     const card = document.createElement('div');
     card.className = 'event-card';
     card.innerHTML = `
-      <label class="select-check" title="בחר לצורך הורדה">
+      <label class="select-check" title="בחרו לצורך הורדה">
         <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${ev.id}')">
         <span class="check-box"><i class="fa-solid fa-check"></i></span>
       </label>
-      <button class="fav-icon ${isFav ? 'active' : ''}" onclick="toggleFav('${ev.id}', this)" title="הוסף למועדפים"><i class="fa-solid fa-heart"></i></button>
+      <button class="fav-icon ${isFav ? 'active' : ''}" onclick="toggleFav('${ev.id}', this)" title="הוסיפו למועדפים"><i class="fa-solid fa-heart"></i></button>
       <div>
         ${imageBlock}
         <div class="card-meta">
