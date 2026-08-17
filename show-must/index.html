@@ -81,6 +81,11 @@ header p{color:var(--text-muted);font-size:1rem}
 .icon-btn{background:var(--glass);border:1px solid var(--border);color:var(--text-main);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
 .icon-btn:hover{background:var(--accent)}
 
+/* כפתור שיתוף האתר בוואטסאפ - מעוצב כ-CTA ברור (ירוק וואטסאפ, לא אפור כמו כפתור ההגדרות),
+   עם תווית מזמינה במקום אייקון בלבד, כדי לגרות לחיצה בפועל ולא רק להיראות כאייקון טכני. */
+.whatsapp-share-cta{background:linear-gradient(135deg,#25d366,#1da851);border-color:transparent;color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:transform .2s,box-shadow .2s}
+.whatsapp-share-cta:hover{background:linear-gradient(135deg,#22c35e,#1a9648);transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,.45)}
+
 .glass-panel{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:26px;box-shadow:0 20px 40px rgba(0,0,0,.4)}
 
 .status-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
@@ -190,13 +195,16 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .toolbar-btn.whatsapp-btn:not(:disabled):hover{background:#25d366;border-color:#25d366}
 .icon-btn.whatsapp-btn:hover{background:#25d366;border-color:#25d366}
 
-.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
 .event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .35s ease both}
 .event-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.35);border-color:rgba(99,102,241,.4)}
 @keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @media (prefers-reduced-motion: reduce){.event-card{animation:none}}
 
-.card-image{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
+/* max-height קובע תקרה לגובה התמונה גם כשהכרטיס עצמו רחב מאוד (חלון דפדפן שמצליח להכיל
+   רק עמודה אחת, אך רחבה) - בלי זה תמונה בודדת עלולה "לבלוע" את כל מסך הפתיחה ולהיראות
+   כתוצאה יחידה, בלי רמז ברור שיש עוד למטה. */
+.card-image{position:relative;width:100%;aspect-ratio:16/9;max-height:230px;border-radius:12px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
 .card-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
 .event-card:hover .card-image img{transform:scale(1.06)}
 .card-image .fallback-icon{display:none;font-size:2.1rem;color:rgba(255,255,255,.85)}
@@ -250,8 +258,10 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .btn-primary{background:var(--accent)}
 .btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .btn-cal{background:var(--music)}
-.btn-trailer{background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.35);color:#fca5a5;backdrop-filter:blur(6px)}
-.btn-trailer:hover{background:rgba(239,68,68,.24);filter:none}
+/* גוון ורוד-אדמדם (אותה משפחת צבע כמו --fav, לב המועדפים) במקום אדום טהור - עדיין קורא
+   כ"וידאו/YouTube" אבל משתלב טוב יותר עם הפלטה הסגולה-ורודה הכללית של האפליקציה */
+.btn-trailer{background:rgba(244,63,94,.14);border:1px solid rgba(244,63,94,.35);color:#fda4af;backdrop-filter:blur(6px)}
+.btn-trailer:hover{background:rgba(244,63,94,.24);filter:none}
 
 .fav-icon{position:absolute;top:16px;left:16px;z-index:2;color:#fff;cursor:pointer;font-size:1.1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s}
 .fav-icon:hover{transform:scale(1.08)}
@@ -383,6 +393,7 @@ footer a{color:var(--accent)}
   .brand{font-size:.95rem}
   .brand i{font-size:.9rem}
   .icon-btn{padding:9px 10px;font-size:.78rem}
+  .whatsapp-cta-label{display:none}
 
   .glass-panel{padding:14px;border-radius:16px;margin-bottom:18px}
 
@@ -488,7 +499,7 @@ footer a{color:var(--accent)}
   <div class="topbar">
     <div class="brand"><i class="fa-solid fa-satellite-dish"></i> SHOWMUST</div>
     <div class="topbar-actions">
-      <button class="icon-btn whatsapp-btn" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST בוואטסאפ"><i class="fa-brands fa-whatsapp"></i></button>
+      <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים בוואטסאפ"><i class="fa-brands fa-whatsapp"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
       <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
     </div>
   </div>
@@ -521,9 +532,6 @@ footer a{color:var(--accent)}
       </div>
       <button class="fav-toggle" id="favFilterBtn" onclick="toggleFavFilter(this)" title="הצג רק מועדפים">
         <i class="fa-solid fa-heart"></i> <span class="fav-label">מועדפים</span> <span id="favCount">0</span>
-      </button>
-      <button class="fav-toggle selected-toggle" id="selectedFilterBtn" onclick="toggleSelectedOnlyFilter(this)" title="השוו בין הפריטים שסימנתם לבחירה">
-        <i class="fa-solid fa-code-compare"></i> <span class="fav-label">השוו בחירות</span> <span id="selectedFilterCount">0</span>
       </button>
     </div>
 
@@ -579,6 +587,7 @@ footer a{color:var(--accent)}
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="רב חן" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="פלאנט איילון" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> פלאנט איילון</label>
         <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="בארבי" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
+        <label class="custom-check pending"><input type="checkbox" class="venue-filter" value="היכל התרבות" disabled onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> היכל התרבות</label>
       </div>
       <p class="filter-hint">מקום מסומן באפור עדיין לא נטען - התיבה תיסמן אוטומטית ברגע שהנתונים יגיעו.</p>
     </div>
@@ -616,6 +625,9 @@ footer a{color:var(--accent)}
       <button class="toolbar-btn whatsapp-btn" id="whatsappSelectedBtn" onclick="handleWhatsappShareClick()">
         <i class="fa-brands fa-whatsapp"></i> <span id="whatsappSelectedBtnLabel">  שיתוף ב-WhatsApp</span>
       </button>
+      <button class="toolbar-btn selected-toggle" id="selectedFilterBtn" onclick="toggleSelectedOnlyFilter(this)" title="השוו בין הפריטים שסימנתם לבחירה">
+        <i class="fa-solid fa-code-compare"></i> השוו בחירות <span id="selectedFilterCount">0</span>
+      </button>
       <button class="toolbar-btn reco-btn" id="recoBtn" onclick="openRecoModal()" style="display:none">
         <i class="fa-solid fa-robot"></i> רוצים לשמוע מה דעתי? 🤖💡
       </button>
@@ -627,7 +639,7 @@ footer a{color:var(--accent)}
   </main>
 
   <footer>
-    הנתונים נשאבים אוטומטית מהאתרים הרשמיים (בית ליסין, הבימה, קולנוע לב, רב חן דיזנגוף, פלאנט איילון, בארבי) ועשויים להשתנות.
+    הנתונים נשאבים אוטומטית מהאתרים הרשמיים ועשויים להשתנות.
     מומלץ לאמת מחיר וזמינות באתר הרשמי לפני רכישה.
   </footer>
 
@@ -774,9 +786,9 @@ const RAVHEN_DAYS_INITIAL = 3;
 const RAVHEN_DAYS_EXTENDED = 6;
 const RAVHEN_CONCURRENCY = 2;
 const FETCH_TIMEOUT_MS = 30000;
-const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen', 'planet']);
+const MULTI_REQUEST_SOURCES = new Set(['lev', 'ravhen', 'planet', 'tarbut']);
 
-const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', ravhen: 'רב חן', barby: 'בארבי', planet: 'פלאנט איילון' };
+const SOURCE_LABELS = { lessin: 'בית ליסין', habima: 'הבימה', lev: 'קולנוע לב', ravhen: 'רב חן', barby: 'בארבי', planet: 'פלאנט איילון', tarbut: 'היכל התרבות' };
 
 const venueInfo = {
   'בית ליסין': { address: 'דיזנגוף 101, תל אביב', navQuery: 'בית ליסין תל אביב' },
@@ -784,14 +796,17 @@ const venueInfo = {
   'קולנוע לב': { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'קולנוע לב דיזנגוף סנטר' },
   'רב חן':     { address: 'דיזנגוף סנטר, תל אביב', navQuery: 'רב חן דיזנגוף תל אביב' },
   'בארבי':     { address: 'נמל יפו, תל אביב', navQuery: 'מועדון הבארבי נמל יפו' },
-  'פלאנט איילון': { address: 'קניון איילון, אבא הלל סילבר 301, רמת גן', navQuery: 'פלאנט קולנוע איילון רמת גן' }
+  'פלאנט איילון': { address: 'קניון איילון, אבא הלל סילבר 301, רמת גן', navQuery: 'פלאנט קולנוע איילון רמת גן' },
+  'היכל התרבות': { address: 'ז\'בוטינסקי 10, רמת גן', navQuery: 'היכל התרבות רמת גן' }
 };
 
-const VENUE_TO_SOURCE = { 'בית ליסין':'lessin', 'הבימה':'habima', 'קולנוע לב':'lev', 'רב חן':'ravhen', 'בארבי':'barby', 'פלאנט איילון':'planet' };
+const VENUE_TO_SOURCE = { 'בית ליסין':'lessin', 'הבימה':'habima', 'קולנוע לב':'lev', 'רב חן':'ravhen', 'בארבי':'barby', 'פלאנט איילון':'planet', 'היכל התרבות':'tarbut' };
 
 /* מקורות שנטענים אוטומטית עם פתיחת הדף (בכפוף לבחירת העניין הראשונית - ר' activeAutoLoadSources
-   למטה). השאר (הבימה, פלאנט איילון) נטענים על-פי דרישה בלבד (לחיצה על תג המקור, או "רענן הכל"),
-   ולעולם לא אוטומטית - גם אם המשתמש בחר "הכל" בשאלת העניין. */
+   למטה). השאר (הבימה, פלאנט איילון, היכל התרבות) נטענים על-פי דרישה בלבד (לחיצה על תג המקור,
+   או "רענן הכל"), ולעולם לא אוטומטית - גם אם המשתמש בחר "הכל" בשאלת העניין. היכל התרבות
+   דורש עד 20 בקשות רשת (דף לכל הופעה) כדי לקבל שעה/תאריכים, אז הוא "יקר" מדי בשביל טעינה
+   אוטומטית - בדיוק כמו פלאנט.*/
 const AUTO_LOAD_SOURCES = new Set(['barby', 'lev', 'ravhen', 'lessin']);
 
 /* איזה מקורות שייכים לכל קטגוריה, לצורך שאלת העניין הראשונית (openInterestModal) - ממפה
@@ -1388,6 +1403,122 @@ async function fetchBarby(){
   return events;
 }
 
+/* היכל התרבות: אתר וורדפרס (Event Organiser). הלוח החודשי (ul.eo-events) מוצג בפועל ב-HTML
+   הסטטי בלי JS - רשימת הופעות עם כותרת/תמונה/קישור לדף ההופעה, אבל בלי שעה. הפרטים המלאים
+   (שעה, אולם, ותאריכים+קישורי רכישה לכל תאריך) נשאבים מ-og:description ומכפתורי "לרכישת
+   כרטיסים" בדף ההופעה עצמה - אומת בפועל שיש שתי תבניות טקסט (תאריך יחיד מול כמה תאריכים),
+   ושהתקציר (החלק אחרי "מקום פנוי") הוא טקסט עלילה/תיאור אמיתי, לא שיווקי גנרי. */
+async function fetchTarbutShowList(){
+  const html = await jinaFetch('https://www.hatarbut.co.il/%D7%9C%D7%95%D7%97-%D7%94%D7%95%D7%A4%D7%A2%D7%95%D7%AA/calendar/', 'html');
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  const seen = new Set(); const shows = [];
+  doc.querySelectorAll('ul.eo-events li article').forEach(article => {
+    const a = article.querySelector('h3.eo-event-title a[href]');
+    if (!a || seen.has(a.href)) return;
+    const titleEl = a.querySelector('span');
+    const title = (titleEl ? titleEl.textContent : a.textContent).trim();
+    if (!title) return;
+    seen.add(a.href);
+    shows.push({ href: a.href, title, image: extractImageUrl(article.querySelector('img.eo-event-thumbnail')) });
+  });
+  return shows;
+}
+
+/* מפענח את שדה og:description לשעה/אולם/רשימת תאריכים. שתי תבניות אמיתיות שנצפו באתר:
+   הופעה בתאריך יחיד: "תאריך: DD.MM.YY | יום X | HH:MM אולם: NAME לרכישת כרטיסים ..."
+   הופעה במספר תאריכים: "...אולם: NAME תחילת המופע: HH:MM ... לרכישת כרטיסים DD.MM.YY לרכישת כרטיסים DD.MM.YY..." */
+function parseTarbutMeta(desc){
+  if (!desc) return null;
+  const hallMatch = desc.match(/אולם:\s*(\S+)/);
+  const hall = hallMatch ? hallMatch[1] : null;
+  let timeMatch = desc.match(/תחילת המופע:\s*(\d{1,2}:\d{2})/);
+  if (!timeMatch) timeMatch = desc.match(/\|\s*(\d{1,2}:\d{2})\s*אולם:/);
+  const time = timeMatch ? timeMatch[1] : null;
+  let dates = [...desc.matchAll(/לרכישת כרטיסים\s*(\d{2}\.\d{2}\.\d{2})/g)].map(m => m[1]);
+  if (!dates.length){
+    const single = desc.match(/תאריך:\s*(\d{2}\.\d{2}\.\d{2})/);
+    if (single) dates = [single[1]];
+  }
+  if (!time || !dates.length) return null;
+  return { hall, time, dates };
+}
+
+function extractTarbutSynopsis(desc){
+  if (!desc) return null;
+  const idx = desc.indexOf('מקום פנוי');
+  if (idx === -1) return null;
+  const text = desc.slice(idx + 'מקום פנוי'.length).replace(/&nbsp;/g,' ').replace(/\[&hellip;\]\s*$/,'').replace(/\s+/g,' ').trim();
+  if (!text) return null;
+  return text.length > 320 ? text.slice(0, 320).trim() + '…' : text;
+}
+
+/* כפתורי "לרכישת כרטיסים DD.MM.YY" עוברים דרך wrapper של click-tracking (TrendMicro) -
+   מפענחים את פרמטר ה-url בתוך הקישור כדי להגיע ישר ליעד האמיתי (כרטיסיה/Ticketmaster וכו'),
+   מהיר יותר ולא תלוי בשירות מעקב חיצוני. */
+function extractTarbutTicketLinks(doc){
+  const links = {};
+  doc.querySelectorAll('a.elementor-button[href]').forEach(a => {
+    const span = a.querySelector('.elementor-button-text');
+    if (!span) return;
+    const m = span.textContent.match(/לרכישת כרטיסים\s*(\d{2}\.\d{2}\.\d{2})/);
+    if (!m) return;
+    let href = a.getAttribute('href') || '';
+    const wrapped = href.match(/[?&]url=([^&]+)/);
+    if (wrapped){ try{ href = decodeURIComponent(wrapped[1]); }catch(e){} }
+    links[m[1]] = href;
+  });
+  return links;
+}
+
+function parseTarbutDate(dateStr, timeStr){
+  const dm = dateStr.match(/(\d{2})\.(\d{2})\.(\d{2})/);
+  const tm = timeStr.match(/(\d{1,2}):(\d{2})/);
+  if (!dm || !tm) return null;
+  const d = new Date(2000 + Number(dm[3]), Number(dm[2]) - 1, Number(dm[1]), Number(tm[1]), Number(tm[2]));
+  return isNaN(d) ? null : d;
+}
+
+const TARBUT_SHOW_FETCH_CAP = 14;
+const TARBUT_CONCURRENCY = 2;
+
+async function fetchTarbutAll(onProgress){
+  const shows = await fetchTarbutShowList();
+  const capped = shows.slice(0, TARBUT_SHOW_FETCH_CAP);
+  onProgress && onProgress(0, capped.length);
+  const events = [];
+  let idx = 0, done = 0;
+  async function worker(){
+    while (idx < capped.length){
+      if (cancelledSources.has('tarbut')) return;
+      const show = capped[idx++];
+      try{
+        const html = await jinaFetch(show.href, 'html');
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const descMeta = doc.querySelector('meta[property="og:description"]');
+        const desc = descMeta ? descMeta.getAttribute('content') : '';
+        const meta = parseTarbutMeta(desc);
+        if (meta){
+          const ticketLinks = extractTarbutTicketLinks(doc);
+          const synopsis = extractTarbutSynopsis(desc);
+          meta.dates.forEach(dateStr => {
+            const date = parseTarbutDate(dateStr, meta.time);
+            if (!date) return;
+            events.push({
+              id: makeId('tarbut', show.title, date), source:'tarbut', venue:'היכל התרבות', type:'music',
+              title: show.title, date, link: ticketLinks[dateStr] || show.href,
+              extra: meta.hall ? `אולם ${meta.hall}` : 'היכל התרבות', image: show.image || null,
+              synopsis
+            });
+          });
+        }
+      }catch(e){ console.error('Tarbut show failed:', show.title, e); }
+      done++; onProgress && onProgress(done, capped.length);
+    }
+  }
+  await Promise.all(Array.from({length: Math.min(TARBUT_CONCURRENCY, capped.length || 1)}, worker));
+  return events;
+}
+
 /* ===================== Orchestration ===================== */
 
 /* lev/ravhen בוחרים את היקף הטעינה (מצומצם/מורחב) בזמן הקריאה עצמה, כל אחד לפי הדגל
@@ -1398,7 +1529,8 @@ const SOURCE_FETCHERS = {
   lev: (onProgress) => fetchLevAll(onProgress, levExpanded ? LEV_MOVIE_CAP_EXTENDED : LEV_MOVIE_CAP_INITIAL),
   ravhen: (onProgress) => fetchRavHenAll(onProgress, ravhenExpanded ? RAVHEN_DAYS_EXTENDED : RAVHEN_DAYS_INITIAL),
   barby: fetchBarby,
-  planet: fetchPlanetAll
+  planet: fetchPlanetAll,
+  tarbut: fetchTarbutAll
 };
 
 /* בונים מחדש את allEvents מתוך rawEventsBySource. כברירת מחדל חותכים כל מקור ל-3 ימים
@@ -1795,7 +1927,7 @@ const CINEMA_VENUES = ['קולנוע לב', 'רב חן', 'פלאנט איילו�
 const TYPE_TO_VENUES = {
   theatre: ['בית ליסין', 'הבימה'],
   cinema: CINEMA_VENUES,
-  music: ['בארבי'],
+  music: ['בארבי', 'היכל התרבות'],
 };
 
 function isVenueRelevantToCurrentType(value){
@@ -2123,7 +2255,9 @@ function filterEvents(){
   const filtered = allEvents.filter(ev => {
     const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm);
     const matchesVenue = selectedVenues.includes(ev.venue);
-    const matchesType = selectedType === 'all' || ev.type === selectedType;
+    // במצב "השוו בחירות" הז'אנר לא אמור לחתוך פריטים שסומנו במפורש - ההשוואה יכולה
+    // לכלול גם תיאטרון וגם קולנוע וגם מוזיקה יחד, ללא קשר לפילטר הסוג הפעיל כרגע.
+    const matchesType = showOnlySelected || selectedType === 'all' || ev.type === selectedType;
     const dateStr = localDateStr(ev.date);
     const matchesDate = (!startDateVal || dateStr >= startDateVal) && (!endDateVal || dateStr <= endDateVal);
     const hh = String(ev.date.getHours()).padStart(2,'0');
@@ -2476,18 +2610,25 @@ function renderEvents(events){
   countEl.innerHTML = `נמצאו <strong>${events.length}</strong> אירועים`;
   container.innerHTML = '';
 
+  // כותרות "היום/מחר/מחרתיים" רלוונטיות רק כשהתוצאות בפועל פרושות על יותר מיום אחד -
+  // אם הכל באותו יום (למשל תחת פילטר "היום"), הכותרת רק חוזרת על מה שכבר ברור מהפילטר
+  // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה.
+  const showDateGroupHeaders = new Set(events.map(ev => localDateStr(ev.date))).size > 1;
+
   let lastGroupKey = null;
   buildRenderItems(events).forEach(item => {
     const ev = item.display;
     // כותרת קיבוץ לפי יום - items כבר ממוין לפי תאריך ההקרנה המוצגת בפועל, אז מספיק לזהות
     // מעבר בין יום ליום ברצף כדי לדעת מתי לפתוח קבוצה חדשה.
-    const dateGroupKey = localDateStr(ev.date);
-    if (dateGroupKey !== lastGroupKey){
-      lastGroupKey = dateGroupKey;
-      const header = document.createElement('div');
-      header.className = 'date-group-header';
-      header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(dateGroupLabel(ev.date))}`;
-      container.appendChild(header);
+    if (showDateGroupHeaders){
+      const dateGroupKey = localDateStr(ev.date);
+      if (dateGroupKey !== lastGroupKey){
+        lastGroupKey = dateGroupKey;
+        const header = document.createElement('div');
+        header.className = 'date-group-header';
+        header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(dateGroupLabel(ev.date))}`;
+        container.appendChild(header);
+      }
     }
 
     const spansMultipleDays = item.times && new Set(item.times.map(t => localDateStr(t.date))).size > 1;
