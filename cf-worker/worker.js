@@ -1,7 +1,7 @@
 /* ============================================================================
    SHOWMUST — Cloudflare Worker (production)
 
-   Pre-scrapes theatre/cinema/music listings from 7 sources, merges them into
+   Pre-scrapes theatre/cinema/music/stand-up listings from 8 sources, merges them into
    one JSON payload, and caches it in KV (refreshed by a cron trigger every
    3h). The client fetches this once and does all filtering locally.
 
@@ -232,6 +232,34 @@ function slugToImdbHint(url) {
   return slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+/* Some cinema listings return the title in Cyrillic instead of Hebrew/English for certain
+   films - verified live on two different sources: Vista/Planet Ayalon ("Spider-Man: Brand
+   New Day" came back as "ЧЕЛОВЕК-ПАУК: НОВЫЙ ДЕНЬ - :Spider-Man") and Lev ("The Odyssey"
+   came back as bare "ОДИССЕЯ", no Latin text anywhere in the field at all) - both chains
+   evidently also serve Russian-speaking audiences and don't consistently honor the
+   Hebrew/English locale for every title. Preference order: (1) any embedded Latin-script
+   segment in the raw title itself (the vendor sometimes appends the English title after a
+   dash, as in the Spider-Man case - this also makes the client's own OMDb search variants,
+   see imdbQueryVariants in index.html, match correctly instead of failing on garbage text),
+   (2) englishFallback - each call site already computes an English hint independently for
+   OMDb purposes (Vista: slugToImdbHint(film.link); Lev: the site's own .englishName) and
+   passes it in here too, which is exactly what rescues the pure-Cyrillic "ОДИССЕЯ" case that
+   has no Latin segment to extract, (3) the original text, kept as a last resort rather than
+   dropping the showtime entirely - a missing real screening is worse than an imperfect title. */
+const CYRILLIC_RE = /[\u0400-\u04FF]/;
+
+function sanitizeFilmTitle(raw, englishFallback) {
+  if (!raw) return englishFallback || raw;
+  let title = decodeHtmlEntities(raw).replace(/\s+/g, ' ').trim();
+  if (CYRILLIC_RE.test(title)) {
+    const latinSegments = title.match(/[A-Za-z][A-Za-z0-9:''.,&!?\- ]{2,}/g) || [];
+    const best = latinSegments.map((s) => s.trim()).sort((a, b) => b.length - a.length)[0];
+    if (best) title = best;
+    else if (englishFallback) title = englishFallback;
+  }
+  return title.replace(/^[\s:\-–—]+|[\s:\-–—]+$/g, '').replace(/\s+/g, ' ').trim() || raw;
+}
+
 async function fetchVistaDay(sourceKey, dateStr) {
   const cfg = VISTA_CINEMAS[sourceKey];
   const url = `https://${cfg.domain}/${cfg.apiPrefix}/data-api-service/v1/quickbook/${cfg.tenantId}/film-events/in-cinema/${cfg.cinemaId}/at-date/${dateStr}?attr=&lang=he_IL`;
@@ -250,9 +278,10 @@ async function fetchVistaDay(sourceKey, dateStr) {
     // Vista embeds its own UTC offset in eventDateTime, so this parses to the correct instant as-is.
     const date = new Date(ev.eventDateTime);
     if (isNaN(date)) return;
+    const title = sanitizeFilmTitle(film.name, slugToImdbHint(film.link));
     events.push({
-      id: makeId(sourceKey, film.name, date), source: sourceKey, venue: cfg.venue, type: 'cinema',
-      title: film.name, date, link: ev.bookingLink || film.link, extra: cfg.extra,
+      id: makeId(sourceKey, title, date), source: sourceKey, venue: cfg.venue, type: 'cinema',
+      title, date, link: ev.bookingLink || film.link, extra: cfg.extra,
       image: film.posterLink || null, imdbHint: slugToImdbHint(film.link),
       trailerUrl: film.videoLink || null,
     });
@@ -325,12 +354,15 @@ async function fetchLevMovieList() {
   });
 
   return movies
-    .map((m) => ({
-      href: m.href,
-      title: decodeHtmlEntities(m.title || m.altTitle || '').replace(/\s+/g, ' ').trim(),
-      image: m.image,
-      imdbHint: decodeHtmlEntities(m.english).replace(/\s+/g, ' ').trim() || null,
-    }))
+    .map((m) => {
+      const imdbHint = decodeHtmlEntities(m.english).replace(/\s+/g, ' ').trim() || null;
+      return {
+        href: m.href,
+        title: sanitizeFilmTitle(m.title || m.altTitle || '', imdbHint),
+        image: m.image,
+        imdbHint,
+      };
+    })
     .filter((m) => m.title);
 }
 
@@ -667,6 +699,93 @@ async function fetchTarbut() {
 }
 
 // ============================================================================
+// Ozen Bar (Music & Stand-up)
+// ============================================================================
+
+const OZEN_CATEGORIES = {
+  music: { url: 'https://ozentelaviv.com/tc-event-category/ozen-shows/', type: 'music' },
+  standup: { url: 'https://ozentelaviv.com/tc-event-category/stand-up/', type: 'standup' },
+};
+
+/* Verified against both live category-archive pages: every upcoming show is a
+   <article class="... tc_events ..."> whose <h2 class="entry-title"><a> gives the title+link,
+   whose <img class="... wp-post-image"> gives the poster, and whose single .entry-content <p>
+   always *starts* with "DD/MM/YYYY HH:MM[ - [DD/MM/YYYY ]HH:MM]" followed by an optional
+   "לכרטיסים >> <url>" external ticket link (go-out.co seen live; task also names Chillz/IWant
+   as other vendors this venue uses - same plain-text pattern) and then the show's description.
+   Everything needed already lives on this one archive page per category - no per-event detail
+   fetch required, which matters for the Worker's 50-subrequest budget (see refreshEvents). */
+async function fetchOzenCategory(categoryKey) {
+  const cfg = OZEN_CATEGORIES[categoryKey];
+  const res = await fetch(cfg.url, { headers: BROWSER_HEADERS_HTML });
+  if (!res.ok) throw new Error(`ozen-${categoryKey} HTTP ${res.status}`);
+  const html = await res.text();
+
+  const rows = [];
+  let current = null;
+
+  await runRewriter(html, (rewriter) => {
+    rewriter
+      .on('article.tc_events', {
+        element(el) {
+          current = { href: null, title: '', image: null, body: '' };
+          const row = current;
+          rows.push(row);
+          el.onEndTag(() => { if (current === row) current = null; });
+        },
+      })
+      .on('article.tc_events h2.entry-title a', {
+        element(el) { if (current && !current.href) current.href = el.getAttribute('href'); },
+        text(t) { if (current) current.title += t.text; },
+      })
+      .on('article.tc_events img.wp-post-image', {
+        element(el) {
+          if (!current || current.image) return;
+          const src = el.getAttribute('src') || '';
+          if (src && !src.startsWith('data:')) current.image = src;
+        },
+      })
+      .on('article.tc_events .entry-content p', {
+        text(t) { if (current) current.body += t.text; },
+      });
+  });
+
+  const events = [];
+  rows.forEach((row) => {
+    const title = decodeHtmlEntities(row.title).replace(/\s+/g, ' ').trim();
+    if (!title || !row.href) return;
+    const body = decodeHtmlEntities(row.body).replace(/\s+/g, ' ').trim();
+    const dm = body.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})\s+(\d{1,2}):(\d{2})/);
+    if (!dm) return;
+    const [, dd, mm, yyyy, hh, min] = dm;
+    const date = israelWallTimeToUTC(Number(yyyy), Number(mm), Number(dd), Number(hh), Number(min));
+
+    // Not every show includes an inline ticket link (verified live: some events have none
+    // at all), and the lead-in phrase varies ("לכרטיסים >>", "לרכישת כרטיסים >>", "לינק
+    // ... –>>" - all verified live across both categories) - rather than enumerate every
+    // phrasing, just take the first URL in the body (always the ticket link when present,
+    // verified against all 15 live events at implementation time: go-out.co, tickets.comy.co.il).
+    // Falls back to the event's own page when no URL is present, same pattern as lessin/tarbut.
+    const urlMatch = body.match(/https?:\/\/[^\s"'<>]+/);
+    const link = urlMatch ? urlMatch[0] : row.href;
+
+    let synopsis = body
+      .replace(/^\d{1,2}\/\d{1,2}\/\d{4}\s+\d{1,2}:\d{2}(\s*[-–]\s*(?:\d{1,2}\/\d{1,2}\/\d{4}\s+)?\d{1,2}:\d{2})?\s*/, '')
+      .replace(/(לכרטיסים|לרכישת כרטיסים|לינק)[^\S\n]*[:\->–]*[^\S\n]*https?:\/\/\S+/, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (synopsis.length > 320) synopsis = synopsis.slice(0, 320).trim() + '…';
+
+    events.push({
+      id: makeId(`ozen-${categoryKey}`, title, date), source: `ozen-${categoryKey}`, venue: 'אוזן בר', type: cfg.type,
+      title, date, link, extra: 'אוזן בר, נמל תל אביב', image: row.image || null,
+      synopsis: synopsis || null,
+    });
+  });
+  return events;
+}
+
+// ============================================================================
 // Orchestration
 // ============================================================================
 
@@ -693,10 +812,37 @@ function vistaDateRange(daysAhead) {
 
 /* Subrequest budget (Workers free plan caps a single invocation at 50): lessin(1) +
    habima(1) + lev list(1) + lev detail(<=18) + ravhen(6) + planet(6) + barby(1) +
-   hatarbut list(1) + hatarbut detail(<=10) + events KV put(1) = 46 worst case. No OMDb
-   calls happen here at all (see file header), so there's no enrichment budget to share. */
+   hatarbut list(1) + hatarbut detail(<=10) + ozen-music(1) + ozen-standup(1) +
+   previous-payload KV get(1) + events KV put(1) = 49 worst case - cutting it close to
+   the cap, so no further sources should be added here without first trimming LEV_MOVIE_CAP
+   or TARBUT_SHOW_FETCH_CAP. No OMDb calls happen here at all (see file header), so there's
+   no enrichment budget to share. Ozen deliberately parses each category archive in full
+   (no per-event detail fetch, see fetchOzenCategory) specifically to stay cheap here - a
+   detail-fetch-per-show design like Lev/Tarbut would have blown well past the remaining
+   headroom. Music and stand-up are two independent top-level tasks (like ravhen/planet)
+   rather than one combined fetch, so either can fail and fall back on its own without
+   dragging the other down. */
 async function refreshEvents(env) {
   const vistaDates = vistaDateRange(VISTA_DAYS_AHEAD);
+
+  // Self-healing fallback: read the last known-good payload *before* scraping - both its
+  // events (grouped by source) and its per-source status - so that any source which fails
+  // this round (timeout, network error, a DOM change that breaks its selectors) can fall
+  // back to its own most recent successful data instead of silently vanishing from the feed
+  // until the next successful cron run. Failure here (cold start, corrupt KV) just means no
+  // fallback is available - scraping still proceeds.
+  let previousEventsBySource = {};
+  let previousSourceStatus = {};
+  try {
+    const prevJson = await env.SHOWMUST_KV.get(EVENTS_KV_KEY);
+    if (prevJson) {
+      const prevPayload = JSON.parse(prevJson);
+      previousSourceStatus = (prevPayload.meta && prevPayload.meta.sourceStatus) || {};
+      (prevPayload.events || []).forEach((e) => {
+        (previousEventsBySource[e.source] || (previousEventsBySource[e.source] = [])).push(e);
+      });
+    }
+  } catch (e) { console.error('failed to read previous payload for fallback:', e); }
 
   const tasks = {
     lessin: fetchLessin(),
@@ -706,10 +852,16 @@ async function refreshEvents(env) {
     planet: fetchVistaCinema('planet', vistaDates),
     barby: fetchBarby(env),
     tarbut: fetchTarbut(),
+    'ozen-music': fetchOzenCategory('music'),
+    'ozen-standup': fetchOzenCategory('standup'),
   };
 
   const keys = Object.keys(tasks);
   const settled = await Promise.allSettled(Object.values(tasks));
+
+  // Computed once and reused both as meta.generatedAt below and as the lastSuccessfulScrape
+  // stamp for every source that succeeds this round.
+  const generatedAt = new Date().toISOString();
 
   const events = [];
   const sourceStatus = {};
@@ -717,10 +869,22 @@ async function refreshEvents(env) {
     const key = keys[i];
     if (result.status === 'fulfilled') {
       events.push(...result.value);
-      sourceStatus[key] = { ok: true, count: result.value.length };
+      sourceStatus[key] = { ok: true, count: result.value.length, fetchedCount: result.value.length, lastSuccessfulScrape: generatedAt };
     } else {
-      console.error(key, result.reason);
-      sourceStatus[key] = { ok: false, error: String((result.reason && result.reason.message) || result.reason) };
+      // Fallback events already went through date serialization once (ISO strings from the
+      // stored payload) - re-hydrate to Date so they sort/re-serialize identically to fresh
+      // events below. Already-past showtimes in the fallback set are harmless: the client's
+      // own date filters exclude them the same way they would any other past event.
+      const fallbackEvents = (previousEventsBySource[key] || []).map((e) => ({ ...e, date: new Date(e.date) }));
+      events.push(...fallbackEvents);
+      const error = String((result.reason && result.reason.message) || result.reason);
+      console.error(key, 'failed, serving fallback cache:', error);
+      // lastSuccessfulScrape carries forward from the previous round's status rather than
+      // being recomputed here, so it keeps pointing at the true last success through any
+      // number of consecutive failures instead of resetting on every failed retry.
+      const prevStatus = previousSourceStatus[key];
+      const lastSuccessfulScrape = (prevStatus && prevStatus.lastSuccessfulScrape) || null;
+      sourceStatus[key] = { ok: false, count: fallbackEvents.length, fetchedCount: 0, error, lastSuccessfulScrape };
     }
   });
 
@@ -728,7 +892,7 @@ async function refreshEvents(env) {
 
   const payload = {
     meta: {
-      generatedAt: new Date().toISOString(),
+      generatedAt,
       sourceStatus,
       totalEvents: events.length,
     },
