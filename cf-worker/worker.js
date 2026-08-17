@@ -906,10 +906,41 @@ async function refreshEvents(env) {
   return json;
 }
 
+/* Manual scraper trigger - lets an admin force an immediate re-scrape (e.g. right after fixing
+   a broken source, instead of waiting up to 3h for the next cron run) without waiting on
+   ctx.waitUntil like the cron path does: this awaits refreshEvents directly and returns its
+   *own* fresh meta, so the caller gets a real synchronous answer, not a "trust me, it's running"
+   response. Gated by SCRAPE_SECRET (`wrangler secret put SCRAPE_SECRET`) - a plain string
+   comparison, not constant-time, which is an intentional tradeoff for a lightweight admin
+   trigger: worst case on a leaked/guessed key is someone burns your scrape budget early, not
+   data exposure or corruption. Requests are rejected outright if the secret isn't configured
+   at all, so an unset secret can never be misread as "no key required". */
+function isAuthorizedScrapeRequest(url, env) {
+  if (!env.SCRAPE_SECRET) return false;
+  return url.searchParams.get('key') === env.SCRAPE_SECRET;
+}
+
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: CORS_HEADERS });
+    }
+
+    const url = new URL(request.url);
+    const wantsManualScrape = url.pathname === '/scrape' || url.searchParams.get('scrape') === 'true';
+
+    if (wantsManualScrape) {
+      if (!isAuthorizedScrapeRequest(url, env)) {
+        return new Response(JSON.stringify({ error: 'unauthorized' }), {
+          status: 401,
+          headers: { ...CORS_HEADERS, 'content-type': 'application/json; charset=utf-8' },
+        });
+      }
+      const json = await refreshEvents(env);
+      const { meta } = JSON.parse(json);
+      return new Response(JSON.stringify({ triggered: true, meta }, null, 2), {
+        headers: { ...CORS_HEADERS, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      });
     }
 
     let json = null;

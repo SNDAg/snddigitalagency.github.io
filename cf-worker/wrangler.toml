@@ -19,3 +19,9 @@ id = "d60268811209470f8e9db1452cf3ae8b"
 # A free key from https://jina.ai moves it onto its own account quota. Works without one,
 # just as unreliably as before.
 # wrangler secret put JINA_API_KEY
+#
+# Optional: SCRAPE_SECRET. Gates the manual scrape trigger (GET /scrape?key=... or
+# GET /?scrape=true&key=...) that forces an immediate re-scrape instead of waiting for the
+# next cron run - useful right after fixing a broken source. Without this secret set, the
+# endpoint always returns 401 (unset is never treated as "no key required").
+# wrangler secret put SCRAPE_SECRET
