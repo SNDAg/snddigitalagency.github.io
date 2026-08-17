@@ -8,7 +8,7 @@ crons = ["0 */3 * * *"]
 
 [[kv_namespaces]]
 binding = "SHOWMUST_KV"
-id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+id = "SHOWMUST_KV"
 
 # No secrets needed - IMDb ratings are resolved client-side per user (see index.html),
 # not by this worker.

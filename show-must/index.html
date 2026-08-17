@@ -84,12 +84,6 @@ header p{color:var(--text-muted);font-size:1rem}
 .status-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--border)}
 .status-note{display:flex;align-items:center;gap:7px;color:var(--text-muted);font-size:.82rem}
 .status-note i{color:var(--ok)}
-#refreshBtn{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:.85rem;transition:background .2s,transform .15s;display:inline-flex;align-items:center;gap:6px}
-#refreshBtn:hover:not(:disabled){background:var(--accent-hover);transform:translateY(-1px)}
-#refreshBtn:disabled{opacity:.5;cursor:not-allowed}
-#refreshBtn .fa-spin{display:none}
-#refreshBtn.loading .fa-spin{display:inline-block}
-#refreshBtn.loading .fa-sync{display:none}
 
 .search-row{display:flex;gap:12px;align-items:stretch;margin-bottom:18px}
 .search-box{position:relative;flex:1;margin-bottom:0}
@@ -367,7 +361,6 @@ footer a{color:var(--accent)}
   .glass-panel{padding:14px;border-radius:16px;margin-bottom:18px}
 
   .status-bar{flex-direction:column;align-items:stretch;gap:10px;margin-bottom:14px;padding-bottom:14px}
-  #refreshBtn{width:100%;justify-content:center;padding:12px}
   .status-note{justify-content:center}
 
   .search-row{gap:8px;margin-bottom:14px;flex-wrap:wrap}
@@ -467,7 +460,6 @@ footer a{color:var(--accent)}
 
     <div class="status-bar">
       <div class="status-note"><i class="fa-solid fa-circle-check"></i> <span id="statusNoteText">נתונים חיים מהאתרים הרשמיים</span></div>
-      <button id="refreshBtn" onclick="loadAllEvents()" title="רענון נתונים"><i class="fa-solid fa-sync"></i><i class="fa-solid fa-circle-notch fa-spin"></i> רעננו</button>
     </div>
 
     <div class="search-row">
@@ -774,9 +766,6 @@ function dateGroupLabel(date){
    קאש ל-3 שעות). אין יותר טעינה הדרגתית/רקע/ביטול/מקורות נפרדים - כל הסינון מכאן והלאה
    קורה מקומית בזיכרון, מיידי. דירוגי IMDB (אם המשתמש הפעיל אותם) נשלפים בנפרד, ר' למטה. */
 async function loadAllEvents(){
-  const btn = document.getElementById('refreshBtn');
-  btn.disabled = true;
-  btn.classList.add('loading');
   renderSkeletons(8);
   document.getElementById('resultsCount').innerText = 'טוען אירועים...';
 
@@ -794,8 +783,6 @@ async function loadAllEvents(){
     lastLoadFailed = true;
   }
 
-  btn.disabled = false;
-  btn.classList.remove('loading');
   filterEvents();
 }
 
