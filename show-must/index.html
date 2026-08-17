@@ -195,26 +195,25 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .toolbar-btn.whatsapp-btn:not(:disabled):hover{background:#25d366;border-color:#25d366}
 .icon-btn.whatsapp-btn:hover{background:#25d366;border-color:#25d366}
 
-.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
-.event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .35s ease both}
+.events-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.event-card{background:var(--glass);border:1px solid var(--border);border-radius:16px;padding:14px;position:relative;display:flex;flex-direction:column;justify-content:space-between;transition:transform .2s,box-shadow .2s,border-color .2s;animation:cardIn .35s ease both}
 .event-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.35);border-color:rgba(99,102,241,.4)}
 @keyframes cardIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @media (prefers-reduced-motion: reduce){.event-card{animation:none}}
 
-/* max-height קובע תקרה לגובה התמונה גם כשהכרטיס עצמו רחב מאוד (חלון דפדפן שמצליח להכיל
-   רק עמודה אחת, אך רחבה) - בלי זה תמונה בודדת עלולה "לבלוע" את כל מסך הפתיחה ולהיראות
-   כתוצאה יחידה, בלי רמז ברור שיש עוד למטה. */
-.card-image{position:relative;width:100%;aspect-ratio:16/9;max-height:230px;border-radius:12px;overflow:hidden;margin-bottom:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
+/* תמונה נמוכה ורחבה (21:9 + תקרת גובה) בכוונה - כרטיס גבוה מדי גורם לעייפות גלילה, במיוחד
+   כשיש הרבה תוצאות. max-height מונע מהתמונה "לבלוע" כרטיס בודד גם בעמודה רחבה יחידה. */
+.card-image{position:relative;width:100%;aspect-ratio:21/9;max-height:130px;border-radius:12px;overflow:hidden;margin-bottom:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
 .card-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
 .event-card:hover .card-image img{transform:scale(1.06)}
-.card-image .fallback-icon{display:none;font-size:2.1rem;color:rgba(255,255,255,.85)}
+.card-image .fallback-icon{display:none;font-size:1.7rem;color:rgba(255,255,255,.85)}
 .card-image.img-fallback .fallback-icon{display:block}
 .card-image.img-fallback.type-theatre{background:linear-gradient(135deg,rgba(236,72,153,.4),rgba(139,92,246,.35))}
 .card-image.img-fallback.type-cinema{background:linear-gradient(135deg,rgba(6,182,212,.4),rgba(99,102,241,.35))}
 .card-image.img-fallback.type-music{background:linear-gradient(135deg,rgba(16,185,129,.4),rgba(6,182,212,.35))}
 .card-image-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(15,23,42,.55),transparent 55%);pointer-events:none}
 
-.card-meta{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.card-meta{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
 .badge{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff}
 .badge-theatre{background:var(--theatre)}
 .badge-cinema{background:var(--cinema)}
@@ -227,22 +226,28 @@ button.imdb-badge{cursor:pointer;color:var(--text-muted);background:rgba(255,255
 button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);background:rgba(var(--imdb-rgb),.1)}
 .imdb-badge.pending{color:var(--text-muted);cursor:default}
 .imdb-badge.not-found{color:var(--text-muted);background:rgba(255,255,255,.05);border-color:var(--border);cursor:help}
-.event-title{font-size:1.15rem;font-weight:700;margin-bottom:12px;line-height:1.3}
-.event-details{color:var(--text-muted);font-size:.87rem;margin-bottom:18px}
-.event-details div{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.event-details i{color:var(--accent);width:16px;text-align:center}
+.event-title{font-size:1.02rem;font-weight:700;margin-bottom:6px;line-height:1.25}
+
+/* שורת מטא-דאטה מאוחדת - תאריך/שעה/מיקום בשורה אחת קומפקטית במקום שלוש שורות נפרדות */
+.event-meta-compact{display:flex;flex-wrap:wrap;align-items:center;gap:5px;color:var(--text-muted);font-size:.78rem;margin-bottom:6px}
+.event-meta-compact span{display:inline-flex;align-items:center;gap:4px}
+.event-meta-compact i{color:var(--accent);font-size:.85em}
+.event-meta-compact .meta-sep{color:var(--border);opacity:.7}
+.event-meta-compact .meta-venue{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.event-cast-line{color:var(--text-muted);font-size:.76rem;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.event-cast-line i{color:var(--accent)}
 
 /* תקציר עלילה - מוגבל ל-2 שורות כברירת מחדל, עם toggle "קרא עוד/פחות" שלא דורש רינדור מחדש */
-.event-synopsis-wrap{margin-bottom:16px}
-.event-synopsis{color:var(--text-muted);font-size:.83rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.event-synopsis-wrap{margin-bottom:10px}
+.event-synopsis{color:var(--text-muted);font-size:.8rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .event-synopsis.expanded{-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}
-.synopsis-toggle{background:none;border:none;color:var(--accent);font-size:.78rem;font-weight:600;cursor:pointer;padding:4px 0;margin-top:2px}
+.synopsis-toggle{background:none;border:none;color:var(--accent);font-size:.76rem;font-weight:600;cursor:pointer;padding:2px 0;margin-top:2px}
 .synopsis-toggle:hover{text-decoration:underline}
 
 /* בורר "שעות נוספות" - כרטיס קולנוע מקובץ (סרט אחד לכל קולנוע) יכול להסתיר כמה הקרנות
    נוספות מאחורי הכפתור הזה; לחיצה על שעה מחליפה בפועל את ההקרנה המוצגת באותה קוביה. */
-.showtime-picker{margin:-6px 0 16px}
-.showtime-toggle{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-muted);font-size:.78rem;font-weight:600;cursor:pointer;padding:6px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:6px}
+.showtime-picker{margin:0 0 10px}
+.showtime-toggle{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-muted);font-size:.76rem;font-weight:600;cursor:pointer;padding:5px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:6px}
 .showtime-toggle:hover{border-color:var(--accent);color:var(--text-main)}
 .showtime-chevron{font-size:.7em;transition:transform .2s}
 .showtime-toggle.open .showtime-chevron{transform:rotate(180deg)}
@@ -252,16 +257,20 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .showtime-chip:hover{border-color:var(--accent)}
 .showtime-chip.active{background:var(--accent);border-color:var(--accent);font-weight:700}
 
-.btn-row{display:flex;gap:8px;flex-wrap:wrap}
-.btn{flex:1;min-width:90px;padding:10px;border-radius:8px;text-decoration:none;text-align:center;font-size:.82rem;font-weight:600;color:#fff;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;transition:transform .15s,filter .15s}
-.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
-.btn-primary{background:var(--accent)}
-.btn-secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
-.btn-cal{background:var(--music)}
+/* היררכיית כפתורים חדשה: "כרטיסים" הוא ה-CTA הדומיננטי היחיד; ניווט/יומן מצטמצמים
+   לכפתורי-אייקון צנועים לצידו; טריילר יורד לשורה דקה ומינימלית בתחתית הכרטיס לגמרי,
+   כדי שלא יתחרה חזותית בכפתור הכרטיסים. */
+.card-actions{margin-top:auto;padding-top:8px}
+.btn-row-compact{display:flex;gap:8px;align-items:stretch}
+.icon-only-btn{flex:none;width:42px;height:42px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid var(--border);color:var(--text-main);display:flex;align-items:center;justify-content:center;font-size:1rem;text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .15s}
+.icon-only-btn:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-1px)}
+.btn-primary-cta{flex:1;min-width:0;background:var(--accent);color:#fff;border:none;border-radius:10px;font-weight:700;font-size:.9rem;display:flex;align-items:center;justify-content:center;gap:7px;text-decoration:none;transition:filter .15s,transform .15s}
+.btn-primary-cta:hover{filter:brightness(1.12);transform:translateY(-1px)}
 /* גוון ורוד-אדמדם (אותה משפחת צבע כמו --fav, לב המועדפים) במקום אדום טהור - עדיין קורא
-   כ"וידאו/YouTube" אבל משתלב טוב יותר עם הפלטה הסגולה-ורודה הכללית של האפליקציה */
-.btn-trailer{background:rgba(244,63,94,.14);border:1px solid rgba(244,63,94,.35);color:#fda4af;backdrop-filter:blur(6px)}
-.btn-trailer:hover{background:rgba(244,63,94,.24);filter:none}
+   כ"וידאו/YouTube" אבל משתלב טוב יותר עם הפלטה הסגולה-ורודה הכללית של האפליקציה. שורה
+   דקה ומינימלית, לא כפתור מתחרה - זו פעולה משנית ל"נחמד לצפות בו", לא ה-CTA. */
+.btn-trailer-bar{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:8px;padding:7px;border-radius:8px;background:rgba(244,63,94,.1);border:1px solid rgba(244,63,94,.28);color:#fda4af;font-size:.76rem;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);transition:background .2s}
+.btn-trailer-bar:hover{background:rgba(244,63,94,.2)}
 
 .fav-icon{position:absolute;top:16px;left:16px;z-index:2;color:#fff;cursor:pointer;font-size:1.1rem;background:rgba(15,23,42,.55);backdrop-filter:blur(4px);border:none;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s,color .2s}
 .fav-icon:hover{transform:scale(1.08)}
@@ -432,14 +441,16 @@ footer a{color:var(--accent)}
   .bulk-actions{justify-content:space-between;gap:10px}
   .toolbar-btn{flex:1;justify-content:center;padding:10px 8px;font-size:.78rem}
 
-  .events-grid{grid-template-columns:1fr;gap:16px}
-  .event-card{padding:14px;border-radius:14px}
-  .event-title{font-size:1.08rem}
-  .card-image{margin-bottom:12px}
-  .event-details{font-size:.85rem;margin-bottom:16px}
+  /* קומפקטי בכוונה - כדי שלפחות 2 כרטיסים שלמים ייכנסו לגובה המסך בלי גלילה מייגעת */
+  .events-grid{grid-template-columns:1fr;gap:12px}
+  .event-card{padding:12px;border-radius:14px}
+  .event-title{font-size:.98rem;margin-bottom:5px}
+  .card-image{margin-bottom:8px;max-height:110px}
+  .event-meta-compact{font-size:.76rem}
 
-  .btn-row{gap:6px}
   .btn{min-width:0;padding:12px 4px;font-size:.76rem;gap:4px}
+  .icon-only-btn{width:40px;height:40px}
+  .btn-primary-cta{font-size:.86rem}
 
   .fav-icon{width:40px;height:40px;font-size:1.15rem;top:12px;left:12px}
   .select-check{top:12px;right:12px}
@@ -2644,8 +2655,9 @@ function renderEvents(events){
 
     const isFav = favorites.includes(ev.id);
     const isSelected = selectedIds.has(ev.id);
-    const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
-    const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
+    const shortDay = ev.date.toLocaleDateString('he-IL', { weekday:'short' });
+    const dd = String(ev.date.getDate()).padStart(2,'0');
+    const mm = String(ev.date.getMonth()+1).padStart(2,'0');
     const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
     const badgeClass = ev.type === 'theatre' ? 'badge-theatre' : ev.type === 'cinema' ? 'badge-cinema' : 'badge-music';
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : 'מוזיקה';
@@ -2672,12 +2684,14 @@ function renderEvents(events){
           ${imdbBadgeHtml(ev)}
         </div>
         <h2 class="event-title">${escapeHtml(ev.title)}</h2>
-        <div class="event-details">
-          <div><i class="fa-regular fa-calendar"></i> <strong>${escapeHtml(dayName)}</strong>, ${dateStr}</div>
-          <div><i class="fa-regular fa-clock"></i> שעה ${timeStr}</div>
-          <div><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</div>
-          ${ev.cast && ev.cast.length ? `<div><i class="fa-solid fa-users"></i> בהשתתפות: ${escapeHtml(ev.cast.join(', '))}</div>` : ''}
+        <div class="event-meta-compact">
+          <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(shortDay)} ${dd}.${mm}</span>
+          <span class="meta-sep">•</span>
+          <span><i class="fa-regular fa-clock"></i> ${timeStr}</span>
+          <span class="meta-sep">•</span>
+          <span class="meta-venue"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</span>
         </div>
+        ${ev.cast && ev.cast.length ? `<div class="event-cast-line"><i class="fa-solid fa-users"></i> ${escapeHtml(ev.cast.join(', '))}</div>` : ''}
         ${showtimePickerHtml}
         ${ev.synopsis ? `
         <div class="event-synopsis-wrap">
@@ -2685,11 +2699,13 @@ function renderEvents(events){
           <button type="button" class="synopsis-toggle" onclick="toggleSynopsis(this)">קרא עוד</button>
         </div>` : ''}
       </div>
-      <div class="btn-row">
-        <a href="${ev.link}" target="_blank" rel="noopener" class="btn btn-primary"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
-        <a href="${navLink(ev)}" target="_blank" rel="noopener" class="btn btn-secondary" title="נווט עם Waze"><i class="fa-solid fa-car"></i> ניווט</a>
-        <a href="${gCal}" target="_blank" rel="noopener" class="btn btn-cal"><i class="fa-regular fa-calendar-plus"></i> ליומן</a>
-        <button type="button" onclick="openTrailerModal('${ev.id}')" class="btn btn-trailer"><i class="fa-brands fa-youtube"></i> טריילר</button>
+      <div class="card-actions">
+        <div class="btn-row-compact">
+          <a href="${navLink(ev)}" target="_blank" rel="noopener" class="icon-only-btn" title="ניווט עם Waze"><i class="fa-solid fa-car"></i></a>
+          <a href="${gCal}" target="_blank" rel="noopener" class="icon-only-btn" title="הוספה ליומן"><i class="fa-regular fa-calendar-plus"></i></a>
+          <a href="${ev.link}" target="_blank" rel="noopener" class="btn-primary-cta"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
+        </div>
+        <button type="button" onclick="openTrailerModal('${ev.id}')" class="btn-trailer-bar"><i class="fa-brands fa-youtube"></i> טריילר</button>
       </div>
     `;
     container.appendChild(card);
