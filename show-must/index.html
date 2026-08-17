@@ -134,6 +134,14 @@ header p{color:var(--text-muted);font-size:1rem}
 .selection-action-btn.reco:hover{background:linear-gradient(135deg,var(--accent),#c084fc)}
 body.has-selection-bar .container{padding-bottom:80px}
 
+/* רמז גלילה עדין - חץ פועם למטה עם דעיכת גרדיאנט מתחתיו, שמראה שיש עוד תוכן. נעלם
+   ברגע שהמשתמש גולל בפועל (JS מוסיף .hidden), ולא חוזר שוב באותו ביקור. */
+.scroll-cue{position:fixed;left:0;right:0;bottom:0;height:90px;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;pointer-events:none;background:linear-gradient(to top,var(--bg) 10%,transparent 100%);opacity:.9;transition:opacity .35s ease}
+.scroll-cue.hidden{opacity:0}
+.scroll-cue i{color:var(--accent);font-size:1.3rem;animation:scrollCueBounce 1.6s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(99,102,241,.6))}
+@keyframes scrollCueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+@media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none}}
+
 .select-all-link{background:none;border:none;color:var(--accent);font-size:.85rem;font-weight:600;cursor:pointer;padding:4px}
 .select-all-link:hover{text-decoration:underline}
 
@@ -147,6 +155,7 @@ body.has-selection-bar .container{padding-bottom:80px}
 .chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);padding:7px 16px;border-radius:30px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;gap:6px;transition:all .2s}
 .chip:hover{border-color:var(--accent)}
 .chip.active{background:var(--accent);border-color:var(--accent);box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.chip.open{border-color:var(--accent);color:var(--accent)}
 .chip-date-suffix{opacity:.8;font-size:.85em}
 .inputs-row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:.85rem;color:var(--text-muted)}
 input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none;font-size:16px;color-scheme:dark}
@@ -384,36 +393,33 @@ footer a{color:var(--accent)}
   .topbar{padding:8px 10px;border-radius:14px;gap:6px}
   .brand{font-size:.95rem}
   .brand i{font-size:.9rem}
-  .icon-btn{padding:9px 10px;font-size:.78rem}
+  .icon-btn{padding:9px 10px;font-size:.78rem;min-height:44px}
   .whatsapp-cta-label{display:none}
 
   .status-note{justify-content:center;font-size:.76rem}
 
-  .search-row{gap:8px;margin-bottom:14px;flex-wrap:wrap}
-  .search-input{padding:13px 44px 13px 14px;font-size:16px}
-  .search-box{flex-basis:100%}
-  .fav-toggle{padding:0 14px;min-height:40px;flex:1;justify-content:center}
-  .fav-toggle .fav-label{display:none}
-
   .filter-section{margin-bottom:14px}
   .filter-section h3{font-size:.87rem;margin-bottom:10px}
   .section-icon{width:23px;height:23px;font-size:.68rem}
-  .chip{padding:10px 14px;font-size:.8rem;min-height:40px}
-  .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:40px}
-  button.imdb-badge{min-width:40px;min-height:40px;padding:0 10px;font-size:.85rem}
+  /* יעדי מגע של לפחות 44x44px בכל האלמנטים האינטראקטיביים - תקן נגישות מובייל בסיסי */
+  .chip{padding:10px 14px;font-size:.8rem;min-height:44px}
+  .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:44px}
+  button.imdb-badge{min-width:44px;min-height:44px;padding:0 10px;font-size:.85rem}
   .filter-hint{font-size:.74rem}
 
   .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
   .inputs-row label{display:flex;flex-direction:column;gap:5px;width:100%}
-  .inputs-row input{width:100%}
+  .inputs-row input{width:100%;min-height:44px}
 
   /* פס הבקרה נשבר לשתי שורות במובייל: חיפוש מלא ברוחב, ואז שלושת הפילים חולקים את השאר */
   .control-bar{flex-wrap:wrap;padding:8px;gap:8px}
   .control-bar .search-box{flex-basis:100%}
-  .pill-btn{flex:1;justify-content:center;min-height:38px}
+  .control-bar .search-input{min-height:44px}
+  .pill-btn{flex:1;justify-content:center;min-height:44px}
 
-  .selection-bar-inner{padding:9px 12px;gap:10px}
-  .selection-action-btn{width:36px;height:36px}
+  .selection-bar-inner{padding:8px 10px;gap:8px}
+  .selection-clear{width:44px;height:44px}
+  .selection-action-btn{width:44px;height:44px}
 
   /* קומפקטי בכוונה - כדי שלפחות 2 כרטיסים שלמים ייכנסו לגובה המסך בלי גלילה מייגעת */
   .events-grid{grid-template-columns:1fr;gap:12px}
@@ -422,12 +428,12 @@ footer a{color:var(--accent)}
   .card-image{margin-bottom:8px;max-height:110px}
   .event-meta-compact{font-size:.76rem}
 
-  .icon-only-btn{width:40px;height:40px}
-  .btn-primary-cta{font-size:.86rem}
+  .icon-only-btn{width:44px;height:44px}
+  .btn-primary-cta{font-size:.86rem;min-height:44px}
 
-  .fav-icon{width:40px;height:40px;font-size:1.15rem;top:12px;left:12px}
-  .select-check{top:12px;right:12px}
-  .select-check .check-box{width:36px;height:36px}
+  .fav-icon{width:44px;height:44px;font-size:1.15rem;top:10px;left:10px}
+  .select-check{top:10px;right:10px}
+  .select-check .check-box{width:44px;height:44px}
 
   .no-results{padding:30px 16px}
   .no-results-actions{flex-direction:column;align-items:stretch}
@@ -442,6 +448,7 @@ footer a{color:var(--accent)}
   .imdb-banner-text{order:2;flex-basis:100%}
   .imdb-banner-actions{order:3;flex-basis:100%;justify-content:space-between}
   .imdb-banner-cta{flex:1;justify-content:center;min-height:44px}
+  .imdb-banner-dismiss{width:44px;height:44px}
   .wizard-box{padding:22px 16px}
   .wizard-actions{flex-direction:column}
   .wizard-actions.two{flex-direction:column-reverse}
@@ -450,11 +457,12 @@ footer a{color:var(--accent)}
   .trailer-box{padding:14px}
   .trailer-header{margin-bottom:10px;gap:8px}
   .trailer-header h3{font-size:1rem}
-  .trailer-close-btn{width:36px;height:36px;font-size:1.05rem}
+  .trailer-close-btn{width:44px;height:44px;font-size:1.05rem}
   .trailer-fallback{padding:24px 10px}
+  .wizard-close-x{width:44px;height:44px}
 
-  .showtime-toggle{min-height:40px;padding:8px 12px}
-  .showtime-chip{min-height:36px;padding:7px 12px}
+  .showtime-toggle{min-height:44px;padding:8px 12px}
+  .showtime-chip{min-height:44px;padding:7px 12px}
 
   .date-group-header{font-size:.92rem}
 
@@ -470,6 +478,10 @@ footer a{color:var(--accent)}
 <body>
 
 <div class="bg-decor" aria-hidden="true"></div>
+
+<!-- רמז גלילה: נעלם ברגע שהמשתמש גולל בפועל (once) - מרמז שיש עוד תוכן מתחת לקפל בלי
+     להישאר תקוע על המסך אחרי שהמסר כבר התקבל. -->
+<div class="scroll-cue" id="scrollCue" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></div>
 
 <div class="container">
 
@@ -560,9 +572,10 @@ footer a{color:var(--accent)}
         <h3><span class="section-icon date-icon"><i class="fa-solid fa-calendar-days"></i></span> מתי יוצאים</h3>
         <div class="chips-row" id="dateChips">
           <button class="chip active" data-range="today" onclick="setQuickDate('today',this)"><i class="fa-solid fa-star"></i> היום <span id="todayDateSuffix" class="chip-date-suffix"></span></button>
+          <button class="chip" data-range="tomorrow" onclick="setQuickDate('tomorrow',this)">מחר</button>
           <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 הימים הקרובים</button>
-          <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע הקרוב</button>
-          <button class="chip" data-range="2weeks" onclick="setQuickDate('2weeks',this)">השבועיים הקרובים</button>
+          <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע</button>
+          <button class="chip" data-range="2weeks" onclick="setQuickDate('2weeks',this)">בשבועיים הקרובים</button>
           <button class="chip" data-range="custom" onclick="setQuickDate('custom',this)"><i class="fa-solid fa-sliders"></i> מותאם אישית</button>
         </div>
 
@@ -572,7 +585,11 @@ footer a{color:var(--accent)}
         </div>
         <p class="field-error" id="customDateError" style="display:none"></p>
 
-        <div class="inputs-row time-range-row">
+        <!-- מכווץ כברירת מחדל - נפתח רק בלחיצה מפורשת על "שעות", בדיוק כמו קודם -->
+        <div class="chips-row time-toggle-row">
+          <button type="button" class="chip" id="timeToggleChip" onclick="toggleTimeSection()"><i class="fa-solid fa-clock"></i> <span id="timeToggleLabel">שעות</span></button>
+        </div>
+        <div class="inputs-row time-range-row" id="timeRangeRow" style="display:none">
           <label>משעה <input type="time" id="startTimeInput" value="00:00" onchange="applyTimeRangeFromSheet()"></label>
           <label>עד שעה <input type="time" id="endTimeInput" value="23:59" onchange="applyTimeRangeFromSheet()"></label>
           <button type="button" class="chip" id="timeResetChip" onclick="resetTimeRange()" style="display:none">איפוס שעות</button>
@@ -583,9 +600,9 @@ footer a{color:var(--accent)}
         <h3><span class="section-icon type-icon"><i class="fa-solid fa-masks-theater"></i></span> סוג</h3>
         <div class="chips-row" id="typeChips">
           <button class="chip active" data-type="all" onclick="setType('all',this)">הכל</button>
-          <button class="chip" data-type="theatre" onclick="setType('theatre',this)">תיאטרון</button>
-          <button class="chip" data-type="cinema" onclick="setType('cinema',this)">קולנוע</button>
           <button class="chip" data-type="music" onclick="setType('music',this)">מוזיקה</button>
+          <button class="chip" data-type="cinema" onclick="setType('cinema',this)">קולנוע</button>
+          <button class="chip" data-type="theatre" onclick="setType('theatre',this)">תיאטרון</button>
         </div>
       </div>
 
@@ -604,12 +621,12 @@ footer a{color:var(--accent)}
         <h3><span class="section-icon location-icon"><i class="fa-solid fa-location-dot"></i></span> איפה</h3>
         <div class="chips-row">
           <label class="custom-check"><input type="checkbox" class="venue-filter" value="בית ליסין" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בית ליסין</label>
-          <label class="custom-check"><input type="checkbox" class="venue-filter" value="הבימה" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
-          <label class="custom-check"><input type="checkbox" class="venue-filter" value="קולנוע לב" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
+          <label class="custom-check"><input type="checkbox" class="venue-filter" value="הבימה" onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> הבימה</label>
+          <label class="custom-check"><input type="checkbox" class="venue-filter" value="קולנוע לב" onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> קולנוע לב</label>
           <label class="custom-check"><input type="checkbox" class="venue-filter" value="רב חן" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> רב חן</label>
-          <label class="custom-check"><input type="checkbox" class="venue-filter" value="פלאנט איילון" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> פלאנט איילון</label>
+          <label class="custom-check"><input type="checkbox" class="venue-filter" value="פלאנט איילון" onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> פלאנט איילון</label>
           <label class="custom-check"><input type="checkbox" class="venue-filter" value="בארבי" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בארבי</label>
-          <label class="custom-check"><input type="checkbox" class="venue-filter" value="היכל התרבות" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> היכל התרבות</label>
+          <label class="custom-check"><input type="checkbox" class="venue-filter" value="היכל התרבות" onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> היכל התרבות</label>
         </div>
       </div>
 
@@ -768,6 +785,15 @@ let currentQuickRange = 'today'; // עוקב אחרי טווח התאריכים 
   el.textContent = `(${dayName}, ${dd}.${mm})`;
 })();
 
+/* רמז הגלילה נעלם לצמיתות (לביקור הנוכחי) ברגע הגלילה הראשונה בפועל - after that המשתמש
+   כבר יודע שיש עוד תוכן, אין טעם להמשיך להציג לו רמז על משהו שהוא כבר גילה. */
+(function initScrollCue(){
+  const cue = document.getElementById('scrollCue');
+  if (!cue) return;
+  const hide = () => { cue.classList.add('hidden'); window.removeEventListener('scroll', hide); };
+  window.addEventListener('scroll', hide, { passive: true, once: true });
+})();
+
 /* ===================== Utilities ===================== */
 function escapeHtml(str){
   return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -814,6 +840,7 @@ async function loadAllEvents(){
     lastLoadFailed = true;
   }
 
+  refreshVenueVisibility();
   filterEvents();
 }
 
@@ -825,19 +852,25 @@ async function loadAllEvents(){
 function updateDatePillLabel(){
   const label = document.getElementById('datePillLabel');
   if (!label) return;
-  const map = { today:'היום', '3days':'3 ימים', week:'השבוע', '2weeks':'שבועיים', custom:'מותאם אישית' };
+  const map = { today:'היום', tomorrow:'מחר', '3days':'3 ימים', week:'השבוע', '2weeks':'שבועיים', custom:'מותאם אישית' };
   label.textContent = map[currentQuickRange] || 'היום';
 }
+
+/* שלוש המקומות שנבחרו כברירת מחדל בטעינה ראשונית (לא "כל 7 המקומות" כמו קודם) - badge
+   הפילטרים משווה מול הסט הזה, לא מול "הכל מסומן", אחרת היה מציג "1" מיד בטעינה בלי
+   שהמשתמש שינה בפועל שום דבר. */
+const DEFAULT_VENUES = ['בית ליסין', 'רב חן', 'בארבי'];
 
 function countActiveFilters(){
   let n = 0;
   if (currentQuickRange !== 'today') n++;
   if (selectedType !== 'all') n++;
-  if (appliedStartTime !== '00:00' || appliedEndTime !== '23:59') n++;
+  // הצרה האוטומטית של "היום" לשעה הנוכחית היא ברירת מחדל חכמה, לא בחירה ידנית - לא נספרת
+  if (currentQuickRange !== 'today' && (appliedStartTime !== '00:00' || appliedEndTime !== '23:59')) n++;
   if (minImdbRating > 0) n++;
-  const totalVenues = document.querySelectorAll('.venue-filter').length;
-  const checkedVenues = document.querySelectorAll('.venue-filter:checked').length;
-  if (checkedVenues !== totalVenues) n++;
+  const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+  const isDefaultVenues = checkedVenues.length === DEFAULT_VENUES.length && DEFAULT_VENUES.every(v => checkedVenues.includes(v));
+  if (!isDefaultVenues) n++;
   return n;
 }
 
@@ -862,12 +895,36 @@ function closeFilterSheet(){
 }
 
 /* איפוס מהיר לכל הפילטרים המורחבים (לא כולל חיפוש/מועדפים/השוואה - אלה לא "פילטרים
-   נסתרים" מבחינת הגיליון). מסתמך על הפונקציות הקיימות (כל אחת כבר מסננת ומעדכנת badge). */
+   נסתרים" מבחינת הגיליון). מסתמך על הפונקציות הקיימות (כל אחת כבר מסננת ומעדכנת badge).
+   setQuickDate('today',...) כבר מטפל בטווח השעות (חוזר לברירת המחדל החכמה של "היום"),
+   אז אין צורך לקרוא גם ל-resetTimeRange בנוסף - זה רק היה דורס אותה בחזרה ל-00:00-23:59. */
 function resetAllFilters(){
   setQuickDate('today', document.querySelector('#dateChips .chip[data-range="today"]'));
   setType('all', document.querySelector('#typeChips .chip[data-type="all"]'));
-  resetTimeRange();
   if (minImdbRating !== 0) setImdbRatingFilter(0, document.querySelector('#imdbRatingChips .chip[data-min="0"]'));
+}
+
+/* השעה הנוכחית לפי שעון ישראל (לא שעון המכשיר) - מעוגלת מטה לשעה העגולה. */
+function currentIsraelHour(){
+  return Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', hour12: false }).format(new Date()));
+}
+
+/* "היום" מציע כברירת מחדל טווח שעות מצומצם (מהשעה העגולה הנוכחית ועד 23:30) - כדי לא
+   להציג הצגות/הקרנות שכבר התחילו/הסתיימו. כל טווח תאריך אחר (מחר/השבוע/מותאם אישית)
+   חוזר לטווח היום המלא - אין שום סיבה להניח שהמשתמש רוצה רק "מהשעה הנוכחית" למחר. */
+function applyDefaultTimeForRange(range){
+  if (range === 'today'){
+    appliedStartTime = `${String(currentIsraelHour()).padStart(2,'0')}:00`;
+    appliedEndTime = '23:30';
+  } else {
+    appliedStartTime = '00:00';
+    appliedEndTime = '23:59';
+  }
+  const startInput = document.getElementById('startTimeInput');
+  const endInput = document.getElementById('endTimeInput');
+  if (startInput) startInput.value = appliedStartTime;
+  if (endInput) endInput.value = appliedEndTime;
+  updateTimeChipLabel();
 }
 
 function setQuickDate(range, btn){
@@ -875,6 +932,7 @@ function setQuickDate(range, btn){
   btn.classList.add('active');
   document.getElementById('customDateError').style.display = 'none';
   currentQuickRange = range;
+  applyDefaultTimeForRange(range);
 
   if (range === 'custom'){
     document.getElementById('customDateRow').style.removeProperty('display');
@@ -884,11 +942,12 @@ function setQuickDate(range, btn){
   document.getElementById('customDateRow').style.display = 'none';
 
   let start = new Date(), end = new Date();
-  if (range === '3days') end.setDate(today.getDate()+3);
+  if (range === 'tomorrow'){ start.setDate(today.getDate()+1); end.setDate(today.getDate()+1); }
+  else if (range === '3days') end.setDate(today.getDate()+3);
   else if (range === 'week') end.setDate(today.getDate()+7);
   else if (range === '2weeks') end.setDate(today.getDate()+14);
   document.getElementById('startDate').value = localDateStr(start);
-  document.getElementById('endDate').value = localDateStr(range === 'today' ? start : end);
+  document.getElementById('endDate').value = localDateStr(range === 'today' || range === 'tomorrow' ? start : end);
   updateFilterBadge();
   filterEvents();
 }
@@ -920,18 +979,34 @@ function onCustomDateChange(){
   filterEvents();
 }
 
-/* טווח שעות חי בתוך גיליון הסינון עצמו (לא פופאובר נפרד) - שני שדות זמן שמסננים מיידית
-   ב-onchange, בלי צורך בכפתור "החל" נפרד: input[type=time] כבר לא יורה change על כל
-   תזוזה במחוג, רק כשהערך מתקבע. */
-function syncTimeResetVisibility(){
-  const btn = document.getElementById('timeResetChip');
-  if (btn) btn.style.display = (appliedStartTime === '00:00' && appliedEndTime === '23:59') ? 'none' : 'inline-flex';
+/* טווח השעות מכווץ כברירת מחדל - נפתח רק בלחיצה מפורשת על צ'יפ "שעות", בדיוק כמו הפופאובר
+   הישן. בתוך הקטע הפתוח שני שדות זמן שמסננים מיידית ב-onchange, בלי כפתור "החל" נפרד. */
+let timeSectionOpen = false;
+function toggleTimeSection(){
+  timeSectionOpen = !timeSectionOpen;
+  const row = document.getElementById('timeRangeRow');
+  if (row) row.style.display = timeSectionOpen ? 'flex' : 'none';
+  const chip = document.getElementById('timeToggleChip');
+  if (chip) chip.classList.toggle('open', timeSectionOpen);
+}
+
+/* תווית הצ'יפ משקפת תמיד את הטווח בפועל (גם כשמכווץ) - כולל ברירת המחדל האוטומטית של
+   "היום" - כדי שהמשתמש יידע מה מסונן בלי לפתוח. מודגשת (active) רק כששונתה ידנית, לא
+   כשזו סתם ברירת המחדל החכמה של "היום". */
+function updateTimeChipLabel(){
+  const label = document.getElementById('timeToggleLabel');
+  const chip = document.getElementById('timeToggleChip');
+  const resetBtn = document.getElementById('timeResetChip');
+  const isFullDay = appliedStartTime === '00:00' && appliedEndTime === '23:59';
+  if (label) label.textContent = isFullDay ? 'שעות' : `${appliedStartTime}-${appliedEndTime}`;
+  if (chip) chip.classList.toggle('active', !isFullDay && currentQuickRange !== 'today');
+  if (resetBtn) resetBtn.style.display = isFullDay ? 'none' : 'inline-flex';
 }
 
 function applyTimeRangeFromSheet(){
   appliedStartTime = document.getElementById('startTimeInput').value || '00:00';
   appliedEndTime = document.getElementById('endTimeInput').value || '23:59';
-  syncTimeResetVisibility();
+  updateTimeChipLabel();
   updateFilterBadge();
   filterEvents();
 }
@@ -941,7 +1016,7 @@ function resetTimeRange(){
   appliedEndTime = '23:59';
   document.getElementById('startTimeInput').value = '00:00';
   document.getElementById('endTimeInput').value = '23:59';
-  syncTimeResetVisibility();
+  updateTimeChipLabel();
   updateFilterBadge();
   filterEvents();
 }
@@ -969,8 +1044,23 @@ function setType(type, btn){
   btn.classList.add('active');
   selectedType = type;
   syncVenuesToType(type);
+  refreshVenueVisibility();
   updateFilterBadge();
   filterEvents();
+}
+
+/* מסננת (מסתירה) תגיות מקום שאין להן בפועל אף אירוע מהסוג הנבחר - בנפרד מ-syncVenuesToType
+   (שמסמן/מבטל וי לפי שיוך קטגורי סטטי). כאן זו בדיקה דינמית מול הדאטה בפועל: גם מקום
+   ש"שייך" קטגורית לסוג (למשל בית קולנוע) אבל כרגע אין לו שום אירוע מהסוג הזה - מוסתר,
+   כדי לא להציג תגית ריקה שלחיצה עליה לא תשנה כלום. "הכל" משחזר את כל התגיות מיד. */
+function refreshVenueVisibility(){
+  const allow = selectedType === 'all' ? null : new Set(allEvents.filter(e => e.type === selectedType).map(e => e.venue));
+  document.querySelectorAll('.venue-filter').forEach(cb => {
+    const wrapper = cb.closest('.custom-check');
+    if (!wrapper) return;
+    const hasEvents = !allow || allow.has(cb.value);
+    wrapper.style.display = hasEvents ? '' : 'none';
+  });
 }
 
 /* היחס בין תגיות ה"סוג" לתיבות ה"איפה" הוא חד-כיווני עד כה (setType -> syncVenuesToType
@@ -1346,26 +1436,53 @@ function imdbBadgeHtml(ev){
   return `<button type="button" class="imdb-badge" title="${title}" onclick="event.stopPropagation();handleImdbIconClick('${ev.id}')"><i class="fa-brands fa-imdb"></i> IMDb</button>`;
 }
 
-/* מנקים כותרת לפני חיפוש ב-OMDb: מסירים תוכן בסוגריים (שנה/פורמט), מירכאות עבריות,
-   נקודתיים/מקפים ופיסוק שגורם להתאמה מדויקת (t=) להיכשל על כותרות שהן בעצם תקינות. */
+/* מילות-תיאור עבריות שנפוצות בכותרות אתרי קולנוע אבל אף פעם לא חלק מהשם עצמו ב-OMDb -
+   השארתן בשאילתה כמעט תמיד מכשילה התאמה מדויקת (t=). */
+const IMDB_NOISE_WORDS = /\b(מדובב|מדובבת|מתורגם|מתורגמת|תרגום|כתוביות|גרסה מקורית|תלת מימד|דיגיטלי|אנגלית|עברית)\b/g;
+
+/* מנקים כותרת לפני חיפוש ב-OMDb: מסירים תוכן בסוגריים/מרובעים (שנה/פורמט), מילות-תיאור
+   עבריות, מירכאות עבריות, נקודתיים/מקפים, שנה בודדת בסוף (בלי סוגריים), ופיסוק סוגר -
+   כל אלה גורמים להתאמה מדויקת (t=) להיכשל על כותרות שהן בעצם תקינות. */
 function cleanImdbQuery(str){
   if (!str) return '';
   return str
+    .replace(/\[.*?\]/g, ' ')
     .replace(/\(.*?\)/g, ' ')
+    .replace(IMDB_NOISE_WORDS, ' ')
     .replace(/[׳']/g, '')
     .replace(/[:"״]/g, ' ')
+    .replace(/\b(19|20)\d{2}\b\s*$/, '')
+    .replace(/[.!?]+$/g, '')
     .replace(/\s{2,}/g, ' ')
     .trim();
 }
 
-/* וריאציות חיפוש לכותרת נתונה: המנוקה במלואה, ואם יש כתובית אחרי מקף/נקודתיים -
-   גם הגרסה בלי הכתובית (לרוב שם הסרט/ההצגה האמיתי). */
+/* חילוץ "שם לועזי חכם": אתרי הקולנוע הישראליים נוהגים לערבב עברית ולועזית באותה כותרת
+   (למשל "צבעי הזמן / Colours of Time"). OMDb מאונדקס כמעט תמיד לפי השם הלועזי, אז אם
+   יש קטע לטיני משמעותי בכותרת - מחלצים את הארוך מביניהם (לרוב השם המלא, לא ראשי-תיבות
+   מקריים כמו "3D" או "VIP") ומשתמשים בו כווריאציית חיפוש בעדיפות ראשונה. */
+function extractLatinTitle(str){
+  if (!str) return null;
+  const matches = str.match(/[A-Za-z][A-Za-z0-9:''.,&!?\- ]{2,}/g);
+  if (!matches || !matches.length) return null;
+  const best = matches.map(m => m.trim()).sort((a,b) => b.length - a.length)[0];
+  return best && best.length >= 3 ? best : null;
+}
+
+/* וריאציות חיפוש לכותרת נתונה, מהמדויקת/הסבירה ביותר לגמישה יותר: קטע לועזי מחולץ
+   (אם יש), אחר כך הכותרת המנוקה במלואה, ואם יש כתובית אחרי מקף/נקודתיים - גם הגרסה
+   בלי הכתובית (לרוב שם הסרט/ההצגה האמיתי). */
 function imdbQueryVariants(title){
-  const cleaned = cleanImdbQuery(title);
   const variants = [];
-  if (cleaned) variants.push(cleaned);
+  const latin = extractLatinTitle(title);
+  if (latin){
+    const cleanedLatin = cleanImdbQuery(latin);
+    if (cleanedLatin) variants.push(cleanedLatin);
+  }
+  const cleaned = cleanImdbQuery(title);
+  if (cleaned && !variants.includes(cleaned)) variants.push(cleaned);
   const noSubtitle = cleaned.split(/\s[-–—]\s/)[0].trim();
-  if (noSubtitle && noSubtitle !== cleaned) variants.push(noSubtitle);
+  if (noSubtitle && !variants.includes(noSubtitle)) variants.push(noSubtitle);
   return variants;
 }
 
@@ -1721,11 +1838,18 @@ function renderSkeletons(count=8){
 
 const TYPE_ICON = { theatre: 'fa-masks-theater', cinema: 'fa-film', music: 'fa-music' };
 
+/* סדר תצוגה מבוקש: מוזיקה/הופעות ראשון, קולנוע שני, תיאטרון שלישי - חל גם על סדר צ'יפי
+   הסוג (ר' HTML) וגם על סדר הכרטיסים בפועל. תוך כל קבוצת-סוג הסדר עדיין כרונולוגי. */
+const TYPE_ORDER = { music: 0, cinema: 1, theatre: 2 };
+function byTypeThenDate(a, b){
+  return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]) || (a.date - b.date);
+}
+
 /* קיבוץ כרטיסי קולנוע: כל סרט מוצג פעם אחת לכל קולנוע (venue+title) בתוך הסינון הנוכחי,
    עם ההקרנה המוקדמת ביותר כברירת מחדל - או ההקרנה שנבחרה ידנית דרך "שעות נוספות"
    (selectedShowtimeOverride). תיאטרון ומוזיקה ממשיכים להציג כרטיס נפרד לכל אירוע. events
-   כבר ממוין לפי תאריך (filterEvents); אחרי הקיבוץ ממיינים שוב לפי ההקרנה שבפועל מוצגת
-   בכל כרטיס, כך שסדר כרונולוגי וכותרות היום/מחר/מחרתיים נשארים נכונים. */
+   כבר ממוין לפי סוג+תאריך (filterEvents); אחרי הקיבוץ ממיינים שוב באותו סדר לפי ההקרנה
+   שבפועל מוצגת בכל כרטיס, כך שהעדיפות בין הסוגים וכותרות היום/מחר/מחרתיים נשארים נכונים. */
 function buildRenderItems(events){
   const groups = {};
   events.forEach(ev => {
@@ -1745,7 +1869,7 @@ function buildRenderItems(events){
     const display = (overrideId && groupEvents.find(e => e.id === overrideId)) || groupEvents[0];
     items.push({ display, times: groupEvents.length > 1 ? groupEvents : null, groupKey: key });
   });
-  items.sort((a,b) => a.display.date - b.display.date);
+  items.sort((a,b) => byTypeThenDate(a.display, b.display));
   return items;
 }
 
@@ -1792,7 +1916,7 @@ function filterEvents(){
     return matchesSearch && matchesVenue && matchesType && matchesDate && matchesTime && matchesFav && matchesSelected && matchesImdbRating;
   });
 
-  filtered.sort((a,b) => a.date - b.date);
+  filtered.sort(byTypeThenDate);
   renderEvents(filtered);
 }
 

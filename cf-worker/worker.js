@@ -36,6 +36,30 @@ function makeId(source, title, date) {
   return `${source}-${t}-${d}`;
 }
 
+const HTML_NAMED_ENTITIES = {
+  amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+  hellip: '…', mdash: '—', ndash: '–',
+  lsquo: '‘', rsquo: '’', ldquo: '“', rdquo: '”',
+};
+
+/* HTMLRewriter does NOT decode HTML entities for you - not in text() node content, and not
+   in getAttribute() values either (verified: og:description's &quot; and a title's &#8211;
+   both came through to the client completely raw, e.g. "שיער &#8211; HAIR" instead of
+   "שיער – HAIR"). Every scraper below runs its extracted title/attribute text through this
+   before it goes into the payload, otherwise visitors see literal "&#8211;"/"&quot;" garbage
+   in the UI - this was the "broken encoding" reported for the Heichal HaTarbut "Hair" show,
+   and it silently affected every other source's titles/synopses too, not just that one. */
+function decodeHtmlEntities(str) {
+  if (!str) return str;
+  return str.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (match, ent) => {
+    if (ent[0] === '#') {
+      const code = ent[1] === 'x' || ent[1] === 'X' ? parseInt(ent.slice(2), 16) : parseInt(ent.slice(1), 10);
+      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+    }
+    return Object.prototype.hasOwnProperty.call(HTML_NAMED_ENTITIES, ent) ? HTML_NAMED_ENTITIES[ent] : match;
+  });
+}
+
 /* Workers always run in UTC - there is no "local timezone" the way a visitor's browser has
    one. Scraped day/month/hour/minute values are Israel wall-clock time, so naively doing
    new Date(year, month-1, day, hour, minute) here would silently shift every event by
@@ -133,12 +157,12 @@ async function parseLessin(html) {
     const [dd, mm, yyyy] = parts.map(Number);
     const tm = row.time.match(/(\d{1,2}):(\d{2})/);
     if (!tm) continue;
-    const title = row.titleText.replace(/\s+/g, ' ').trim();
+    const title = decodeHtmlEntities(row.titleText).replace(/\s+/g, ' ').trim();
     if (!title || !row.titleHref) continue;
     const date = israelWallTimeToUTC(yyyy, mm, dd, Number(tm[1]), Number(tm[2]));
     events.push({
       id: makeId('lessin', title, date), source: 'lessin', venue: 'בית ליסין', type: 'theatre',
-      title, date, link: row.orderHref || row.titleHref, extra: row.hall.replace(/\s+/g, ' ').trim(), image: null,
+      title, date, link: row.orderHref || row.titleHref, extra: decodeHtmlEntities(row.hall).replace(/\s+/g, ' ').trim(), image: null,
     });
   }
   return events;
@@ -303,9 +327,9 @@ async function fetchLevMovieList() {
   return movies
     .map((m) => ({
       href: m.href,
-      title: (m.title || m.altTitle || '').replace(/\s+/g, ' ').trim(),
+      title: decodeHtmlEntities(m.title || m.altTitle || '').replace(/\s+/g, ' ').trim(),
       image: m.image,
-      imdbHint: m.english.replace(/\s+/g, ' ').trim() || null,
+      imdbHint: decodeHtmlEntities(m.english).replace(/\s+/g, ' ').trim() || null,
     }))
     .filter((m) => m.title);
 }
@@ -333,7 +357,7 @@ async function fetchLevMovieShowtimes(movie) {
     rewriter
       .on('meta[property="og:description"]', {
         element(el) {
-          const content = (el.getAttribute('content') || '').replace(/\s+/g, ' ').trim();
+          const content = decodeHtmlEntities(el.getAttribute('content') || '').replace(/\s+/g, ' ').trim();
           if (content) synopsis = content.length > 320 ? content.slice(0, 320).trim() + '…' : content;
         },
       })
@@ -432,7 +456,7 @@ function parseBarbyMarkdown(text) {
       const cand = lines[j];
       if (!cand) continue;
       if (/^!|כרטיסים|לרכישת|^Image \d|^\[?Image/.test(cand)) continue;
-      title = cand.replace(/^\[|\]$/g, '').trim();
+      title = decodeHtmlEntities(cand.replace(/^\[|\]$/g, '')).trim();
       break;
     }
     if (!title) continue;
@@ -504,7 +528,7 @@ async function fetchTarbutShowList() {
           el.onEndTag(() => {
             if (show.href && show.title && !seen.has(show.href)) {
               seen.add(show.href);
-              shows.push({ href: show.href, title: show.title.replace(/\s+/g, ' ').trim(), image: show.image });
+              shows.push({ href: show.href, title: decodeHtmlEntities(show.title).replace(/\s+/g, ' ').trim(), image: show.image });
             }
             if (current === show) current = null;
           });
@@ -533,8 +557,10 @@ async function fetchTarbutShowList() {
    verified against both shapes on live pages. */
 function parseTarbutMeta(desc) {
   if (!desc) return null;
-  const hallMatch = desc.match(/אולם:\s*(\S+)/);
-  const hall = hallMatch ? hallMatch[1] : null;
+  // \S+ only grabbed the hall's first word, silently truncating multi-word hall names -
+  // capture everything up to the next known label instead.
+  const hallMatch = desc.match(/אולם:\s*([^\n]+?)\s*(?:תחילת המופע:|לרכישת כרטיסים|$)/);
+  const hall = hallMatch ? hallMatch[1].trim() : null;
   let timeMatch = desc.match(/תחילת המופע:\s*(\d{1,2}:\d{2})/);
   if (!timeMatch) timeMatch = desc.match(/\|\s*(\d{1,2}:\d{2})\s*אולם:/);
   const time = timeMatch ? timeMatch[1] : null;
@@ -551,7 +577,9 @@ function extractTarbutSynopsis(desc) {
   if (!desc) return null;
   const idx = desc.indexOf('מקום פנוי');
   if (idx === -1) return null;
-  const text = desc.slice(idx + 'מקום פנוי'.length).replace(/&nbsp;/g, ' ').replace(/\[&hellip;\]\s*$/, '').replace(/\s+/g, ' ').trim();
+  // desc is already entity-decoded by the caller, so the WordPress excerpt-truncation
+  // marker now reads as a literal "[…]" (real ellipsis char), not the raw "[&hellip;]".
+  const text = desc.slice(idx + 'מקום פנוי'.length).replace(/\[…\]\s*$/, '').replace(/\s+/g, ' ').trim();
   if (!text) return null;
   return text.length > 320 ? text.slice(0, 320).trim() + '…' : text;
 }
@@ -590,7 +618,7 @@ async function fetchTarbutShowDetail(show) {
   await runRewriter(html, (rewriter) => {
     rewriter
       .on('meta[property="og:description"]', {
-        element(el) { desc = el.getAttribute('content') || ''; },
+        element(el) { desc = decodeHtmlEntities(el.getAttribute('content') || ''); },
       })
       .on('a.elementor-button', {
         element(el) {
