@@ -1,0 +1,14 @@
+name = "aged-hall-eff1"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Refreshes the KV cache every 3 hours - matches CACHE_TTL_SECONDS in worker.js.
+[triggers]
+crons = ["0 */3 * * *"]
+
+[[kv_namespaces]]
+binding = "SHOWMUST_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# No secrets needed - IMDb ratings are resolved client-side per user (see index.html),
+# not by this worker.
