@@ -229,7 +229,34 @@ function slugToImdbHint(url) {
   if (!m || !m[1]) return null;
   const slug = m[1];
   if (/^\d+$/.test(slug)) return null;
+  // Vista sometimes uses its own internal record ID as the slug instead of a real title-slug
+  // - verified live: Planet Ayalon's Russian-dub alternate sessions (see dubLanguageSuffix
+  // below) have film.link === .../films/8085s2r2/8085s2r2 - not a real word, just digits with
+  // a couple of stray letters. A genuine title always has at least one real word (3+ letter
+  // run); reject anything that doesn't, rather than feeding OMDb a garbage query like
+  // "8085s2r2" that can only ever return zero or spurious results.
+  const longestLetterRun = (slug.match(/[a-z]+/gi) || []).reduce((max, s) => Math.max(max, s.length), 0);
+  if (longestLetterRun < 3) return null;
   return slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+/* Vista tags alternate-language dub sessions via attributeIds like "dubbed-lang-ru" - these
+   are real, separately-bookable screenings, not a scraping glitch (verified live: Planet
+   Ayalon's Russian-dubbed "Spider-Man: Brand New Day" session carries attributeIds including
+   "dubbed-lang-ru", its own filmId, and a name field that's Cyrillic apart from a truncated
+   "Spider-Man:" fragment - see sanitizeFilmTitle's Cyrillic handling below, which is what
+   produces the bare "Spider-Man" title from it). Left unlabeled, a session like that renders
+   as an unexplained duplicate card right next to the main Hebrew listing. Appends a Hebrew
+   "(דיבוב <language>)" suffix so it reads as intentional; unknown language codes fall back to
+   the raw code rather than being silently dropped. */
+const DUB_LANGUAGE_LABELS = { ru: 'רוסית', en: 'אנגלית', fr: 'צרפתית', es: 'ספרדית', ar: 'ערבית' };
+
+function dubLanguageSuffix(attributeIds) {
+  if (!Array.isArray(attributeIds)) return '';
+  const attr = attributeIds.find((a) => /^dubbed-lang-/.test(a));
+  if (!attr) return '';
+  const code = attr.replace('dubbed-lang-', '');
+  return ` (דיבוב ${DUB_LANGUAGE_LABELS[code] || code})`;
 }
 
 /* Some cinema listings return the title in Cyrillic instead of Hebrew/English for certain
@@ -278,12 +305,18 @@ async function fetchVistaDay(sourceKey, dateStr) {
     // Vista embeds its own UTC offset in eventDateTime, so this parses to the correct instant as-is.
     const date = new Date(ev.eventDateTime);
     if (isNaN(date)) return;
-    const title = sanitizeFilmTitle(film.name, slugToImdbHint(film.link));
+    const title = sanitizeFilmTitle(film.name, slugToImdbHint(film.link)) + dubLanguageSuffix(film.attributeIds);
     events.push({
       id: makeId(sourceKey, title, date), source: sourceKey, venue: cfg.venue, type: 'cinema',
       title, date, link: ev.bookingLink || film.link, extra: cfg.extra,
       image: film.posterLink || null, imdbHint: slugToImdbHint(film.link),
       trailerUrl: film.videoLink || null,
+      // Vista's own release year (e.g. "2026") - lets the client disambiguate OMDb lookups
+      // for common English words that collide with unrelated films from other decades sharing
+      // the exact same title (see fetchImdbScore in index.html). Not available from the other
+      // (non-Vista) sources, so this is null there - omdbLookup already treats a falsy year as
+      // "no year filter", so that's a no-op for them, not a regression.
+      releaseYear: film.releaseYear || null,
     });
   });
   return events;
@@ -890,8 +923,15 @@ async function refreshEvents(env) {
 
   events.sort((a, b) => a.date - b.date);
 
+  // Placed first in meta (object key order is preserved in JSON.stringify output) so it's the
+  // very first thing visible when checking the /scrape response or the raw payload - a single
+  // glance answers "did everything come back OK", instead of having to read sourceStatus's 9
+  // per-source entries one at a time to confirm none of them has ok:false.
+  const allSourcesOk = Object.values(sourceStatus).every((s) => s.ok);
+
   const payload = {
     meta: {
+      allSourcesOk,
       generatedAt,
       sourceStatus,
       totalEvents: events.length,

@@ -201,6 +201,11 @@ body.has-selection-bar .scroll-cue{opacity:0;pointer-events:none}
 input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px solid var(--border);color:#fff;padding:7px 10px;border-radius:8px;outline:none;font-size:16px;color-scheme:dark}
 .filter-hint{color:var(--text-muted);font-size:.78rem;margin-top:8px}
 .custom-date-row{margin-top:12px}
+/* בלי זה, כשטווח התאריכים אינו "מותאם אישית" (customDateRow ו-customDateError שניהם
+   display:none, לא תופסים גובה), צ'יפ "שעות" נדבק ישירות מתחת לשורת צ'יפי התאריך בלי
+   שום רווח - ר' משימה 7. עקבי עם ה-margin-top:12px של custom-date-row/time-range-row
+   הסמוכות. */
+.time-toggle-row{margin-top:12px}
 
 /* תיבת סימון מותאמת אישית - משמשת גם לסינון מקומות וגם לבחירה מרובה */
 .custom-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;background:rgba(15,23,42,.5);border:1px solid var(--border);padding:7px 14px 7px 10px;border-radius:30px;font-size:.85rem;transition:border-color .2s,opacity .2s}
@@ -435,7 +440,10 @@ footer a{color:var(--accent)}
   .topbar{padding:8px 10px;border-radius:14px;gap:6px}
   .brand{font-size:.95rem}
   .brand i{font-size:.9rem}
-  .icon-btn{padding:9px 10px;font-size:.78rem;min-height:44px}
+  /* min-width מפורש - בלי זה, כפתורי אייקון-בלבד (הגדרות/שיתוף כשהתווית מוסתרת, ר'
+     .whatsapp-cta-label{display:none} למטה) מצטמצמים לרוחב ~33px (padding+אייקון בלבד),
+     מתחת ליעד המגע המינימלי של 44px לרוחב - למרות ש-min-height כבר דואג לגובה. */
+  .icon-btn{padding:9px 10px;font-size:.78rem;min-height:44px;min-width:44px;justify-content:center}
   .whatsapp-cta-label{display:none}
 
   .status-note{justify-content:center;font-size:.76rem}
@@ -1803,10 +1811,11 @@ async function omdbLookup(apiKey, query, year){
 /* חיפוש "מטושטש" מול OMDb (s=) - מוצא אחרון: לוקחים את התוצאה הראשונה ומביאים לה פרטים
    מלאים (i=) כדי לוודא שיש לה בכלל דירוג IMDB. שימושי בעיקר לכותרות עם רעש שגם אחרי
    ניקוי עדיין לא תואמות בדיוק את השם ב-OMDb. */
-async function omdbSearchFallback(apiKey, query){
+async function omdbSearchFallback(apiKey, query, year){
   if (!query) return null;
   try{
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&s=${encodeURIComponent(query)}&type=movie`);
+    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&s=${encodeURIComponent(query)}&type=movie${yearParam}`);
     if (!res.ok) return null;
     const data = await res.json();
     if (data.Response !== 'True' || !Array.isArray(data.Search) || !data.Search.length) return null;
@@ -1849,8 +1858,11 @@ function omdbKeyErrorMessage(result){
 /* חיפוש דו-לשוני: OMDb מאונדקס כמעט תמיד לפי שם לועזי/אנגלי, אז כשיש רמז אנגלי (ev.imdbHint
    שהשרת שאב אגב הסקרייפינג) מנסים אותו קודם - הסיכוי להצליח גבוה משמעותית. רק אם זה נכשל
    מנסים גם לפי הכותרת המוצגת (בעברית, לרוב). תוצאת "לא נמצא" נשמרת במטמון כדי שלא ננסה
-   שוב על אותה הצגה/סרט בכל רינדור. */
-async function fetchImdbScore(title, hint){
+   שוב על אותה הצגה/סרט בכל רינדור. releaseYear (זמין לקולנוע רק ל-Vista - ר' fetchVistaDay
+   ב-worker.js) מועבר הלאה בתור y= לצמצום התנגשויות בין סרטים שחולקים בדיוק את אותו שם באנגלית
+   בעשורים שונים (למשל "Sweetheart"/"Mutiny"/"The Invite" - כותרות גנריות עם כמה סרטים
+   בשם זהה) - בלעדיו OMDb יכול להחזיר בביטחון מלא דירוג של סרט לגמרי אחר עם אותו שם. */
+async function fetchImdbScore(title, hint, releaseYear){
   if (imdbCache[title] !== undefined) return imdbCache[title];
   if (imdbFetchInFlight.has(title)) return undefined;
   const apiKey = localStorage.getItem('omdb_api_key');
@@ -1858,15 +1870,15 @@ async function fetchImdbScore(title, hint){
   imdbFetchInFlight.add(title);
   try{
     const cleanHint = cleanImdbQuery(hint);
-    let result = cleanHint ? await omdbLookup(apiKey, cleanHint) : null;
+    let result = cleanHint ? await omdbLookup(apiKey, cleanHint, releaseYear) : null;
     if (!result){
       for (const variant of imdbQueryVariants(title)){
         if (variant.toLowerCase() === (cleanHint || '').toLowerCase()) continue;
-        result = await omdbLookup(apiKey, variant);
+        result = await omdbLookup(apiKey, variant, releaseYear);
         if (result) break;
       }
     }
-    if (!result) result = await omdbSearchFallback(apiKey, cleanHint || cleanImdbQuery(title));
+    if (!result) result = await omdbSearchFallback(apiKey, cleanHint || cleanImdbQuery(title), releaseYear);
     imdbCache[title] = result;
     try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
     return result;
@@ -1877,7 +1889,7 @@ async function fetchImdbScore(title, hint){
 
 function triggerImdbForEvent(ev){
   if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
-  fetchImdbScore(ev.title, ev.imdbHint).then(result => { if (result !== undefined) filterEvents(); });
+  fetchImdbScore(ev.title, ev.imdbHint, ev.releaseYear).then(result => { if (result !== undefined) filterEvents(); });
 }
 
 /* דירוג אוטומטי רק כשהתצוגה היא "קולנוע טהור" (סוג=קולנוע, או שכל המקומות המסומנים הם
@@ -1915,7 +1927,7 @@ function handleImdbIconClick(id){
   if (!ev) return;
   if (!localStorage.getItem('omdb_api_key')){ openImdbWizard(); return; }
   if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
-  fetchImdbScore(ev.title, ev.imdbHint).then(() => filterEvents());
+  fetchImdbScore(ev.title, ev.imdbHint, ev.releaseYear).then(() => filterEvents());
   filterEvents(); // imdbFetchInFlight כבר עודכן באופן סנכרוני בתוך fetchImdbScore - מציג מיד מצב "בודקים..."
 }
 
@@ -2190,6 +2202,27 @@ function selectShowtime(groupKey, eventId){
   filterEvents(); // רינדור מחדש - הכרטיס יציג את ההקרנה שנבחרה, באותה קוביה בדיוק
 }
 
+function timeStrToMinutes(t){
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
+}
+
+/* שער קולנוע בתוך "הכל": קולנוע נכלל תמיד כשהסוג נבחר במפורש (ר' matchesType למטה - זה
+   כלל לא נוגע לצ'ק הזה). בתוך "הכל" עצמו קולנוע יכול להציף עשרות תוצאות לכל יום (ר'
+   VISTA - עד 500+ הקרנות), אז נכלל רק כשהחיפוש כבר ממוקד מספיק שקולנוע לא "בולע" את
+   שאר הקטגוריות: יום בודד, טווח שעות מצומצם (עד 8 שעות), או תחילת ערב (מ-15:00) - שלושת
+   התנאים ממשימה 6 בתיעוד. חיפוש רחב ומרובה-ימים בשעות בוקר לא-ממוקדות (ברירת המחדל)
+   ממשיך להחריג קולנוע מ"הכל" כדי לא להטביע את שאר האירועים. */
+function isSingleDayRange(startDateVal, endDateVal){
+  return !!startDateVal && !!endDateVal && startDateVal === endDateVal;
+}
+function isTimeWindowFocusedRange(startTime, endTime){
+  return (timeStrToMinutes(endTime) - timeStrToMinutes(startTime)) <= 8 * 60;
+}
+function isEveningRange(startTime){
+  return timeStrToMinutes(startTime) >= timeStrToMinutes('15:00');
+}
+
 /* מנוע הסינון המשותף - מקבל את קבוצת הז'אנרים לבדיקה כפרמטר במקום לקרוא ישירות את
    selectedTypes, כדי שאפשר יהיה לחשב גם תצוגה מקדימה (מונה התוצאות בגיליון, עם הטיוטה
    modalDraftTypes) בלי לגעת ב-currentFiltered/ברינדור בפועל. כל שאר הפילטרים (תאריך,
@@ -2201,13 +2234,20 @@ function computeFilteredEvents(types){
   const startDateVal = document.getElementById('startDate').value;
   const endDateVal = document.getElementById('endDate').value;
   const selectedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+  const cinemaAllowedInAll = isSingleDayRange(startDateVal, endDateVal)
+    || isTimeWindowFocusedRange(appliedStartTime, appliedEndTime)
+    || isEveningRange(appliedStartTime);
 
   return allEvents.filter(ev => {
     const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm);
     const matchesVenue = selectedVenues.includes(ev.venue);
     // במצב "השוו בחירות" הז'אנר לא אמור לחתוך פריטים שסומנו במפורש - ההשוואה יכולה
     // לכלול גם תיאטרון וגם קולנוע וגם מוזיקה יחד, ללא קשר לפילטר הסוג הפעיל כרגע.
-    const matchesType = showOnlySelected || activeTypes.has('all') || activeTypes.has(ev.type);
+    // בחירה מפורשת של "קולנוע" (activeTypes.has(ev.type)) תמיד מציגה קולנוע ללא תלות
+    // בתאריך/שעה - השער cinemaAllowedInAll חל רק כשהגענו לכאן דרך "הכל".
+    const matchesType = showOnlySelected
+      || activeTypes.has(ev.type)
+      || (activeTypes.has('all') && (ev.type !== 'cinema' || cinemaAllowedInAll));
     const dateStr = localDateStr(ev.date);
     const matchesDate = (!startDateVal || dateStr >= startDateVal) && (!endDateVal || dateStr <= endDateVal);
     const hh = String(ev.date.getHours()).padStart(2,'0');
@@ -2392,6 +2432,13 @@ function renderEvents(events){
    קאש) שהיא *היא* מסך הפתיחה: שלד טעינה קצר (renderSkeletons בתוך loadAllEvents) ואז
    ישר הכרטיסים האמיתיים. באנר ההזמנה להפעלת IMDB מוצג פעם אחת אחרי הטעינה הראשונה,
    אלא אם המשתמש כבר הפעיל דירוגים או סגר את הבאנר בעבר. */
+// syncVenuesToTypes בדרך כלל רץ רק כתגובה לשינוי סוג בפועל (ר' applyGenreSelection -
+// typeChanged) - selectedTypes מתחיל כבר כ-{'all'} מברירת המחדל, אז בלי הקריאה המפורשת
+// הזו כאן, "שינוי" לעולם לא קורה בטעינה הראשונית וה-checked הגולמי שב-HTML (רק בית
+// ליסין/רב חן/בארבי) נשאר כמות שהוא - כך שתחת "הכל" המוצג כברירת מחדל, קולנוע לב/פלאנט
+// איילון/הבימה/היכל התרבות/אוזן בר נעדרים בשקט מהתצוגה הראשונה עד שהמשתמש עצמו יחליף סוג
+// ידנית פעמיים (החוצה וחזרה) כדי להפעיל את הסנכרון בטעות. דווח כבאג (משימה 6).
+syncVenuesToTypes(selectedTypes);
 updateFilterBadge();
 loadAllEvents().then(maybeShowImdbBanner);
 </script>
