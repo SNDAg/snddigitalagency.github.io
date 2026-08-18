@@ -103,12 +103,31 @@ header p{color:var(--text-muted);font-size:1rem}
 .fav-pill.active{background:var(--fav);border-color:var(--fav);color:#fff;box-shadow:0 4px 14px rgba(244,63,94,.35)}
 .filter-badge{background:var(--fav);color:#fff;font-size:.65rem;font-weight:700;min-width:16px;height:16px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:0 4px}
 
-/* ===================== פס ז'אנרים מהיר (מסך ראשי) =====================
-   ריבוי-בחירה ישיר מעל רשת האירועים - ר' משימה 1. גולל אופקית (בלי לגלוש/לעטוף) כדי
-   שלא "יקפוץ" בגובה במובייל כשמספר הצ'יפים גדול מרוחב המסך. */
-.quick-genre-bar{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin-bottom:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.quick-genre-bar::-webkit-scrollbar{display:none}
-.quick-genre-bar .chip{flex:none}
+/* ===================== פס ז'אנרים/מקומות מהיר (מסך ראשי) =====================
+   ריבוי-בחירה ישיר מעל רשת האירועים - ר' משימה 1 + "Enhance Quick Bar". במובייל שני
+   הפסים גוללים אופקית עם scroll-snap (מרגיש כמו אפליקציה, לא כמו רשימה שנעטפת ומקפיצה
+   גובה); בדסקטופ (ר' מדיה-קוורי בהמשך) הם עוברים ל-wrap טבעי - יש מספיק רוחב, אין צורך
+   בגלילה, ועטיפה לשורה שנייה שם היא נקייה ולא "מקפצת" פריסה. */
+.quick-genre-bar,.quick-venue-bar,.quick-imdb-bar{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin-bottom:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:2px}
+.quick-genre-bar::-webkit-scrollbar,.quick-venue-bar::-webkit-scrollbar,.quick-imdb-bar::-webkit-scrollbar{display:none}
+.quick-genre-bar .chip,.quick-venue-bar .chip,.quick-imdb-bar .chip{flex:none;scroll-snap-align:start}
+
+/* צ'יפי המקום/דירוג ה-IMDb מוצגים כקבוצה משנית, חזותית "תלויה" בפס הז'אנרים שמעליה -
+   קצת יותר קטנים/עדינים כדי שהיררכיית הסינון (ז'אנר ראשי, מקום/דירוג משניים בתוכו) תהיה
+   ברורה במבט. */
+.quick-venue-bar,.quick-imdb-bar{margin-top:-8px}
+/* min-height מוגדר כאן במפורש (לא מסתמך על הכלל הכללי .chip{min-height:44px} שבתוך
+   מדיה-קוורי המובייל) - הסלקטור הספציפי יותר .quick-venue-bar .chip היה עוקף אותו
+   ומאפס בשקט את יעד המגע ל-44px גם במובייל, בניגוד לדרישת הנגישות המפורשת. */
+.quick-venue-bar .chip,.quick-imdb-bar .chip{padding:6px 14px;font-size:.8rem;min-height:44px;background:rgba(255,255,255,.03)}
+.quick-venue-bar .chip.active{background:var(--accent);border-color:var(--accent)}
+.quick-imdb-bar .chip.active{background:var(--imdb);border-color:var(--imdb);color:#111;font-weight:700}
+
+@media (min-width:641px){
+  /* בדסקטופ יש מספיק רוחב לרוב המקרים - עטיפה טבעית במקום גלילה מרגישה נכון יותר
+     ("utilizing space efficiently without awkward wrapping"), ו-scroll-snap לא נחוץ. */
+  .quick-genre-bar,.quick-venue-bar,.quick-imdb-bar{flex-wrap:wrap;overflow-x:visible;scroll-snap-type:none}
+}
 
 /* ===================== גיליון סינון (Bottom Sheet) =====================
    כל הפילטרים המורחבים (תאריך/סוג/מקום/דירוג IMDb) חיים כאן במקום תפוסים תמיד על המסך.
@@ -574,6 +593,23 @@ footer a{color:var(--accent)}
     <button type="button" class="chip" data-type="theatre" onclick="toggleQuickGenre('theatre')">תיאטרון</button>
   </div>
 
+  <!-- צ'יפי מקום בפס המהיר - נחשפים דינמית מתחת לצ'יפי הסוג ברגע שנבחר סוג ספציפי (ר' משימת
+       "Enhance Quick Bar: Category Venue Filtering"). מוסתר כברירת מחדל (display:none inline,
+       מוחלף ל-flex ע"י renderQuickVenueChips ברגע שרלוונטי) כדי לא לתפוס מקום/לגרום להבהוב
+       בטעינה הראשונית לפני שה-JS רץ. -->
+  <div class="quick-venue-bar" id="quickVenueBar" role="group" aria-label="סינון מהיר לפי מקום" style="display:none"></div>
+
+  <!-- פילטר דירוג IMDb מינימלי ב-Quick Bar - מוצג רק במצב "ממוקד קולנוע" (isCinemaFocused)
+       וכשיש מפתח OMDb פעיל, ר' "Cinema Mode & IMDB Rating Filter". אותה תיבת-אמת
+       (minImdbRating) כמו הגרסה בגיליון - שתי תצוגות מסונכרנות, לא state כפול. -->
+  <div class="quick-imdb-bar" id="quickImdbBar" role="group" aria-label="סינון לפי דירוג IMDb" style="display:none">
+    <button type="button" class="chip active" data-min="0" onclick="setImdbRatingFilter(0)"><i class="fa-brands fa-imdb"></i> הכל</button>
+    <button type="button" class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
+    <button type="button" class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
+    <button type="button" class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
+    <button type="button" class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
+  </div>
+
   <main class="events-grid" id="eventsContainer">
     <div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>טוען אירועים...</p></div>
   </main>
@@ -649,11 +685,11 @@ footer a{color:var(--accent)}
       <div class="filter-section" id="imdbRatingFilterSection" style="display:none">
         <h3><span class="section-icon imdb-icon"><i class="fa-brands fa-imdb"></i></span> ציון IMDb מינימלי</h3>
         <div class="chips-row" id="imdbRatingChips">
-          <button class="chip active" data-min="0" onclick="setImdbRatingFilter(0,this)">הכל</button>
-          <button class="chip" data-min="6" onclick="setImdbRatingFilter(6,this)">6+</button>
-          <button class="chip" data-min="7" onclick="setImdbRatingFilter(7,this)">7+</button>
-          <button class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5,this)">7.5+</button>
-          <button class="chip" data-min="8" onclick="setImdbRatingFilter(8,this)">8+</button>
+          <button class="chip active" data-min="0" onclick="setImdbRatingFilter(0)">הכל</button>
+          <button class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
+          <button class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
+          <button class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
+          <button class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
         </div>
       </div>
 
@@ -897,6 +933,7 @@ async function loadAllEvents(){
   }
 
   refreshVenueVisibility();
+  renderQuickVenueChips();
   filterEvents();
 }
 
@@ -985,7 +1022,7 @@ function applyFilterSheet(){
 function resetAllFilters(){
   setQuickDate('today', document.querySelector('#dateChips .chip[data-range="today"]'));
   applyGenreSelection(new Set(['all']));
-  if (minImdbRating !== 0) setImdbRatingFilter(0, document.querySelector('#imdbRatingChips .chip[data-min="0"]'));
+  if (minImdbRating !== 0) setImdbRatingFilter(0);
 }
 
 /* השעה הנוכחית לפי שעון ישראל (לא שעון המכשיר) - מעוגלת מטה לשעה העגולה. */
@@ -1162,19 +1199,50 @@ function refreshVenueVisibility(types){
   });
 }
 
-/* אם המשתמש מסמן ידנית מקום שלא שייך לאף אחד מהז'אנרים הפעילים כרגע (ואלה לא "הכל") -
-   הבחירה חוזרת ל"הכל" אוטומטית. אחרת התיבה נראית מסומנת אבל matchesType בפועל מסנן את
-   כל האירועים שלה בשקט - בדיוק סוג ה"0 תוצאות" השקט שמשימה 3 דורשת למנוע. אין תגובה
-   בכיוון ההפוך (לא מנחשים ז'אנר מתוך שילוב תיבות) - זו הרחבה גדולה יותר שלא התבקשה. */
-function reconcileTypesWithVenue(cb){
-  if (selectedTypes.has('all') || !cb.checked) return;
-  const relevant = relevantVenuesForTypes(selectedTypes);
-  if (relevant && relevant.has(cb.value)) return;
-  applyGenreSelection(new Set(['all']));
+/* צ'יפי מקום בפס המהיר (מסך ראשי) - נחשפים מתחת לצ'יפי הסוג ברגע שנבחר סוג ספציפי כלשהו
+   (לא "הכל"), ומאפשרים לכוון/לצמצם מקומות בלי לפתוח את הגיליון בכלל. משקפים תמיד את
+   אותה תיבת-אמת יחידה (.venue-filter checkboxes) שמפעילה גם את הגיליון - אין state
+   כפול, רק שתי תצוגות לאותו מקור אמת (בדיוק כמו quickGenreBar/typeChips לז'אנר). רק
+   מקומות שכבר "גלויים" (יש להם בפועל אירועים תואמים - ר' refreshVenueVisibility) מוצגים
+   כאן, כך ש"אוזן בר" למשל לא יופיע כשאין לו כרגע שום אירוע בדאטה. */
+function renderQuickVenueChips(){
+  const bar = document.getElementById('quickVenueBar');
+  if (!bar) return;
+  if (selectedTypes.has('all')){
+    bar.style.display = 'none';
+    bar.innerHTML = '';
+    return;
+  }
+  const visibleVenues = Array.from(document.querySelectorAll('.venue-filter')).filter(cb => {
+    const wrapper = cb.closest('.custom-check');
+    return wrapper && wrapper.style.display !== 'none';
+  });
+  if (!visibleVenues.length){
+    bar.style.display = 'none';
+    bar.innerHTML = '';
+    return;
+  }
+  bar.style.display = 'flex';
+  bar.innerHTML = visibleVenues.map(cb => `
+    <button type="button" class="chip venue-chip${cb.checked ? ' active' : ''}" onclick="toggleQuickVenue('${cb.value}')">${escapeHtml(cb.value)}</button>
+  `).join('');
 }
 
+function toggleQuickVenue(venue){
+  const cb = Array.from(document.querySelectorAll('.venue-filter')).find(c => c.value === venue);
+  if (!cb) return;
+  cb.checked = !cb.checked;
+  onVenueCheckboxChange(cb);
+}
+
+/* עדכון תיבת מקום בודדת (מהמודל, או מ-toggleQuickVenue בפס המהיר) - סוג וגם מקום הם
+   פילטרים בלתי-תלויים שפועלים ב-AND (ר' computeFilteredEvents), בכוונה בלי שום "תיקון"
+   שקט שמאפס את הז'אנר בחזרה ל"הכל": בעבר הייתה כאן לוגיקה כזו (reconcileTypesWithVenue),
+   אבל היא בדיוק הגורם לבאג "לחיצה על אישור מאפסת את הבחירה" - היא הייתה משנה את
+   selectedTypes/modalDraftTypes בשקט מתוך תוך כדי שהמשתמש רק ניסה לכוון מקום. עכשיו
+   המשתמש חופשי לסמן/לבטל כל מקום בכל שילוב סוג, בדיוק כמו שמשימת "Quick Bar" דורשת. */
 function onVenueCheckboxChange(cb){
-  reconcileTypesWithVenue(cb);
+  renderQuickVenueChips();
   updateFilterBadge();
   filterEvents();
   updateSheetResultsPreview();
@@ -1197,14 +1265,27 @@ function updateGenreChipsUI(){
   renderGenreChipsState(document.getElementById('typeChips'), modalDraftTypes || selectedTypes);
 }
 
-/* מחיל בפועל בחירת ז'אנרים חדשה: מסנכרן תיבות מקום, מרענן נראות תגיות, מעדכן את שני
-   פסי הצ'יפים, ומריץ סינון. זו נקודת הכניסה היחידה שמשנה את selectedTypes בפועל - הן
-   מהקליק המיידי בפס המהיר (toggleQuickGenre) והן מלחיצת "אישור" בגיליון (applyFilterSheet). */
+function setsEqual(a, b){
+  if (a.size !== b.size) return false;
+  for (const v of a) if (!b.has(v)) return false;
+  return true;
+}
+
+/* מחיל בפועל בחירת ז'אנרים חדשה: מרענן נראות תגיות, מעדכן את שני פסי הצ'יפים (סוג
+   ומקום כאחד), ומריץ סינון. זו נקודת הכניסה היחידה שמשנה את selectedTypes בפועל - הן
+   מהקליק המיידי בפס המהיר (toggleQuickGenre) והן מלחיצת "אישור" בגיליון (applyFilterSheet).
+   syncVenuesToTypes (איפוס תיבות המקום לברירת המחדל של הז'אנר) רץ *רק* כשהז'אנר עצמו
+   השתנה בפועל לעומת מה שכבר הוחל - לא בכל קריאה. בלי התנאי הזה, לחיצה על "אישור" בגיליון
+   כשהמשתמש רק כיוון תיבות מקום (בלי לגעת בצ'יפי הסוג בכלל, כך ש-modalDraftTypes זהה
+   ל-selectedTypes) הייתה דורסת בשקט את בחירת המקום הידנית שלו בחזרה לברירת המחדל -
+   בדיוק הבאג "אישור מאפס את הבחירה" שדווח. */
 function applyGenreSelection(newTypes){
+  const typeChanged = !setsEqual(selectedTypes, newTypes);
   selectedTypes = newTypes;
   if (modalDraftTypes !== null) modalDraftTypes = new Set(selectedTypes);
-  syncVenuesToTypes(selectedTypes);
+  if (typeChanged) syncVenuesToTypes(selectedTypes);
   refreshVenueVisibility(selectedTypes);
+  renderQuickVenueChips();
   updateGenreChipsUI();
   updateFilterBadge();
   filterEvents();
@@ -1550,27 +1631,39 @@ function imdbRatingPasses(ev){
   return parseFloat(c.rating) >= minImdbRating;
 }
 
-function setImdbRatingFilter(min, btn){
+/* משקף min בשני מקומות בו-זמנית (הגיליון וה-Quick Bar) - אותה תיבת-אמת יחידה
+   (minImdbRating), שתי תצוגות. תואם לדפוס renderGenreChipsState/renderQuickVenueChips. */
+function renderImdbRatingChipsState(container, min){
+  if (!container) return;
+  container.querySelectorAll('.chip[data-min]').forEach(b => b.classList.toggle('active', parseFloat(b.dataset.min) === min));
+}
+
+function setImdbRatingFilter(min){
   minImdbRating = min;
-  document.querySelectorAll('#imdbRatingChips .chip').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
+  renderImdbRatingChipsState(document.getElementById('imdbRatingChips'), min);
+  renderImdbRatingChipsState(document.getElementById('quickImdbBar'), min);
   if (min > 0) fetchImdbForAllVisibleCinema();
   updateFilterBadge();
   filterEvents();
 }
 
-/* פילטר דירוג ה-IMDB מוצג רק כשהתצוגה ממוקדת קולנוע טהור וכשיש מפתח OMDb פעיל (בלי
-   מפתח אין דירוגים לסנן לפיהם). אם התצוגה מפסיקה להיות ממוקדת-קולנוע (למשל המשתמש עבר
-   ל"הכל") מאפסים את הסינון - כדי לא להשאיר תצוגה "תקועה" עם סף שהמשתמש כבר לא רואה איך
-   לשנות. */
+/* פילטר דירוג ה-IMDB מוצג רק כשהתצוגה ממוקדת קולנוע טהור (isCinemaFocused - ז'אנר קולנוע
+   בלבד, או שכל המקומות המסומנים הם בתי קולנוע) וכשיש מפתח OMDb פעיל (בלי מפתח אין דירוגים
+   לסנן לפיהם) - גם בגיליון וגם ב-Quick Bar (ר' "Cinema Mode Detection"). minImdbRating
+   עצמו לא מתאפס בלחיצת "אישור" (הוא לא חלק מטיוטת הז'אנר) - הוא נשאר בעינו כל עוד המצב
+   עדיין ממוקד-קולנוע, בדיוק כמו שנדרש ב"State Persistence". אם התצוגה מפסיקה להיות
+   ממוקדת-קולנוע (למשל המשתמש עבר ל"הכל") מאפסים את הסינון - כדי לא להשאיר תצוגה "תקועה"
+   עם סף שהמשתמש כבר לא רואה איך לשנות. */
 function refreshImdbRatingFilterSection(){
   const section = document.getElementById('imdbRatingFilterSection');
-  if (!section) return;
+  const quickBar = document.getElementById('quickImdbBar');
   const show = isCinemaFocused() && !!localStorage.getItem('omdb_api_key');
-  section.style.display = show ? 'block' : 'none';
+  if (section) section.style.display = show ? 'block' : 'none';
+  if (quickBar) quickBar.style.display = show ? 'flex' : 'none';
   if (!show && minImdbRating > 0){
     minImdbRating = 0;
-    document.querySelectorAll('#imdbRatingChips .chip').forEach(b => b.classList.toggle('active', b.dataset.min === '0'));
+    renderImdbRatingChipsState(document.getElementById('imdbRatingChips'), 0);
+    renderImdbRatingChipsState(quickBar, 0);
   }
 }
 
@@ -1578,12 +1671,19 @@ function imdbBadgeHtml(ev){
   if (ev.type !== 'cinema') return '';
   const hasKey = !!localStorage.getItem('omdb_api_key');
   const cached = imdbCache[ev.title];
-  if (cached){
+  if (cached && cached.rating){
     const link = cached.imdbId ? `https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/` : null;
     const inner = `<i class="fa-brands fa-imdb"></i> IMDb ${escapeHtml(cached.rating)}`;
     return link
       ? `<a class="imdb-badge" href="${link}" target="_blank" rel="noopener" title="לדף הסרט ב-IMDB" onclick="event.stopPropagation()">${inner}</a>`
       : `<span class="imdb-badge" title="דירוג IMDB">${inner}</span>`;
+  }
+  // הסרט זוהה במדויק מול OMDb (יש imdbId) אבל עדיין אין לו דירוג מספרי - בד"כ סרט חדש/
+  // עתידי מדי. מציגים קישור לדף הסרט האמיתי בלי מספר - זה תמיד עדיף על להמשיך לחיפוש
+  // מטושטש (s=) שעלול לתפוס בטעות סרט אחר לגמרי עם שם דומה/זהה (ר' omdbLookup/
+  // fetchImdbScore - "לה בוהם" נתפס בעבר בטעות בסרט אילם מ-1926 בגלל בדיוק זה).
+  if (cached && cached.imdbId){
+    return `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/" target="_blank" rel="noopener" title="נמצא ב-IMDB, עדיין אין דירוג" onclick="event.stopPropagation()"><i class="fa-brands fa-imdb"></i> IMDb</a>`;
   }
   // נבדק מול OMDb בעבר ולא נמצא - נשאר גלוי (לא נעלם!) עם הודעה ידידותית, במקום כפתור פעיל
   if (hasKey && cached === null){
@@ -1646,16 +1746,20 @@ function imdbQueryVariants(title){
   return variants;
 }
 
-/* חיפוש יחיד מול OMDb לפי התאמה מדויקת (t=). מחזיר {rating,imdbId} כשנמצא, null
-   כשלא נמצא (לא זריקה - "לא נמצא" הוא תוצאה תקינה, לא תקלה), ולעולם לא משאיר UI שבור. */
-async function omdbLookup(apiKey, query){
+/* חיפוש יחיד מול OMDb לפי התאמה מדויקת (t=), עם שנה אופציונלית (y=) לצמצום התנגשויות
+   בין סרטים שחולקים בדיוק את אותו שם בעשורים שונים (ר' fetchImdbScore). מחזיר
+   {rating,imdbId} כשהזיהוי המדויק הצליח - rating יכול להיות null אם הסרט זוהה נכון
+   אבל עדיין אין לו דירוג מספרי (סרט חדש/עתידי מדי, לא שגיאה). מחזיר null רק כשלא נמצא
+   שום סרט בשם הזה (לא זריקה - "לא נמצא" הוא תוצאה תקינה), ולעולם לא משאיר UI שבור. */
+async function omdbLookup(apiKey, query, year){
   if (!query) return null;
   try{
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(query)}`);
+    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(query)}${yearParam}`);
     if (!res.ok) return null;
     const data = await res.json();
-    if (data.Response === 'True' && data.imdbRating && data.imdbRating !== 'N/A'){
-      return { rating: data.imdbRating, imdbId: data.imdbID };
+    if (data.Response === 'True'){
+      return { rating: (data.imdbRating && data.imdbRating !== 'N/A') ? data.imdbRating : null, imdbId: data.imdbID };
     }
     return null;
   }catch(e){
@@ -2092,10 +2196,20 @@ function filterEvents(){
 
 /* מונה התוצאות על כפתור "אישור" בתחתית הגיליון - משקף את מה שהתוצאות *יהיו* אם יאשרו
    את הטיוטה הנוכחית (modalDraftTypes), לא את currentFiltered שכבר הוחל בפועל. בטוח
-   לקרוא גם כשהגיליון סגור (האלמנט קיים תמיד ב-DOM, רק מוסתר). */
+   לקרוא גם כשהגיליון סגור (האלמנט קיים תמיד ב-DOM, רק מוסתר). סופר לפי buildRenderItems
+   (כרטיסים ייחודיים בפועל, לא הקרנות גולמיות) - ר' countUniqueResults למטה. */
 function updateSheetResultsPreview(){
   const countEl = document.getElementById('sheetResultsCount');
-  if (countEl) countEl.textContent = computeFilteredEvents(modalDraftTypes || selectedTypes).length;
+  if (countEl) countEl.textContent = countUniqueResults(computeFilteredEvents(modalDraftTypes || selectedTypes));
+}
+
+/* מספר "התוצאות" חייב לשקף מה שהמשתמש בפועל *רואה* - buildRenderItems כבר מקבץ כל סרט
+   פעם אחת לכל קולנוע (ר' התיעוד שם), אז ספירה לפי events.length הגולמי (כל הקרנה בנפרד)
+   מציגה מספר "מפחיד" ומטעה כשקולנוע מעורב (יכול להיות פי 10-20 יותר מכמה כרטיסים באמת
+   מוצגים על המסך) - דווח כבאג. buildRenderItems כבר רץ בכל מקרה בתוך renderEvents, אז
+   כאן זו רק קריאה קלה בלי לבנות תוכן HTML. */
+function countUniqueResults(events){
+  return buildRenderItems(events).length;
 }
 
 function renderEvents(events){
@@ -2103,8 +2217,12 @@ function renderEvents(events){
   const container = document.getElementById('eventsContainer');
   const countEl = document.getElementById('resultsCount');
   document.getElementById('favCount').innerText = favorites.length;
+  // buildRenderItems (קיבוץ קולנוע - סרט אחד לכל קולנוע) מחושב פעם אחת כאן ומשמש גם
+  // למונה התוצאות (הן כאן והן בגיליון) והן ללולאת הרינדור בהמשך - כדי לא להריץ אותו
+  // פעמיים על אותם events, ובעיקר כדי שהמספר המוצג תמיד יתאים למה שבאמת נראה על המסך.
+  const renderItems = buildRenderItems(events);
   const sheetCountEl = document.getElementById('sheetResultsCount');
-  if (sheetCountEl) sheetCountEl.textContent = events.length;
+  if (sheetCountEl) sheetCountEl.textContent = renderItems.length;
   updateSelectionUI();
   maybeHandleImdbScores(events);
 
@@ -2140,7 +2258,7 @@ function renderEvents(events){
     return;
   }
 
-  countEl.innerHTML = `נמצאו <strong>${events.length}</strong> אירועים`;
+  countEl.innerHTML = `נמצאו <strong>${renderItems.length}</strong> אירועים`;
   container.innerHTML = '';
 
   // כותרות "היום/מחר/מחרתיים" רלוונטיות רק כשהתוצאות בפועל פרושות על יותר מיום אחד -
@@ -2149,7 +2267,7 @@ function renderEvents(events){
   const showDateGroupHeaders = new Set(events.map(ev => localDateStr(ev.date))).size > 1;
 
   let lastGroupKey = null;
-  buildRenderItems(events).forEach(item => {
+  renderItems.forEach(item => {
     const ev = item.display;
     if (showDateGroupHeaders){
       const dateGroupKey = localDateStr(ev.date);
