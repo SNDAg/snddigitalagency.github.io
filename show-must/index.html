@@ -61,9 +61,17 @@ body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color
 header.app-header{margin:18px 0 22px}
 .topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .topbar-actions{display:flex;align-items:center;gap:8px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.4rem;background:linear-gradient(90deg,#a5b4fc,#c084fc,#f472b6,#a5b4fc);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradientShift 8s ease infinite}
+/* כניסה חד-פעמית קלילה בטעינת הדף (משימה 3 בתור) - לא לולאה, רק "רגע" קטן שמושך את
+   העין למיתוג ברגע שהדף עולה, בלי לעכב שום דבר (רץ במקביל לטעינת הדאטה, לא לפניה).
+   .brand מקבל שתי אנימציות ברשימה אחת: הכניסה (חד-פעמית) + gradientShift הקיים
+   (לולאה, כמו קודם). לאימוג'י: pop-in חד-פעמי (.5s) ואז emojiFloat הרגיל מתחיל בדיוק
+   כשה-pop-in מסתיים (animation-delay תואם למשך ה-pop-in) - שתיהן נוגעות ב-transform,
+   אז התזמון המדויק הזה הוא מה שמונע "קפיצה" נראית לעין במעבר ביניהן. */
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.4rem;background:linear-gradient(90deg,#a5b4fc,#c084fc,#f472b6,#a5b4fc);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:brandEntrance .5s ease-out both, gradientShift 8s ease infinite}
+@keyframes brandEntrance{from{opacity:0;transform:translateY(6px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.brand .emoji-accent{display:inline-block;animation:emojiFloat 3s ease-in-out infinite;-webkit-text-fill-color:initial}
+.brand .emoji-accent{display:inline-block;animation:emojiPopIn .5s cubic-bezier(.34,1.56,.64,1) both, emojiFloat 3s ease-in-out .5s infinite;-webkit-text-fill-color:initial}
+@keyframes emojiPopIn{0%{transform:scale(0) rotate(-15deg);opacity:0}60%{transform:scale(1.25) rotate(8deg);opacity:1}100%{transform:scale(1) rotate(0deg);opacity:1}}
 @keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-5px) rotate(-6deg)}}
 @media (prefers-reduced-motion: reduce){.brand{animation:none}.brand .emoji-accent{animation:none}}
 .tagline{color:var(--text-muted);font-size:.85rem;margin-top:5px}
@@ -171,9 +179,13 @@ body.has-selection-bar .container{padding-bottom:80px}
    נעלם ברגע שהמשתמש גולל בפועל או מגיע לסוף התוכן, ומחושב מחדש בכל רינדור. */
 .scroll-cue{position:fixed;left:0;right:0;bottom:0;height:calc(90px + env(safe-area-inset-bottom,0));z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:calc(14px + env(safe-area-inset-bottom,0));pointer-events:none;background:linear-gradient(to top,var(--bg) 10%,transparent 100%);opacity:.9;transition:opacity .35s ease}
 .scroll-cue.hidden{opacity:0}
-.scroll-cue i{color:var(--accent);font-size:1.3rem;animation:scrollCueBounce 1.6s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(99,102,241,.6))}
-@keyframes scrollCueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
-@media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none}}
+/* גלולה עם תווית טקסט במקום אייקון בודד וקטן על רקע גרדיאנט - אייקון לבד (הגרסה
+   הקודמת) התברר כעדין מדי, נעלם בקלות במיוחד במסך רחב (ר' משימה בתור). התווית הופכת
+   את זה לרכיב UI מכוון וברור, לא רק "משהו זז למטה". */
+.scroll-cue-pill{display:flex;align-items:center;gap:8px;background:rgba(30,41,59,.9);backdrop-filter:blur(8px);border:1px solid var(--border);border-radius:30px;padding:9px 18px;font-size:.83rem;font-weight:600;color:var(--text-main);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.scroll-cue-pill i{color:var(--accent);font-size:1.05rem;animation:scrollCueBounce 1.6s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(99,102,241,.6))}
+@keyframes scrollCueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@media (prefers-reduced-motion: reduce){.scroll-cue-pill i{animation:none}}
 /* כשסרגל הבחירה הצף פעיל הוא תופס את אותו אזור תחתון - מחביאים את רמז הגלילה כדי
    שלא יתנגשו חזותית (בחירת כרטיסים ממילא מעידה שהמשתמש כבר גילה את התוכן). */
 body.has-selection-bar .scroll-cue{opacity:0;pointer-events:none}
@@ -255,6 +267,12 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .imdb-badge.pending{color:var(--text-muted);cursor:default}
 .imdb-badge.not-found{color:var(--text-muted);background:rgba(255,255,255,.05);border-color:var(--border);cursor:help}
 .event-title{font-size:1.02rem;font-weight:700;margin-bottom:6px;line-height:1.25}
+
+/* תג יום מוטבע (משימה 1 בתור) - כשקבוצת-תאריך מכילה תוצאה בודדת, לא בונים בשבילה
+   כותרת ברוחב מלא (grid-column:1/-1) שגוררת שורה חדשה כמעט ריקה בווב ועוד גלילה
+   במובייל. במקום זה התווית ("היום"/"מחר"/וכו') יושבת על הכרטיס עצמו, שנשאר תא רגיל
+   ברשת - כך שכמה ימים "בודדים" ברצף פשוט נארזים יחד באותה שורה. ר' renderEvents. */
+.inline-day-badge{padding:4px 10px;border-radius:6px;font-size:.72rem;font-weight:700;color:#fff;background:var(--accent);display:inline-flex;align-items:center;gap:4px}
 
 /* שורת מטא-דאטה מאוחדת - תאריך/שעה/מיקום בשורה אחת קומפקטית במקום שלוש שורות נפרדות */
 .event-meta-compact{display:flex;flex-wrap:wrap;align-items:center;gap:5px;color:var(--text-muted);font-size:.78rem;margin-bottom:6px}
@@ -439,9 +457,18 @@ footer a{color:var(--accent)}
   .brand{font-size:1.1rem;gap:6px}
   /* min-width מפורש - בלי זה, כפתורי אייקון-בלבד (הגדרות/שיתוף כשהתווית מוסתרת, ר'
      .whatsapp-cta-label{display:none} למטה) מצטמצמים לרוחב ~33px (padding+אייקון בלבד),
-     מתחת ליעד המגע המינימלי של 44px לרוחב - למרות ש-min-height כבר דואג לגובה. */
-  .icon-btn{padding:9px 10px;font-size:.78rem;min-height:44px;min-width:44px;justify-content:center}
+     מתחת ליעד המגע המינימלי של 44px לרוחב - למרות ש-min-height כבר דואג לגובה.
+     font-size גדל מ-.78rem - באייקון בודד בתוך תיבה של 44px, אייקון קטן מדי משאיר
+     המון "אוויר ריק" סביבו ונראה כאילו המסגרת גדולה מדי ביחס אליו. */
+  .icon-btn{padding:9px 10px;font-size:1.05rem;min-height:44px;min-width:44px;justify-content:center}
   .whatsapp-cta-label{display:none}
+  /* במובייל, בלי התווית "שתפו עם חברים" (שמבהירה שזה שיתוף), כפתור וואטסאפ ירוק ובולט
+     נקרא כ"תמיכה בוואטסאפ" - דפוס UI נפוץ - ולא כשיתוף, וגם מתחרה חזותית בלוגו לידו.
+     מוריד לאותה עוצמה עדינה כמו כפתור ההגדרות; האייקון עצמו נשאר בירוק וואטסאפ כרמז
+     מספיק בלי להיות CTA דומיננטי. בדסקטופ (עם התווית) אין את הבעיה - נשאר כמו שהיה. */
+  .whatsapp-share-cta{background:var(--glass);border-color:var(--border);box-shadow:none}
+  .whatsapp-share-cta i{color:#25d366}
+  .whatsapp-share-cta:hover{background:rgba(37,211,102,.14);border-color:#25d366;transform:none;box-shadow:none}
 
   /* justify-content:center כאן לא עשה כלום בפועל - .status-note לא נמתח לרוחב .status-bar,
      אז זה רק מרכז את שני הילדים (אייקון+טקסט) בתוך תיבה שכבר בגודל התוכן שלה, ללא אפקט
@@ -545,7 +572,7 @@ footer a{color:var(--accent)}
 
 <!-- רמז גלילה: נעלם ברגע שהמשתמש גולל בפועל (once) - מרמז שיש עוד תוכן מתחת לקפל בלי
      להישאר תקוע על המסך אחרי שהמסר כבר התקבל. -->
-<div class="scroll-cue" id="scrollCue" aria-hidden="true"><i class="fa-solid fa-chevron-down"></i></div>
+<div class="scroll-cue" id="scrollCue" aria-hidden="true"><div class="scroll-cue-pill"><i class="fa-solid fa-chevron-down"></i> <span>עוד תוצאות למטה</span></div></div>
 
 <div class="container">
 
@@ -957,6 +984,37 @@ function dateGroupLabel(date){
   return `${evDay.toLocaleDateString('he-IL', { weekday:'long' })}, ${dd}.${mm}`;
 }
 
+/* כותרת קיבוץ לפי שבוע (משימה בתור: "אחרי" משימה 1 - כשיש הרבה ימים "בודדים" ברצף,
+   כמו בארבי שמארחת בערך אירוע אחד ביום על פני כמה שבועות, כותרת מלאה כמעט לכל יום
+   נהיית רעש: הרבה כותרות "ענקיות" ברצף, וכשמזדמן פה ושם יום עם 2+ אירועים (מקבל
+   כותרת יומית משלו לפי renderEvents), הימים ה"בודדים" שאחריו (ר' .inline-day-badge)
+   בלי כותרת יומית משלהם עלולים להיראות כאילו הם עדיין שייכים לכותרת הקודמת. קיבוץ
+   לפי שבוע (ר' shouldGroupByWeek) פותר את זה: מעט כותרות, ולכל כרטיס עדיין יש
+   .inline-day-badge משלו (בקיבוץ שבועי מוצג על כל כרטיס, לא רק בודדים) שאומר בדיוק
+   איזה יום זה. */
+function weekGroupLabel(date){
+  const d0 = new Date(today); d0.setHours(0,0,0,0);
+  const evDay = new Date(date); evDay.setHours(0,0,0,0);
+  const diffDays = Math.round((evDay - d0) / 86400000);
+  const weekIndex = Math.floor(diffDays / 7);
+  if (weekIndex === 0) return 'השבוע';
+  if (weekIndex === 1) return 'בשבוע הבא';
+  const weekStart = new Date(d0); weekStart.setDate(weekStart.getDate() + weekIndex * 7);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 6);
+  const fmt = (d) => `${String(d.getDate()).padStart(2,'0')}.${String(d.getMonth()+1).padStart(2,'0')}`;
+  return `שבוע ${fmt(weekStart)}–${fmt(weekEnd)}`;
+}
+
+/* מתי עדיף קיבוץ שבועי על פני קיבוץ יומי: כשהתוצאות פרושות על יותר משבוע *וגם* הצפיפות
+   הממוצעת ליום נמוכה (רוב הימים עם תוצאה אחת-שתיים, לא קבוצות גדולות) - בדיוק התבנית
+   של בארבי (הופעה אחת בערב, כמעט כל יום, על פני שבועות). כשהצפיפות גבוהה (למשל טווח
+   קולנוע רחב) כותרות יומיות עדיין המידע השימושי ביותר - נשארות כמו שהיו. */
+function shouldGroupByWeek(events){
+  const uniqueDays = new Set(events.map(ev => localDateStr(ev.date)));
+  if (uniqueDays.size <= 7) return false;
+  return events.length / uniqueDays.size < 2;
+}
+
 /* ===================== טעינת נתונים =====================
    קריאה יחידה לוורקר, שמחזיר את כל הדאטהסט מראש תוך פחות מ-100ms כמעט תמיד (השרת שומר
    קאש ל-3 שעות). אין יותר טעינה הדרגתית/רקע/ביטול/מקורות נפרדים - כל הסינון מכאן והלאה
@@ -1009,11 +1067,13 @@ function updateDatePillLabel(){
   label.textContent = map[currentQuickRange] || 'היום';
 }
 
-/* שלוש המקומות שנבחרו כברירת מחדל בטעינה ראשונית (לא "כל 7 המקומות" כמו קודם) - badge
-   הפילטרים משווה מול הסט הזה, לא מול "הכל מסומן", אחרת היה מציג "1" מיד בטעינה בלי
-   שהמשתמש שינה בפועל שום דבר. */
-const DEFAULT_VENUES = ['בית ליסין', 'רב חן', 'בארבי'];
-
+/* "ברירת מחדל" למקומות היא לא רשימה קבועה - היא מה ש-syncVenuesToTypes היה מסמן
+   בעצמו עבור selectedTypes הנוכחי (הכל מסומן תחת "הכל", רק המקומות הרלוונטיים תחת
+   סוג/ים ספציפיים - ר' relevantVenuesForTypes). badge הפילטרים משווה מול זה, לא מול
+   רשימה קשיחה של מקומות ספציפיים - קודם הייתה כאן רשימה קבועה של 3 מקומות שהתאימה
+   לזמן שבו סימון המקומות בטעינה ראשונית היה שגוי (משימה 6, באג syncVenuesToTypes) -
+   אחרי שהוא תוקן ו"הכל" מסמן את כל 8 המקומות כברירת מחדל, ההשוואה מול 3 בלבד גרמה
+   ל-badge להראות "1" תמיד מיד בטעינה, בלי שהמשתמש שינה בפועל שום דבר. */
 function countActiveFilters(){
   let n = 0;
   if (currentQuickRange !== 'today') n++;
@@ -1022,7 +1082,9 @@ function countActiveFilters(){
   if (currentQuickRange !== 'today' && (appliedStartTime !== '00:00' || appliedEndTime !== '23:59')) n++;
   if (minImdbRating > 0) n++;
   const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
-  const isDefaultVenues = checkedVenues.length === DEFAULT_VENUES.length && DEFAULT_VENUES.every(v => checkedVenues.includes(v));
+  const relevant = relevantVenuesForTypes(selectedTypes);
+  const expectedVenues = relevant ? Array.from(relevant) : Array.from(document.querySelectorAll('.venue-filter')).map(cb => cb.value);
+  const isDefaultVenues = checkedVenues.length === expectedVenues.length && expectedVenues.every(v => checkedVenues.includes(v));
   if (!isDefaultVenues) n++;
   return n;
 }
@@ -2396,13 +2458,42 @@ function renderEvents(events){
   // אם הכל באותו יום (למשל תחת פילטר "היום"), הכותרת רק חוזרת על מה שכבר ברור מהפילטר
   // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה.
   const showDateGroupHeaders = new Set(events.map(ev => localDateStr(ev.date))).size > 1;
+  // בפריסה דלילה על פני הרבה שבועות (ר' shouldGroupByWeek) - כותרת לכל שבוע במקום לכל
+  // יום, עם תג יום על כל כרטיס (לא רק בודדים) כדי שעדיין יהיה ברור בדיוק איזה יום זה.
+  const groupByWeek = showDateGroupHeaders && shouldGroupByWeek(events);
+
+  // כמה renderItems יש לכל תאריך - קובע אם קבוצת התאריך מקבלת כותרת ברוחב מלא (2+
+  // תוצאות) או תג מוטבע על הכרטיס עצמו (תוצאה בודדת) - ר' .inline-day-badge למעלה.
+  const groupSizeByDate = {};
+  if (showDateGroupHeaders && !groupByWeek){
+    renderItems.forEach(item => {
+      const key = localDateStr(item.display.date);
+      groupSizeByDate[key] = (groupSizeByDate[key] || 0) + 1;
+    });
+  }
 
   let lastGroupKey = null;
   renderItems.forEach(item => {
     const ev = item.display;
-    if (showDateGroupHeaders){
+    let inlineDayLabel = '';
+    if (groupByWeek){
+      inlineDayLabel = dateGroupLabel(ev.date); // על כל כרטיס - הכותרת השבועית לבדה לא אומרת איזה יום
+      const d0 = new Date(today); d0.setHours(0,0,0,0);
+      const evDay = new Date(ev.date); evDay.setHours(0,0,0,0);
+      const weekKey = Math.floor(Math.round((evDay - d0) / 86400000) / 7);
+      if (weekKey !== lastGroupKey){
+        lastGroupKey = weekKey;
+        const header = document.createElement('div');
+        header.className = 'date-group-header';
+        header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(weekGroupLabel(ev.date))}`;
+        container.appendChild(header);
+      }
+    } else if (showDateGroupHeaders){
       const dateGroupKey = localDateStr(ev.date);
-      if (dateGroupKey !== lastGroupKey){
+      if (groupSizeByDate[dateGroupKey] === 1){
+        inlineDayLabel = dateGroupLabel(ev.date);
+        lastGroupKey = null; // כדי שקבוצה מרובה-תוצאות שתבוא אחרי תמיד תפתח כותרת משלה
+      } else if (dateGroupKey !== lastGroupKey){
         lastGroupKey = dateGroupKey;
         const header = document.createElement('div');
         header.className = 'date-group-header';
@@ -2448,6 +2539,7 @@ function renderEvents(events){
       <div>
         ${imageBlock}
         <div class="card-meta">
+          ${inlineDayLabel ? `<span class="inline-day-badge"><i class="fa-regular fa-calendar"></i> ${escapeHtml(inlineDayLabel)}</span>` : ''}
           <span class="badge ${badgeClass}">${escapeHtml(ev.venue)}</span>
           <span class="type-badge">${typeLabel}</span>
           ${imdbBadgeHtml(ev)}
