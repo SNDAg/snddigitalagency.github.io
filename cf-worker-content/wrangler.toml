@@ -1,0 +1,23 @@
+name = "aged-hall-content"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Rotating coverage (see worker.js file header) needs to run often to sweep through Lessin/
+# Habima/Hatarbut's full catalogs within a reasonable time - every 40 min, offset from
+# showmust-core's on-the-hour cadence purely so the two don't both fire in the same minute.
+[triggers]
+crons = ["*/40 * * * *"]
+
+# Same KV namespace as showmust-core (cf-worker/wrangler.toml) - this worker writes only its
+# own exclusive key (content-v1), showmust-core writes only its own (events-v1). Neither ever
+# touches the other's key, so there's nothing for the two workers to race or clobber.
+[[kv_namespaces]]
+binding = "SHOWMUST_KV"
+id = "d60268811209470f8e9db1452cf3ae8b"
+
+# Optional: SCRAPE_SECRET. Gates the manual rotation trigger (GET /scrape?key=... or
+# GET /?scrape=true&key=...) that forces an immediate rotation step instead of waiting for the
+# next cron tick. Can be the same value as showmust-core's own SCRAPE_SECRET for convenience,
+# or a different one - they're independent. Without this secret set, the endpoint always
+# returns 401 (unset is never treated as "no key required").
+# wrangler secret put SCRAPE_SECRET

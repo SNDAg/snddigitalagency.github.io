@@ -1,9 +1,18 @@
 /* ============================================================================
-   SHOWMUST — Cloudflare Worker (production)
+   SHOWMUST-CORE — Cloudflare Worker (production, client-facing)
 
    Pre-scrapes theatre/cinema/music/stand-up listings from 8 sources, merges them into
    one JSON payload, and caches it in KV (refreshed by a cron trigger every
    3h). The client fetches this once and does all filtering locally.
+
+   This is the ONLY worker the client ever talks to (same URL as always). A sibling worker,
+   showmust-content (cf-worker-content/), independently scrapes Hatarbut in full plus
+   Lessin/Habima detail-page enrichment (synopsis/trailer) on a rotating schedule, writing
+   its own `content-v1` KV entry. This worker merges that in at REQUEST time (not baked into
+   its own `events-v1` cron cycle) so the client always sees content-worker's latest data
+   immediately, independent of either worker's own cron cadence - see buildClientPayload.
+   Two workers, two exclusively-owned KV keys, no worker ever writes the other's key: nothing
+   to race or clobber.
 
    IMDb ratings are intentionally NOT resolved here. Each visitor supplies
    their own free OMDb API key client-side (stored in their own browser's
@@ -114,8 +123,6 @@ async function runRewriter(html, register) {
 // ============================================================================
 
 const LESSIN_URL = 'https://www.lessin.co.il/%D7%94%D7%A6%D7%92%D7%95%D7%AA/';
-const LESSIN_SHOW_FETCH_CAP = 6;
-const LESSIN_CONCURRENCY = 3;
 
 /* Verified against live markup: each row is
    <tr class="showlistitem" data-date="DD-MM-YYYY"><td>day</td><td>date</td><td>time</td>
@@ -153,10 +160,6 @@ async function parseLessin(html) {
   });
 
   const events = [];
-  // title -> lessin.co.il show page href (row.titleHref, distinct from the ticket-purchase
-  // link used as event.link) - reused below to enrich each unique show with synopsis/trailer
-  // without a second listing fetch, since this href was already scraped for free here.
-  const showHrefs = new Map();
   for (const row of rows) {
     const parts = row.dateAttr.split('-');
     if (parts.length !== 3) continue;
@@ -170,78 +173,22 @@ async function parseLessin(html) {
       id: makeId('lessin', title, date), source: 'lessin', venue: 'בית ליסין', type: 'theatre',
       title, date, link: row.orderHref || row.titleHref, extra: decodeHtmlEntities(row.hall).replace(/\s+/g, ' ').trim(), image: null,
     });
-    if (!showHrefs.has(title)) showHrefs.set(title, row.titleHref);
   }
-  return { events, showHrefs };
+  return events;
 }
 
-/* Lessin's own show page (the href above) carries a real synopsis (og:description) and, for
-   most shows, an embedded YouTube trailer via <a class="showvideo" href="...">) - verified
-   live across 3 different current shows. extractYoutubeId on the client (index.html) already
-   parses youtube.com/embed, youtube.com/watch and youtu.be forms alike, so the raw href is
-   passed through as-is with no reformatting needed. Some shows (workshop/fringe nights)
-   plausibly have no trailer at all - the selector then simply never fires and trailerUrl
-   stays null, same "don't show what we don't have" behavior as everywhere else. */
-async function fetchLessinShowDetail(href) {
-  const res = await fetch(href, { headers: BROWSER_HEADERS_HTML });
-  if (!res.ok) throw new Error('lessin detail HTTP ' + res.status);
-  const html = await res.text();
-
-  let synopsis = null;
-  let trailerUrl = null;
-
-  await runRewriter(html, (rewriter) => {
-    rewriter
-      .on('meta[property="og:description"]', {
-        element(el) {
-          const content = decodeHtmlEntities(el.getAttribute('content') || '').replace(/\s+/g, ' ').trim();
-          if (content) synopsis = content.length > 320 ? content.slice(0, 320).trim() + '…' : content;
-        },
-      })
-      .on('a.showvideo', {
-        element(el) {
-          const href2 = el.getAttribute('href') || '';
-          if (/youtu\.?be/.test(href2)) trailerUrl = href2;
-        },
-      });
-  });
-
-  return { synopsis, trailerUrl };
-}
-
-/* Two-phase fetch, same pattern as fetchLev/fetchTarbut: the listing page gives every
-   showtime for free, then a second bounded pass enriches a capped subset of UNIQUE shows
-   (not showtimes - ~22 unique shows currently, well above what the budget allows for all of
-   them) with synopsis/trailerUrl from their own page. Capped lower than Lev(18)/Tarbut(10)
-   purely for the Worker's 50-subrequest ceiling (see refreshEvents) - adding two brand-new
-   detail-fetch sources (this one and Habima) meant trimming LEV_MOVIE_CAP and
-   TARBUT_SHOW_FETCH_CAP down to make room, see their own comments. No special-casing which
-   shows get enriched - same "listing order, first N" convention as Lev/Tarbut. */
+/* Synopsis/trailer enrichment for Lessin moved to the sibling showmust-content worker
+   (cf-worker-content/) - its own page (row.titleHref above, distinct from the ticket-purchase
+   link used as event.link) carries a real og:description and, for most shows, an embedded
+   YouTube trailer, but there are far too many unique shows to detail-fetch all of them within
+   this worker's own budget alongside everything else it already does. This worker only needs
+   the dates, which come entirely from the listing page above - no detail fetch required for
+   that. See buildClientPayload for where showmust-content's synopsis/trailerUrl get merged
+   back onto these events at request time. */
 async function fetchLessin() {
   const res = await fetch(LESSIN_URL, { headers: BROWSER_HEADERS_HTML });
   if (!res.ok) throw new Error('lessin HTTP ' + res.status);
-  const { events, showHrefs } = await parseLessin(await res.text());
-
-  const shows = Array.from(showHrefs.entries()).slice(0, LESSIN_SHOW_FETCH_CAP);
-  const details = {};
-  let idx = 0;
-  async function worker() {
-    while (idx < shows.length) {
-      const [title, href] = shows[idx++];
-      try { details[title] = await fetchLessinShowDetail(href); }
-      catch (e) { console.error('lessin detail failed:', title, e); }
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(LESSIN_CONCURRENCY, shows.length || 1) }, worker));
-
-  events.forEach((e) => {
-    const d = details[e.title];
-    if (d) {
-      if (d.synopsis) e.synopsis = d.synopsis;
-      if (d.trailerUrl) e.trailerUrl = d.trailerUrl;
-    }
-  });
-  return events;
+  return parseLessin(await res.text());
 }
 
 // ============================================================================
@@ -249,50 +196,13 @@ async function fetchLessin() {
 // ============================================================================
 
 const HABIMA_URL = 'https://www.habima.co.il/wp-content/themes/tyco-wp/cache/allData.json';
-const HABIMA_SHOW_FETCH_CAP = 6;
-const HABIMA_CONCURRENCY = 3;
 
-/* Each show's own page (show.url, already present in allData.json - no extra discovery
-   fetch needed) carries a real synopsis and, for most shows, an embedded YouTube trailer -
-   verified live across 2 different current shows. Synopsis lives in two parts under
-   .show-desc .content: a short h2.content-title tagline (often just a one-word genre like
-   "דרמה רומנטית" - not meaningful alone) plus the actual description in p.content-subtitle;
-   both are concatenated. Trailer is a plain <a class="play video-popup ...", href="...">
-   (both youtube.com/watch and youtu.be forms seen live) - extractYoutubeId on the client
-   parses either, so passed through as-is. allData.json's own `excerpt` field is always empty
-   in practice (verified: 0 of 47 current shows have one) - not a usable shortcut. */
-async function fetchHabimaShowDetail(href) {
-  const res = await fetch(href, { headers: BROWSER_HEADERS_HTML });
-  if (!res.ok) throw new Error('habima detail HTTP ' + res.status);
-  const html = await res.text();
-
-  let tagline = '';
-  let description = '';
-  let trailerUrl = null;
-
-  await runRewriter(html, (rewriter) => {
-    rewriter
-      .on('.show-desc .content h2.content-title', { text(t) { tagline += t.text; } })
-      .on('.show-desc .content p.content-subtitle', { text(t) { description += t.text; } })
-      .on('a.video-popup', {
-        element(el) {
-          if (trailerUrl) return;
-          const href2 = el.getAttribute('href') || '';
-          if (/youtu\.?be/.test(href2)) trailerUrl = href2;
-        },
-      });
-  });
-
-  const combined = [tagline, description].map((s) => decodeHtmlEntities(s).replace(/\s+/g, ' ').trim()).filter(Boolean).join(' — ');
-  const synopsis = combined ? (combined.length > 320 ? combined.slice(0, 320).trim() + '…' : combined) : null;
-  return { synopsis, trailerUrl };
-}
-
-/* Two-phase fetch, same pattern as fetchLev/fetchTarbut/fetchLessin: allData.json gives every
-   showtime for free, then a second bounded pass enriches a capped subset of UNIQUE shows (not
-   showtimes - ~47 unique shows currently, far above what the budget allows for all of them)
-   with synopsis/trailerUrl from their own page. Capped at 6, same as Lessin and for the same
-   reason - see fetchLessin's comment on the 50-subrequest ceiling. */
+/* Synopsis/trailer enrichment for Habima moved to the sibling showmust-content worker
+   (cf-worker-content/) - same reasoning as fetchLessin above (~47 unique shows, far more than
+   this worker can afford to detail-fetch alongside everything else it does). This worker only
+   needs the dates, which come entirely from allData.json's own presentations/shows objects -
+   no detail fetch required for that. See buildClientPayload for where showmust-content's
+   synopsis/trailerUrl get merged back onto these events at request time. */
 async function fetchHabima() {
   const res = await fetch(HABIMA_URL, { headers: BROWSER_HEADERS_JSON });
   if (!res.ok) throw new Error('habima HTTP ' + res.status);
@@ -303,7 +213,6 @@ async function fetchHabima() {
   const presentations = (data.presentations && data.presentations.he) || {};
 
   const events = [];
-  const showUrls = new Map(); // title -> habima.co.il show page url, for detail-page enrichment
   Object.keys(presentations).forEach((showKey) => {
     const show = shows[showKey];
     if (!show || !show.title) return;
@@ -319,27 +228,6 @@ async function fetchHabima() {
         extra: venueName, image: show.img || null,
       });
     });
-    if (show.url && !showUrls.has(show.title)) showUrls.set(show.title, show.url);
-  });
-
-  const showList = Array.from(showUrls.entries()).slice(0, HABIMA_SHOW_FETCH_CAP);
-  const details = {};
-  let idx = 0;
-  async function worker() {
-    while (idx < showList.length) {
-      const [title, url] = showList[idx++];
-      try { details[title] = await fetchHabimaShowDetail(url); }
-      catch (e) { console.error('habima detail failed:', title, e); }
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(HABIMA_CONCURRENCY, showList.length || 1) }, worker));
-
-  events.forEach((e) => {
-    const d = details[e.title];
-    if (d) {
-      if (d.synopsis) e.synopsis = d.synopsis;
-      if (d.trailerUrl) e.trailerUrl = d.trailerUrl;
-    }
   });
   return events;
 }
@@ -476,9 +364,11 @@ async function fetchVistaCinema(sourceKey, dateStrs) {
 // ============================================================================
 
 const LEV_LIST_URL = 'https://www.lev.co.il/location/telaviv/';
-// Trimmed from 18 to make subrequest room for Lessin/Habima's new detail-fetch enrichment -
-// see refreshEvents' 50-subrequest accounting comment.
-const LEV_MOVIE_CAP = 10;
+// Lessin/Habima/Tarbut detail-fetching moved to the sibling showmust-content worker (see file
+// header), freeing real room back in this worker's own budget - raised from the temporary 10
+// back up past the original 18, covering Lev's entire live Tel Aviv catalog (verified: ~23
+// movie links on the branch page at once) rather than an arbitrary subset.
+const LEV_MOVIE_CAP = 20;
 const LEV_CONCURRENCY = 3;
 
 /* The Tel Aviv branch page only lists movies actually screening there (not the whole
@@ -708,173 +598,13 @@ async function fetchBarby(env) {
   return parseBarbyMarkdown(await fetchBarbyMarkdown(env));
 }
 
-// ============================================================================
-// Hatarbut Hall
-// ============================================================================
-
-const TARBUT_CALENDAR_URL = 'https://www.hatarbut.co.il/%D7%9C%D7%95%D7%97-%D7%94%D7%95%D7%A4%D7%A2%D7%95%D7%AA/calendar/';
-// Trimmed from 10 to make subrequest room for Lessin/Habima's new detail-fetch enrichment -
-// see refreshEvents' 50-subrequest accounting comment. (Verified live: Hatarbut show pages
-// carry no trailer at all - see fetchTarbutShowDetail - so this cap only affects synopsis
-// coverage, not trailer coverage.)
-const TARBUT_SHOW_FETCH_CAP = 6;
-const TARBUT_CONCURRENCY = 3;
-
-async function fetchTarbutShowList() {
-  const res = await fetch(TARBUT_CALENDAR_URL, { headers: BROWSER_HEADERS_HTML });
-  if (!res.ok) throw new Error('hatarbut HTTP ' + res.status);
-  const html = await res.text();
-
-  const shows = [];
-  const seen = new Set();
-  let current = null;
-
-  await runRewriter(html, (rewriter) => {
-    rewriter
-      .on('ul.eo-events li article', {
-        element(el) {
-          current = { href: null, title: '', image: null };
-          const show = current;
-          el.onEndTag(() => {
-            if (show.href && show.title && !seen.has(show.href)) {
-              seen.add(show.href);
-              shows.push({ href: show.href, title: decodeHtmlEntities(show.title).replace(/\s+/g, ' ').trim(), image: show.image });
-            }
-            if (current === show) current = null;
-          });
-        },
-      })
-      .on('ul.eo-events li article h3.eo-event-title a', {
-        element(el) { if (current && !current.href) current.href = el.getAttribute('href'); },
-      })
-      .on('ul.eo-events li article h3.eo-event-title a span', {
-        text(t) { if (current) current.title += t.text; },
-      })
-      .on('ul.eo-events li article img.eo-event-thumbnail', {
-        element(el) {
-          if (!current || current.image) return;
-          const src = el.getAttribute('src') || el.getAttribute('data-src') || '';
-          if (src && !src.startsWith('data:') && !/placeholder/i.test(src)) current.image = src;
-        },
-      });
-  });
-
-  return shows;
-}
-
-/* og:description on the show page holds everything: hall, start time, and either a single
-   date ("תאריך: DD.MM.YY") or several ("לרכישת כרטיסים DD.MM.YY" repeated once per date) -
-   verified against both shapes on live pages. */
-function parseTarbutMeta(desc) {
-  if (!desc) return null;
-  // \S+ only grabbed the hall's first word, silently truncating multi-word hall names -
-  // capture everything up to the next known label instead.
-  const hallMatch = desc.match(/אולם:\s*([^\n]+?)\s*(?:תחילת המופע:|לרכישת כרטיסים|$)/);
-  const hall = hallMatch ? hallMatch[1].trim() : null;
-  let timeMatch = desc.match(/תחילת המופע:\s*(\d{1,2}:\d{2})/);
-  if (!timeMatch) timeMatch = desc.match(/\|\s*(\d{1,2}:\d{2})\s*אולם:/);
-  const time = timeMatch ? timeMatch[1] : null;
-  let dates = [...desc.matchAll(/לרכישת כרטיסים\s*(\d{2}\.\d{2}\.\d{2})/g)].map((m) => m[1]);
-  if (!dates.length) {
-    const single = desc.match(/תאריך:\s*(\d{2}\.\d{2}\.\d{2})/);
-    if (single) dates = [single[1]];
-  }
-  if (!time || !dates.length) return null;
-  return { hall, time, dates };
-}
-
-function extractTarbutSynopsis(desc) {
-  if (!desc) return null;
-  const idx = desc.indexOf('מקום פנוי');
-  if (idx === -1) return null;
-  // desc is already entity-decoded by the caller, so the WordPress excerpt-truncation
-  // marker now reads as a literal "[…]" (real ellipsis char), not the raw "[&hellip;]".
-  const text = desc.slice(idx + 'מקום פנוי'.length).replace(/\[…\]\s*$/, '').replace(/\s+/g, ' ').trim();
-  if (!text) return null;
-  return text.length > 320 ? text.slice(0, 320).trim() + '…' : text;
-}
-
-/* Ticket buttons sometimes route through a click-tracking wrapper with the real URL in a
-   `url` query param - unwrap it so the client links straight to the ticket vendor. */
-function extractTarbutTicketLinks(buttons) {
-  const links = {};
-  buttons.forEach(({ href, text }) => {
-    const m = text.match(/לרכישת כרטיסים\s*(\d{2}\.\d{2}\.\d{2})/);
-    if (!m) return;
-    let realHref = href;
-    const wrapped = href.match(/[?&]url=([^&]+)/);
-    if (wrapped) { try { realHref = decodeURIComponent(wrapped[1]); } catch (e) { /* keep raw href */ } }
-    links[m[1]] = realHref;
-  });
-  return links;
-}
-
-function parseTarbutDate(dateStr, timeStr) {
-  const dm = dateStr.match(/(\d{2})\.(\d{2})\.(\d{2})/);
-  const tm = timeStr.match(/(\d{1,2}):(\d{2})/);
-  if (!dm || !tm) return null;
-  return israelWallTimeToUTC(2000 + Number(dm[3]), Number(dm[2]), Number(dm[1]), Number(tm[1]), Number(tm[2]));
-}
-
-async function fetchTarbutShowDetail(show) {
-  const res = await fetch(show.href, { headers: BROWSER_HEADERS_HTML });
-  if (!res.ok) throw new Error('hatarbut detail HTTP ' + res.status);
-  const html = await res.text();
-
-  let desc = '';
-  const buttons = [];
-  let currentBtn = null;
-
-  await runRewriter(html, (rewriter) => {
-    rewriter
-      .on('meta[property="og:description"]', {
-        element(el) { desc = decodeHtmlEntities(el.getAttribute('content') || ''); },
-      })
-      .on('a.elementor-button', {
-        element(el) {
-          const btn = { href: el.getAttribute('href') || '', text: '' };
-          currentBtn = btn;
-          el.onEndTag(() => { buttons.push(btn); if (currentBtn === btn) currentBtn = null; });
-        },
-      })
-      .on('a.elementor-button .elementor-button-text', {
-        text(t) { if (currentBtn) currentBtn.text += t.text; },
-      });
-  });
-
-  const meta = parseTarbutMeta(desc);
-  if (!meta) return [];
-  const ticketLinks = extractTarbutTicketLinks(buttons);
-  const synopsis = extractTarbutSynopsis(desc);
-
-  const events = [];
-  meta.dates.forEach((dateStr) => {
-    const date = parseTarbutDate(dateStr, meta.time);
-    if (!date) return;
-    events.push({
-      id: makeId('tarbut', show.title, date), source: 'tarbut', venue: 'היכל התרבות', type: 'music',
-      title: show.title, date, link: ticketLinks[dateStr] || show.href,
-      extra: meta.hall ? `אולם ${meta.hall}` : 'היכל התרבות', image: show.image || null,
-      synopsis,
-    });
-  });
-  return events;
-}
-
-async function fetchTarbut() {
-  const shows = (await fetchTarbutShowList()).slice(0, TARBUT_SHOW_FETCH_CAP);
-  const events = [];
-  let idx = 0;
-  async function worker() {
-    while (idx < shows.length) {
-      const show = shows[idx++];
-      try { events.push(...await fetchTarbutShowDetail(show)); }
-      catch (e) { console.error('tarbut show failed:', show.title, e); }
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(TARBUT_CONCURRENCY, shows.length || 1) }, worker));
-  return events;
-}
+/* Hatarbut (theatre hall, music/theatre shows) moved entirely to the sibling
+   showmust-content worker (cf-worker-content/) - unlike every other source here, Hatarbut's
+   actual performance DATES only exist on each show's own detail page (the calendar/list page
+   gives just title+image), so getting any real date coverage at all means detail-fetching
+   most/all of its ~25 current shows - too much for this worker's own budget alongside
+   everything else. showmust-content contributes Hatarbut's events via content-v1, merged in
+   at request time - see buildClientPayload. */
 
 // ============================================================================
 // Ozen Bar (Music & Stand-up)
@@ -968,8 +698,15 @@ async function fetchOzenCategory(categoryKey) {
 // ============================================================================
 
 const EVENTS_KV_KEY = 'events-v1';
+const CONTENT_KV_KEY = 'content-v1'; // written by the sibling showmust-content worker - read-only from here
 const CACHE_TTL_SECONDS = 10800; // 3 hours - matches the cron schedule in wrangler.toml
-const VISTA_DAYS_AHEAD = 6; // matches the old client's "extended" Vista window
+/* Live-probed every date this many days out against Rav-Hen's and Planet Ayalon's real APIs:
+   Rav-Hen returns 0 events past day+8, Planet Ayalon past day+9-10 (a handful trailing off by
+   then). Cinemas simply don't publish showtimes further ahead than that - raising this further
+   would just be spending subrequest budget on empty responses. 9 covers the real ceiling with
+   a small buffer. Raised from 6 now that Tarbut/Lessin/Habima detail-fetching moved out to the
+   sibling showmust-content worker, freeing real budget room here. */
+const VISTA_DAYS_AHEAD = 9;
 
 const CORS_HEADERS = {
   'access-control-allow-origin': '*',
@@ -989,22 +726,21 @@ function vistaDateRange(daysAhead) {
 }
 
 /* Subrequest budget (Workers free plan caps a single invocation at 50): lessin list(1) +
-   lessin detail(<=6) + habima list(1) + habima detail(<=6) + lev list(1) + lev detail(<=10) +
-   ravhen(6) + planet(6) + barby(1) + hatarbut list(1) + hatarbut detail(<=6) + ozen-music(1) +
-   ozen-standup(1) + previous-payload KV get(1) + events KV put(1) = 49 worst case - cutting
-   it close to the cap, so no further sources should be added here without first trimming one
-   of the four *_CAP constants (LEV_MOVIE_CAP / TARBUT_SHOW_FETCH_CAP / LESSIN_SHOW_FETCH_CAP /
-   HABIMA_SHOW_FETCH_CAP - all four exist purely for detail-page synopsis/trailer enrichment,
-   not for the core listing data, so trimming any of them only reduces enrichment coverage,
-   never drops a showtime). Lev's and Tarbut's caps were both trimmed down from their original
-   18/10 specifically to make room for Lessin/Habima's caps when those two were added. No OMDb
-   calls happen here at all (see file header), so there's no enrichment budget to share with
-   that. Ozen deliberately parses each category archive in full (no per-event detail fetch,
-   see fetchOzenCategory) specifically to stay cheap here - verified live it has no trailer
-   available at the source anyway (see index.html card template), so there was nothing to gain
-   from a detail-fetch-per-show design there like Lev/Tarbut/Lessin/Habima use. Music and
-   stand-up are two independent top-level tasks (like ravhen/planet) rather than one combined
-   fetch, so either can fail and fall back on its own without dragging the other down. */
+   habima list(1) + lev list(1) + lev detail(<=20) + ravhen(9) + planet(9) + barby(1) +
+   ozen-music(1) + ozen-standup(1) + previous-payload KV get(1) + events KV put(1) = 46 worst
+   case. Hatarbut and Lessin/Habima detail-page enrichment (synopsis/trailer) live entirely in
+   the sibling showmust-content worker (cf-worker-content/) now - see that file and
+   buildClientPayload below for how its content-v1 KV entry gets merged back in at request
+   time. Splitting them out is what freed the room to raise LEV_MOVIE_CAP (10->20, covering
+   Lev's whole live catalog) and VISTA_DAYS_AHEAD (6->9, the real horizon those cinemas
+   publish to - see VISTA_DAYS_AHEAD's own comment) back up from last session's tighter caps.
+   No OMDb calls happen here at all (see file header), so there's no enrichment budget to
+   share with that. Ozen deliberately parses each category archive in full (no per-event
+   detail fetch, see fetchOzenCategory) - verified live it has no trailer available at the
+   source anyway (see index.html card template), so there's nothing to gain from a
+   detail-fetch-per-show design there. Music and stand-up are two independent top-level tasks
+   (like ravhen/planet) rather than one combined fetch, so either can fail and fall back on
+   its own without dragging the other down. */
 async function refreshEvents(env) {
   const vistaDates = vistaDateRange(VISTA_DAYS_AHEAD);
 
@@ -1034,7 +770,6 @@ async function refreshEvents(env) {
     ravhen: fetchVistaCinema('ravhen', vistaDates),
     planet: fetchVistaCinema('planet', vistaDates),
     barby: fetchBarby(env),
-    tarbut: fetchTarbut(),
     'ozen-music': fetchOzenCategory('music'),
     'ozen-standup': fetchOzenCategory('standup'),
   };
@@ -1096,6 +831,64 @@ async function refreshEvents(env) {
   return json;
 }
 
+/* Merges the sibling showmust-content worker's content-v1 (Hatarbut's events in full, plus
+   Lessin/Habima synopsis/trailer enrichment) onto this worker's own events-v1 payload -
+   always at REQUEST time, never baked into events-v1 itself. That's what lets content-v1's
+   much faster rotation cadence (every ~40 min, see cf-worker-content/) reach the client
+   immediately regardless of when this worker's own 3h cron last ran, and vice versa: this
+   worker's cron doesn't need to know or care that showmust-content exists at all. Missing or
+   corrupt content-v1 degrades gracefully - client still gets everything from events-v1, just
+   without Hatarbut/extra synopsis - same self-healing philosophy as previousEventsBySource in
+   refreshEvents above, never a hard failure just because the sibling worker hasn't completed
+   its first run yet or is having a bad day. coreJson is the raw events-v1 JSON string already
+   in hand (either freshly scraped or read from KV by the caller) - avoids a redundant read. */
+async function buildClientPayload(env, coreJson) {
+  let content = null;
+  try {
+    const contentJson = await env.SHOWMUST_KV.get(CONTENT_KV_KEY);
+    if (contentJson) content = JSON.parse(contentJson);
+  } catch (e) { console.error('content-v1 read failed, serving core-only payload:', e); }
+
+  if (!content) return coreJson; // nothing to merge - core's own payload is already complete on its own
+
+  const core = JSON.parse(coreJson);
+  const enrichmentBySource = { lessin: content.lessin || {}, habima: content.habima || {} };
+
+  const events = core.events.map((e) => {
+    const extra = enrichmentBySource[e.source] && enrichmentBySource[e.source][e.title];
+    if (!extra) return e;
+    return { ...e, synopsis: e.synopsis || extra.synopsis || null, trailerUrl: e.trailerUrl || extra.trailerUrl || null };
+  });
+
+  // Hatarbut contributes whole events (unlike Lessin/Habima, its dates only exist behind a
+  // detail-page fetch - see the note where its scraper used to live, above fetchOzenCategory),
+  // stored in content-v1 keyed by title -> { hall, image, dates: [{date, link, synopsis}] }.
+  Object.entries(content.tarbut || {}).forEach(([title, show]) => {
+    (show.dates || []).forEach((d) => {
+      events.push({
+        id: makeId('tarbut', title, new Date(d.date)), source: 'tarbut', venue: 'היכל התרבות', type: 'music',
+        title, date: d.date, link: d.link, extra: show.hall ? `אולם ${show.hall}` : 'היכל התרבות',
+        image: show.image || null, synopsis: d.synopsis || null,
+      });
+    });
+  });
+
+  events.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const sourceStatus = { ...core.meta.sourceStatus, ...((content.meta && content.meta.sourceStatus) || {}) };
+
+  return JSON.stringify({
+    meta: {
+      allSourcesOk: Object.values(sourceStatus).every((s) => s.ok),
+      generatedAt: core.meta.generatedAt,
+      contentGeneratedAt: (content.meta && content.meta.generatedAt) || null,
+      sourceStatus,
+      totalEvents: events.length,
+    },
+    events,
+  });
+}
+
 /* Manual scraper trigger - lets an admin force an immediate re-scrape (e.g. right after fixing
    a broken source, instead of waiting up to 3h for the next cron run) without waiting on
    ctx.waitUntil like the cron path does: this awaits refreshEvents directly and returns its
@@ -1142,7 +935,9 @@ export default {
       json = await refreshEvents(env);
     }
 
-    return new Response(json, {
+    const merged = await buildClientPayload(env, json);
+
+    return new Response(merged, {
       headers: { ...CORS_HEADERS, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=300' },
     });
   },
