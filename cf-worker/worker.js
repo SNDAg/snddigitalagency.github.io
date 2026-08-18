@@ -114,6 +114,8 @@ async function runRewriter(html, register) {
 // ============================================================================
 
 const LESSIN_URL = 'https://www.lessin.co.il/%D7%94%D7%A6%D7%92%D7%95%D7%AA/';
+const LESSIN_SHOW_FETCH_CAP = 6;
+const LESSIN_CONCURRENCY = 3;
 
 /* Verified against live markup: each row is
    <tr class="showlistitem" data-date="DD-MM-YYYY"><td>day</td><td>date</td><td>time</td>
@@ -151,6 +153,10 @@ async function parseLessin(html) {
   });
 
   const events = [];
+  // title -> lessin.co.il show page href (row.titleHref, distinct from the ticket-purchase
+  // link used as event.link) - reused below to enrich each unique show with synopsis/trailer
+  // without a second listing fetch, since this href was already scraped for free here.
+  const showHrefs = new Map();
   for (const row of rows) {
     const parts = row.dateAttr.split('-');
     if (parts.length !== 3) continue;
@@ -164,14 +170,78 @@ async function parseLessin(html) {
       id: makeId('lessin', title, date), source: 'lessin', venue: 'בית ליסין', type: 'theatre',
       title, date, link: row.orderHref || row.titleHref, extra: decodeHtmlEntities(row.hall).replace(/\s+/g, ' ').trim(), image: null,
     });
+    if (!showHrefs.has(title)) showHrefs.set(title, row.titleHref);
   }
-  return events;
+  return { events, showHrefs };
 }
 
+/* Lessin's own show page (the href above) carries a real synopsis (og:description) and, for
+   most shows, an embedded YouTube trailer via <a class="showvideo" href="...">) - verified
+   live across 3 different current shows. extractYoutubeId on the client (index.html) already
+   parses youtube.com/embed, youtube.com/watch and youtu.be forms alike, so the raw href is
+   passed through as-is with no reformatting needed. Some shows (workshop/fringe nights)
+   plausibly have no trailer at all - the selector then simply never fires and trailerUrl
+   stays null, same "don't show what we don't have" behavior as everywhere else. */
+async function fetchLessinShowDetail(href) {
+  const res = await fetch(href, { headers: BROWSER_HEADERS_HTML });
+  if (!res.ok) throw new Error('lessin detail HTTP ' + res.status);
+  const html = await res.text();
+
+  let synopsis = null;
+  let trailerUrl = null;
+
+  await runRewriter(html, (rewriter) => {
+    rewriter
+      .on('meta[property="og:description"]', {
+        element(el) {
+          const content = decodeHtmlEntities(el.getAttribute('content') || '').replace(/\s+/g, ' ').trim();
+          if (content) synopsis = content.length > 320 ? content.slice(0, 320).trim() + '…' : content;
+        },
+      })
+      .on('a.showvideo', {
+        element(el) {
+          const href2 = el.getAttribute('href') || '';
+          if (/youtu\.?be/.test(href2)) trailerUrl = href2;
+        },
+      });
+  });
+
+  return { synopsis, trailerUrl };
+}
+
+/* Two-phase fetch, same pattern as fetchLev/fetchTarbut: the listing page gives every
+   showtime for free, then a second bounded pass enriches a capped subset of UNIQUE shows
+   (not showtimes - ~22 unique shows currently, well above what the budget allows for all of
+   them) with synopsis/trailerUrl from their own page. Capped lower than Lev(18)/Tarbut(10)
+   purely for the Worker's 50-subrequest ceiling (see refreshEvents) - adding two brand-new
+   detail-fetch sources (this one and Habima) meant trimming LEV_MOVIE_CAP and
+   TARBUT_SHOW_FETCH_CAP down to make room, see their own comments. No special-casing which
+   shows get enriched - same "listing order, first N" convention as Lev/Tarbut. */
 async function fetchLessin() {
   const res = await fetch(LESSIN_URL, { headers: BROWSER_HEADERS_HTML });
   if (!res.ok) throw new Error('lessin HTTP ' + res.status);
-  return parseLessin(await res.text());
+  const { events, showHrefs } = await parseLessin(await res.text());
+
+  const shows = Array.from(showHrefs.entries()).slice(0, LESSIN_SHOW_FETCH_CAP);
+  const details = {};
+  let idx = 0;
+  async function worker() {
+    while (idx < shows.length) {
+      const [title, href] = shows[idx++];
+      try { details[title] = await fetchLessinShowDetail(href); }
+      catch (e) { console.error('lessin detail failed:', title, e); }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(LESSIN_CONCURRENCY, shows.length || 1) }, worker));
+
+  events.forEach((e) => {
+    const d = details[e.title];
+    if (d) {
+      if (d.synopsis) e.synopsis = d.synopsis;
+      if (d.trailerUrl) e.trailerUrl = d.trailerUrl;
+    }
+  });
+  return events;
 }
 
 // ============================================================================
@@ -179,7 +249,50 @@ async function fetchLessin() {
 // ============================================================================
 
 const HABIMA_URL = 'https://www.habima.co.il/wp-content/themes/tyco-wp/cache/allData.json';
+const HABIMA_SHOW_FETCH_CAP = 6;
+const HABIMA_CONCURRENCY = 3;
 
+/* Each show's own page (show.url, already present in allData.json - no extra discovery
+   fetch needed) carries a real synopsis and, for most shows, an embedded YouTube trailer -
+   verified live across 2 different current shows. Synopsis lives in two parts under
+   .show-desc .content: a short h2.content-title tagline (often just a one-word genre like
+   "דרמה רומנטית" - not meaningful alone) plus the actual description in p.content-subtitle;
+   both are concatenated. Trailer is a plain <a class="play video-popup ...", href="...">
+   (both youtube.com/watch and youtu.be forms seen live) - extractYoutubeId on the client
+   parses either, so passed through as-is. allData.json's own `excerpt` field is always empty
+   in practice (verified: 0 of 47 current shows have one) - not a usable shortcut. */
+async function fetchHabimaShowDetail(href) {
+  const res = await fetch(href, { headers: BROWSER_HEADERS_HTML });
+  if (!res.ok) throw new Error('habima detail HTTP ' + res.status);
+  const html = await res.text();
+
+  let tagline = '';
+  let description = '';
+  let trailerUrl = null;
+
+  await runRewriter(html, (rewriter) => {
+    rewriter
+      .on('.show-desc .content h2.content-title', { text(t) { tagline += t.text; } })
+      .on('.show-desc .content p.content-subtitle', { text(t) { description += t.text; } })
+      .on('a.video-popup', {
+        element(el) {
+          if (trailerUrl) return;
+          const href2 = el.getAttribute('href') || '';
+          if (/youtu\.?be/.test(href2)) trailerUrl = href2;
+        },
+      });
+  });
+
+  const combined = [tagline, description].map((s) => decodeHtmlEntities(s).replace(/\s+/g, ' ').trim()).filter(Boolean).join(' — ');
+  const synopsis = combined ? (combined.length > 320 ? combined.slice(0, 320).trim() + '…' : combined) : null;
+  return { synopsis, trailerUrl };
+}
+
+/* Two-phase fetch, same pattern as fetchLev/fetchTarbut/fetchLessin: allData.json gives every
+   showtime for free, then a second bounded pass enriches a capped subset of UNIQUE shows (not
+   showtimes - ~47 unique shows currently, far above what the budget allows for all of them)
+   with synopsis/trailerUrl from their own page. Capped at 6, same as Lessin and for the same
+   reason - see fetchLessin's comment on the 50-subrequest ceiling. */
 async function fetchHabima() {
   const res = await fetch(HABIMA_URL, { headers: BROWSER_HEADERS_JSON });
   if (!res.ok) throw new Error('habima HTTP ' + res.status);
@@ -190,6 +303,7 @@ async function fetchHabima() {
   const presentations = (data.presentations && data.presentations.he) || {};
 
   const events = [];
+  const showUrls = new Map(); // title -> habima.co.il show page url, for detail-page enrichment
   Object.keys(presentations).forEach((showKey) => {
     const show = shows[showKey];
     if (!show || !show.title) return;
@@ -205,6 +319,27 @@ async function fetchHabima() {
         extra: venueName, image: show.img || null,
       });
     });
+    if (show.url && !showUrls.has(show.title)) showUrls.set(show.title, show.url);
+  });
+
+  const showList = Array.from(showUrls.entries()).slice(0, HABIMA_SHOW_FETCH_CAP);
+  const details = {};
+  let idx = 0;
+  async function worker() {
+    while (idx < showList.length) {
+      const [title, url] = showList[idx++];
+      try { details[title] = await fetchHabimaShowDetail(url); }
+      catch (e) { console.error('habima detail failed:', title, e); }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(HABIMA_CONCURRENCY, showList.length || 1) }, worker));
+
+  events.forEach((e) => {
+    const d = details[e.title];
+    if (d) {
+      if (d.synopsis) e.synopsis = d.synopsis;
+      if (d.trailerUrl) e.trailerUrl = d.trailerUrl;
+    }
   });
   return events;
 }
@@ -240,20 +375,24 @@ function slugToImdbHint(url) {
   return slug.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
-/* Vista tags alternate-language dub sessions via attributeIds like "dubbed-lang-ru" - these
-   are real, separately-bookable screenings, not a scraping glitch (verified live: Planet
-   Ayalon's Russian-dubbed "Spider-Man: Brand New Day" session carries attributeIds including
-   "dubbed-lang-ru", its own filmId, and a name field that's Cyrillic apart from a truncated
-   "Spider-Man:" fragment - see sanitizeFilmTitle's Cyrillic handling below, which is what
-   produces the bare "Spider-Man" title from it). Left unlabeled, a session like that renders
-   as an unexplained duplicate card right next to the main Hebrew listing. Appends a Hebrew
-   "(דיבוב <language>)" suffix so it reads as intentional; unknown language codes fall back to
-   the raw code rather than being silently dropped. */
+/* Vista tags EVERY dubbed print with its language via attributeIds ("dubbed-lang-he",
+   "dubbed-lang-ru", ...) - Hebrew is the default/expected dub for kids' movies in Israeli
+   cinemas, not an exception (verified live post-deploy: 171 of 818 cinema events carry
+   dubbed-lang-he, vs. 11 carrying dubbed-lang-ru - labeling "he" would tag nearly every
+   animated film with a redundant "(דיבוב he)" instead of only the genuinely alternate
+   sessions). Only a non-Hebrew dub is the real, separately-bookable alternate screening worth
+   calling out (verified live: Planet Ayalon's Russian-dubbed "Spider-Man: Brand New Day"
+   session carries "dubbed-lang-ru", its own filmId, and a name field that's Cyrillic apart
+   from a truncated "Spider-Man:" fragment - see sanitizeFilmTitle's Cyrillic handling below,
+   which is what produces the bare "Spider-Man" title from it). Left unlabeled, a session like
+   that renders as an unexplained duplicate card right next to the main Hebrew listing.
+   Appends a Hebrew "(דיבוב <language>)" suffix so it reads as intentional; unknown non-Hebrew
+   codes fall back to the raw code rather than being silently dropped. */
 const DUB_LANGUAGE_LABELS = { ru: 'רוסית', en: 'אנגלית', fr: 'צרפתית', es: 'ספרדית', ar: 'ערבית' };
 
 function dubLanguageSuffix(attributeIds) {
   if (!Array.isArray(attributeIds)) return '';
-  const attr = attributeIds.find((a) => /^dubbed-lang-/.test(a));
+  const attr = attributeIds.find((a) => /^dubbed-lang-/.test(a) && a !== 'dubbed-lang-he');
   if (!attr) return '';
   const code = attr.replace('dubbed-lang-', '');
   return ` (דיבוב ${DUB_LANGUAGE_LABELS[code] || code})`;
@@ -337,7 +476,9 @@ async function fetchVistaCinema(sourceKey, dateStrs) {
 // ============================================================================
 
 const LEV_LIST_URL = 'https://www.lev.co.il/location/telaviv/';
-const LEV_MOVIE_CAP = 18;
+// Trimmed from 18 to make subrequest room for Lessin/Habima's new detail-fetch enrichment -
+// see refreshEvents' 50-subrequest accounting comment.
+const LEV_MOVIE_CAP = 10;
 const LEV_CONCURRENCY = 3;
 
 /* The Tel Aviv branch page only lists movies actually screening there (not the whole
@@ -572,7 +713,11 @@ async function fetchBarby(env) {
 // ============================================================================
 
 const TARBUT_CALENDAR_URL = 'https://www.hatarbut.co.il/%D7%9C%D7%95%D7%97-%D7%94%D7%95%D7%A4%D7%A2%D7%95%D7%AA/calendar/';
-const TARBUT_SHOW_FETCH_CAP = 10;
+// Trimmed from 10 to make subrequest room for Lessin/Habima's new detail-fetch enrichment -
+// see refreshEvents' 50-subrequest accounting comment. (Verified live: Hatarbut show pages
+// carry no trailer at all - see fetchTarbutShowDetail - so this cap only affects synopsis
+// coverage, not trailer coverage.)
+const TARBUT_SHOW_FETCH_CAP = 6;
 const TARBUT_CONCURRENCY = 3;
 
 async function fetchTarbutShowList() {
@@ -843,18 +988,23 @@ function vistaDateRange(daysAhead) {
   });
 }
 
-/* Subrequest budget (Workers free plan caps a single invocation at 50): lessin(1) +
-   habima(1) + lev list(1) + lev detail(<=18) + ravhen(6) + planet(6) + barby(1) +
-   hatarbut list(1) + hatarbut detail(<=10) + ozen-music(1) + ozen-standup(1) +
-   previous-payload KV get(1) + events KV put(1) = 49 worst case - cutting it close to
-   the cap, so no further sources should be added here without first trimming LEV_MOVIE_CAP
-   or TARBUT_SHOW_FETCH_CAP. No OMDb calls happen here at all (see file header), so there's
-   no enrichment budget to share. Ozen deliberately parses each category archive in full
-   (no per-event detail fetch, see fetchOzenCategory) specifically to stay cheap here - a
-   detail-fetch-per-show design like Lev/Tarbut would have blown well past the remaining
-   headroom. Music and stand-up are two independent top-level tasks (like ravhen/planet)
-   rather than one combined fetch, so either can fail and fall back on its own without
-   dragging the other down. */
+/* Subrequest budget (Workers free plan caps a single invocation at 50): lessin list(1) +
+   lessin detail(<=6) + habima list(1) + habima detail(<=6) + lev list(1) + lev detail(<=10) +
+   ravhen(6) + planet(6) + barby(1) + hatarbut list(1) + hatarbut detail(<=6) + ozen-music(1) +
+   ozen-standup(1) + previous-payload KV get(1) + events KV put(1) = 49 worst case - cutting
+   it close to the cap, so no further sources should be added here without first trimming one
+   of the four *_CAP constants (LEV_MOVIE_CAP / TARBUT_SHOW_FETCH_CAP / LESSIN_SHOW_FETCH_CAP /
+   HABIMA_SHOW_FETCH_CAP - all four exist purely for detail-page synopsis/trailer enrichment,
+   not for the core listing data, so trimming any of them only reduces enrichment coverage,
+   never drops a showtime). Lev's and Tarbut's caps were both trimmed down from their original
+   18/10 specifically to make room for Lessin/Habima's caps when those two were added. No OMDb
+   calls happen here at all (see file header), so there's no enrichment budget to share with
+   that. Ozen deliberately parses each category archive in full (no per-event detail fetch,
+   see fetchOzenCategory) specifically to stay cheap here - verified live it has no trailer
+   available at the source anyway (see index.html card template), so there was nothing to gain
+   from a detail-fetch-per-show design there like Lev/Tarbut/Lessin/Habima use. Music and
+   stand-up are two independent top-level tasks (like ravhen/planet) rather than one combined
+   fetch, so either can fail and fall back on its own without dragging the other down. */
 async function refreshEvents(env) {
   const vistaDates = vistaDateRange(VISTA_DAYS_AHEAD);
 

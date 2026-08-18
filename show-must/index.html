@@ -56,21 +56,17 @@ body{background:linear-gradient(135deg,var(--bg) 0%,var(--bg2) 100%) fixed;color
 @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-6%,8%) scale(1.15)}}
 @media (prefers-reduced-motion: reduce){.bg-decor::before,.bg-decor::after{animation:none}}
 
-header{text-align:center;margin:20px 0 28px;position:relative}
-header::before{content:'';position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:360px;height:180px;background:radial-gradient(ellipse,rgba(168,139,250,.28),transparent 70%);filter:blur(35px);z-index:-1;pointer-events:none}
-header h1{font-size:2.4rem;background:linear-gradient(90deg,#a5b4fc,#c084fc,#f472b6,#a5b4fc);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;animation:gradientShift 8s ease infinite}
-@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-header .emoji-accent{display:inline-block;animation:emojiFloat 3s ease-in-out infinite;-webkit-text-fill-color:initial;color:initial}
-@keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-5px) rotate(-6deg)}}
-header p{color:var(--text-muted);font-size:1rem}
-@media (prefers-reduced-motion: reduce){header h1{animation:none}header .emoji-accent{animation:none}}
-
-.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap;background:rgba(255,255,255,.045);border:1px solid var(--border);border-radius:16px;padding:10px 18px;backdrop-filter:blur(10px)}
+/* כותרת ממוזגת (משימה 3) - שורת מיתוג+פעולות ותגית מתחתיה, בלי "כרטיס" ממוסגר (רקע/
+   border/blur) מסביב: זו כותרת הדף, לא רכיב UI צף, ואין סיבה שתיראה כמו אחד. */
+header.app-header{margin:18px 0 22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .topbar-actions{display:flex;align-items:center;gap:8px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.1rem}
-.brand i{color:var(--accent);animation:iconGlow 3s ease-in-out infinite}
-@keyframes iconGlow{0%,100%{filter:drop-shadow(0 0 2px rgba(99,102,241,.4))}50%{filter:drop-shadow(0 0 8px rgba(99,102,241,.85))}}
-@media (prefers-reduced-motion: reduce){.brand i{animation:none}}
+.brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:1.4rem;background:linear-gradient(90deg,#a5b4fc,#c084fc,#f472b6,#a5b4fc);background-size:300% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradientShift 8s ease infinite}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.brand .emoji-accent{display:inline-block;animation:emojiFloat 3s ease-in-out infinite;-webkit-text-fill-color:initial}
+@keyframes emojiFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-5px) rotate(-6deg)}}
+@media (prefers-reduced-motion: reduce){.brand{animation:none}.brand .emoji-accent{animation:none}}
+.tagline{color:var(--text-muted);font-size:.85rem;margin-top:5px}
 .icon-btn{background:var(--glass);border:1px solid var(--border);color:var(--text-main);padding:8px 12px;border-radius:10px;cursor:pointer;font-size:.85rem;display:inline-flex;align-items:center;gap:6px}
 .icon-btn:hover{background:var(--accent)}
 
@@ -387,6 +383,10 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .key-input-wrap.invalid .key-input-icon{color:var(--err)}
 .field-success{color:var(--ok);font-size:.78rem;margin-bottom:10px;line-height:1.5;display:flex;align-items:center;gap:6px}
 .wizard-external-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--imdb);color:#111;text-decoration:none;font-weight:700;padding:11px;border-radius:9px;font-size:.87rem;margin-bottom:12px}
+/* מרגיע חשש "יצאתי מהאתר" לפני שהמשתמש בכלל לוחץ - שונה חזותית מ-wizard-hint (אזהרה
+   כתומה) בכוונה: זה מסר מרגיע/אינפורמטיבי, לא אזהרה. ר' משימה 2 - "פתרון אלגנטי". */
+.wizard-return-note{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#a5b4fc !important;margin-bottom:10px}
+.wizard-return-note i{margin-inline-end:4px}
 .wizard-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#fbbf24 !important}
 .wizard-hint i{margin-inline-end:4px}
 .wizard-actions{display:flex;gap:10px;margin-top:16px}
@@ -432,21 +432,22 @@ footer a{color:var(--accent)}
   body{padding:10px}
   .container{padding-bottom: env(safe-area-inset-bottom, 0)}
 
-  header{margin:8px 0 12px}
-  header::before{width:220px;height:110px;top:-14px}
-  header h1{font-size:1.5rem;gap:6px;margin-bottom:4px}
-  header p{font-size:.78rem}
+  header.app-header{margin:10px 0 14px}
+  .tagline{font-size:.74rem;margin-top:3px}
 
-  .topbar{padding:8px 10px;border-radius:14px;gap:6px}
-  .brand{font-size:.95rem}
-  .brand i{font-size:.9rem}
+  .topbar{gap:6px}
+  .brand{font-size:1.1rem;gap:6px}
   /* min-width מפורש - בלי זה, כפתורי אייקון-בלבד (הגדרות/שיתוף כשהתווית מוסתרת, ר'
      .whatsapp-cta-label{display:none} למטה) מצטמצמים לרוחב ~33px (padding+אייקון בלבד),
      מתחת ליעד המגע המינימלי של 44px לרוחב - למרות ש-min-height כבר דואג לגובה. */
   .icon-btn{padding:9px 10px;font-size:.78rem;min-height:44px;min-width:44px;justify-content:center}
   .whatsapp-cta-label{display:none}
 
-  .status-note{justify-content:center;font-size:.76rem}
+  /* justify-content:center כאן לא עשה כלום בפועל - .status-note לא נמתח לרוחב .status-bar,
+     אז זה רק מרכז את שני הילדים (אייקון+טקסט) בתוך תיבה שכבר בגודל התוכן שלה, ללא אפקט
+     נראה לעין. עכשיו כשהשורה יושבת ממש מעל resultsCount (שגם הוא לא ממורכז) - יישור
+     התחלה עקבי נראה מכוון יותר מקו יחיד ממורכז שאין לו עם מה להתיישר. */
+  .status-note{font-size:.76rem}
 
   .filter-section{margin-bottom:14px}
   .filter-section h3{font-size:.87rem;margin-bottom:10px}
@@ -534,7 +535,7 @@ footer a{color:var(--accent)}
 
 /* מסכים צרים במיוחד (טלפונים קטנים) */
 @media (max-width: 360px){
-  header h1{font-size:1.45rem}
+  .brand{font-size:1.02rem}
 }
 </style>
 </head>
@@ -548,22 +549,20 @@ footer a{color:var(--accent)}
 
 <div class="container">
 
-  <div class="topbar">
-    <div class="brand"><i class="fa-solid fa-satellite-dish"></i> SHOWMUST</div>
-    <div class="topbar-actions">
-      <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים בוואטסאפ"><i class="fa-brands fa-whatsapp"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
-      <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
+  <!-- כותרת ממוזגת (משימה 3) - במקום שני מלבנים נפרדים ברצף שכל אחד מכריז "SHOWMUST"
+       בנפרד (topbar קטן + header גדול מתחתיו), ומעליהם - שורה אחת, בלי מסגרת/רקע "כרטיס"
+       נפרדת שגורמת לה להיראות כמו אלמנט UI צף שלא ברור למה הוא שם. המיתוג (טקסט גרדיאנט
+       + אימוג'י מרחף) והתגית עדיין כאן, רק לא כפולים ולא תופסים שורה נוספת שלמה. -->
+  <header class="app-header">
+    <div class="topbar">
+      <div class="brand"><span class="emoji-accent">🎭</span> SHOWMUST</div>
+      <div class="topbar-actions">
+        <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים בוואטסאפ"><i class="fa-brands fa-whatsapp"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
+        <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
+      </div>
     </div>
-  </div>
-
-  <header>
-    <h1><span class="emoji-accent">🎭</span> SHOWMUST</h1>
     <p class="tagline">Show Must Go On | מה עושים הלילה?</p>
   </header>
-
-  <div class="status-bar">
-    <div class="status-note"><i class="fa-solid fa-circle-check"></i> <span id="statusNoteText">נתונים חיים מהאתרים הרשמיים</span></div>
-  </div>
 
   <div class="control-bar" id="controlBar">
     <div class="search-box">
@@ -591,6 +590,14 @@ footer a{color:var(--accent)}
       <button class="imdb-banner-cta" onclick="openImdbWizard()">הפעילו עכשיו <i class="fa-solid fa-arrow-left"></i></button>
       <button class="imdb-banner-dismiss" onclick="dismissImdbBanner()" title="לא עכשיו" aria-label="סגירת באנר"><i class="fa-solid fa-xmark"></i></button>
     </div>
+  </div>
+
+  <!-- הועבר לכאן ממש מעל תוצאות הרשימה (משימה 4) - במקום לצוץ בין המיתוג לפס החיפוש
+       (איפה שלא היה ברור מה הקשר שלו לשום דבר סביבו), עכשיו הוא נקרא כהערת-שוליים על
+       הנתונים שבאמת נמצאים ממש מתחתיו. אותו מיקום גם בווב וגם במובייל - אין סיבה טובה
+       שהם יתנהגו אחרת. -->
+  <div class="status-bar">
+    <div class="status-note"><i class="fa-solid fa-circle-check"></i> <span id="statusNoteText">נתונים חיים מהאתרים הרשמיים</span></div>
   </div>
 
   <div class="results-toolbar" id="resultsToolbar">
@@ -786,7 +793,8 @@ footer a{color:var(--accent)}
       <div class="wizard-icon"><i class="fa-brands fa-imdb"></i></div>
       <h3>שלב 1 מתוך 2 - קבלו מפתח מ-OMDb</h3>
       <p>OMDb הוא שירות חיצוני חינמי (לא קשור אלינו) שמספק דירוגי IMDB. לחצו על הכפתור, ובאתר שלהם הזינו את <strong>המייל שלכם</strong> (לא שלנו) ובחרו באפשרות ה-"Free".</p>
-      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
+      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn" onclick="markOmdbSignupStarted()"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
+      <p class="wizard-return-note"><i class="fa-solid fa-arrow-turn-down"></i> זה נפתח בכרטיסייה חדשה - הדף הזה נשאר פתוח ברקע, פשוט חוזרים אליו אחר כך (נזהה את זה אוטומטית ונעביר אתכם לשלב הבא).</p>
       <p class="wizard-hint"><i class="fa-solid fa-triangle-exclamation"></i> שימו לב: OMDb שולחים מייל עם המפתח <strong>וגם קישור הפעלה נפרד</strong> - חובה ללחוץ גם עליו, אחרת המפתח לא יעבוד. כדאי לבדוק גם בתיבת הספאם.</p>
       <div class="wizard-actions">
         <button class="wizard-next-btn" onclick="wizardGoToStep2()">קיבלתי מפתח, המשיכו <i class="fa-solid fa-arrow-left"></i></button>
@@ -2067,6 +2075,49 @@ function wizardGoToStep1(){
   setWizardStep(1);
 }
 
+/* ===================== משימה 2 - חזרה חלקה מהרשמת OMDb =====================
+   ההרשמה עצמה חייבת לצאת מהאתר לפחות לרגע (יש אימות מייל אמיתי, אין דרך לעקוף את זה) -
+   אז במקום לנסות "לתקן" את היציאה עצמה, האתר מזהה את החזרה בעצמו ומקדם את המשתמש ישר
+   לשלב הבא, כך שהחזרה מרגישה רציפה ולא כמו שהתחלה מחדש. חותמת זמן (לא boolean) כדי
+   שגם אם מערכת ההפעלה סגרה את הטאב המקורי לגמרי (מעבר בין אפליקציות בזמן שבודקים מייל
+   זה נפוץ במיוחד במובייל) - initResumeOmdbWizard בהמשך מזהה את זה בטעינה חדשה של הדף
+   ופותח את האשף ישר בשלב הנכון, במקום להשאיר את המשתמש "לגלות" מחדש איך ממשיכים. */
+function markOmdbSignupStarted(){
+  try{ localStorage.setItem('omdb_wizard_pending', String(Date.now())); }catch(e){}
+}
+
+/* חזרה תוך כדי שהאשף עדיין פתוח (הטאב לא נסגר) - Page Visibility API. חלון זמן סביר
+   (3 שניות עד שעה) כדי לא להניח בטעות שמשתמש שרק הציץ בהתראה ומיד חזר כבר הספיק
+   להירשם ב-OMDb, ולא "לתפוס" עדיין חלון פתוח מביקור ישן מדי. */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState !== 'visible') return;
+  const pending = localStorage.getItem('omdb_wizard_pending');
+  if (!pending) return;
+  const elapsedMs = Date.now() - Number(pending);
+  if (elapsedMs < 3000 || elapsedMs > 60 * 60 * 1000) return;
+  const modal = document.getElementById('imdbWizardModal');
+  const panel1 = document.getElementById('wizardPanel1');
+  if (modal && modal.style.display === 'flex' && panel1 && panel1.style.display !== 'none'){
+    wizardGoToStep2();
+  }
+});
+
+/* חזרה אחרי שהטאב המקורי נסגר לגמרי - נבדק פעם אחת בטעינת הדף (ר' קריאה בסוף הקובץ,
+   לפני loadAllEvents). פותח את האשף ישר בשלב 2 במקום את הבאנר הרגיל, כדי שהמשתמש לא
+   יצטרך לגלות מחדש איך ממשיכים ממה שכבר התחיל. מוחק את הדגל תמיד אחרי בדיקה חד-פעמית -
+   כדי לא להציק עם זה בכל ביקור עתידי אם המשתמש בפועל נטש את התהליך. */
+function initResumeOmdbWizard(){
+  const pending = localStorage.getItem('omdb_wizard_pending');
+  if (!pending) return false;
+  localStorage.removeItem('omdb_wizard_pending');
+  if (localStorage.getItem('omdb_api_key')) return false; // כבר סיים בדרך אחרת
+  const elapsedMs = Date.now() - Number(pending);
+  if (elapsedMs > 60 * 60 * 1000) return false; // סביר שנטש - לא נציק עם זה בביקור מאוחר
+  openImdbWizard();
+  wizardGoToStep2();
+  return true;
+}
+
 async function wizardFinish(){
   const key = document.getElementById('wizardKeyInput').value.trim();
   const errorEl = document.getElementById('wizardKeyError');
@@ -2119,6 +2170,10 @@ function maybeShowImdbBanner(){
   if (!banner) return;
   if (localStorage.getItem('omdb_api_key')) return;
   if (localStorage.getItem('imdb_banner_dismissed') === '1') return;
+  // אם האשף כבר פתוח (initResumeOmdbWizard החזיר משתמש שחזר מ-OMDb ישר לשלב 2) - הבאנר
+  // מיותר, יוצר רעש חזותי כפול מאחורי המודל.
+  const wizard = document.getElementById('imdbWizardModal');
+  if (wizard && wizard.style.display === 'flex') return;
   banner.style.display = 'flex';
 }
 
@@ -2418,7 +2473,7 @@ function renderEvents(events){
           <a href="${gCal}" target="_blank" rel="noopener" class="icon-only-btn" title="הוספה ליומן" aria-label="הוספה ליומן"><i class="fa-regular fa-calendar-plus"></i></a>
           <a href="${ev.link}" target="_blank" rel="noopener" class="btn-primary-cta"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
         </div>
-        <button type="button" onclick="openTrailerModal('${ev.id}')" class="btn-trailer-bar"><i class="fa-brands fa-youtube"></i> טריילר</button>
+        ${ev.trailerUrl ? `<button type="button" onclick="openTrailerModal('${ev.id}')" class="btn-trailer-bar"><i class="fa-brands fa-youtube"></i> טריילר</button>` : ''}
       </div>
     `;
     container.appendChild(card);
@@ -2440,6 +2495,7 @@ function renderEvents(events){
 // ידנית פעמיים (החוצה וחזרה) כדי להפעיל את הסנכרון בטעות. דווח כבאג (משימה 6).
 syncVenuesToTypes(selectedTypes);
 updateFilterBadge();
+initResumeOmdbWizard(); // ר' משימה 2 - ממשיך אשף OMDb שנשאר "תלוי" מביקור קודם, לפני שהבאנר הרגיל מספיק להציג את עצמו
 loadAllEvents().then(maybeShowImdbBanner);
 </script>
 </body>
