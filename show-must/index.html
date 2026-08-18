@@ -168,13 +168,19 @@ header p{color:var(--text-muted);font-size:1rem}
 .selection-action-btn .action-label{display:none}
 body.has-selection-bar .container{padding-bottom:80px}
 
-/* רמז גלילה עדין - חץ פועם למטה עם דעיכת גרדיאנט מתחתיו, שמראה שיש עוד תוכן. נעלם
-   ברגע שהמשתמש גולל בפועל (JS מוסיף .hidden), ולא חוזר שוב באותו ביקור. */
-.scroll-cue{position:fixed;left:0;right:0;bottom:0;height:90px;z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;pointer-events:none;background:linear-gradient(to top,var(--bg) 10%,transparent 100%);opacity:.9;transition:opacity .35s ease}
+/* רמז גלילה עדין - חץ פועם למטה עם דעיכת גרדיאנט מתחתיו, שמראה שיש עוד תוכן מתחת לקפל.
+   מוצג/מוחבא לפי בדיקת overflow אמיתית של המסמך (evaluateScrollCue) - לא רק בטעינה
+   הראשונית - כך שגם כשקטגוריה/יום מחזירים תוצאה אחת-שתיים שעדיין דורשות גלילה קצרה
+   (בגלל הפס הדביק וכו') המשתמש מקבל רמז, וכשהתוכן כבר נכנס כולו למסך הרמז לא מוצג בכלל.
+   נעלם ברגע שהמשתמש גולל בפועל או מגיע לסוף התוכן, ומחושב מחדש בכל רינדור. */
+.scroll-cue{position:fixed;left:0;right:0;bottom:0;height:calc(90px + env(safe-area-inset-bottom,0));z-index:40;display:flex;align-items:flex-end;justify-content:center;padding-bottom:calc(14px + env(safe-area-inset-bottom,0));pointer-events:none;background:linear-gradient(to top,var(--bg) 10%,transparent 100%);opacity:.9;transition:opacity .35s ease}
 .scroll-cue.hidden{opacity:0}
 .scroll-cue i{color:var(--accent);font-size:1.3rem;animation:scrollCueBounce 1.6s ease-in-out infinite;filter:drop-shadow(0 2px 6px rgba(99,102,241,.6))}
 @keyframes scrollCueBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
 @media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none}}
+/* כשסרגל הבחירה הצף פעיל הוא תופס את אותו אזור תחתון - מחביאים את רמז הגלילה כדי
+   שלא יתנגשו חזותית (בחירת כרטיסים ממילא מעידה שהמשתמש כבר גילה את התוכן). */
+body.has-selection-bar .scroll-cue{opacity:0;pointer-events:none}
 
 .select-all-link{background:none;border:none;color:var(--accent);font-size:.85rem;font-weight:600;cursor:pointer;padding:4px}
 .select-all-link:hover{text-decoration:underline}
@@ -876,14 +882,40 @@ applyDefaultTimeForRange('today');
   el.textContent = `(${dayName}, ${dd}.${mm})`;
 })();
 
-/* רמז הגלילה נעלם לצמיתות (לביקור הנוכחי) ברגע הגלילה הראשונה בפועל - after that המשתמש
-   כבר יודע שיש עוד תוכן, אין טעם להמשיך להציג לו רמז על משהו שהוא כבר גילה. */
-(function initScrollCue(){
-  const cue = document.getElementById('scrollCue');
-  if (!cue) return;
-  const hide = () => { cue.classList.add('hidden'); window.removeEventListener('scroll', hide); };
-  window.addEventListener('scroll', hide, { passive: true, once: true });
-})();
+/* רמז הגלילה מוערך מחדש בכל רינדור תוצאות (ר' קריאות ל-scheduleScrollCueEvaluation
+   בתוך renderEvents) - כי גובה הדף משתנה עם כל שינוי קטגוריה/יום/סינון. מוצג רק כשיש
+   בפועל עוד תוכן מתחת לקפל (בדיקת scrollHeight מול גובה החלון, לא הנחה גורפת), ונעלם
+   ברגע שהמשתמש גולל בפועל או כשהוא כבר קרוב לסוף הדף. */
+const scrollCueEl = document.getElementById('scrollCue');
+
+function scrollCueOverflow(){
+  return document.documentElement.scrollHeight - window.innerHeight;
+}
+
+function evaluateScrollCue(){
+  if (!scrollCueEl) return;
+  const overflow = scrollCueOverflow();
+  const nearBottom = window.scrollY >= overflow - 32;
+  // סף מינימלי (80px) כדי לא להבהב על הפרשי גובה זניחים/עיגול פיקסלים
+  const hasMeaningfulOverflow = overflow > 80;
+  scrollCueEl.classList.toggle('hidden', !hasMeaningfulOverflow || nearBottom);
+}
+
+// שני requestAnimationFrame במקום אחד: הראשון מחכה שהדפדפן יסיים לעבד את ה-DOM שזה
+// עתה הוכנס (innerHTML/appendChild), השני מבטיח שהלייאאוט (scrollHeight) כבר יציב.
+function scheduleScrollCueEvaluation(){
+  if (!scrollCueEl) return;
+  requestAnimationFrame(() => requestAnimationFrame(evaluateScrollCue));
+}
+
+if (scrollCueEl){
+  window.addEventListener('scroll', () => {
+    const overflow = scrollCueOverflow();
+    const nearBottom = window.scrollY >= overflow - 32;
+    if (window.scrollY > 24 || nearBottom) scrollCueEl.classList.add('hidden');
+  }, { passive: true });
+  window.addEventListener('resize', scheduleScrollCueEvaluation);
+}
 
 /* ===================== Utilities ===================== */
 function escapeHtml(str){
@@ -2098,6 +2130,8 @@ function renderSkeletons(count=8){
       <div class="skeleton skeleton-btnrow"></div>
     </div>
   `).join('');
+  // מחביאים את רמז הגלילה בזמן הטעינה - הוא יוערך מחדש כשהתוצאות האמיתיות יירונדרו
+  if (scrollCueEl) scrollCueEl.classList.add('hidden');
 }
 
 const TYPE_ICON = { theatre: 'fa-masks-theater', cinema: 'fa-film', music: 'fa-music', standup: 'fa-microphone' };
@@ -2237,6 +2271,7 @@ function renderEvents(events){
             <button class="chip" onclick="loadAllEvents()">נסו שוב · רעננו</button>
           </div>
         </div>`;
+      scheduleScrollCueEvaluation();
       return;
     }
     countEl.innerText = 'נמצאו 0 אירועים';
@@ -2255,6 +2290,7 @@ function renderEvents(events){
           <button class="chip" onclick="quickExpand('2weeks')">הציגו את השבועיים הקרובים</button>
         </div>
       </div>`;
+    scheduleScrollCueEvaluation();
     return;
   }
 
@@ -2347,6 +2383,8 @@ function renderEvents(events){
     `;
     container.appendChild(card);
   });
+
+  scheduleScrollCueEvaluation();
 }
 
 /* ===================== Init =====================
