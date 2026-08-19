@@ -1904,12 +1904,12 @@ function countUniqueResults(events){
    כך גם טווח "מותאם אישית" מקבל כותרת נכונה): "הערב" ליום בודד (היום), "השבוע" לטווח קצר
    (עד שבוע, כמו "3 הימים הקרובים"/"השבוע"), "החודש" לטווח רחב יותר (כמו "בשבועיים הקרובים"). */
 function topPickLabel(){
-  if (currentQuickRange === 'today') return 'המומלץ הערב';
+  if (currentQuickRange === 'today') return 'מומלץ הערב';
   const startVal = document.getElementById('startDate').value;
   const endVal = document.getElementById('endDate').value;
   if (!startVal || !endVal) return 'המומלץ ברשימה';
   const spanDays = Math.round((new Date(endVal) - new Date(startVal)) / 86400000) + 1;
-  return spanDays <= 8 ? 'המומלץ השבוע' : 'המומלץ החודש';
+  return spanDays <= 8 ? 'מומלץ השבוע' : 'מומלץ החודש';
 }
 
 /* רצועת "המומלץ" - מציגה מיד את סרט הקולנוע עם הדירוג הגבוה ביותר מבין התוצאות המוצגות
