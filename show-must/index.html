@@ -517,7 +517,6 @@ footer a{color:var(--accent)}
       <div class="brand"><span class="emoji-accent">🎭</span> SHOWMUST</div>
       <div class="topbar-actions">
         <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים בוואטסאפ"><i class="fa-brands fa-whatsapp"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
-        <button class="icon-btn" onclick="openSettings()" title="הגדרות"><i class="fa-solid fa-gear"></i></button>
       </div>
     </div>
     <p class="tagline">Show Must Go On | מה עושים הלילה?</p>
@@ -700,19 +699,6 @@ footer a{color:var(--accent)}
 <div id="trailerModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeTrailerModal()">
   <div class="modal-box trailer-box">
     <div id="trailerModalBody"></div>
-  </div>
-</div>
-
-<!-- דירוגי IMDB עברו למטמון משותף בצד השרת (ר' imdbBadgeHtml) - אין יותר הרשמה/מפתח אישי
-     לנהל, אז מודל ההגדרות נשאר תמציתי: הבהרה קצרה שהדירוגים אוטומטיים, בלי שום פעולה
-     נדרשת מהמשתמש. -->
-<div id="settingsModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeSettings()">
-  <div class="modal-box">
-    <h3><i class="fa-solid fa-gear"></i> הגדרות</h3>
-    <p><i class="fa-brands fa-imdb"></i> דירוגי IMDb לסרטי קולנוע מוצגים אוטומטית על הכרטיסים - אין יותר צורך בהרשמה או במפתח אישי.</p>
-    <div class="modal-actions" style="margin-top:18px">
-      <button class="secondary" onclick="closeSettings()">סגירה</button>
-    </div>
   </div>
 </div>
 
@@ -1646,11 +1632,6 @@ function imdbBadgeHtml(ev){
   }
   return '';
 }
-
-function openSettings(){
-  document.getElementById('settingsModal').style.display = 'flex';
-}
-function closeSettings(){ document.getElementById('settingsModal').style.display = 'none'; }
 
 function toggleSynopsis(btn){
   const wrap = btn.closest('.event-synopsis-wrap');
