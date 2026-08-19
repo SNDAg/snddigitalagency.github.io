@@ -262,10 +262,6 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .imdb-badge{display:inline-flex;align-items:center;gap:4px;color:var(--imdb);font-size:.72rem;font-weight:700;background:rgba(var(--imdb-rgb),.12);border:1px solid rgba(var(--imdb-rgb),.3);padding:3px 8px;border-radius:6px;text-decoration:none;cursor:default;font-family:inherit}
 a.imdb-badge{cursor:pointer}
 a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
-button.imdb-badge{cursor:pointer;color:var(--text-muted);background:rgba(255,255,255,.06);border-color:var(--border)}
-button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);background:rgba(var(--imdb-rgb),.1)}
-.imdb-badge.pending{color:var(--text-muted);cursor:default}
-.imdb-badge.not-found{color:var(--text-muted);background:rgba(255,255,255,.05);border-color:var(--border);cursor:help}
 .event-title{font-size:1.02rem;font-weight:700;margin-bottom:6px;line-height:1.25}
 
 /* תג יום מוטבע (משימה 1 בתור) - כשקבוצת-תאריך מכילה תוצאה בודדת, לא בונים בשבילה
@@ -352,66 +348,13 @@ button.imdb-badge:hover{color:var(--imdb);border-color:rgba(var(--imdb-rgb),.4);
 .modal-actions button{padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-size:.85rem;color:#fff;background:var(--accent)}
 .modal-actions button.secondary{background:rgba(255,255,255,.08);border:1px solid var(--border)}
 .muted{color:var(--text-muted);font-size:.8rem;margin-top:14px}
-.field-error,.wizard-error{color:#f87171;font-size:.78rem;margin-bottom:10px;line-height:1.5}
+.field-error{color:#f87171;font-size:.78rem;margin-bottom:10px;line-height:1.5}
 .wizard-close-x{position:absolute;top:14px;left:14px;background:transparent;border:none;color:var(--text-muted);font-size:1.1rem;cursor:pointer;padding:6px;border-radius:50%}
 .wizard-close-x:hover{background:rgba(255,255,255,.08);color:#fff}
-.settings-subtitle{display:flex;align-items:center;gap:8px;font-size:.95rem;margin-bottom:10px}
-
 @keyframes heroFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* באנר הזמנה להפעלת דירוגי IMDB - כל משתמש מפעיל עם המפתח האישי והחינמי שלו מ-OMDb;
-   הדירוגים לא מגיעים מהשרת. */
-.imdb-banner{display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,rgba(var(--imdb-rgb),.12),rgba(var(--imdb-rgb),.04));border:1px solid rgba(var(--imdb-rgb),.35);border-radius:16px;padding:16px 20px;margin-bottom:18px;animation:heroFadeIn .4s ease both}
-.imdb-banner-icon{flex:none;width:44px;height:44px;border-radius:50%;background:var(--imdb);color:#111;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 0 20px rgba(var(--imdb-rgb),.4)}
-.imdb-banner-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
-.imdb-banner-text strong{font-size:.95rem}
-.imdb-banner-text span{color:var(--text-muted);font-size:.82rem}
-.imdb-banner-actions{flex:none;display:flex;align-items:center;gap:8px}
-.imdb-banner-cta{background:var(--imdb);color:#111;border:none;padding:10px 16px;border-radius:9px;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:transform .2s}
-.imdb-banner-cta:hover{transform:translateY(-1px)}
-.imdb-banner-dismiss{background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:8px;border-radius:50%;line-height:1}
-.imdb-banner-dismiss:hover{background:rgba(255,255,255,.08);color:#fff}
-
-/* אשף הפעלת IMDB (מפתח OMDb אישי - נשמר רק ב-localStorage של המשתמש) */
-.wizard-box{max-width:440px;position:relative;text-align:center}
-.wizard-steps{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 22px}
-.wizard-step-dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:var(--text-muted);font-weight:700;transition:all .3s}
-.wizard-step-dot.active{background:var(--imdb);border-color:var(--imdb);color:#111}
-.wizard-step-dot.done{background:var(--ok);border-color:var(--ok);color:#fff}
-.wizard-step-line{width:36px;height:2px;background:var(--border);transition:background .3s}
-.wizard-step-line.done{background:var(--ok)}
-.wizard-panel{animation:heroFadeIn .35s ease both}
-.wizard-icon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--imdb),var(--imdb-dark));color:#111;display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 14px}
-.wizard-icon.success{background:linear-gradient(135deg,var(--ok),#15803d);color:#fff}
-.wizard-panel h3{margin-bottom:8px;font-size:1.15rem}
-.wizard-panel p{color:var(--text-muted);font-size:.87rem;line-height:1.6;margin-bottom:16px}
 .modal-box input[type="text"]{width:100%;padding:11px 14px;border-radius:9px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#fff;outline:none;font-size:.9rem;transition:border-color .2s,box-shadow .2s}
 .modal-box input[type="text"]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,.18)}
-
-/* עטיפת שדה מפתח OMDb (בהגדרות ובאשף) - עם אייקון וצבע גבול שמשקפים בזמן אמת אם המפתח
-   בבדיקה/תקין/שגוי, במקום תיבת טקסט "שקטה" שלא אומרת כלום עד לחיצה על שמור. */
-.key-input-wrap{position:relative;margin-bottom:10px}
-.key-input-wrap input[type="text"]{padding-right:42px;margin-bottom:0}
-.key-input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:.95rem;pointer-events:none;transition:color .2s}
-.key-input-wrap.checking input[type="text"]{border-color:var(--accent)}
-.key-input-wrap.checking .key-input-icon{color:var(--accent)}
-.key-input-wrap.valid input[type="text"]{border-color:var(--ok);box-shadow:0 0 0 3px rgba(34,197,94,.14)}
-.key-input-wrap.valid .key-input-icon{color:var(--ok)}
-.key-input-wrap.invalid input[type="text"]{border-color:var(--err);box-shadow:0 0 0 3px rgba(239,68,68,.14)}
-.key-input-wrap.invalid .key-input-icon{color:var(--err)}
-.field-success{color:var(--ok);font-size:.78rem;margin-bottom:10px;line-height:1.5;display:flex;align-items:center;gap:6px}
-.wizard-external-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--imdb);color:#111;text-decoration:none;font-weight:700;padding:11px;border-radius:9px;font-size:.87rem;margin-bottom:12px}
-/* מרגיע חשש "יצאתי מהאתר" לפני שהמשתמש בכלל לוחץ - שונה חזותית מ-wizard-hint (אזהרה
-   כתומה) בכוונה: זה מסר מרגיע/אינפורמטיבי, לא אזהרה. ר' משימה 2 - "פתרון אלגנטי". */
-.wizard-return-note{background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#a5b4fc !important;margin-bottom:10px}
-.wizard-return-note i{margin-inline-end:4px}
-.wizard-hint{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);border-radius:8px;padding:9px 12px;font-size:.78rem !important;text-align:right;color:#fbbf24 !important}
-.wizard-hint i{margin-inline-end:4px}
-.wizard-actions{display:flex;gap:10px;margin-top:16px}
-.wizard-actions.two{justify-content:space-between}
-.wizard-next-btn{flex:1;background:var(--accent);color:#fff;border:none;padding:11px 16px;border-radius:9px;font-weight:700;font-size:.88rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
-.wizard-back-btn{background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--text-muted);padding:11px 16px;border-radius:9px;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:6px}
-@media (prefers-reduced-motion: reduce){.imdb-banner,.wizard-panel{animation:none}}
 
 /* מודל ההמלצה החכמה ("רוצים לשמוע מה דעתי?") */
 .reco-box{max-width:460px;position:relative;text-align:center}
@@ -482,7 +425,6 @@ footer a{color:var(--accent)}
   /* יעדי מגע של לפחות 44x44px בכל האלמנטים האינטראקטיביים - תקן נגישות מובייל בסיסי */
   .chip{padding:10px 14px;font-size:.8rem;min-height:44px}
   .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:44px}
-  button.imdb-badge{min-width:44px;min-height:44px;padding:0 10px;font-size:.85rem}
   .filter-hint{font-size:.74rem}
 
   .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
@@ -534,16 +476,6 @@ footer a{color:var(--accent)}
   .modal-box h3{font-size:1.05rem}
   .modal-actions{flex-direction:column}
   .modal-actions button{width:100%;padding:12px;min-height:44px}
-
-  .imdb-banner{flex-wrap:wrap;padding:14px 16px}
-  .imdb-banner-text{order:2;flex-basis:100%}
-  .imdb-banner-actions{order:3;flex-basis:100%;justify-content:space-between}
-  .imdb-banner-cta{flex:1;justify-content:center;min-height:44px}
-  .imdb-banner-dismiss{width:44px;height:44px}
-  .wizard-box{padding:22px 16px}
-  .wizard-actions{flex-direction:column}
-  .wizard-actions.two{flex-direction:column-reverse}
-  .wizard-next-btn,.wizard-back-btn{width:100%;min-height:44px}
 
   .trailer-box{padding:14px}
   .trailer-header{margin-bottom:10px;gap:8px}
@@ -607,18 +539,6 @@ footer a{color:var(--accent)}
     </button>
   </div>
 
-  <div class="imdb-banner" id="imdbBanner" style="display:none">
-    <div class="imdb-banner-icon"><i class="fa-brands fa-imdb"></i></div>
-    <div class="imdb-banner-text">
-      <strong>רוצים לראות דירוגי IMDB על כרטיסי הסרטים?</strong>
-      <span>הפעלה חד-פעמית וחינמית, לוקחת כ-2 דקות</span>
-    </div>
-    <div class="imdb-banner-actions">
-      <button class="imdb-banner-cta" onclick="openImdbWizard()">הפעילו עכשיו <i class="fa-solid fa-arrow-left"></i></button>
-      <button class="imdb-banner-dismiss" onclick="dismissImdbBanner()" title="לא עכשיו" aria-label="סגירת באנר"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-  </div>
-
   <!-- הועבר לכאן ממש מעל תוצאות הרשימה (משימה 4) - במקום לצוץ בין המיתוג לפס החיפוש
        (איפה שלא היה ברור מה הקשר שלו לשום דבר סביבו), עכשיו הוא נקרא כהערת-שוליים על
        הנתונים שבאמת נמצאים ממש מתחתיו. אותו מיקום גם בווב וגם במובייל - אין סיבה טובה
@@ -647,9 +567,10 @@ footer a{color:var(--accent)}
        בטעינה הראשונית לפני שה-JS רץ. -->
   <div class="quick-venue-bar" id="quickVenueBar" role="group" aria-label="סינון מהיר לפי מקום" style="display:none"></div>
 
-  <!-- פילטר דירוג IMDb מינימלי ב-Quick Bar - מוצג רק במצב "ממוקד קולנוע" (isCinemaFocused)
-       וכשיש מפתח OMDb פעיל, ר' "Cinema Mode & IMDB Rating Filter". אותה תיבת-אמת
-       (minImdbRating) כמו הגרסה בגיליון - שתי תצוגות מסונכרנות, לא state כפול. -->
+  <!-- פילטר דירוג IMDb מינימלי ב-Quick Bar - מוצג רק במצב "ממוקד קולנוע" (isCinemaFocused, ר'
+       refreshImdbRatingFilterSection). דירוגי IMDb מגיעים מהשרת (מטמון משותף - ר' תיעוד
+       imdbBadgeHtml), אין יותר תלות במפתח OMDb אישי. אותה תיבת-אמת (minImdbRating) כמו הגרסה
+       בגיליון - שתי תצוגות מסונכרנות, לא state כפול. -->
   <div class="quick-imdb-bar" id="quickImdbBar" role="group" aria-label="סינון לפי דירוג IMDb" style="display:none">
     <button type="button" class="chip active" data-min="0" onclick="setImdbRatingFilter(0)"><i class="fa-brands fa-imdb"></i> הכל</button>
     <button type="button" class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
@@ -782,74 +703,15 @@ footer a{color:var(--accent)}
   </div>
 </div>
 
-<div id="settingsModal" class="modal-overlay" style="display:none">
+<!-- דירוגי IMDB עברו למטמון משותף בצד השרת (ר' imdbBadgeHtml) - אין יותר הרשמה/מפתח אישי
+     לנהל, אז מודל ההגדרות נשאר תמציתי: הבהרה קצרה שהדירוגים אוטומטיים, בלי שום פעולה
+     נדרשת מהמשתמש. -->
+<div id="settingsModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeSettings()">
   <div class="modal-box">
     <h3><i class="fa-solid fa-gear"></i> הגדרות</h3>
-
-    <h4 class="settings-subtitle"><i class="fa-brands fa-imdb"></i> דירוגי IMDB לסרטים</h4>
-    <p id="omdbStatusText">אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.</p>
-    <div class="modal-actions">
-      <button onclick="openImdbWizard()"><i class="fa-brands fa-imdb"></i> פתחו את אשף ההפעלה</button>
-      <button class="secondary" id="clearOmdbBtnSettings" onclick="clearOmdbKey()" style="display:none">נקו מפתח</button>
-    </div>
-    <p class="muted">כבר יש לכם מפתח? אפשר להדביק אותו ישירות כאן:</p>
-    <div class="key-input-wrap" id="omdbKeyInputWrap">
-      <input type="text" id="omdbKeyInput" placeholder="לדוגמה: a1b2c3d4" autocomplete="off" spellcheck="false" oninput="onOmdbKeyInputChange()">
-      <i class="fa-solid fa-key key-input-icon" id="omdbKeyInputIcon"></i>
-    </div>
-    <p class="field-error" id="omdbKeyInputError" style="display:none"></p>
-    <p class="field-success" id="omdbKeyInputSuccess" style="display:none"><i class="fa-solid fa-circle-check"></i> המפתח פעיל - דירוגי IMDB יופיעו על כרטיסי קולנוע</p>
+    <p><i class="fa-brands fa-imdb"></i> דירוגי IMDb לסרטי קולנוע מוצגים אוטומטית על הכרטיסים - אין יותר צורך בהרשמה או במפתח אישי.</p>
     <div class="modal-actions" style="margin-top:18px">
-      <button id="saveOmdbBtn" onclick="saveOmdbKey()"><span id="saveOmdbBtnLabel">שמירה וסגירה</span></button>
       <button class="secondary" onclick="closeSettings()">סגירה</button>
-    </div>
-  </div>
-</div>
-
-<div id="imdbWizardModal" class="modal-overlay" style="display:none">
-  <div class="modal-box wizard-box">
-    <button class="wizard-close-x" onclick="closeImdbWizard()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
-
-    <div class="wizard-steps">
-      <div class="wizard-step-dot active" id="wizardDot1">1</div>
-      <div class="wizard-step-line" id="wizardLine1"></div>
-      <div class="wizard-step-dot" id="wizardDot2">2</div>
-    </div>
-
-    <div class="wizard-panel" id="wizardPanel1">
-      <div class="wizard-icon"><i class="fa-brands fa-imdb"></i></div>
-      <h3>שלב 1 מתוך 2 - קבלו מפתח מ-OMDb</h3>
-      <p>OMDb הוא שירות חיצוני חינמי (לא קשור אלינו) שמספק דירוגי IMDB. לחצו על הכפתור, ובאתר שלהם הזינו את <strong>המייל שלכם</strong> (לא שלנו) ובחרו באפשרות ה-"Free".</p>
-      <a href="https://www.omdbapi.com/apikey.aspx" target="_blank" rel="noopener" class="wizard-external-btn" onclick="markOmdbSignupStarted()"><i class="fa-solid fa-arrow-up-left-from-square"></i> פתחו את דף ההרשמה של OMDb</a>
-      <p class="wizard-return-note"><i class="fa-solid fa-arrow-turn-down"></i> זה נפתח בכרטיסייה חדשה - הדף הזה נשאר פתוח ברקע, פשוט חוזרים אליו אחר כך (נזהה את זה אוטומטית ונעביר אתכם לשלב הבא).</p>
-      <p class="wizard-hint"><i class="fa-solid fa-triangle-exclamation"></i> שימו לב: OMDb שולחים מייל עם המפתח <strong>וגם קישור הפעלה נפרד</strong> - חובה ללחוץ גם עליו, אחרת המפתח לא יעבוד. כדאי לבדוק גם בתיבת הספאם.</p>
-      <div class="wizard-actions">
-        <button class="wizard-next-btn" onclick="wizardGoToStep2()">קיבלתי מפתח, המשיכו <i class="fa-solid fa-arrow-left"></i></button>
-      </div>
-    </div>
-
-    <div class="wizard-panel" id="wizardPanel2" style="display:none">
-      <div class="wizard-icon"><i class="fa-solid fa-key"></i></div>
-      <h3>שלב 2 מתוך 2 - הדביקו את המפתח</h3>
-      <p>אחרי שקיבלתם את המייל מ-OMDb <strong>ולחצתם על קישור ההפעלה</strong> שבו, העתיקו את המפתח לכאן:</p>
-      <div class="key-input-wrap" id="wizardKeyInputWrap">
-        <input type="text" id="wizardKeyInput" placeholder="הדביקו כאן את המפתח שקיבלתם במייל" autocomplete="off" spellcheck="false" oninput="onWizardKeyInputChange()">
-        <i class="fa-solid fa-key key-input-icon" id="wizardKeyInputIcon"></i>
-      </div>
-      <p class="wizard-error" id="wizardKeyError" style="display:none">צריך להדביק מפתח לפני שממשיכים</p>
-      <div class="wizard-actions two">
-        <button class="wizard-back-btn" onclick="wizardGoToStep1()"><i class="fa-solid fa-arrow-right"></i> חזרה</button>
-        <button class="wizard-next-btn" id="wizardFinishBtn" onclick="wizardFinish()"><span id="wizardFinishBtnLabel">סיימתי, הפעילו דירוגים</span> <i class="fa-solid fa-check" id="wizardFinishBtnIcon"></i></button>
-      </div>
-    </div>
-
-    <div class="wizard-panel" id="wizardPanelSuccess" style="display:none">
-      <div class="wizard-icon success"><i class="fa-solid fa-check"></i></div>
-      <h3>מעולה, זהו!</h3>
-      <p>דירוגי IMDB יופיעו מעכשיו אוטומטית על כרטיסי הצגות קולנוע.</p>
-      <div class="wizard-actions">
-        <button class="wizard-next-btn" onclick="closeImdbWizard()">סגירה</button>
-      </div>
     </div>
   </div>
 </div>
@@ -858,8 +720,8 @@ footer a{color:var(--accent)}
 /* ===================== קונפיגורציה =====================
    השרת (Cloudflare Worker) מבצע את כל השאיבה/מטמון מראש - הלקוח מבצע קריאת רשת יחידה
    לכל הדאטהסט המלא, ומריץ סינון/מיון/רינדור מקומי לחלוטין בזיכרון מרגע זה והלאה.
-   דירוגי IMDB לא כלולים בתשובת השרת - הם אופציונליים ונשלפים ישירות מהדפדפן של כל
-   משתמש מול OMDb, עם המפתח האישי והחינמי שלו (ר' "דירוגי IMDB" בהמשך). כש-Route
+   דירוגי IMDb לסרטי קולנוע כלולים כבר בתשובת השרת עצמה (ev.imdbRating/ev.imdbId) - מטמון
+   משותף אחד לכל המשתמשים, מתעדכן ברקע ע"י הוורקר (ר' "דירוגי IMDb" בהמשך). כש-Route
    המותאם אישית (www.snddigitalagency.com/api*) יעלה, אפשר להחליף לכתובת יחסית. */
 const SHOWMUST_API_URL = 'https://aged-hall-eff1.shahaf579.workers.dev/';
 
@@ -892,11 +754,6 @@ let showOnlySelected = false;
    על "אישור" (applyFilterSheet) - בעוד פס הצ'יפים המהיר ממשיך לפעול בלי אישור בכלל. */
 let selectedTypes = new Set(['all']);
 let modalDraftTypes = null;
-
-/* דירוגי IMDB (אופציונלי - דורש מפתח OMDb API אישי וחינמי, ר' הגדרות). כל בקשה יוצאת
-   ישירות מהדפדפן של המשתמש עם המפתח האישי שלו - השרת לא מעורב בזה בכלל ולא רואה את המפתח. */
-let imdbCache = JSON.parse(localStorage.getItem('imdb_cache') || '{}'); // כותרת -> {rating, imdbId} | null (לא נמצא)
-let imdbFetchInFlight = new Set();
 
 const today = new Date();
 document.getElementById('startDate').value = localDateStr(today);
@@ -1557,8 +1414,7 @@ function buildWhatsappBlockForEvent(ev, index){
   const dayName = ev.date.toLocaleDateString('he-IL', { weekday:'long' });
   const dateStr = ev.date.toLocaleDateString('he-IL', { day:'2-digit', month:'2-digit', year:'numeric' });
   const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
-  const cached = imdbCache[ev.title];
-  const imdbLine = ev.type === 'cinema' && cached && cached.rating ? `\n⭐ IMDb: ${cached.rating}` : '';
+  const imdbLine = ev.type === 'cinema' && ev.imdbRating ? `\n⭐ IMDb: ${ev.imdbRating}` : '';
   const locationLine = `${ev.venue}${ev.extra ? ' - ' + ev.extra : ''}`;
   return `${index}. *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 יום ${dayName}, ${dateStr} בשעה ${timeStr}\n🎟️ כרטיסים: ${ev.link}`;
 }
@@ -1593,7 +1449,7 @@ function buildSmartRecommendation(events){
   const seenTitles = new Set();
   events.forEach(e => { if (!seenTitles.has(e.title)){ seenTitles.add(e.title); uniq.push(e); } });
 
-  const ratingOf = ev => { const c = imdbCache[ev.title]; return (c && c.rating) ? parseFloat(c.rating) : null; };
+  const ratingOf = ev => ev.imdbRating ? parseFloat(ev.imdbRating) : null;
   const music = uniq.filter(e => e.type === 'music');
   const cinema = uniq.filter(e => e.type === 'cinema');
   const theatre = uniq.filter(e => e.type === 'theatre');
@@ -1723,10 +1579,10 @@ function navLink(ev){
   return `https://waze.com/ul?q=${encodeURIComponent(q)}`;
 }
 
-/* ===================== דירוגי IMDB (אופציונלי, Client-Side בלבד) =====================
-   השרת לא שולח דירוגים בכלל - כל בקשה יוצאת ישירות מהדפדפן מול OMDb, עם המפתח האישי
-   והחינמי שהמשתמש הפעיל בעצמו (ר' אשף ההפעלה למטה). ev.imdbHint (כשקיים, לקולנוע לב/
-   רב חן/פלאנט) מגיע כבר מהשרת - זהו רק רמז שם באנגלית שנשאב אגב הסקרייפינג, לא דירוג. */
+/* ===================== דירוגי IMDb (מטמון משותף בצד השרת) =====================
+   הדירוגים מגיעים מוכנים על כל אירוע קולנוע (ev.imdbRating/ev.imdbId) - השרת (aged-hall-eff1)
+   מתחזק אותם ברקע במטמון KV משותף לכל המשתמשים (ר' refreshImdbRatings ב-cf-worker/worker.js),
+   בלי שום הרשמה/מפתח אישי מהמשתמש. אין יותר בקשות רשת מהדפדפן ל-OMDb בכלל. */
 
 function isCinemaFocused(){
   if (selectedTypes.size === 1 && selectedTypes.has('cinema')) return true;
@@ -1735,10 +1591,8 @@ function isCinemaFocused(){
 }
 
 function imdbRatingPasses(ev){
-  const c = imdbCache[ev.title];
-  if (c === undefined) return true; // עדיין לא נבדק - לא מוסתר בטרם עת, filterEvents ירוץ שוב כשהדירוג יגיע
-  if (!c || !c.rating) return false;
-  return parseFloat(c.rating) >= minImdbRating;
+  if (!ev.imdbRating) return false; // אין דירוג ידוע - לא עומד בסף מינימלי
+  return parseFloat(ev.imdbRating) >= minImdbRating;
 }
 
 /* משקף min בשני מקומות בו-זמנית (הגיליון וה-Quick Bar) - אותה תיבת-אמת יחידה
@@ -1752,14 +1606,12 @@ function setImdbRatingFilter(min){
   minImdbRating = min;
   renderImdbRatingChipsState(document.getElementById('imdbRatingChips'), min);
   renderImdbRatingChipsState(document.getElementById('quickImdbBar'), min);
-  if (min > 0) fetchImdbForAllVisibleCinema();
   updateFilterBadge();
   filterEvents();
 }
 
-/* פילטר דירוג ה-IMDB מוצג רק כשהתצוגה ממוקדת קולנוע טהור (isCinemaFocused - ז'אנר קולנוע
-   בלבד, או שכל המקומות המסומנים הם בתי קולנוע) וכשיש מפתח OMDb פעיל (בלי מפתח אין דירוגים
-   לסנן לפיהם) - גם בגיליון וגם ב-Quick Bar (ר' "Cinema Mode Detection"). minImdbRating
+/* פילטר דירוג ה-IMDb מוצג רק כשהתצוגה ממוקדת קולנוע טהור (isCinemaFocused - ז'אנר קולנוע
+   בלבד, או שכל המקומות המסומנים הם בתי קולנוע) - גם בגיליון וגם ב-Quick Bar. minImdbRating
    עצמו לא מתאפס בלחיצת "אישור" (הוא לא חלק מטיוטת הז'אנר) - הוא נשאר בעינו כל עוד המצב
    עדיין ממוקד-קולנוע, בדיוק כמו שנדרש ב"State Persistence". אם התצוגה מפסיקה להיות
    ממוקדת-קולנוע (למשל המשתמש עבר ל"הכל") מאפסים את הסינון - כדי לא להשאיר תצוגה "תקועה"
@@ -1767,7 +1619,7 @@ function setImdbRatingFilter(min){
 function refreshImdbRatingFilterSection(){
   const section = document.getElementById('imdbRatingFilterSection');
   const quickBar = document.getElementById('quickImdbBar');
-  const show = isCinemaFocused() && !!localStorage.getItem('omdb_api_key');
+  const show = isCinemaFocused();
   if (section) section.style.display = show ? 'block' : 'none';
   if (quickBar) quickBar.style.display = show ? 'flex' : 'none';
   if (!show && minImdbRating > 0){
@@ -1777,467 +1629,28 @@ function refreshImdbRatingFilterSection(){
   }
 }
 
+/* תג סטטי בלבד - אין יותר מצבי pending/not-found/כפתור-לחיצה, כי אין שום פעולת משתמש
+   שיכולה להשפיע על הדירוג. כשאין דירוג/imdbId ידועים עדיין (סרט חדש שהוורקר עוד לא הגיע
+   אליו בסבב הרוטציה שלו, ר' IMDB_TITLES_PER_RUN) פשוט לא מוצג שום תג - לא תקוע במצב ביניים. */
 function imdbBadgeHtml(ev){
   if (ev.type !== 'cinema') return '';
-  const hasKey = !!localStorage.getItem('omdb_api_key');
-  const cached = imdbCache[ev.title];
-  if (cached && cached.rating){
-    const link = cached.imdbId ? `https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/` : null;
-    const inner = `<i class="fa-brands fa-imdb"></i> IMDb ${escapeHtml(cached.rating)}`;
-    return link
-      ? `<a class="imdb-badge" href="${link}" target="_blank" rel="noopener" title="לדף הסרט ב-IMDB" onclick="event.stopPropagation()">${inner}</a>`
-      : `<span class="imdb-badge" title="דירוג IMDB">${inner}</span>`;
+  if (ev.imdbRating){
+    const inner = `<i class="fa-brands fa-imdb"></i> IMDb ${escapeHtml(ev.imdbRating)}`;
+    return ev.imdbId
+      ? `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(ev.imdbId)}/" target="_blank" rel="noopener" title="לדף הסרט ב-IMDb" onclick="event.stopPropagation()">${inner}</a>`
+      : `<span class="imdb-badge" title="דירוג IMDb">${inner}</span>`;
   }
-  // הסרט זוהה במדויק מול OMDb (יש imdbId) אבל עדיין אין לו דירוג מספרי - בד"כ סרט חדש/
-  // עתידי מדי. מציגים קישור לדף הסרט האמיתי בלי מספר - זה תמיד עדיף על להמשיך לחיפוש
-  // מטושטש (s=) שעלול לתפוס בטעות סרט אחר לגמרי עם שם דומה/זהה (ר' omdbLookup/
-  // fetchImdbScore - "לה בוהם" נתפס בעבר בטעות בסרט אילם מ-1926 בגלל בדיוק זה).
-  if (cached && cached.imdbId){
-    return `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(cached.imdbId)}/" target="_blank" rel="noopener" title="נמצא ב-IMDB, עדיין אין דירוג" onclick="event.stopPropagation()"><i class="fa-brands fa-imdb"></i> IMDb</a>`;
+  // הסרט זוהה במדויק מול OMDb (יש imdbId) אבל עדיין אין לו דירוג מספרי - בד"כ סרט חדש/עתידי מדי.
+  if (ev.imdbId){
+    return `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(ev.imdbId)}/" target="_blank" rel="noopener" title="נמצא ב-IMDb, עדיין אין דירוג" onclick="event.stopPropagation()"><i class="fa-brands fa-imdb"></i> IMDb</a>`;
   }
-  // נבדק מול OMDb בעבר ולא נמצא - נשאר גלוי (לא נעלם!) עם הודעה ידידותית, במקום כפתור פעיל
-  if (hasKey && cached === null){
-    return `<span class="imdb-badge not-found" title="לא מצאנו ציון לסרט הזה 🎬"><i class="fa-brands fa-imdb"></i> IMDb</span>`;
-  }
-  if (hasKey && imdbFetchInFlight.has(ev.title)){
-    return `<span class="imdb-badge pending" title="בודקים דירוג..."><i class="fa-brands fa-imdb fa-fade"></i> IMDb</span>`;
-  }
-  const title = hasKey ? 'בדקו דירוג IMDB' : 'הפעילו דירוגי IMDB';
-  return `<button type="button" class="imdb-badge" title="${title}" onclick="event.stopPropagation();handleImdbIconClick('${ev.id}')"><i class="fa-brands fa-imdb"></i> IMDb</button>`;
-}
-
-/* מילות-תיאור עבריות שנפוצות בכותרות אתרי קולנוע אבל אף פעם לא חלק מהשם עצמו ב-OMDb -
-   השארתן בשאילתה כמעט תמיד מכשילה התאמה מדויקת (t=). */
-const IMDB_NOISE_WORDS = /\b(מדובב|מדובבת|מתורגם|מתורגמת|תרגום|כתוביות|גרסה מקורית|תלת מימד|דיגיטלי|אנגלית|עברית)\b/g;
-
-/* מנקים כותרת לפני חיפוש ב-OMDb: מסירים תוכן בסוגריים/מרובעים (שנה/פורמט), מילות-תיאור
-   עבריות, מירכאות עבריות, נקודתיים/מקפים, שנה בודדת בסוף (בלי סוגריים), ופיסוק סוגר -
-   כל אלה גורמים להתאמה מדויקת (t=) להיכשל על כותרות שהן בעצם תקינות. */
-function cleanImdbQuery(str){
-  if (!str) return '';
-  return str
-    .replace(/\[.*?\]/g, ' ')
-    .replace(/\(.*?\)/g, ' ')
-    .replace(IMDB_NOISE_WORDS, ' ')
-    .replace(/[׳']/g, '')
-    .replace(/[:"״]/g, ' ')
-    .replace(/\b(19|20)\d{2}\b\s*$/, '')
-    .replace(/[.!?]+$/g, '')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
-}
-
-/* חילוץ "שם לועזי חכם": אתרי הקולנוע הישראליים נוהגים לערבב עברית ולועזית באותה כותרת
-   (למשל "צבעי הזמן / Colours of Time"). OMDb מאונדקס כמעט תמיד לפי השם הלועזי, אז אם
-   יש קטע לטיני משמעותי בכותרת - מחלצים את הארוך מביניהם (לרוב השם המלא, לא ראשי-תיבות
-   מקריים כמו "3D" או "VIP") ומשתמשים בו כווריאציית חיפוש בעדיפות ראשונה. */
-function extractLatinTitle(str){
-  if (!str) return null;
-  const matches = str.match(/[A-Za-z][A-Za-z0-9:''.,&!?\- ]{2,}/g);
-  if (!matches || !matches.length) return null;
-  const best = matches.map(m => m.trim()).sort((a,b) => b.length - a.length)[0];
-  return best && best.length >= 3 ? best : null;
-}
-
-/* וריאציות חיפוש לכותרת נתונה, מהמדויקת/הסבירה ביותר לגמישה יותר: קטע לועזי מחולץ
-   (אם יש), אחר כך הכותרת המנוקה במלואה, ואם יש כתובית אחרי מקף/נקודתיים - גם הגרסה
-   בלי הכתובית (לרוב שם הסרט/ההצגה האמיתי). */
-function imdbQueryVariants(title){
-  const variants = [];
-  const latin = extractLatinTitle(title);
-  if (latin){
-    const cleanedLatin = cleanImdbQuery(latin);
-    if (cleanedLatin) variants.push(cleanedLatin);
-  }
-  const cleaned = cleanImdbQuery(title);
-  if (cleaned && !variants.includes(cleaned)) variants.push(cleaned);
-  const noSubtitle = cleaned.split(/\s[-–—]\s/)[0].trim();
-  if (noSubtitle && !variants.includes(noSubtitle)) variants.push(noSubtitle);
-  return variants;
-}
-
-/* חיפוש יחיד מול OMDb לפי התאמה מדויקת (t=), עם שנה אופציונלית (y=) לצמצום התנגשויות
-   בין סרטים שחולקים בדיוק את אותו שם בעשורים שונים (ר' fetchImdbScore). מחזיר
-   {rating,imdbId} כשהזיהוי המדויק הצליח - rating יכול להיות null אם הסרט זוהה נכון
-   אבל עדיין אין לו דירוג מספרי (סרט חדש/עתידי מדי, לא שגיאה). מחזיר null רק כשלא נמצא
-   שום סרט בשם הזה (לא זריקה - "לא נמצא" הוא תוצאה תקינה), ולעולם לא משאיר UI שבור. */
-async function omdbLookup(apiKey, query, year){
-  if (!query) return null;
-  try{
-    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(query)}${yearParam}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (data.Response === 'True'){
-      return { rating: (data.imdbRating && data.imdbRating !== 'N/A') ? data.imdbRating : null, imdbId: data.imdbID };
-    }
-    return null;
-  }catch(e){
-    console.error('OMDb lookup failed:', query, e);
-    return null;
-  }
-}
-
-/* חיפוש "מטושטש" מול OMDb (s=) - מוצא אחרון: לוקחים את התוצאה הראשונה ומביאים לה פרטים
-   מלאים (i=) כדי לוודא שיש לה בכלל דירוג IMDB. שימושי בעיקר לכותרות עם רעש שגם אחרי
-   ניקוי עדיין לא תואמות בדיוק את השם ב-OMDb. */
-async function omdbSearchFallback(apiKey, query, year){
-  if (!query) return null;
-  try{
-    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&s=${encodeURIComponent(query)}&type=movie${yearParam}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (data.Response !== 'True' || !Array.isArray(data.Search) || !data.Search.length) return null;
-    const imdbId = data.Search[0].imdbID;
-    if (!imdbId) return null;
-    const detailRes = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&i=${encodeURIComponent(imdbId)}`);
-    if (!detailRes.ok) return null;
-    const detail = await detailRes.json();
-    if (detail.Response === 'True' && detail.imdbRating && detail.imdbRating !== 'N/A'){
-      return { rating: detail.imdbRating, imdbId: detail.imdbID };
-    }
-    return null;
-  }catch(e){
-    console.error('OMDb search fallback failed:', query, e);
-    return null;
-  }
-}
-
-/* בודקים שהמפתח בפועל עובד לפני שנשמר - שליפת מבחן קטנה וידועה מראש ("טיטניק") כדי
-   שלא נגיד "אוקי" ליוזר בזמן שהמפתח בכלל לא תקף. */
-async function validateOmdbKey(key){
-  try{
-    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(key)}&t=Titanic`);
-    if (res.status === 401) return { valid:false, reason:'invalid_key' };
-    if (!res.ok) return { valid:false, reason:'network_error' };
-    const data = await res.json();
-    if (data && data.Response === 'True' && data.imdbRating) return { valid:true };
-    return { valid:false, reason:'api_error', apiError: data && data.Error };
-  }catch(e){
-    return { valid:false, reason:'network_error' };
-  }
-}
-
-function omdbKeyErrorMessage(result){
-  if (result.reason === 'invalid_key') return 'המפתח לא עובד מול OMDb. ודאו שהעתקתם אותו נכון מהמייל - ושימו לב: לפעמים המייל הראשון הוא רק אישור, וצריך ללחוץ על קישור ההפעלה (Activate Key) שנשלח בנפרד/בהמשך אותו מייל.';
-  if (result.reason === 'network_error') return 'לא הצלחנו לבדוק את המפתח כרגע (בעיית רשת). נסו שוב בעוד רגע.';
-  return `המפתח לא אושר על-ידי OMDb${result.apiError ? (': ' + result.apiError) : ''}.`;
-}
-
-/* חיפוש דו-לשוני: OMDb מאונדקס כמעט תמיד לפי שם לועזי/אנגלי, אז כשיש רמז אנגלי (ev.imdbHint
-   שהשרת שאב אגב הסקרייפינג) מנסים אותו קודם - הסיכוי להצליח גבוה משמעותית. רק אם זה נכשל
-   מנסים גם לפי הכותרת המוצגת (בעברית, לרוב). תוצאת "לא נמצא" נשמרת במטמון כדי שלא ננסה
-   שוב על אותה הצגה/סרט בכל רינדור. releaseYear (זמין לקולנוע רק ל-Vista - ר' fetchVistaDay
-   ב-worker.js) מועבר הלאה בתור y= לצמצום התנגשויות בין סרטים שחולקים בדיוק את אותו שם באנגלית
-   בעשורים שונים (למשל "Sweetheart"/"Mutiny"/"The Invite" - כותרות גנריות עם כמה סרטים
-   בשם זהה) - בלעדיו OMDb יכול להחזיר בביטחון מלא דירוג של סרט לגמרי אחר עם אותו שם. */
-async function fetchImdbScore(title, hint, releaseYear){
-  if (imdbCache[title] !== undefined) return imdbCache[title];
-  if (imdbFetchInFlight.has(title)) return undefined;
-  const apiKey = localStorage.getItem('omdb_api_key');
-  if (!apiKey) return null;
-  imdbFetchInFlight.add(title);
-  try{
-    const cleanHint = cleanImdbQuery(hint);
-    let result = cleanHint ? await omdbLookup(apiKey, cleanHint, releaseYear) : null;
-    if (!result){
-      for (const variant of imdbQueryVariants(title)){
-        if (variant.toLowerCase() === (cleanHint || '').toLowerCase()) continue;
-        result = await omdbLookup(apiKey, variant, releaseYear);
-        if (result) break;
-      }
-    }
-    if (!result) result = await omdbSearchFallback(apiKey, cleanHint || cleanImdbQuery(title), releaseYear);
-    imdbCache[title] = result;
-    try{ localStorage.setItem('imdb_cache', JSON.stringify(imdbCache)); }catch(e){}
-    return result;
-  }finally{
-    imdbFetchInFlight.delete(title);
-  }
-}
-
-function triggerImdbForEvent(ev){
-  if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
-  fetchImdbScore(ev.title, ev.imdbHint, ev.releaseYear).then(result => { if (result !== undefined) filterEvents(); });
-}
-
-/* דירוג אוטומטי רק כשהתצוגה היא "קולנוע טהור" (סוג=קולנוע, או שכל המקומות המסומנים הם
-   בתי קולנוע) - ורק ל-3 הכרטיסים הראשונים. כל שאר הכרטיסים מציגים אייקון "בדקו דירוג"
-   קטן על הכרטיס עצמו במקום, ללא בקשת רשת אוטומטית. */
-function maybeHandleImdbScores(events){
-  if (!localStorage.getItem('omdb_api_key')) return;
-  if (!isCinemaFocused()) return;
-  const cinemaEvents = events.filter(e => e.type === 'cinema');
-  if (!cinemaEvents.length) return;
-  const seen = new Set();
-  for (const ev of cinemaEvents){
-    if (seen.size >= 3) break;
-    if (seen.has(ev.title)) continue;
-    seen.add(ev.title);
-    triggerImdbForEvent(ev);
-  }
-}
-
-/* בניגוד ל-maybeHandleImdbScores (שמביא דירוג רק ל-3 הכרטיסים הראשונים כברירת מחדל),
-   כשסינון לפי דירוג מינימלי פעיל צריך לדעת את הדירוג של כל סרטי הקולנוע כדי לסנן נכון -
-   אז מביאים לכולם, עדיין מדודפל לפי כותרת ייחודית בלבד. */
-function fetchImdbForAllVisibleCinema(){
-  if (!localStorage.getItem('omdb_api_key')) return;
-  const seen = new Set();
-  allEvents.filter(e => e.type === 'cinema').forEach(ev => {
-    if (seen.has(ev.title)) return;
-    seen.add(ev.title);
-    triggerImdbForEvent(ev);
-  });
-}
-
-function handleImdbIconClick(id){
-  const ev = currentFiltered.find(e => e.id === id) || allEvents.find(e => e.id === id);
-  if (!ev) return;
-  if (!localStorage.getItem('omdb_api_key')){ openImdbWizard(); return; }
-  if (imdbCache[ev.title] !== undefined || imdbFetchInFlight.has(ev.title)) return;
-  fetchImdbScore(ev.title, ev.imdbHint, ev.releaseYear).then(() => filterEvents());
-  filterEvents(); // imdbFetchInFlight כבר עודכן באופן סנכרוני בתוך fetchImdbScore - מציג מיד מצב "בודקים..."
-}
-
-/* ===================== הגדרות + אשף הפעלת IMDB =====================
-   הערה: לא ניתן למלא מראש את המייל בטופס ההרשמה של OMDb (דף חיצוני, ללא API רשמי לכך) -
-   ולכן האשף לא אוסף מייל בכלל. */
-/* מצב חזותי לשדה מפתח OMDb (בהגדרות ובאשף כאחד) - גבול+אייקון שמשקפים checking/valid/
-   invalid, כדי שהמשתמש יידע מיד אם המפתח שהדביק תקין בלי לחכות לטקסט שגיאה בלבד. */
-function setKeyInputState(wrapId, iconId, state){
-  const wrap = document.getElementById(wrapId);
-  const icon = document.getElementById(iconId);
-  if (!wrap || !icon) return;
-  wrap.classList.remove('checking', 'valid', 'invalid');
-  if (state) wrap.classList.add(state);
-  icon.className = 'key-input-icon ' + (
-    state === 'checking' ? 'fa-solid fa-circle-notch fa-spin' :
-    state === 'valid' ? 'fa-solid fa-circle-check' :
-    state === 'invalid' ? 'fa-solid fa-circle-xmark' :
-    'fa-solid fa-key'
-  );
-}
-
-function onOmdbKeyInputChange(){
-  document.getElementById('omdbKeyInputError').style.display = 'none';
-  document.getElementById('omdbKeyInputSuccess').style.display = 'none';
-  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null);
+  return '';
 }
 
 function openSettings(){
-  const key = localStorage.getItem('omdb_api_key') || '';
-  document.getElementById('omdbKeyInput').value = key;
-  document.getElementById('omdbKeyInputError').style.display = 'none';
-  document.getElementById('omdbKeyInputSuccess').style.display = key ? 'flex' : 'none';
-  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', key ? 'valid' : null);
-  refreshOmdbSettingsStatus();
   document.getElementById('settingsModal').style.display = 'flex';
 }
 function closeSettings(){ document.getElementById('settingsModal').style.display = 'none'; }
-function refreshOmdbSettingsStatus(){
-  const hasKey = !!localStorage.getItem('omdb_api_key');
-  const statusText = document.getElementById('omdbStatusText');
-  const clearBtn = document.getElementById('clearOmdbBtnSettings');
-  if (statusText) statusText.innerText = hasKey
-    ? 'דירוגי IMDB פעילים - הכרטיסים של הצגות קולנוע מציגים דירוג כשהוא נמצא.'
-    : 'אופציונלי. עם מפתח OMDb API אישי וחינמי, הכרטיסים של הצגות קולנוע יציגו גם דירוג IMDB.';
-  if (clearBtn) clearBtn.style.display = hasKey ? 'inline-flex' : 'none';
-}
-async function saveOmdbKey(){
-  const val = document.getElementById('omdbKeyInput').value.trim();
-  const errorEl = document.getElementById('omdbKeyInputError');
-  const successEl = document.getElementById('omdbKeyInputSuccess');
-  errorEl.style.display = 'none';
-  successEl.style.display = 'none';
-  if (!val){ setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null); return; }
-  const btn = document.getElementById('saveOmdbBtn');
-  const label = document.getElementById('saveOmdbBtnLabel');
-  btn.disabled = true;
-  label.textContent = 'בודקים את המפתח מול OMDb...';
-  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'checking');
-  const result = await validateOmdbKey(val);
-  btn.disabled = false;
-  label.textContent = 'שמירה וסגירה';
-  if (!result.valid){
-    setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'invalid');
-    errorEl.textContent = omdbKeyErrorMessage(result);
-    errorEl.style.display = 'block';
-    return;
-  }
-  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', 'valid');
-  successEl.style.display = 'flex';
-  localStorage.setItem('omdb_api_key', val);
-  imdbCache = {};
-  try{ localStorage.removeItem('imdb_cache'); }catch(e){}
-  hideImdbBanner(true);
-  refreshOmdbSettingsStatus();
-  filterEvents();
-  // משאירים את אישור ה-"פעיל ✓" הירוק גלוי לרגע לפני הסגירה, כדי שהמשתמש בפועל יראה
-  // שהמפתח נשמר בהצלחה - שמירה וסגירה מיידית לגמרי הייתה מסתירה את המשוב הזה.
-  setTimeout(closeSettings, 900);
-}
-function clearOmdbKey(){
-  localStorage.removeItem('omdb_api_key');
-  document.getElementById('omdbKeyInput').value = '';
-  document.getElementById('omdbKeyInputError').style.display = 'none';
-  document.getElementById('omdbKeyInputSuccess').style.display = 'none';
-  setKeyInputState('omdbKeyInputWrap', 'omdbKeyInputIcon', null);
-  try{ localStorage.removeItem('imdb_banner_dismissed'); }catch(e){}
-  refreshOmdbSettingsStatus();
-  maybeShowImdbBanner();
-  filterEvents();
-}
-
-function setWizardStep(step){
-  const dot1 = document.getElementById('wizardDot1');
-  const dot2 = document.getElementById('wizardDot2');
-  const line = document.getElementById('wizardLine1');
-  if (!dot1 || !dot2 || !line) return;
-  dot1.classList.toggle('active', step === 1);
-  dot1.classList.toggle('done', step > 1);
-  dot2.classList.toggle('active', step === 2);
-  line.classList.toggle('done', step > 1);
-}
-
-function onWizardKeyInputChange(){
-  document.getElementById('wizardKeyError').style.display = 'none';
-  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', null);
-}
-
-function openImdbWizard(){
-  document.getElementById('wizardKeyInput').value = '';
-  document.getElementById('wizardKeyError').style.display = 'none';
-  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', null);
-  document.getElementById('wizardPanel1').style.display = 'block';
-  document.getElementById('wizardPanel2').style.display = 'none';
-  document.getElementById('wizardPanelSuccess').style.display = 'none';
-  document.getElementById('wizardDot2').classList.remove('done');
-  setWizardStep(1);
-  document.getElementById('settingsModal').style.display = 'none';
-  document.getElementById('imdbWizardModal').style.display = 'flex';
-}
-
-function closeImdbWizard(){
-  document.getElementById('imdbWizardModal').style.display = 'none';
-}
-
-function wizardGoToStep2(){
-  document.getElementById('wizardPanel1').style.display = 'none';
-  document.getElementById('wizardPanel2').style.display = 'block';
-  document.getElementById('wizardKeyError').style.display = 'none';
-  setWizardStep(2);
-  setTimeout(() => { const el = document.getElementById('wizardKeyInput'); if (el) el.focus(); }, 150);
-}
-
-function wizardGoToStep1(){
-  document.getElementById('wizardPanel2').style.display = 'none';
-  document.getElementById('wizardPanel1').style.display = 'block';
-  setWizardStep(1);
-}
-
-/* ===================== משימה 2 - חזרה חלקה מהרשמת OMDb =====================
-   ההרשמה עצמה חייבת לצאת מהאתר לפחות לרגע (יש אימות מייל אמיתי, אין דרך לעקוף את זה) -
-   אז במקום לנסות "לתקן" את היציאה עצמה, האתר מזהה את החזרה בעצמו ומקדם את המשתמש ישר
-   לשלב הבא, כך שהחזרה מרגישה רציפה ולא כמו שהתחלה מחדש. חותמת זמן (לא boolean) כדי
-   שגם אם מערכת ההפעלה סגרה את הטאב המקורי לגמרי (מעבר בין אפליקציות בזמן שבודקים מייל
-   זה נפוץ במיוחד במובייל) - initResumeOmdbWizard בהמשך מזהה את זה בטעינה חדשה של הדף
-   ופותח את האשף ישר בשלב הנכון, במקום להשאיר את המשתמש "לגלות" מחדש איך ממשיכים. */
-function markOmdbSignupStarted(){
-  try{ localStorage.setItem('omdb_wizard_pending', String(Date.now())); }catch(e){}
-}
-
-/* חזרה תוך כדי שהאשף עדיין פתוח (הטאב לא נסגר) - Page Visibility API. חלון זמן סביר
-   (3 שניות עד שעה) כדי לא להניח בטעות שמשתמש שרק הציץ בהתראה ומיד חזר כבר הספיק
-   להירשם ב-OMDb, ולא "לתפוס" עדיין חלון פתוח מביקור ישן מדי. */
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState !== 'visible') return;
-  const pending = localStorage.getItem('omdb_wizard_pending');
-  if (!pending) return;
-  const elapsedMs = Date.now() - Number(pending);
-  if (elapsedMs < 3000 || elapsedMs > 60 * 60 * 1000) return;
-  const modal = document.getElementById('imdbWizardModal');
-  const panel1 = document.getElementById('wizardPanel1');
-  if (modal && modal.style.display === 'flex' && panel1 && panel1.style.display !== 'none'){
-    wizardGoToStep2();
-  }
-});
-
-/* חזרה אחרי שהטאב המקורי נסגר לגמרי - נבדק פעם אחת בטעינת הדף (ר' קריאה בסוף הקובץ,
-   לפני loadAllEvents). פותח את האשף ישר בשלב 2 במקום את הבאנר הרגיל, כדי שהמשתמש לא
-   יצטרך לגלות מחדש איך ממשיכים ממה שכבר התחיל. מוחק את הדגל תמיד אחרי בדיקה חד-פעמית -
-   כדי לא להציק עם זה בכל ביקור עתידי אם המשתמש בפועל נטש את התהליך. */
-function initResumeOmdbWizard(){
-  const pending = localStorage.getItem('omdb_wizard_pending');
-  if (!pending) return false;
-  localStorage.removeItem('omdb_wizard_pending');
-  if (localStorage.getItem('omdb_api_key')) return false; // כבר סיים בדרך אחרת
-  const elapsedMs = Date.now() - Number(pending);
-  if (elapsedMs > 60 * 60 * 1000) return false; // סביר שנטש - לא נציק עם זה בביקור מאוחר
-  openImdbWizard();
-  wizardGoToStep2();
-  return true;
-}
-
-async function wizardFinish(){
-  const key = document.getElementById('wizardKeyInput').value.trim();
-  const errorEl = document.getElementById('wizardKeyError');
-  if (!key){
-    errorEl.textContent = 'צריך להדביק מפתח לפני שממשיכים';
-    errorEl.style.display = 'block';
-    document.getElementById('wizardKeyInput').focus();
-    return;
-  }
-  const btn = document.getElementById('wizardFinishBtn');
-  const label = document.getElementById('wizardFinishBtnLabel');
-  const icon = document.getElementById('wizardFinishBtnIcon');
-  errorEl.style.display = 'none';
-  btn.disabled = true;
-  label.textContent = 'בודקים את המפתח מול OMDb...';
-  icon.className = 'fa-solid fa-circle-notch fa-spin';
-  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'checking');
-  const result = await validateOmdbKey(key);
-  btn.disabled = false;
-  label.textContent = 'סיימתי, הפעילו דירוגים';
-  icon.className = 'fa-solid fa-check';
-  if (!result.valid){
-    setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'invalid');
-    errorEl.textContent = omdbKeyErrorMessage(result);
-    errorEl.style.display = 'block';
-    return;
-  }
-  setKeyInputState('wizardKeyInputWrap', 'wizardKeyInputIcon', 'valid');
-  localStorage.setItem('omdb_api_key', key);
-  imdbCache = {};
-  try{ localStorage.removeItem('imdb_cache'); }catch(e){}
-  document.getElementById('wizardPanel2').style.display = 'none';
-  document.getElementById('wizardPanelSuccess').style.display = 'block';
-  document.getElementById('wizardDot2').classList.add('done');
-  hideImdbBanner(true);
-  refreshOmdbSettingsStatus();
-  filterEvents();
-}
-
-function hideImdbBanner(persistDismiss){
-  const banner = document.getElementById('imdbBanner');
-  if (banner) banner.style.display = 'none';
-  if (persistDismiss){ try{ localStorage.setItem('imdb_banner_dismissed', '1'); }catch(e){} }
-}
-
-function dismissImdbBanner(){ hideImdbBanner(true); }
-
-function maybeShowImdbBanner(){
-  const banner = document.getElementById('imdbBanner');
-  if (!banner) return;
-  if (localStorage.getItem('omdb_api_key')) return;
-  if (localStorage.getItem('imdb_banner_dismissed') === '1') return;
-  // אם האשף כבר פתוח (initResumeOmdbWizard החזיר משתמש שחזר מ-OMDb ישר לשלב 2) - הבאנר
-  // מיותר, יוצר רעש חזותי כפול מאחורי המודל.
-  const wizard = document.getElementById('imdbWizardModal');
-  if (wizard && wizard.style.display === 'flex') return;
-  banner.style.display = 'flex';
-}
 
 function toggleSynopsis(btn){
   const wrap = btn.closest('.event-synopsis-wrap');
@@ -2415,7 +1828,6 @@ function renderEvents(events){
   const sheetCountEl = document.getElementById('sheetResultsCount');
   if (sheetCountEl) sheetCountEl.textContent = renderItems.length;
   updateSelectionUI();
-  maybeHandleImdbScores(events);
 
   if (events.length === 0){
     if (lastLoadFailed){
@@ -2587,8 +1999,10 @@ function renderEvents(events){
 // ידנית פעמיים (החוצה וחזרה) כדי להפעיל את הסנכרון בטעות. דווח כבאג (משימה 6).
 syncVenuesToTypes(selectedTypes);
 updateFilterBadge();
-initResumeOmdbWizard(); // ר' משימה 2 - ממשיך אשף OMDb שנשאר "תלוי" מביקור קודם, לפני שהבאנר הרגיל מספיק להציג את עצמו
-loadAllEvents().then(maybeShowImdbBanner);
+loadAllEvents();
 </script>
+<!-- Cloudflare Web Analytics -->
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "21c43ee72da942139f7280e9a263587e"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>

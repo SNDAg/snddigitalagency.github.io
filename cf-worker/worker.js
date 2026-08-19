@@ -14,13 +14,20 @@
    Two workers, two exclusively-owned KV keys, no worker ever writes the other's key: nothing
    to race or clobber.
 
-   IMDb ratings are intentionally NOT resolved here. Each visitor supplies
-   their own free OMDb API key client-side (stored in their own browser's
-   localStorage) - so there is no OMDB_API_KEY secret and no server-side OMDb
-   traffic. Cinema events still carry `imdbHint` (an English-title hint
-   scraped alongside the showtime, e.g. from Rav-Hen's URL slug or Lev's
-   English title) purely to make the client's own OMDb search more accurate -
-   the server never calls OMDb itself.
+   IMDb ratings are resolved SERVER-SIDE, here, shared by every visitor - there is no more
+   per-user OMDb signup flow. A second, independent cron trigger (see IMDB_CRON/wrangler.toml)
+   fires refreshImdbRatings, which reads this worker's own events-v1 for the current set of
+   unique cinema titles, looks up each one against OMDb (using one of the comma-separated keys
+   in the OMDB_API_KEYS secret, `wrangler secret put OMDB_API_KEYS`), and writes the results to
+   its own exclusively-owned `imdb-v1` KV key - a rotating queue processes as many titles as fit
+   in a per-run OMDb request budget (see IMDB_MAX_OMDB_REQUESTS_PER_RUN) so a whole-catalog
+   refresh never blows the 50-subrequest budget of a single invocation. Each cron trigger is a
+   fully independent Worker invocation with its
+   own fresh subrequest budget, so this shares no budget at all with refreshEvents's 3h scrape
+   cycle. buildClientPayload merges imdb-v1's ratings onto cinema events at request time, same
+   merge-on-read pattern as content-v1. Cinema events still carry `imdbHint` (an English-title
+   hint scraped alongside the showtime, e.g. from Rav-Hen's URL slug or Lev's English title) -
+   now consumed here server-side instead of by client-side OMDb calls.
    ============================================================================ */
 
 // ============================================================================
@@ -357,6 +364,234 @@ async function fetchVistaCinema(sourceKey, dateStrs) {
     else console.error(sourceKey, 'day failed:', r.reason);
   });
   return events;
+}
+
+// ============================================================================
+// IMDb ratings (server-side, shared cache via imdb-v1 - see refreshImdbRatings)
+// ============================================================================
+
+/* Ported verbatim from the client's old per-user OMDb logic (removed from index.html this
+   session) - the query-cleaning/variant heuristics were already tuned against real titles from
+   these exact sources, no reason to redesign them now that the lookup moved server-side. */
+const IMDB_NOISE_WORDS = /\b(מדובב|מדובבת|מתורגם|מתורגמת|תרגום|כתוביות|גרסה מקורית|תלת מימד|דיגיטלי|אנגלית|עברית)\b/g;
+
+function cleanImdbQuery(str) {
+  if (!str) return '';
+  return str
+    .replace(/\[.*?\]/g, ' ')
+    .replace(/\(.*?\)/g, ' ')
+    .replace(IMDB_NOISE_WORDS, ' ')
+    .replace(/[׳']/g, '')
+    .replace(/[:"״]/g, ' ')
+    .replace(/\b(19|20)\d{2}\b\s*$/, '')
+    .replace(/[.!?]+$/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function extractLatinTitle(str) {
+  if (!str) return null;
+  const matches = str.match(/[A-Za-z][A-Za-z0-9:''.,&!?\- ]{2,}/g);
+  if (!matches || !matches.length) return null;
+  const best = matches.map((m) => m.trim()).sort((a, b) => b.length - a.length)[0];
+  return best && best.length >= 3 ? best : null;
+}
+
+function imdbQueryVariants(title) {
+  const variants = [];
+  const latin = extractLatinTitle(title);
+  if (latin) {
+    const cleanedLatin = cleanImdbQuery(latin);
+    if (cleanedLatin) variants.push(cleanedLatin);
+  }
+  const cleaned = cleanImdbQuery(title);
+  if (cleaned && !variants.includes(cleaned)) variants.push(cleaned);
+  const noSubtitle = cleaned.split(/\s[-–—]\s/)[0].trim();
+  if (noSubtitle && !variants.includes(noSubtitle)) variants.push(noSubtitle);
+  return variants;
+}
+
+/* counter is a shared { used } object, incremented once per actual OMDb HTTP call - lets
+   refreshImdbRatings budget by real subrequest cost instead of a flat title count (see
+   IMDB_MAX_OMDB_REQUESTS_PER_RUN). Most titles resolve in exactly 1 call (the hint alone
+   matches), so budgeting per-title was wildly conservative in practice - counting the real
+   cost lets a single run cover far more of the catalog. */
+async function omdbLookup(apiKey, query, year, counter) {
+  if (!query) return null;
+  counter.used++;
+  try {
+    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&t=${encodeURIComponent(query)}${yearParam}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.Response === 'True') {
+      return { rating: (data.imdbRating && data.imdbRating !== 'N/A') ? data.imdbRating : null, imdbId: data.imdbID || null };
+    }
+    return null;
+  } catch (e) {
+    console.error('OMDb lookup failed:', query, e);
+    return null;
+  }
+}
+
+async function omdbSearchFallback(apiKey, query, year, counter) {
+  if (!query) return null;
+  counter.used++;
+  try {
+    const yearParam = year ? `&y=${encodeURIComponent(year)}` : '';
+    const res = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&s=${encodeURIComponent(query)}&type=movie${yearParam}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data.Response !== 'True' || !Array.isArray(data.Search) || !data.Search.length) return null;
+    const imdbId = data.Search[0].imdbID;
+    if (!imdbId) return null;
+    counter.used++;
+    const detailRes = await fetch(`https://www.omdbapi.com/?apikey=${encodeURIComponent(apiKey)}&i=${encodeURIComponent(imdbId)}`);
+    if (!detailRes.ok) return null;
+    const detail = await detailRes.json();
+    if (detail.Response === 'True' && detail.imdbRating && detail.imdbRating !== 'N/A') {
+      return { rating: detail.imdbRating, imdbId: detail.imdbID || null };
+    }
+    return null;
+  } catch (e) {
+    console.error('OMDb search fallback failed:', query, e);
+    return null;
+  }
+}
+
+/* Same bilingual-search strategy the client used to run per-visitor: try the English hint
+   first (OMDb is indexed almost entirely in English, and the hint comes straight from the
+   source's own URL slug/English title - see slugToImdbHint/fetchLevMovieList), then fall back
+   through cleaned title variants, then a fuzzy search-by-title as a last resort. releaseYear
+   (Vista sources only) disambiguates common English titles shared by unrelated films from
+   different decades. Returns null only when no film at all could be matched - a matched film
+   with no numeric rating yet (too new/unreleased) still returns {rating:null, imdbId}. */
+async function lookupImdbRating(apiKey, title, hint, releaseYear, counter) {
+  const cleanHint = cleanImdbQuery(hint);
+  let result = cleanHint ? await omdbLookup(apiKey, cleanHint, releaseYear, counter) : null;
+  if (!result) {
+    for (const variant of imdbQueryVariants(title)) {
+      if (variant.toLowerCase() === (cleanHint || '').toLowerCase()) continue;
+      result = await omdbLookup(apiKey, variant, releaseYear, counter);
+      if (result) break;
+    }
+  }
+  if (!result) result = await omdbSearchFallback(apiKey, cleanHint || cleanImdbQuery(title), releaseYear, counter);
+  return result;
+}
+
+function parseOmdbKeys(env) {
+  return (env.OMDB_API_KEYS || '').split(',').map((s) => s.trim()).filter(Boolean);
+}
+
+const IMDB_KV_KEY = 'imdb-v1';
+// Budgeted by actual OMDb subrequests made this run, not a flat title count - a title that
+// resolves on the first hint-based lookup (the large majority, verified live) costs 1 call,
+// while the rare full-fallback path (hint + up to 2 variants + search + detail) costs up to 6.
+// 40 leaves headroom for events-v1 read(1) + imdb-v1 write(1) = 42 worst case, safely under the
+// 50-subrequest cap, while processing far more of the catalog per run than a fixed title cap
+// would (most runs use close to 1 call/title, so this covers ~35-40 titles, not just 7).
+const IMDB_MAX_OMDB_REQUESTS_PER_RUN = 40;
+// Ratings/IDs rarely change day to day - re-checking this often just catches a newly-released
+// numeric rating for a recently-opened film, or a previously-unmatched title that OMDb has since
+// indexed. New/unseen titles always take priority over stale re-checks (see the queue below).
+const IMDB_REFRESH_STALE_MS = 7 * 24 * 60 * 60 * 1000;
+
+/* Rotating-cursor refresh, same cumulative-merge philosophy as showmust-content's rotateAndMerge
+   (cf-worker-content/worker.js): each run only touches as many titles as fit inside its own
+   OMDb request budget (IMDB_MAX_OMDB_REQUESTS_PER_RUN), merges results onto whatever imdb-v1
+   already held, and prunes titles that are no longer showing anywhere. Combined with the 10-min
+   cron (see IMDB_CRON/wrangler.toml), a cold-start catalog (~60-90 unique cinema titles, per
+   live measurement) reaches full coverage within roughly 30-40 minutes, then stays continuously
+   fresh - new titles are always queued first (see `neverChecked` below), so a movie newly added
+   to the catalog gets its rating within one cron cycle, not a multi-hour backlog. Reads events-v1
+   (not content-v1) for the candidate title list because all three cinema sources
+   (lev/ravhen/planet) are scraped directly by this worker - cinema never moves through
+   showmust-content. */
+async function refreshImdbRatings(env) {
+  const apiKeys = parseOmdbKeys(env);
+  if (!apiKeys.length) {
+    console.error('OMDB_API_KEYS not configured - skipping IMDb rating refresh');
+    return;
+  }
+
+  let coreEvents = [];
+  try {
+    const coreJson = await env.SHOWMUST_KV.get(EVENTS_KV_KEY);
+    // A missing/unreadable events-v1 here is always transient (it's kept warm by its own 3h
+    // cron plus every cold-start client request) - never a legitimate signal that cinema is
+    // genuinely empty. Bailing out before touching imdb-v1 at all is deliberate: falling
+    // through with an empty coreEvents would make the prune step below (which deletes any
+    // rating whose title isn't in the current cinema list) wipe the *entire* cache on what's
+    // just a momentary read miss, discarding real coverage for no reason.
+    if (!coreJson) {
+      console.error('imdb refresh: events-v1 not found in KV - skipping this run rather than risk wiping imdb-v1');
+      return;
+    }
+    coreEvents = JSON.parse(coreJson).events || [];
+  } catch (e) {
+    console.error('imdb refresh: failed to read events-v1:', e);
+    return;
+  }
+
+  const cinemaTitles = new Map(); // title -> { imdbHint, releaseYear }
+  coreEvents.filter((e) => e.type === 'cinema').forEach((e) => {
+    if (!cinemaTitles.has(e.title)) cinemaTitles.set(e.title, { imdbHint: e.imdbHint || null, releaseYear: e.releaseYear || null });
+  });
+
+  if (!cinemaTitles.size) {
+    // Same reasoning as the events-v1 check above: events-v1 existing but momentarily carrying
+    // zero cinema events (e.g. mid-refresh, or all three cinema sources failing simultaneously)
+    // is far more likely a transient blip than reality - never treat it as "prune everything".
+    console.error('imdb refresh: no cinema events found in events-v1 - skipping this run rather than risk wiping imdb-v1');
+    return;
+  }
+
+  let store = { ratings: {}, keyIndex: 0, generatedAt: null };
+  try {
+    const prevJson = await env.SHOWMUST_KV.get(IMDB_KV_KEY);
+    if (prevJson) store = { ...store, ...JSON.parse(prevJson) };
+  } catch (e) { console.error('imdb refresh: failed to read previous imdb-v1:', e); }
+  if (!store.ratings) store.ratings = {};
+
+  // Prune ratings for films that are no longer showing anywhere - avoids imdb-v1 accumulating
+  // stale entries forever, same reasoning as showmust-content's own pruning step.
+  Object.keys(store.ratings).forEach((title) => { if (!cinemaTitles.has(title)) delete store.ratings[title]; });
+
+  const now = Date.now();
+  const titlesList = Array.from(cinemaTitles.keys());
+  const neverChecked = titlesList.filter((t) => !store.ratings[t]);
+  const stale = titlesList.filter((t) => store.ratings[t] && (now - (store.ratings[t].checkedAt || 0)) > IMDB_REFRESH_STALE_MS);
+  const queue = [...neverChecked, ...stale];
+
+  if (!queue.length) {
+    // Nothing to do this run, but still persist the pruning above (harmless if unchanged) and
+    // an updated generatedAt so the client-visible imdbGeneratedAt reflects a live worker.
+    store.generatedAt = new Date().toISOString();
+    try { await env.SHOWMUST_KV.put(IMDB_KV_KEY, JSON.stringify(store)); }
+    catch (e) { console.error('imdb-v1 put failed:', e); }
+    return;
+  }
+
+  const apiKey = apiKeys[store.keyIndex % apiKeys.length];
+  const counter = { used: 0 };
+
+  for (const title of queue) {
+    if (counter.used >= IMDB_MAX_OMDB_REQUESTS_PER_RUN) break;
+    const { imdbHint, releaseYear } = cinemaTitles.get(title);
+    try {
+      const result = await lookupImdbRating(apiKey, title, imdbHint, releaseYear, counter);
+      store.ratings[title] = { rating: result ? result.rating : null, imdbId: result ? result.imdbId : null, checkedAt: now };
+    } catch (e) {
+      console.error('imdb lookup failed for', title, e);
+    }
+  }
+
+  store.keyIndex = (store.keyIndex + 1) % apiKeys.length;
+  store.generatedAt = new Date().toISOString();
+
+  try { await env.SHOWMUST_KV.put(IMDB_KV_KEY, JSON.stringify(store)); }
+  catch (e) { console.error('imdb-v1 put failed:', e); }
 }
 
 // ============================================================================
@@ -734,13 +969,15 @@ function vistaDateRange(daysAhead) {
    time. Splitting them out is what freed the room to raise LEV_MOVIE_CAP (10->20, covering
    Lev's whole live catalog) and VISTA_DAYS_AHEAD (6->9, the real horizon those cinemas
    publish to - see VISTA_DAYS_AHEAD's own comment) back up from last session's tighter caps.
-   No OMDb calls happen here at all (see file header), so there's no enrichment budget to
-   share with that. Ozen deliberately parses each category archive in full (no per-event
-   detail fetch, see fetchOzenCategory) - verified live it has no trailer available at the
-   source anyway (see index.html card template), so there's nothing to gain from a
-   detail-fetch-per-show design there. Music and stand-up are two independent top-level tasks
-   (like ravhen/planet) rather than one combined fetch, so either can fail and fall back on
-   its own without dragging the other down. */
+   Ozen deliberately parses each category archive in full (no per-event detail fetch, see
+   fetchOzenCategory) - verified live it has no trailer available at the source anyway (see
+   index.html card template), so there's nothing to gain from a detail-fetch-per-show design
+   there. Music and stand-up are two independent top-level tasks (like ravhen/planet) rather
+   than one combined fetch, so either can fail and fall back on its own without dragging the
+   other down. IMDb rating lookups (refreshImdbRatings) run on a completely separate cron
+   trigger/invocation - see IMDB_CRON below - so they never share this budget at all; that
+   run's own worst case is events-v1 KV get(1) + up to IMDB_MAX_OMDB_REQUESTS_PER_RUN(40) OMDb
+   calls + imdb-v1 KV put(1) = 42, safely under 50 on its own. */
 async function refreshEvents(env) {
   const vistaDates = vistaDateRange(VISTA_DAYS_AHEAD);
 
@@ -844,20 +1081,35 @@ async function refreshEvents(env) {
    in hand (either freshly scraped or read from KV by the caller) - avoids a redundant read. */
 async function buildClientPayload(env, coreJson) {
   let content = null;
+  let imdb = null;
   try {
-    const contentJson = await env.SHOWMUST_KV.get(CONTENT_KV_KEY);
+    const [contentJson, imdbJson] = await Promise.all([
+      env.SHOWMUST_KV.get(CONTENT_KV_KEY),
+      env.SHOWMUST_KV.get(IMDB_KV_KEY),
+    ]);
     if (contentJson) content = JSON.parse(contentJson);
-  } catch (e) { console.error('content-v1 read failed, serving core-only payload:', e); }
+    if (imdbJson) imdb = JSON.parse(imdbJson);
+  } catch (e) { console.error('content-v1/imdb-v1 read failed, serving core-only payload:', e); }
 
-  if (!content) return coreJson; // nothing to merge - core's own payload is already complete on its own
+  if (!content && !imdb) return coreJson; // nothing to merge - core's own payload is already complete on its own
 
   const core = JSON.parse(coreJson);
-  const enrichmentBySource = { lessin: content.lessin || {}, habima: content.habima || {} };
+  const enrichmentBySource = content ? { lessin: content.lessin || {}, habima: content.habima || {} } : {};
+  const ratings = (imdb && imdb.ratings) || {};
 
   const events = core.events.map((e) => {
+    let out = e;
     const extra = enrichmentBySource[e.source] && enrichmentBySource[e.source][e.title];
-    if (!extra) return e;
-    return { ...e, synopsis: e.synopsis || extra.synopsis || null, trailerUrl: e.trailerUrl || extra.trailerUrl || null };
+    if (extra) out = { ...out, synopsis: out.synopsis || extra.synopsis || null, trailerUrl: out.trailerUrl || extra.trailerUrl || null };
+    // Server-side shared IMDb rating (see refreshImdbRatings) - replaces the old per-user
+    // client-side OMDb flow entirely. Only cinema carries a rating; imdbId is still attached
+    // even when rating is null (film matched on OMDb but has no numeric rating yet, e.g. too
+    // new/unreleased) so the client can still link to the real IMDb page.
+    if (out.type === 'cinema') {
+      const r = ratings[out.title];
+      if (r) out = { ...out, imdbRating: r.rating || null, imdbId: r.imdbId || null };
+    }
+    return out;
   });
 
   // Hatarbut contributes whole events (unlike Lessin/Habima, its dates only exist behind a
@@ -870,28 +1122,31 @@ async function buildClientPayload(env, coreJson) {
   // has cycled past its 3h TTL post-deploy this guard never actually triggers, but costs nothing
   // to leave in permanently as a safety net against any future stale-KV overlap.
   const seenIds = new Set(events.map((e) => e.id));
-  Object.entries(content.tarbut || {}).forEach(([title, show]) => {
-    (show.dates || []).forEach((d) => {
-      const id = makeId('tarbut', title, new Date(d.date));
-      if (seenIds.has(id)) return;
-      seenIds.add(id);
-      events.push({
-        id, source: 'tarbut', venue: 'היכל התרבות', type: 'music',
-        title, date: d.date, link: d.link, extra: show.hall ? `אולם ${show.hall}` : 'היכל התרבות',
-        image: show.image || null, synopsis: d.synopsis || null,
+  if (content) {
+    Object.entries(content.tarbut || {}).forEach(([title, show]) => {
+      (show.dates || []).forEach((d) => {
+        const id = makeId('tarbut', title, new Date(d.date));
+        if (seenIds.has(id)) return;
+        seenIds.add(id);
+        events.push({
+          id, source: 'tarbut', venue: 'היכל התרבות', type: 'music',
+          title, date: d.date, link: d.link, extra: show.hall ? `אולם ${show.hall}` : 'היכל התרבות',
+          image: show.image || null, synopsis: d.synopsis || null,
+        });
       });
     });
-  });
+  }
 
   events.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-  const sourceStatus = { ...core.meta.sourceStatus, ...((content.meta && content.meta.sourceStatus) || {}) };
+  const sourceStatus = { ...core.meta.sourceStatus, ...((content && content.meta && content.meta.sourceStatus) || {}) };
 
   return JSON.stringify({
     meta: {
       allSourcesOk: Object.values(sourceStatus).every((s) => s.ok),
       generatedAt: core.meta.generatedAt,
-      contentGeneratedAt: (content.meta && content.meta.generatedAt) || null,
+      contentGeneratedAt: (content && content.meta && content.meta.generatedAt) || null,
+      imdbGeneratedAt: (imdb && imdb.generatedAt) || null,
       sourceStatus,
       totalEvents: events.length,
     },
@@ -913,6 +1168,12 @@ function isAuthorizedScrapeRequest(url, env) {
   return url.searchParams.get('key') === env.SCRAPE_SECRET;
 }
 
+// Matches the second entry in wrangler.toml's `crons` array exactly - scheduled() dispatches on
+// this to tell the IMDb-rating rotation apart from the regular 3h scrape cron. Two independent
+// triggers, two independent invocations (and subrequest budgets) - see the file header and the
+// budget comment above refreshEvents.
+const IMDB_CRON = '*/10 * * * *';
+
 export default {
   async fetch(request, env, ctx) {
     if (request.method === 'OPTIONS') {
@@ -921,6 +1182,26 @@ export default {
 
     const url = new URL(request.url);
     const wantsManualScrape = url.pathname === '/scrape' || url.searchParams.get('scrape') === 'true';
+    const wantsManualImdb = url.pathname === '/scrape-imdb';
+
+    if (wantsManualImdb) {
+      if (!isAuthorizedScrapeRequest(url, env)) {
+        return new Response(JSON.stringify({ error: 'unauthorized' }), {
+          status: 401,
+          headers: { ...CORS_HEADERS, 'content-type': 'application/json; charset=utf-8' },
+        });
+      }
+      await refreshImdbRatings(env);
+      const imdbJson = await env.SHOWMUST_KV.get(IMDB_KV_KEY);
+      const imdb = imdbJson ? JSON.parse(imdbJson) : null;
+      return new Response(JSON.stringify({
+        triggered: true,
+        generatedAt: imdb && imdb.generatedAt,
+        ratingsCount: imdb ? Object.keys(imdb.ratings || {}).length : 0,
+      }, null, 2), {
+        headers: { ...CORS_HEADERS, 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+      });
+    }
 
     if (wantsManualScrape) {
       if (!isAuthorizedScrapeRequest(url, env)) {
@@ -953,6 +1234,10 @@ export default {
   },
 
   async scheduled(event, env, ctx) {
-    ctx.waitUntil(refreshEvents(env));
+    if (event.cron === IMDB_CRON) {
+      ctx.waitUntil(refreshImdbRatings(env));
+    } else {
+      ctx.waitUntil(refreshEvents(env));
+    }
   },
 };

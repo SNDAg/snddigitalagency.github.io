@@ -2,16 +2,27 @@ name = "aged-hall-eff1"
 main = "worker.js"
 compatibility_date = "2025-01-01"
 
-# Refreshes the KV cache every 3 hours - matches CACHE_TTL_SECONDS in worker.js.
+# Two independent cron triggers, dispatched in worker.js's scheduled() by event.cron:
+#   - "0 */3 * * *" refreshes the events-v1 scrape cache every 3 hours (matches
+#     CACHE_TTL_SECONDS in worker.js).
+#   - "*/10 * * * *" runs refreshImdbRatings, a rotating IMDb rating refresh budgeted by actual
+#     OMDb request count (see IMDB_MAX_OMDB_REQUESTS_PER_RUN/IMDB_CRON in worker.js) - a
+#     completely separate invocation with its own fresh 50-subrequest budget, so it never
+#     competes with the scrape cron's budget. At this cadence a cold-start catalog reaches full
+#     coverage in roughly 30-40 minutes, then stays continuously fresh.
 [triggers]
-crons = ["0 */3 * * *"]
+crons = ["0 */3 * * *", "*/10 * * * *"]
 
 [[kv_namespaces]]
 binding = "SHOWMUST_KV"
 id = "d60268811209470f8e9db1452cf3ae8b"
 
-# No secrets required to run - IMDb ratings are resolved client-side per user (see
-# index.html), not by this worker.
+# Required for IMDb ratings: OMDB_API_KEYS - a comma-separated list of one or more free OMDb
+# API keys (https://www.omdbapi.com/apikey.aspx, 1,000 req/day each on the free tier). Ratings
+# are resolved server-side and shared by every visitor (see refreshImdbRatings in worker.js) -
+# there is no more per-user client-side OMDb signup flow. Without this secret set,
+# refreshImdbRatings logs an error and no-ops (existing cached ratings, if any, keep serving).
+# wrangler secret put OMDB_API_KEYS
 #
 # Optional: JINA_API_KEY. Barby is the one source proxied through Jina (SPA + WAF-blocked
 # API), and Jina's free anonymous tier shares its rate limit across all Workers' outbound
@@ -22,6 +33,7 @@ id = "d60268811209470f8e9db1452cf3ae8b"
 #
 # Optional: SCRAPE_SECRET. Gates the manual scrape trigger (GET /scrape?key=... or
 # GET /?scrape=true&key=...) that forces an immediate re-scrape instead of waiting for the
-# next cron run - useful right after fixing a broken source. Without this secret set, the
-# endpoint always returns 401 (unset is never treated as "no key required").
+# next cron run - useful right after fixing a broken source. Also gates GET /scrape-imdb?key=...
+# for forcing an immediate IMDb rating refresh. Without this secret set, both endpoints always
+# return 401 (unset is never treated as "no key required").
 # wrangler secret put SCRAPE_SECRET
