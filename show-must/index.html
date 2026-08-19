@@ -6,6 +6,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SHOWMUST | Show Must Go On | מה עושים הלילה?</title>
 
+<!-- PWA: מאפשר "הוסיפו למסך הבית" ופתיחה כמו אפליקציה אמיתית (standalone), עם קאשינג
+     בסיסי של מעטפת הדף ע"י sw.js - ר' תיעוד שם. אייקונים אמיתיים (לא ה-favicon ה-SVG
+     שלמעלה, שרוב מערכות ההפעלה לא תומכות בו לצורך אייקון מותקן) נוצרו מאותו מיתוג
+     (🍿 על רקע הגרדיאנט הכהה של האתר) לעקביות חזותית. -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SHOWMUST">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
 <!-- תצוגה מקדימה בשיתוף (וואטסאפ, פייסבוק וכו') -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://snddigitalagency.com/show-must/">
@@ -371,6 +382,16 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 /* פילטר דירוג IMDB מינימלי - מוצג רק כשהתצוגה ממוקדת קולנוע טהור */
 .section-icon.imdb-icon{background:linear-gradient(135deg,var(--imdb),var(--imdb-dark));color:#111}
 
+/* רצועת "המומלץ" - גרדיאנט חם (כתום/ורוד) שונה בכוונה מהפלטה הקרה של שאר האתר, כדי
+   שתיקרא כהמלצה "חיה"/דחופה ולא כעוד כרטיס רגיל ברשימה. ר' renderTopPick. */
+.top-pick-inner{width:100%;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(249,115,22,.16),rgba(244,63,94,.1));border:1px solid rgba(249,115,22,.35);border-radius:14px;padding:12px 16px;margin-bottom:16px;cursor:pointer;text-align:right;color:var(--text-main);font-family:inherit;font-size:.88rem;transition:transform .15s,box-shadow .15s}
+.top-pick-inner:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(249,115,22,.18)}
+.top-pick-icon{font-size:1.2rem;flex:none}
+.top-pick-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-pick-text strong{color:#fdba74}
+.top-pick-rating{display:inline-flex;align-items:center;gap:4px;color:var(--imdb);font-weight:700;margin-inline-start:6px;white-space:nowrap}
+.top-pick-arrow{flex:none;color:var(--text-muted);font-size:.8em}
+
 /* טריילר מוטבע באפליקציה - מודל עם iframe רספונסיבי (16:9), או מסך fallback ידידותי.
    כפתור הסגירה יושב בשורת הכותרת, ממש צמוד למסך הווידאו - גדול ובולט יותר מ-wizard-close-x
    הרגיל, כדי שיהיה קל למצוא ולהקיש עליו. */
@@ -489,6 +510,8 @@ footer a{color:var(--accent)}
 
   .date-group-header{font-size:.92rem}
 
+  .top-pick-inner{padding:10px 12px;font-size:.82rem;gap:8px}
+
   footer{font-size:.72rem;padding:0 6px}
 }
 
@@ -578,6 +601,11 @@ footer a{color:var(--accent)}
     <button type="button" class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
   </div>
 
+  <!-- רצועת "המומלץ" - מוצגת אוטומטית כשיש סרט קולנוע עם דירוג IMDb מהמטמון המשותף
+       בתוצאות הנוכחיות, בלי שהמשתמש יצטרך לבחור 2+ אירועים כדי לקבל המלצה (ר' renderTopPick).
+       מוסתרת כברירת מחדל - JS קובע נראות בכל רינדור. -->
+  <div class="top-pick-strip" id="topPickStrip" style="display:none"></div>
+
   <main class="events-grid" id="eventsContainer">
     <div class="loader-container"><i class="fa-solid fa-spinner fa-spin"></i><p>טוען אירועים...</p></div>
   </main>
@@ -595,6 +623,7 @@ footer a{color:var(--accent)}
     <div class="selection-actions">
       <button type="button" class="selection-action-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled title="הורדה ליומן" aria-label="הורדה ליומן"><i class="fa-solid fa-download"></i></button>
       <button type="button" class="selection-action-btn" id="whatsappSelectedBtn" onclick="shareSelectedToWhatsapp()" title="שתף לחבר" aria-label="שתף לחבר"><i class="fa-solid fa-share-nodes"></i><span class="action-label">שתף לחבר</span></button>
+      <button type="button" class="selection-action-btn" id="copyLinkSelectedBtn" onclick="copySelectedShareLink(this)" title="העתיקו קישור לליינאפ" aria-label="העתיקו קישור לליינאפ"><i class="fa-solid fa-link"></i><span class="action-label">העתיקו קישור</span></button>
       <button type="button" class="selection-action-btn" id="compareSelectedBtn" onclick="toggleSelectedOnlyFilter(this)" title="השוו בין הנבחרים" aria-label="השוו בין הנבחרים" style="display:none"><i class="fa-solid fa-scale-balanced"></i><span class="action-label" id="compareBtnLabel">השוו</span></button>
       <button type="button" class="selection-action-btn reco" id="recoBtn" onclick="openRecoModal()" title="רוצים לשמוע מה דעתי?" aria-label="רוצים לשמוע מה דעתי?" style="display:none"><i class="fa-solid fa-robot"></i><span class="action-label">רוצים לשמוע מה דעתי?</span></button>
     </div>
@@ -1394,6 +1423,23 @@ function downloadSelected(){
 
 const SHOWMUST_URL = 'https://snddigitalagency.com/show-must/';
 
+/* ===================== קישור שיתוף ל"ליינאפ" נבחר =====================
+   בניגוד לשיתוף בוואטסאפ (טקסט יבש עם קישורי כרטיסים), קישור השיתוף מחזיר את מי שפותח
+   אותו לתוך האתר עצמו, עם בדיוק אותם אירועים שנבחרו - כרטיסים מלאים (תמונה/תקציר/דירוג/
+   טריילר), לא רק רשימה טקסטואלית. מזהי האירועים מקודדים כערך פרמטר יחיד (URLSearchParams
+   כבר דואג לקידוד/פענוח נכון של התו המפריד '|' וכל תו עברי בתוכו - לא נדרש קידוד ידני
+   נוסף). ר' initShareFromUrl למטה לצד הקריאה. */
+function buildShareUrl(events){
+  const url = new URL(SHOWMUST_URL);
+  url.searchParams.set('share', events.map(ev => ev.id).join('|'));
+  return url.toString();
+}
+
+function getSharedEventIds(){
+  const raw = new URLSearchParams(location.search).get('share');
+  return raw ? raw.split('|').filter(Boolean) : null;
+}
+
 /* ===================== שיתוף בוואטסאפ ===================== */
 
 function buildWhatsappBlockForEvent(ev, index){
@@ -1407,7 +1453,7 @@ function buildWhatsappBlockForEvent(ev, index){
 
 function buildWhatsappMessageForEvents(events){
   const blocks = events.map((ev, i) => buildWhatsappBlockForEvent(ev, i + 1)).join('\n\n');
-  return `*ה-Lineup שלי מ-SHOWMUST* 🎬🍿\n\n${blocks}\n\n--\nעוד מופעים ב-SHOWMUST - Show Must Go On:\n${SHOWMUST_URL}`;
+  return `*ה-Lineup שלי מ-SHOWMUST* 🎬🍿\n\n${blocks}\n\n--\n🔗 פתחו את הליינאפ הזה באתר:\n${buildShareUrl(events)}`;
 }
 
 function shareSelectedToWhatsapp(){
@@ -1415,6 +1461,63 @@ function shareSelectedToWhatsapp(){
   if (!selected.length) return;
   const message = buildWhatsappMessageForEvents(selected);
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+}
+
+/* כפתור העתקה עצמאי (לא רק וואטסאפ) - טלגרם/מייל/הודעות SMS וכו'. Clipboard API דורש
+   הקשר מאובטח (https) וזמין כמעט בכל דפדפן מודרני; הנפילה החוזרת (פתיחת הקישור בטאב חדש)
+   מכסה את המקרים הנדירים שבהם אין הרשאה - עדיין שימושי, רק דורש העתקה ידנית משורת הכתובת. */
+function copySelectedShareLink(btn){
+  const selected = allEvents.filter(ev => selectedIds.has(ev.id)).sort((a,b) => a.date - b.date);
+  if (!selected.length) return;
+  const url = buildShareUrl(selected);
+  const icon = btn.querySelector('i');
+  const originalIconClass = icon.className;
+  const originalTitle = btn.title;
+  const showCopied = () => {
+    icon.className = 'fa-solid fa-check';
+    btn.title = 'הקישור הועתק!';
+    setTimeout(() => { icon.className = originalIconClass; btn.title = originalTitle; }, 1600);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(showCopied).catch(() => window.open(url, '_blank', 'noopener'));
+  } else {
+    window.open(url, '_blank', 'noopener');
+  }
+}
+
+/* נקרא פעם אחת בטעינת הדף (אחרי loadAllEvents, ר' סוף הקובץ) - אם יש פרמטר share בכתובת,
+   מסמן את האירועים המתאימים ועובר למצב "מסומנים בלבד" (showOnlySelected, אותה תשתית של
+   "השוו בין הנבחרים"). מרחיב במפורש את טווח התאריך/שעות לכל טווח האירועים המשותפים - כי
+   matchesDate/matchesTime ב-computeFilteredEvents לא עוקפים לפי showOnlySelected (רק
+   matchesType עוקף), אז בלי זה אירוע שאינו "היום" (ברירת המחדל) היה נעלם בשקט. קישור
+   ישן/שגוי (0 התאמות) נכשל בשקט לתצוגה הרגילה, בלי הודעת שגיאה מפחידה. */
+function initShareFromUrl(){
+  const ids = getSharedEventIds();
+  if (!ids || !ids.length) return;
+  const matched = allEvents.filter(ev => ids.includes(ev.id));
+  if (!matched.length) return;
+
+  const dates = matched.map(ev => localDateStr(ev.date)).sort();
+  document.getElementById('startDate').value = dates[0];
+  document.getElementById('endDate').value = dates[dates.length - 1];
+  appliedStartTime = '00:00';
+  appliedEndTime = '23:59';
+  currentQuickRange = 'custom';
+  document.querySelectorAll('#dateChips .chip[data-range]').forEach(b => b.classList.remove('active'));
+
+  matched.forEach(ev => selectedIds.add(ev.id));
+  showOnlySelected = true;
+
+  const statusNote = document.getElementById('statusNoteText');
+  if (statusNote) statusNote.innerText = `🔗 לינאפ משותף - ${matched.length} אירועים נבחרו עבורכם`;
+
+  updateSelectionUI();
+  updateFilterBadge();
+  filterEvents();
+
+  // מנקים את הכתובת אחרי שהמצב כבר הוחל - כדי שרענון ידני של הדף יחזיר לתצוגה הרגילה
+  // ולא "יתקע" את המבקר שוב ושוב באותו מצב השוואה כפוי.
+  try{ history.replaceState(null, '', location.pathname); }catch(e){}
 }
 
 
@@ -1750,7 +1853,7 @@ function computeFilteredEvents(types){
     || isEveningRange(appliedStartTime);
 
   return allEvents.filter(ev => {
-    const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm);
+    const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm) || (ev.synopsis && ev.synopsis.toLowerCase().includes(searchTerm));
     const matchesVenue = selectedVenues.includes(ev.venue);
     // במצב "השוו בחירות" הז'אנר לא אמור לחתוך פריטים שסומנו במפורש - ההשוואה יכולה
     // לכלול גם תיאטרון וגם קולנוע וגם מוזיקה יחד, ללא קשר לפילטר הסוג הפעיל כרגע.
@@ -1797,6 +1900,54 @@ function countUniqueResults(events){
   return buildRenderItems(events).length;
 }
 
+/* כותרת הרצועה מותאמת לטווח התאריך הפעיל בפועל (לפי שדות התאריך עצמם, לא רק currentQuickRange -
+   כך גם טווח "מותאם אישית" מקבל כותרת נכונה): "הערב" ליום בודד (היום), "השבוע" לטווח קצר
+   (עד שבוע, כמו "3 הימים הקרובים"/"השבוע"), "החודש" לטווח רחב יותר (כמו "בשבועיים הקרובים"). */
+function topPickLabel(){
+  if (currentQuickRange === 'today') return 'המומלץ הערב';
+  const startVal = document.getElementById('startDate').value;
+  const endVal = document.getElementById('endDate').value;
+  if (!startVal || !endVal) return 'המומלץ ברשימה';
+  const spanDays = Math.round((new Date(endVal) - new Date(startVal)) / 86400000) + 1;
+  return spanDays <= 8 ? 'המומלץ השבוע' : 'המומלץ החודש';
+}
+
+/* רצועת "המומלץ" - מציגה מיד את סרט הקולנוע עם הדירוג הגבוה ביותר מבין התוצאות המוצגות
+   כרגע, ללא צורך לבחור 2+ אירועים (בניגוד ל"רוצים לשמוע מה דעתי?" שנשארת ללא שינוי,
+   מיועדת להשוואה מפורשת בין בחירות). מוצגת רק במצב "ממוקד קולנוע" (isCinemaFocused - אותו
+   תנאי כמו פילטר דירוג ה-IMDb) - בתצוגה הכללית ("הכל") היא לא רלוונטית לרוב האירועים
+   המוצגים, ומרגישה כמו פרסומת מוזרה לתיאטרון/מוזיקה. מוסתרת גם במצב "מסומנים בלבד"
+   (השוואה/לינאפ משותף - רעש חזותי מיותר כשהמשתמש כבר מתמקד ברשימה ספציפית) ובזמן חיפוש
+   פעיל (המשתמש כבר מחפש משהו מסוים, לא רוצה הסחת דעת). לוחצים -> אותו openTrailerModal
+   שהכרטיסים עצמם משתמשים בו, שכבר נופל בחזרה בעדינות למסך "חפשו ביוטיוב" כשאין טריילר ישיר. */
+function renderTopPick(events){
+  const strip = document.getElementById('topPickStrip');
+  if (!strip) return;
+  const searchTerm = document.getElementById('searchInput').value.trim();
+  if (showOnlySelected || searchTerm || !isCinemaFocused()){
+    strip.style.display = 'none';
+    strip.innerHTML = '';
+    return;
+  }
+  const rated = events
+    .filter(ev => ev.type === 'cinema' && ev.imdbRating)
+    .sort((a,b) => parseFloat(b.imdbRating) - parseFloat(a.imdbRating));
+  if (!rated.length){
+    strip.style.display = 'none';
+    strip.innerHTML = '';
+    return;
+  }
+  const pick = rated[0];
+  const label = topPickLabel();
+  strip.innerHTML = `
+    <button type="button" class="top-pick-inner" onclick="openTrailerModal('${pick.id}')">
+      <span class="top-pick-icon">🔥</span>
+      <span class="top-pick-text"><strong>${label}:</strong> ${escapeHtml(pick.title)}<span class="top-pick-rating"><i class="fa-brands fa-imdb"></i> ${escapeHtml(pick.imdbRating)}</span></span>
+      <i class="fa-solid fa-chevron-left top-pick-arrow"></i>
+    </button>`;
+  strip.style.display = 'block';
+}
+
 function renderEvents(events){
   currentFiltered = events;
   const container = document.getElementById('eventsContainer');
@@ -1809,6 +1960,7 @@ function renderEvents(events){
   const sheetCountEl = document.getElementById('sheetResultsCount');
   if (sheetCountEl) sheetCountEl.textContent = renderItems.length;
   updateSelectionUI();
+  renderTopPick(events);
 
   if (events.length === 0){
     if (lastLoadFailed){
@@ -1980,7 +2132,17 @@ function renderEvents(events){
 // ידנית פעמיים (החוצה וחזרה) כדי להפעיל את הסנכרון בטעות. דווח כבאג (משימה 6).
 syncVenuesToTypes(selectedTypes);
 updateFilterBadge();
-loadAllEvents();
+loadAllEvents().then(initShareFromUrl);
+
+/* רישום ה-service worker (ר' sw.js) - מאפשר התקנה כ-PWA וקאשינג בסיסי של מעטפת הדף.
+   window.load (לא ישר) כדי לא לגזול רוחב-פס/עדיפות מהטעינה הראשונית של הדף עצמו -
+   הרישום לא דחוף, יכול לקרות רגע אחרי שהתוכן האמיתי כבר על המסך. כישלון (למשל דפדפן
+   ללא תמיכה, או הרשאות חסומות) נבלע בשקט - זה שיפור אופציונלי, לא תלות. */
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
 </script>
 <!-- Cloudflare Web Analytics -->
 <script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "21c43ee72da942139f7280e9a263587e"}'></script>
