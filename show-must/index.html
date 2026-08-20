@@ -201,6 +201,39 @@ body.has-selection-bar .container{padding-bottom:80px}
    שלא יתנגשו חזותית (בחירת כרטיסים ממילא מעידה שהמשתמש כבר גילה את התוכן). */
 body.has-selection-bar .scroll-cue{opacity:0;pointer-events:none}
 
+/* ===================== פאנל "כל הדירוגים" =====================
+   צף, קבוע (לא ניתן-להזזה בכוונה - ר' השיחה על drag-and-drop), נפרד לגמרי מהתצוגה
+   הראשית שנשארת כרונולוגית תמיד. בדסקטופ: כרטיס צף בפינה. במובייל: גיליון תחתון,
+   עקבי עם סרגל הבחירה הצף הקיים (selection-bar) - נסתר אוטומטית כשהוא פעיל, כדי
+   שלא יתנגשו על אותו אזור מסך. */
+.imdb-rankings-panel{position:fixed;z-index:70;background:var(--glass-solid);border:1px solid var(--border);box-shadow:0 -10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;animation:selectionBarUp .25s ease both}
+@media (prefers-reduced-motion: reduce){.imdb-rankings-panel{animation:none}}
+body.has-selection-bar .imdb-rankings-panel{display:none !important}
+.imdb-rankings-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);flex:none}
+.imdb-rankings-header h3{font-size:.92rem;display:flex;align-items:center;gap:8px;color:var(--imdb)}
+.imdb-rankings-close{flex:none;background:transparent;border:none;color:var(--text-muted);cursor:pointer;font-size:1rem;padding:0;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.imdb-rankings-close:hover{background:rgba(255,255,255,.08);color:#fff}
+.imdb-rankings-list{overflow-y:auto;padding:6px}
+.imdb-rankings-empty{color:var(--text-muted);font-size:.82rem;padding:16px 10px;text-align:center}
+.imdb-ranking-row{width:100%;display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:10px;cursor:pointer;background:transparent;border:none;text-align:right;font-family:inherit;transition:background .15s}
+.imdb-ranking-row:hover{background:rgba(255,255,255,.06)}
+.imdb-ranking-rank{flex:none;width:20px;text-align:center;color:var(--text-muted);font-size:.76rem;font-weight:700}
+.imdb-ranking-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.84rem;color:var(--text-main)}
+.imdb-ranking-score{flex:none;display:flex;align-items:center;gap:4px;color:var(--imdb);font-weight:700;font-size:.8rem}
+
+@media (min-width:641px){
+  .imdb-rankings-panel{left:20px;bottom:20px;width:290px;max-height:min(420px,60vh);border-radius:16px}
+}
+@media (max-width:640px){
+  /* גובה מוגבל בכוונה (לא 55vh+) - הפאנל נפתח אוטומטית מיד עם כניסה למצב קולנוע (ר'
+     refreshImdbRatingFilterSection), אז אסור לו לכסות את רוב המסך לפני שהמשתמש בכלל
+     ראה כרטיס אחד מהרשת הרגילה - זו רק תוספת-עזר, לא התצוגה העיקרית. */
+  .imdb-rankings-panel{left:0;right:0;bottom:0;max-height:min(300px,36vh);border-radius:18px 18px 0 0;padding-bottom:env(safe-area-inset-bottom,0)}
+  .imdb-rankings-header{padding:10px 14px}
+  .imdb-ranking-row{min-height:44px}
+  .imdb-rankings-close{width:44px;height:44px}
+}
+
 .select-all-link{background:none;border:none;color:var(--accent);font-size:.85rem;font-weight:600;cursor:pointer;padding:4px}
 .select-all-link:hover{text-decoration:underline}
 
@@ -239,6 +272,12 @@ input[type="date"],input[type="time"]{background:rgba(15,23,42,.6);border:1px so
 .results-toolbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px}
 .results-count{color:var(--text-muted);font-size:.9rem}
 .results-count strong{color:var(--text-main)}
+.results-toolbar-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* כפתור "מיון בתוך היום" - עדין כברירת מחדל (שעת הקרנה, המצב המוכר), מודגש בצבע ה-IMDb
+   כשמופעל למיון לפי דירוג, כדי שיהיה ברור בלי לפתוח שום דבר נוסף באיזה מצב נמצאים. */
+.cinema-day-sort-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-muted);font-size:.78rem;font-weight:600;cursor:pointer;padding:7px 12px;border-radius:20px;display:inline-flex;align-items:center;gap:6px;transition:all .15s;white-space:nowrap}
+.cinema-day-sort-btn:hover{border-color:var(--accent);color:var(--text-main)}
+.cinema-day-sort-btn.active{background:rgba(var(--imdb-rgb),.15);border-color:rgba(var(--imdb-rgb),.4);color:var(--imdb)}
 .icon-btn.whatsapp-btn:hover{background:#25d366;border-color:#25d366}
 
 /* Breakpoints מפורשים במקום auto-fill - מרגיש מכוון ולא "נוזל" על מסכים רחבים */
@@ -446,6 +485,7 @@ footer a{color:var(--accent)}
   /* יעדי מגע של לפחות 44x44px בכל האלמנטים האינטראקטיביים - תקן נגישות מובייל בסיסי */
   .chip{padding:10px 14px;font-size:.8rem;min-height:44px}
   .custom-check{padding:9px 12px 9px 8px;font-size:.8rem;min-height:44px}
+  .cinema-day-sort-btn{min-height:44px;padding:8px 12px}
   .filter-hint{font-size:.74rem}
 
   .inputs-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
@@ -571,12 +611,17 @@ footer a{color:var(--accent)}
 
   <div class="results-toolbar" id="resultsToolbar">
     <div class="results-count" id="resultsCount">טוען אירועים...</div>
-    <button type="button" class="select-all-link" id="selectAllLink" onclick="toggleSelectAllFiltered()" style="display:none">בחרו הכל</button>
+    <div class="results-toolbar-actions">
+      <!-- מוצג רק במצב ממוקד-קולנוע (ר' updateCinemaDaySortButton) - שולט רק בסדר בתוך כל
+           יום (שעת הקרנה/דירוג IMDb), לא בקיבוץ הימים עצמו שנשאר כרונולוגי תמיד. -->
+      <button type="button" class="cinema-day-sort-btn" id="cinemaDaySortBtn" onclick="toggleCinemaDaySort()" style="display:none"><i class="fa-solid fa-arrow-down-wide-short"></i> <span id="cinemaDaySortLabel">מיון: שעת הקרנה</span></button>
+      <button type="button" class="select-all-link" id="selectAllLink" onclick="toggleSelectAllFiltered()" style="display:none">בחרו הכל</button>
+    </div>
   </div>
 
   <!-- פס ז'אנרים מהיר - ריבוי-בחירה ישיר מהמסך הראשי, ללא צורך באישור (ר' משימה 1) -->
   <div class="quick-genre-bar" id="quickGenreBar" role="group" aria-label="סינון מהיר לפי סוג">
-    <button type="button" class="chip active" data-type="all" onclick="toggleQuickGenre('all')">הכל</button>
+    <button type="button" class="chip active" data-type="all" onclick="toggleQuickGenre('all')">כללי</button>
     <button type="button" class="chip" data-type="music" onclick="toggleQuickGenre('music')">מוזיקה</button>
     <button type="button" class="chip" data-type="standup" onclick="toggleQuickGenre('standup')">סטנדאפ</button>
     <button type="button" class="chip" data-type="cinema" onclick="toggleQuickGenre('cinema')">קולנוע</button>
@@ -594,7 +639,7 @@ footer a{color:var(--accent)}
        imdbBadgeHtml), אין יותר תלות במפתח OMDb אישי. אותה תיבת-אמת (minImdbRating) כמו הגרסה
        בגיליון - שתי תצוגות מסונכרנות, לא state כפול. -->
   <div class="quick-imdb-bar" id="quickImdbBar" role="group" aria-label="סינון לפי דירוג IMDb" style="display:none">
-    <button type="button" class="chip active" data-min="0" onclick="setImdbRatingFilter(0)"><i class="fa-brands fa-imdb"></i> הכל</button>
+    <button type="button" class="chip active" data-min="0" onclick="setImdbRatingFilter(0)"><i class="fa-solid fa-star"></i> הכל</button>
     <button type="button" class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
     <button type="button" class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
     <button type="button" class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
@@ -628,6 +673,17 @@ footer a{color:var(--accent)}
       <button type="button" class="selection-action-btn reco" id="recoBtn" onclick="openRecoModal()" title="רוצים לשמוע מה דעתי?" aria-label="רוצים לשמוע מה דעתי?" style="display:none"><i class="fa-solid fa-robot"></i><span class="action-label">רוצים לשמוע מה דעתי?</span></button>
     </div>
   </div>
+</div>
+
+<!-- פאנל "כל הדירוגים" - צף ונפרד לגמרי מהתצוגה הראשית (לא מודל-overlay, אפשר להשאיר
+     פתוח תוך כדי גלילה/עיון ברשימה הרגילה). נפתח אוטומטית במצב ממוקד-קולנוע, X סוגר
+     לביקור הנוכחי בלבד - ר' refreshImdbRatingFilterSection/closeImdbRankingsPanel. -->
+<div class="imdb-rankings-panel" id="imdbRankingsPanel" style="display:none">
+  <div class="imdb-rankings-header">
+    <h3><i class="fa-solid fa-star"></i> כל הדירוגים</h3>
+    <button type="button" class="imdb-rankings-close" onclick="closeImdbRankingsPanel()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="imdb-rankings-list" id="imdbRankingsList"></div>
 </div>
 
 <div class="sheet-overlay" id="filterSheetOverlay" style="display:none" onclick="if(event.target===this) closeFilterSheet()">
@@ -670,7 +726,7 @@ footer a{color:var(--accent)}
       <div class="filter-section">
         <h3><span class="section-icon type-icon"><i class="fa-solid fa-masks-theater"></i></span> סוג</h3>
         <div class="chips-row" id="typeChips">
-          <button type="button" class="chip active" data-type="all" onclick="toggleModalGenre('all')">הכל</button>
+          <button type="button" class="chip active" data-type="all" onclick="toggleModalGenre('all')">כללי</button>
           <button type="button" class="chip" data-type="music" onclick="toggleModalGenre('music')">מוזיקה</button>
           <button type="button" class="chip" data-type="standup" onclick="toggleModalGenre('standup')">סטנדאפ</button>
           <button type="button" class="chip" data-type="cinema" onclick="toggleModalGenre('cinema')">קולנוע</button>
@@ -680,23 +736,13 @@ footer a{color:var(--accent)}
       </div>
 
       <div class="filter-section" id="imdbRatingFilterSection" style="display:none">
-        <h3><span class="section-icon imdb-icon"><i class="fa-brands fa-imdb"></i></span> ציון IMDb מינימלי</h3>
+        <h3><span class="section-icon imdb-icon"><i class="fa-solid fa-star"></i></span> ציון IMDb מינימלי</h3>
         <div class="chips-row" id="imdbRatingChips">
           <button class="chip active" data-min="0" onclick="setImdbRatingFilter(0)">הכל</button>
           <button class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
           <button class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
           <button class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
           <button class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
-        </div>
-      </div>
-
-      <!-- מיון קולנוע לפי דירוג - מוצג רק במצב ממוקד-קולנוע (אותו תנאי כמו פילטר הדירוג
-           ממש מעל), כדי לעיין ברשימה המדורגת המלאה ולא רק ב"מומלץ" הבודד (ר' setCinemaSortMode). -->
-      <div class="filter-section" id="cinemaSortSection" style="display:none">
-        <h3><span class="section-icon imdb-icon"><i class="fa-solid fa-arrow-down-wide-short"></i></span> מיון</h3>
-        <div class="chips-row" id="cinemaSortChips">
-          <button class="chip active" data-sort="date" onclick="setCinemaSortMode('date')"><i class="fa-regular fa-calendar"></i> תאריך</button>
-          <button class="chip" data-sort="rating" onclick="setCinemaSortMode('rating')"><i class="fa-brands fa-imdb"></i> דירוג IMDb</button>
         </div>
       </div>
 
@@ -768,7 +814,19 @@ let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
 let selectedIds = new Set();
 let currentFiltered = [];
 let minImdbRating = 0; // 0 = כבוי. פעיל רק כשהתצוגה ממוקדת קולנוע טהור (ר' isCinemaFocused)
-let sortByRating = false; // מיון קולנוע לפי דירוג IMDb במקום תאריך - אותו תנאי הצגה (isCinemaFocused)
+/* פאנל "כל הדירוגים" (ר' renderImdbRankingsPanel) - צף מעל התצוגה הראשית, לא משנה אותה.
+   רשימת סרטים ייחודית (לפי שם בלבד, לא לפי אולם) ממוינת לפי דירוג - במקום למיין את הרשת
+   הראשית עצמה (שהייתה גורמת לאותו סרט לחזור על עצמו פעם לכל אולם שמקרין אותו - ר' שיחה
+   עם המשתמשת). התצוגה הראשית תמיד נשארת כרונולוגית/מקובצת-לפי-יום, בלי קשר לפאנל.
+   נפתח אוטומטית במצב ממוקד-קולנוע (ר' refreshImdbRatingFilterSection) - imdbRankingsPanelDismissed
+   מסמן שהמשתמש סגר אותו ידנית (X) לביקור הנוכחי, כדי שלא "יקפוץ בחזרה" מיד; מתאפס
+   ביציאה ממצב קולנוע, כך שכניסה טרייה בפעם הבאה מציגה אותו מחדש כברירת מחדל. */
+let imdbRankingsPanelOpen = false;
+let imdbRankingsPanelDismissed = false;
+/* מיון *בתוך* כל יום בתצוגה הראשית (לא בין ימים - אלה תמיד כרונולוגיים) - 'time' (ברירת
+   מחדל, שעת הקרנה) או 'rating' (דירוג IMDb גבוה קודם). כפתור קטן בלוח התוצאות
+   (updateCinemaDaySortButton/toggleCinemaDaySort), מוצג ורלוונטי רק במצב ממוקד-קולנוע. */
+let cinemaDaySortMode = 'time';
 let selectedShowtimeOverride = {}; // venue||title -> id של הקרנה שנבחרה ידנית דרך "שעות נוספות"
 let showOnlyFavs = false;
 let showOnlySelected = false;
@@ -995,7 +1053,7 @@ function openFilterSheet(){
    וסעיפי הקולנוע בגיליון למצב שכבר הוחל בפועל (selectedTypes), לא למה שהמשתמש התחיל
    לבחור בגיליון ולא אישר. refreshImdbRatingFilterSection (לא רק refreshCinemaSheetSections)
    בכוונה - modalDraftTypes כבר null בשלב הזה, אז אם המשתמש ביטל טיוטת קולנוע (או ציון/מיון
-   שנבחרו תוך כדי) - זה גם מאפס minImdbRating/sortByRating בהתאם למצב האמיתי שנשאר. */
+   שנבחרו תוך כדי) - זה גם מאפס minImdbRating/פאנל הדירוגים בהתאם למצב האמיתי שנשאר. */
 function closeFilterSheet(){
   modalDraftTypes = null;
   refreshVenueVisibility(selectedTypes);
@@ -1316,7 +1374,7 @@ function toggleModalGenre(type){
   renderGenreChipsState(document.getElementById('typeChips'), modalDraftTypes);
   refreshVenueVisibility(modalDraftTypes);
   // refreshImdbRatingFilterSection (לא רק refreshCinemaSheetSections) - אם הטיוטה זזה
-  // הרחק מקולנוע, גם minImdbRating/sortByRating מתאפסים מיד, לא רק נראות הסעיף.
+  // הרחק מקולנוע, גם minImdbRating/פאנל הדירוגים מתאפסים מיד, לא רק נראות הסעיף.
   refreshImdbRatingFilterSection();
   updateSheetResultsPreview();
 }
@@ -1745,13 +1803,15 @@ function isCinemaFocusedForSheetDraft(){
 
 /* פילטר דירוג ה-IMDb וה-Quick Bar חיים על העמוד הראשי (מאחורי הגיליון, לא בתוכו) - הם
    חייבים לשקף תמיד את המצב שכבר *הוחל בפועל* (selectedTypes/הפילטר בפועל), לא טיוטה, כי
-   הם גלויים במקביל לגיליון הפתוח. minImdbRating/sortByRating עצמם לא מתאפסים בלחיצת
-   "אישור" (הם לא חלק מטיוטת הז'אנר) - הם נשארים בעינם כל עוד המצב עדיין ממוקד-קולנוע,
-   בדיוק כמו שנדרש ב"State Persistence" - אבל האיפוס עצמו (כשלא ממוקד) חייב להשתמש
-   ב-isCinemaFocusedForSheetDraft ולא ב-isCinemaFocused(selectedTypes) הישיר, אחרת מתקבל
-   בדיוק באג ה"צ'יפ לא נצבע" שתואר למעלה: המשתמש בוחר קולנוע וציון/מיון *בתוך אותו מסך
-   הגיליון*, לפני שאישר משהו, וההשוואה מול selectedTypes הישן (עדיין "הכל") הייתה מבטלת
-   את הבחירה מיד. */
+   הם גלויים במקביל לגיליון הפתוח. minImdbRating עצמו לא מתאפס בלחיצת "אישור" (הוא לא
+   חלק מטיוטת הז'אנר) - הוא נשאר בעינו כל עוד המצב עדיין ממוקד-קולנוע, בדיוק כמו שנדרש
+   ב"State Persistence" - אבל האיפוס עצמו (כשלא ממוקד) חייב להשתמש ב-isCinemaFocusedForSheetDraft
+   ולא ב-isCinemaFocused(selectedTypes) הישיר, אחרת מתקבל בדיוק באג ה"צ'יפ לא נצבע" שתואר
+   למעלה: המשתמש בוחר קולנוע וציון *בתוך אותו מסך הגיליון*, לפני שאישר משהו, וההשוואה מול
+   selectedTypes הישן (עדיין "כללי") הייתה מבטלת את הבחירה מיד.
+   פאנל "כל הדירוגים" ומיון-לפי-יום (cinemaDaySortMode) חיים גם הם על העמוד הראשי (לא
+   בגיליון) ומתאפסים/נפתחים לפי אותו liveShow - ר' renderImdbRankingsPanel/
+   updateCinemaDaySortButton. */
 function refreshImdbRatingFilterSection(){
   const quickBar = document.getElementById('quickImdbBar');
   const liveShow = isCinemaFocused(selectedTypes);
@@ -1762,31 +1822,110 @@ function refreshImdbRatingFilterSection(){
     renderImdbRatingChipsState(document.getElementById('imdbRatingChips'), 0);
     renderImdbRatingChipsState(quickBar, 0);
   }
-  // אותה עקביות בדיוק כמו minImdbRating מעל - יציאה ממצב ממוקד-קולנוע מאפסת גם את המיון,
-  // כדי לא להשאיר תצוגה כללית ("הכל") ממוינת לפי דירוג שרק סרטים ממילא רלוונטיים לו.
-  if (!show && sortByRating){
-    sortByRating = false;
-    document.querySelectorAll('#cinemaSortChips .chip[data-sort]').forEach(b => b.classList.toggle('active', b.dataset.sort === 'date'));
+  // כניסה למצב ממוקד-קולנוע פותחת את הפאנל אוטומטית (אין יותר צ'יפ ידני לפתוח אותו) -
+  // imdbRankingsPanelDismissed מאפשר ל-X לסגור אותו לביקור הנוכחי בלי שהוא "יקפוץ בחזרה"
+  // באותה נשימה; יציאה ממצב קולנוע מאפסת את הדגל, כדי שכניסה טרייה בפעם הבאה תציג אותו
+  // מחדש מברירת המחדל. אותה עקביות בדיוק גם למיון-לפי-יום (cinemaDaySortMode).
+  if (liveShow && !imdbRankingsPanelDismissed) imdbRankingsPanelOpen = true;
+  if (!liveShow){
+    imdbRankingsPanelOpen = false;
+    imdbRankingsPanelDismissed = false;
+    cinemaDaySortMode = 'time';
   }
+  renderImdbRankingsPanel();
+  updateCinemaDaySortButton();
   refreshCinemaSheetSections();
 }
 
-/* בניגוד לזוג שמעל (שתמיד משקפים את selectedTypes המוחל בפועל) - הסעיפים המקבילים *בתוך*
-   הגיליון עצמו חייבים לשקף את הטיוטה (modalDraftTypes) כשהגיליון פתוח, אחרת הם נשארים
-   גלויים/מוסתרים על בסיס המצב הישן עד ללחיצה על "אישור". ר' isCinemaFocusedForSheetDraft
+/* בניגוד לזוג שמעל (שתמיד משקפים את selectedTypes המוחל בפועל) - הסעיף המקביל *בתוך*
+   הגיליון עצמו חייב לשקף את הטיוטה (modalDraftTypes) כשהגיליון פתוח, אחרת הוא נשאר
+   גלוי/מוסתר על בסיס המצב הישן עד ללחיצה על "אישור". ר' isCinemaFocusedForSheetDraft
    לפירוט המלא של הדימוי. */
 function refreshCinemaSheetSections(){
   const section = document.getElementById('imdbRatingFilterSection');
-  const sortSection = document.getElementById('cinemaSortSection');
   const show = isCinemaFocusedForSheetDraft();
   if (section) section.style.display = show ? 'block' : 'none';
-  if (sortSection) sortSection.style.display = show ? 'block' : 'none';
 }
 
-function setCinemaSortMode(mode){
-  sortByRating = mode === 'rating';
-  document.querySelectorAll('#cinemaSortChips .chip[data-sort]').forEach(b => b.classList.toggle('active', b.dataset.sort === mode));
+/* סגירה ידנית (X) - לביקור הנוכחי בלבד, ר' תיעוד imdbRankingsPanelDismissed למעלה. */
+function closeImdbRankingsPanel(){
+  imdbRankingsPanelOpen = false;
+  imdbRankingsPanelDismissed = true;
+  renderImdbRankingsPanel();
+}
+
+/* כפתור קטן במעמד לוח התוצאות (לא בגיליון הסינון) - שולט רק בסדר *בתוך* כל יום (איזה
+   סרט ראשון תחת "היום"), לא בקיבוץ הימים עצמו שנשאר כרונולוגי תמיד (ר' התיעוד ליד
+   showDateGroupHeaders ב-renderEvents). מוצג רק במצב ממוקד-קולנוע. */
+function updateCinemaDaySortButton(){
+  const btn = document.getElementById('cinemaDaySortBtn');
+  const label = document.getElementById('cinemaDaySortLabel');
+  if (!btn) return;
+  const show = isCinemaFocused(selectedTypes);
+  btn.style.display = show ? 'inline-flex' : 'none';
+  if (label) label.textContent = cinemaDaySortMode === 'rating' ? 'מיון: דירוג IMDb' : 'מיון: שעת הקרנה';
+  btn.classList.toggle('active', cinemaDaySortMode === 'rating');
+}
+
+function toggleCinemaDaySort(){
+  cinemaDaySortMode = cinemaDaySortMode === 'rating' ? 'time' : 'rating';
+  updateCinemaDaySortButton();
   filterEvents();
+}
+
+/* משמש רק כשממוקדים על קולנוע (ר' קריאה ב-renderEvents) - כשכל האירועים ממילא קולנוע
+   (isCinemaFocused מבטיח את זה, ר' תיעוד שם), אין צורך לדאוג להתנגשות עם תיאטרון/מוזיקה.
+   שומר תמיד על סדר כרונולוגי בין ימים שונים (כדי שכותרות הימים ב-renderEvents יישארו
+   תקינות) - משנה רק את הסדר *בתוך* אותו יום עצמו: לפי דירוג (גבוה לנמוך) או לפי שעת
+   הקרנה, בהתאם ל-cinemaDaySortMode. */
+function dayThenModeComparator(a, b){
+  const dayA = localDateStr(a.date), dayB = localDateStr(b.date);
+  if (dayA !== dayB) return a.date - b.date;
+  if (cinemaDaySortMode === 'rating'){
+    const ra = a.imdbRating ? parseFloat(a.imdbRating) : -1;
+    const rb = b.imdbRating ? parseFloat(b.imdbRating) : -1;
+    if (ra !== rb) return rb - ra;
+  }
+  return a.date - b.date;
+}
+
+/* רשימת סרטים ייחודית (לפי שם בלבד - לא venue+title כמו buildRenderItems) מתוך events,
+   ממוינת לפי דירוג. כשאותו סרט מוקרן בכמה בתי קולנוע/שעות, כל הכפילויות מתכווצות לשורה
+   אחת - זה בדיוק מה שהפאנל הזה קיים בשבילו. events תמיד currentFiltered בפועל (ר' קריאה
+   למטה) - כך שהרשימה משקפת בדיוק את טווח התאריכים/השעות שהמשתמש בחר, לא את כל הקטלוג. */
+function buildImdbRankingsList(events){
+  const seen = new Set();
+  const ranked = [];
+  events.forEach(ev => {
+    if (ev.type !== 'cinema' || !ev.imdbRating || seen.has(ev.title)) return;
+    seen.add(ev.title);
+    ranked.push(ev);
+  });
+  ranked.sort(byRatingThenDate);
+  return ranked;
+}
+
+/* נקראת מכל renderEvents (כדי להישאר מסונכרנת עם הפילטרים הפעילים גם כשהיא כבר פתוחה)
+   וגם מ-refreshImdbRatingFilterSection/closeImdbRankingsPanel (פתיחה/סגירה/איפוס). כשסגורה
+   פשוט מסתירה ולא בונה HTML - זולה לקרוא לה תמיד בלי תנאי-שמירה בצד הקורא. */
+function renderImdbRankingsPanel(){
+  const panel = document.getElementById('imdbRankingsPanel');
+  const list = document.getElementById('imdbRankingsList');
+  if (!panel || !list) return;
+  if (!imdbRankingsPanelOpen){
+    panel.style.display = 'none';
+    return;
+  }
+  const ranked = buildImdbRankingsList(currentFiltered);
+  list.innerHTML = ranked.length
+    ? ranked.map((ev, i) => `
+      <button type="button" class="imdb-ranking-row" onclick="openTrailerModal('${ev.id}')">
+        <span class="imdb-ranking-rank">${i + 1}</span>
+        <span class="imdb-ranking-title">${escapeHtml(ev.title)}</span>
+        <span class="imdb-ranking-score"><i class="fa-solid fa-star"></i> ${escapeHtml(ev.imdbRating)}</span>
+      </button>`).join('')
+    : `<p class="imdb-rankings-empty">אין עדיין סרטים עם דירוג בטווח שנבחר</p>`;
+  panel.style.display = 'flex';
 }
 
 /* תג סטטי בלבד - אין יותר מצבי pending/not-found/כפתור-לחיצה, כי אין שום פעולת משתמש
@@ -1795,14 +1934,14 @@ function setCinemaSortMode(mode){
 function imdbBadgeHtml(ev){
   if (ev.type !== 'cinema') return '';
   if (ev.imdbRating){
-    const inner = `<i class="fa-brands fa-imdb"></i> IMDb ${escapeHtml(ev.imdbRating)}`;
+    const inner = `<i class="fa-solid fa-star"></i> IMDb ${escapeHtml(ev.imdbRating)}`;
     return ev.imdbId
       ? `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(ev.imdbId)}/" target="_blank" rel="noopener" title="לדף הסרט ב-IMDb" onclick="event.stopPropagation()">${inner}</a>`
       : `<span class="imdb-badge" title="דירוג IMDb">${inner}</span>`;
   }
   // הסרט זוהה במדויק מול OMDb (יש imdbId) אבל עדיין אין לו דירוג מספרי - בד"כ סרט חדש/עתידי מדי.
   if (ev.imdbId){
-    return `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(ev.imdbId)}/" target="_blank" rel="noopener" title="נמצא ב-IMDb, עדיין אין דירוג" onclick="event.stopPropagation()"><i class="fa-brands fa-imdb"></i> IMDb</a>`;
+    return `<a class="imdb-badge" href="https://www.imdb.com/title/${encodeURIComponent(ev.imdbId)}/" target="_blank" rel="noopener" title="נמצא ב-IMDb, עדיין אין דירוג" onclick="event.stopPropagation()"><i class="fa-solid fa-star"></i> IMDb</a>`;
   }
   return '';
 }
@@ -1841,9 +1980,8 @@ function byTypeThenDate(a, b){
   return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]) || (a.date - b.date);
 }
 
-/* מיון קולנוע לפי דירוג IMDb (גבוה לנמוך), במקום תאריך - ר' setCinemaSortMode. אירועים
-   בלי דירוג ידוע (imdbRating חסר) יורדים לסוף, לא נעלמים. פעיל רק במצב ממוקד-קולנוע
-   (isCinemaFocused), אז a/b כאן הם תמיד סוג 'cinema' בפועל - אין צורך למיין לפי סוג. */
+/* מיון לפי דירוג IMDb (גבוה לנמוך) - משמש רק את פאנל "כל הדירוגים" (ר' renderImdbRankingsPanel),
+   לא את הרשת הראשית. אירועים בלי דירוג ידוע (imdbRating חסר) יורדים לסוף, לא נעלמים. */
 function byRatingThenDate(a, b){
   const ra = a.imdbRating ? parseFloat(a.imdbRating) : -1;
   const rb = b.imdbRating ? parseFloat(b.imdbRating) : -1;
@@ -1901,12 +2039,16 @@ function timeStrToMinutes(t){
   return h * 60 + m;
 }
 
-/* שער קולנוע בתוך "הכל": קולנוע נכלל תמיד כשהסוג נבחר במפורש (ר' matchesType למטה - זה
-   כלל לא נוגע לצ'ק הזה). בתוך "הכל" עצמו קולנוע יכול להציף עשרות תוצאות לכל יום (ר'
+/* שער קולנוע בתוך "כללי": קולנוע נכלל תמיד כשהסוג נבחר במפורש (ר' matchesType למטה - זה
+   כלל לא נוגע לצ'ק הזה). בתוך "כללי" עצמו קולנוע יכול להציף עשרות תוצאות לכל יום (ר'
    VISTA - עד 500+ הקרנות), אז נכלל רק כשהחיפוש כבר ממוקד מספיק שקולנוע לא "בולע" את
-   שאר הקטגוריות: יום בודד, טווח שעות מצומצם (עד 8 שעות), או תחילת ערב (מ-15:00) - שלושת
-   התנאים ממשימה 6 בתיעוד. חיפוש רחב ומרובה-ימים בשעות בוקר לא-ממוקדות (ברירת המחדל)
-   ממשיך להחריג קולנוע מ"הכל" כדי לא להטביע את שאר האירועים. */
+   שאר הקטגוריות: יום בודד, טווח שעות מצומצם (עד 8 שעות), תחילת ערב (מ-15:00), או - נוסף
+   בעקבות שיחה עם המשתמשת - סטייה ידנית מברירת המחדל של המקומות (לא כל המקומות מסומנים)
+   כשלפחות בית קולנוע אחד עדיין מסומן: אם המשתמש כבר צלל לגיליון הסינון וסימן/ביטל מקומות
+   ספציפיים בעצמו (פעולה מכוונת, לא מקרית - צ'יפי המקום המהירים לא מוצגים בכלל תחת "כללי"),
+   זה סימן ברור מספיק שהוא מעוניין לראות את מה שסימן, כולל קולנוע, בלי קשר לרוחב הטווח.
+   חיפוש רחב עם ברירת המחדל המלאה של המקומות (הנפוץ ביותר) ממשיך להחריג קולנוע מ"כללי"
+   כדי לא להטביע את שאר האירועים - שלושת התנאים המקוריים ממשימה 6 בתיעוד. */
 function isSingleDayRange(startDateVal, endDateVal){
   return !!startDateVal && !!endDateVal && startDateVal === endDateVal;
 }
@@ -1928,9 +2070,13 @@ function computeFilteredEvents(types){
   const startDateVal = document.getElementById('startDate').value;
   const endDateVal = document.getElementById('endDate').value;
   const selectedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
+  const totalVenueCount = document.querySelectorAll('.venue-filter').length;
+  const venuesManuallyNarrowed = selectedVenues.length > 0 && selectedVenues.length < totalVenueCount;
+  const cinemaVenueChecked = selectedVenues.some(v => CINEMA_VENUES.includes(v));
   const cinemaAllowedInAll = isSingleDayRange(startDateVal, endDateVal)
     || isTimeWindowFocusedRange(appliedStartTime, appliedEndTime)
-    || isEveningRange(appliedStartTime);
+    || isEveningRange(appliedStartTime)
+    || (venuesManuallyNarrowed && cinemaVenueChecked);
 
   return allEvents.filter(ev => {
     const matchesSearch = !searchTerm || ev.title.toLowerCase().includes(searchTerm) || ev.venue.toLowerCase().includes(searchTerm) || (ev.synopsis && ev.synopsis.toLowerCase().includes(searchTerm));
@@ -1958,7 +2104,7 @@ function computeFilteredEvents(types){
 function filterEvents(){
   refreshImdbRatingFilterSection();
   const filtered = computeFilteredEvents(selectedTypes);
-  filtered.sort((sortByRating && isCinemaFocused()) ? byRatingThenDate : byTypeThenDate);
+  filtered.sort(byTypeThenDate);
   renderEvents(filtered);
 }
 
@@ -2022,7 +2168,7 @@ function renderTopPick(events){
   strip.innerHTML = `
     <button type="button" class="top-pick-inner" onclick="openTrailerModal('${pick.id}')">
       <span class="top-pick-icon">🔥</span>
-      <span class="top-pick-text"><strong>${label}:</strong> ${escapeHtml(pick.title)}<span class="top-pick-rating"><i class="fa-brands fa-imdb"></i> ${escapeHtml(pick.imdbRating)}</span></span>
+      <span class="top-pick-text"><strong>${label}:</strong> ${escapeHtml(pick.title)}<span class="top-pick-rating"><i class="fa-solid fa-star"></i> ${escapeHtml(pick.imdbRating)}</span></span>
       <i class="fa-solid fa-chevron-left top-pick-arrow"></i>
     </button>`;
   strip.style.display = 'block';
@@ -2037,14 +2183,17 @@ function renderEvents(events){
   // למונה התוצאות (הן כאן והן בגיליון) והן ללולאת הרינדור בהמשך - כדי לא להריץ אותו
   // פעמיים על אותם events, ובעיקר כדי שהמספר המוצג תמיד יתאים למה שבאמת נראה על המסך.
   const renderItems = buildRenderItems(events);
-  // buildRenderItems תמיד ממיין פנימית לפי byTypeThenDate (ר' התיעוד שם) - במצב מיון-לפי-דירוג
-  // דורסים את זה כאן, אחרי הקיבוץ, כי הקיבוץ עצמו (סרט אחד לכל קולנוע) תקין ללא תלות בסדר.
-  const useRatingOrder = sortByRating && isCinemaFocused();
-  if (useRatingOrder) renderItems.sort((a,b) => byRatingThenDate(a.display, b.display));
+  // כשממוקדים על קולנוע וה"מיון בתוך היום" מוגדר לדירוג - דורסים כאן את הסדר הפנימי של
+  // buildRenderItems (תמיד byTypeThenDate), בלי לגעת בקיבוץ עצמו (שכבר תקין ללא תלות בסדר).
+  // dayThenModeComparator שומר על סדר הימים כרונולוגי - רק הסדר *בתוך* כל יום משתנה.
+  if (isCinemaFocused(selectedTypes)) renderItems.sort((a,b) => dayThenModeComparator(a.display, b.display));
   const sheetCountEl = document.getElementById('sheetResultsCount');
   if (sheetCountEl) sheetCountEl.textContent = renderItems.length;
   updateSelectionUI();
   renderTopPick(events);
+  // הפאנל (אם פתוח) חייב להתעדכן בכל רינדור - הוא קורא מ-currentFiltered, שמשתנה עם
+  // כל שינוי פילטר (תאריך/מקום/חיפוש וכו') גם כשהפאנל כבר פתוח מקודם.
+  renderImdbRankingsPanel();
 
   if (events.length === 0){
     if (lastLoadFailed){
@@ -2085,11 +2234,10 @@ function renderEvents(events){
 
   // כותרות "היום/מחר/מחרתיים" רלוונטיות רק כשהתוצאות בפועל פרושות על יותר מיום אחד -
   // אם הכל באותו יום (למשל תחת פילטר "היום"), הכותרת רק חוזרת על מה שכבר ברור מהפילטר
-  // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה. גם במיון-לפי-דירוג
-  // (useRatingOrder) - קיבוץ יומי/שבועי מניח סדר כרונולוגי, ובסדר-דירוג התאריכים מפוזרים,
-  // אז כותרת קבוצה הייתה חוזרת על עצמה בלי הפסקה או נראית שבורה. כל כרטיס עדיין מציג את
-  // התאריך שלו עצמו ב-event-meta-compact, כך שהמידע לא אבד, רק לא מקובץ.
-  const showDateGroupHeaders = !useRatingOrder && new Set(events.map(ev => localDateStr(ev.date))).size > 1;
+  // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה. התצוגה הראשית
+  // תמיד כרונולוגית/מקובצת-לפי-יום - "דירוג IMDb" פותח פאנל נפרד (ר' renderImdbRankingsPanel)
+  // בלי לגעת בקיבוץ הזה בכלל, אז אין יותר מצב "מיון-לפי-דירוג" שמבטל את הכותרות.
+  const showDateGroupHeaders = new Set(events.map(ev => localDateStr(ev.date))).size > 1;
   // בפריסה דלילה על פני הרבה שבועות (ר' shouldGroupByWeek) - כותרת לכל שבוע במקום לכל
   // יום, עם תג יום על כל כרטיס (לא רק בודדים) כדי שעדיין יהיה ברור בדיוק איזה יום זה.
   const groupByWeek = showDateGroupHeaders && shouldGroupByWeek(events);
