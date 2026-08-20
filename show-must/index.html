@@ -690,6 +690,16 @@ footer a{color:var(--accent)}
         </div>
       </div>
 
+      <!-- מיון קולנוע לפי דירוג - מוצג רק במצב ממוקד-קולנוע (אותו תנאי כמו פילטר הדירוג
+           ממש מעל), כדי לעיין ברשימה המדורגת המלאה ולא רק ב"מומלץ" הבודד (ר' setCinemaSortMode). -->
+      <div class="filter-section" id="cinemaSortSection" style="display:none">
+        <h3><span class="section-icon imdb-icon"><i class="fa-solid fa-arrow-down-wide-short"></i></span> מיון</h3>
+        <div class="chips-row" id="cinemaSortChips">
+          <button class="chip active" data-sort="date" onclick="setCinemaSortMode('date')"><i class="fa-regular fa-calendar"></i> תאריך</button>
+          <button class="chip" data-sort="rating" onclick="setCinemaSortMode('rating')"><i class="fa-brands fa-imdb"></i> דירוג IMDb</button>
+        </div>
+      </div>
+
       <div class="filter-section">
         <h3><span class="section-icon location-icon"><i class="fa-solid fa-location-dot"></i></span> איפה</h3>
         <div class="chips-row">
@@ -758,6 +768,7 @@ let favorites = JSON.parse(localStorage.getItem('tlv_favs') || '[]');
 let selectedIds = new Set();
 let currentFiltered = [];
 let minImdbRating = 0; // 0 = כבוי. פעיל רק כשהתצוגה ממוקדת קולנוע טהור (ר' isCinemaFocused)
+let sortByRating = false; // מיון קולנוע לפי דירוג IMDb במקום תאריך - אותו תנאי הצגה (isCinemaFocused)
 let selectedShowtimeOverride = {}; // venue||title -> id של הקרנה שנבחרה ידנית דרך "שעות נוספות"
 let showOnlyFavs = false;
 let showOnlySelected = false;
@@ -975,15 +986,20 @@ function openFilterSheet(){
   modalDraftTypes = new Set(selectedTypes);
   renderGenreChipsState(document.getElementById('typeChips'), modalDraftTypes);
   refreshVenueVisibility(modalDraftTypes);
+  refreshImdbRatingFilterSection();
   document.getElementById('filterSheetOverlay').style.display = 'flex';
   updateSheetResultsPreview();
 }
 
 /* סגירה בלי החלה (X / קליק על הרקע) - מבטלת את הטיוטה ומחזירה את נראות תגיות המקום
-   למצב שכבר הוחל בפועל (selectedTypes), לא למה שהמשתמש התחיל לבחור בגיליון ולא אישר. */
+   וסעיפי הקולנוע בגיליון למצב שכבר הוחל בפועל (selectedTypes), לא למה שהמשתמש התחיל
+   לבחור בגיליון ולא אישר. refreshImdbRatingFilterSection (לא רק refreshCinemaSheetSections)
+   בכוונה - modalDraftTypes כבר null בשלב הזה, אז אם המשתמש ביטל טיוטת קולנוע (או ציון/מיון
+   שנבחרו תוך כדי) - זה גם מאפס minImdbRating/sortByRating בהתאם למצב האמיתי שנשאר. */
 function closeFilterSheet(){
   modalDraftTypes = null;
   refreshVenueVisibility(selectedTypes);
+  refreshImdbRatingFilterSection();
   document.getElementById('filterSheetOverlay').style.display = 'none';
 }
 
@@ -1299,6 +1315,9 @@ function toggleModalGenre(type){
   modalDraftTypes = toggleTypeInSet(modalDraftTypes, type);
   renderGenreChipsState(document.getElementById('typeChips'), modalDraftTypes);
   refreshVenueVisibility(modalDraftTypes);
+  // refreshImdbRatingFilterSection (לא רק refreshCinemaSheetSections) - אם הטיוטה זזה
+  // הרחק מקולנוע, גם minImdbRating/sortByRating מתאפסים מיד, לא רק נראות הסעיף.
+  refreshImdbRatingFilterSection();
   updateSheetResultsPreview();
 }
 
@@ -1673,8 +1692,13 @@ function navLink(ev){
    מתחזק אותם ברקע במטמון KV משותף לכל המשתמשים (ר' refreshImdbRatings ב-cf-worker/worker.js),
    בלי שום הרשמה/מפתח אישי מהמשתמש. אין יותר בקשות רשת מהדפדפן ל-OMDb בכלל. */
 
-function isCinemaFocused(){
-  if (selectedTypes.size === 1 && selectedTypes.has('cinema')) return true;
+/* types אופציונלי - כשלא סופק נופל לברירת המחדל selectedTypes (המצב שכבר הוחל בפועל).
+   הגיליון הפתוח מעביר את הטיוטה (modalDraftTypes) כדי שסעיפים תלויי-קולנוע *בתוך הגיליון*
+   (ר' refreshCinemaSheetSections) יגיבו למה שהמשתמש בפועל מרכיב עכשיו, לא למצב הישן שעדיין
+   מוחל - אותו דפוס כמו computeFilteredEvents/refreshVenueVisibility. */
+function isCinemaFocused(types){
+  const activeTypes = types || selectedTypes;
+  if (activeTypes.size === 1 && activeTypes.has('cinema')) return true;
   const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
   return checkedVenues.length > 0 && checkedVenues.every(v => CINEMA_VENUES.includes(v));
 }
@@ -1699,23 +1723,70 @@ function setImdbRatingFilter(min){
   filterEvents();
 }
 
-/* פילטר דירוג ה-IMDb מוצג רק כשהתצוגה ממוקדת קולנוע טהור (isCinemaFocused - ז'אנר קולנוע
-   בלבד, או שכל המקומות המסומנים הם בתי קולנוע) - גם בגיליון וגם ב-Quick Bar. minImdbRating
-   עצמו לא מתאפס בלחיצת "אישור" (הוא לא חלק מטיוטת הז'אנר) - הוא נשאר בעינו כל עוד המצב
-   עדיין ממוקד-קולנוע, בדיוק כמו שנדרש ב"State Persistence". אם התצוגה מפסיקה להיות
-   ממוקדת-קולנוע (למשל המשתמש עבר ל"הכל") מאפסים את הסינון - כדי לא להשאיר תצוגה "תקועה"
-   עם סף שהמשתמש כבר לא רואה איך לשנות. */
+/* "האם ממוקד-קולנוע" מנקודת המבט של הגיליון עצמו: כשיש טיוטה פעילה שכבר שינתה את הסוג
+   (modalDraftTypes שונה מ-selectedTypes), מדמה את מה ש-syncVenuesToTypes היה עושה אילו
+   הוחלה (לפי TYPE_TO_VENUES) בלי לגעת בפועל בתיבות הסימון החיות של המקום - אלה עדיין
+   משקפות את הסוג *הישן* עד ללחיצה על "אישור" (ר' onVenueCheckboxChange: המקום תמיד "חי",
+   לא חלק מהטיוטה). בלי הדימוי הזה, isCinemaFocused(selectedTypes) הרגיל היה ממשיך "לגלות"
+   קולנוע/לא-קולנוע דרך המקומות הישנים גם כשהטיוטה כבר שונה - בדיוק הבאג שדווח: לחיצה על
+   צ'יפ "קולנוע" *בתוך הגיליון* (טיוטה, לא הוחל עדיין), ואז על צ'יפ ציון/מיון - כל קריאה
+   ל-filterEvents (שכל צ'יפ כזה מפעיל) עברה דרך refreshImdbRatingFilterSection שבדקה את
+   selectedTypes הישן (עדיין "הכל"), ראתה "לא קולנוע", ואיפסה את הבחירה חזרה מיד באותה
+   קריאה סינכרונית - הצ'יפ "נצבע" ומתבטל בו-זמנית, לפני שהדפדפן בכלל מספיק לצייר אותו. */
+function isCinemaFocusedForSheetDraft(){
+  const draftChangedType = modalDraftTypes && !setsEqual(modalDraftTypes, selectedTypes);
+  if (draftChangedType){
+    if (modalDraftTypes.size === 1 && modalDraftTypes.has('cinema')) return true;
+    const relevant = relevantVenuesForTypes(modalDraftTypes);
+    return !!relevant && relevant.size > 0 && Array.from(relevant).every(v => CINEMA_VENUES.includes(v));
+  }
+  return isCinemaFocused(selectedTypes);
+}
+
+/* פילטר דירוג ה-IMDb וה-Quick Bar חיים על העמוד הראשי (מאחורי הגיליון, לא בתוכו) - הם
+   חייבים לשקף תמיד את המצב שכבר *הוחל בפועל* (selectedTypes/הפילטר בפועל), לא טיוטה, כי
+   הם גלויים במקביל לגיליון הפתוח. minImdbRating/sortByRating עצמם לא מתאפסים בלחיצת
+   "אישור" (הם לא חלק מטיוטת הז'אנר) - הם נשארים בעינם כל עוד המצב עדיין ממוקד-קולנוע,
+   בדיוק כמו שנדרש ב"State Persistence" - אבל האיפוס עצמו (כשלא ממוקד) חייב להשתמש
+   ב-isCinemaFocusedForSheetDraft ולא ב-isCinemaFocused(selectedTypes) הישיר, אחרת מתקבל
+   בדיוק באג ה"צ'יפ לא נצבע" שתואר למעלה: המשתמש בוחר קולנוע וציון/מיון *בתוך אותו מסך
+   הגיליון*, לפני שאישר משהו, וההשוואה מול selectedTypes הישן (עדיין "הכל") הייתה מבטלת
+   את הבחירה מיד. */
 function refreshImdbRatingFilterSection(){
-  const section = document.getElementById('imdbRatingFilterSection');
   const quickBar = document.getElementById('quickImdbBar');
-  const show = isCinemaFocused();
-  if (section) section.style.display = show ? 'block' : 'none';
-  if (quickBar) quickBar.style.display = show ? 'flex' : 'none';
+  const liveShow = isCinemaFocused(selectedTypes);
+  if (quickBar) quickBar.style.display = liveShow ? 'flex' : 'none';
+  const show = isCinemaFocusedForSheetDraft();
   if (!show && minImdbRating > 0){
     minImdbRating = 0;
     renderImdbRatingChipsState(document.getElementById('imdbRatingChips'), 0);
     renderImdbRatingChipsState(quickBar, 0);
   }
+  // אותה עקביות בדיוק כמו minImdbRating מעל - יציאה ממצב ממוקד-קולנוע מאפסת גם את המיון,
+  // כדי לא להשאיר תצוגה כללית ("הכל") ממוינת לפי דירוג שרק סרטים ממילא רלוונטיים לו.
+  if (!show && sortByRating){
+    sortByRating = false;
+    document.querySelectorAll('#cinemaSortChips .chip[data-sort]').forEach(b => b.classList.toggle('active', b.dataset.sort === 'date'));
+  }
+  refreshCinemaSheetSections();
+}
+
+/* בניגוד לזוג שמעל (שתמיד משקפים את selectedTypes המוחל בפועל) - הסעיפים המקבילים *בתוך*
+   הגיליון עצמו חייבים לשקף את הטיוטה (modalDraftTypes) כשהגיליון פתוח, אחרת הם נשארים
+   גלויים/מוסתרים על בסיס המצב הישן עד ללחיצה על "אישור". ר' isCinemaFocusedForSheetDraft
+   לפירוט המלא של הדימוי. */
+function refreshCinemaSheetSections(){
+  const section = document.getElementById('imdbRatingFilterSection');
+  const sortSection = document.getElementById('cinemaSortSection');
+  const show = isCinemaFocusedForSheetDraft();
+  if (section) section.style.display = show ? 'block' : 'none';
+  if (sortSection) sortSection.style.display = show ? 'block' : 'none';
+}
+
+function setCinemaSortMode(mode){
+  sortByRating = mode === 'rating';
+  document.querySelectorAll('#cinemaSortChips .chip[data-sort]').forEach(b => b.classList.toggle('active', b.dataset.sort === mode));
+  filterEvents();
 }
 
 /* תג סטטי בלבד - אין יותר מצבי pending/not-found/כפתור-לחיצה, כי אין שום פעולת משתמש
@@ -1768,6 +1839,15 @@ const TYPE_ICON = { theatre: 'fa-masks-theater', cinema: 'fa-film', music: 'fa-m
 const TYPE_ORDER = { music: 0, standup: 1, cinema: 2, theatre: 3 };
 function byTypeThenDate(a, b){
   return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]) || (a.date - b.date);
+}
+
+/* מיון קולנוע לפי דירוג IMDb (גבוה לנמוך), במקום תאריך - ר' setCinemaSortMode. אירועים
+   בלי דירוג ידוע (imdbRating חסר) יורדים לסוף, לא נעלמים. פעיל רק במצב ממוקד-קולנוע
+   (isCinemaFocused), אז a/b כאן הם תמיד סוג 'cinema' בפועל - אין צורך למיין לפי סוג. */
+function byRatingThenDate(a, b){
+  const ra = a.imdbRating ? parseFloat(a.imdbRating) : -1;
+  const rb = b.imdbRating ? parseFloat(b.imdbRating) : -1;
+  return (rb - ra) || (a.date - b.date);
 }
 
 /* קיבוץ כרטיסי קולנוע: כל סרט מוצג פעם אחת לכל קולנוע (venue+title) בתוך הסינון הנוכחי,
@@ -1878,7 +1958,7 @@ function computeFilteredEvents(types){
 function filterEvents(){
   refreshImdbRatingFilterSection();
   const filtered = computeFilteredEvents(selectedTypes);
-  filtered.sort(byTypeThenDate);
+  filtered.sort((sortByRating && isCinemaFocused()) ? byRatingThenDate : byTypeThenDate);
   renderEvents(filtered);
 }
 
@@ -1957,6 +2037,10 @@ function renderEvents(events){
   // למונה התוצאות (הן כאן והן בגיליון) והן ללולאת הרינדור בהמשך - כדי לא להריץ אותו
   // פעמיים על אותם events, ובעיקר כדי שהמספר המוצג תמיד יתאים למה שבאמת נראה על המסך.
   const renderItems = buildRenderItems(events);
+  // buildRenderItems תמיד ממיין פנימית לפי byTypeThenDate (ר' התיעוד שם) - במצב מיון-לפי-דירוג
+  // דורסים את זה כאן, אחרי הקיבוץ, כי הקיבוץ עצמו (סרט אחד לכל קולנוע) תקין ללא תלות בסדר.
+  const useRatingOrder = sortByRating && isCinemaFocused();
+  if (useRatingOrder) renderItems.sort((a,b) => byRatingThenDate(a.display, b.display));
   const sheetCountEl = document.getElementById('sheetResultsCount');
   if (sheetCountEl) sheetCountEl.textContent = renderItems.length;
   updateSelectionUI();
@@ -2001,8 +2085,11 @@ function renderEvents(events){
 
   // כותרות "היום/מחר/מחרתיים" רלוונטיות רק כשהתוצאות בפועל פרושות על יותר מיום אחד -
   // אם הכל באותו יום (למשל תחת פילטר "היום"), הכותרת רק חוזרת על מה שכבר ברור מהפילטר
-  // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה.
-  const showDateGroupHeaders = new Set(events.map(ev => localDateStr(ev.date))).size > 1;
+  // הפעיל, ותופסת מקום מסך בלי לתרום מידע. מדלגים עליה כליל במקרה הזה. גם במיון-לפי-דירוג
+  // (useRatingOrder) - קיבוץ יומי/שבועי מניח סדר כרונולוגי, ובסדר-דירוג התאריכים מפוזרים,
+  // אז כותרת קבוצה הייתה חוזרת על עצמה בלי הפסקה או נראית שבורה. כל כרטיס עדיין מציג את
+  // התאריך שלו עצמו ב-event-meta-compact, כך שהמידע לא אבד, רק לא מקובץ.
+  const showDateGroupHeaders = !useRatingOrder && new Set(events.map(ev => localDateStr(ev.date))).size > 1;
   // בפריסה דלילה על פני הרבה שבועות (ר' shouldGroupByWeek) - כותרת לכל שבוע במקום לכל
   // יום, עם תג יום על כל כרטיס (לא רק בודדים) כדי שעדיין יהיה ברור בדיוק איזה יום זה.
   const groupByWeek = showDateGroupHeaders && shouldGroupByWeek(events);
