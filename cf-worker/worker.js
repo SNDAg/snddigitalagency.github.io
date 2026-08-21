@@ -817,20 +817,37 @@ function parseBarbyMarkdown(text) {
    https://jina.ai, set via `wrangler secret put JINA_API_KEY`) moves the quota off the
    shared-IP pool and onto the key's own account allowance. Works fine without a key too,
    just as unreliably as before. */
-async function fetchBarbyMarkdown(env, attempt = 0) {
-  const headers = env.JINA_API_KEY ? { Authorization: `Bearer ${env.JINA_API_KEY}` } : {};
+async function fetchBarbyMarkdown(env, extraHeaders = {}, attempt = 0) {
+  const headers = { ...extraHeaders, ...(env.JINA_API_KEY ? { Authorization: `Bearer ${env.JINA_API_KEY}` } : {}) };
   const res = await fetch(JINA_BASE + BARBY_URL, { headers });
   if (res.status === 429 && attempt < 3) {
     const retryAfter = Number(res.headers.get('retry-after')) || (5 + attempt * 5);
     await new Promise((r) => setTimeout(r, retryAfter * 1000));
-    return fetchBarbyMarkdown(env, attempt + 1);
+    return fetchBarbyMarkdown(env, extraHeaders, attempt + 1);
   }
   if (!res.ok) throw new Error('barby (jina) HTTP ' + res.status);
   return res.text();
 }
 
+/* A plain cached request from Jina occasionally comes back with zero shows parsed - verified
+   live (repeatedly) that this isn't a parser/site-format problem: Jina had cached a snapshot
+   taken before Barby's client-side SPA finished rendering its show list (a genuine React SPA,
+   ~snapshot-before-hydration race on Jina's end), and since Jina then *keeps serving that same
+   bad cached snapshot* for a while, a bare retry without forcing a fresh render would just get
+   the identical empty result again - not actually a second chance. Only escalate to a forced-
+   fresh, wait-for-real-content retry when the fast/cached path comes back empty, since that
+   retry is slow (~15-20s measured live, vs ~0.5s for a good cache hit) - paying that cost on
+   every single run regardless would be wasteful. `X-No-Cache`/`X-Wait-For-Selector` are
+   documented Jina Reader headers (bypass Jina's own cache; wait for a CSS selector to exist in
+   the DOM before returning) - `.card-home` is the real class Barby's React app renders each
+   show card into (verified live via a real browser, not guessed from the markdown output).
+   If this retry also comes back empty (or throws), refreshEvents' own fallback-to-previous-data
+   safety net (the fulfilled-but-empty-result handling there) takes over from here - this is an
+   additional layer to make hitting that safety net less frequent, not a replacement for it. */
 async function fetchBarby(env) {
-  return parseBarbyMarkdown(await fetchBarbyMarkdown(env));
+  const first = parseBarbyMarkdown(await fetchBarbyMarkdown(env));
+  if (first.length > 0) return first;
+  return parseBarbyMarkdown(await fetchBarbyMarkdown(env, { 'X-No-Cache': 'true', 'X-Wait-For-Selector': '.card-home' }));
 }
 
 /* Hatarbut (theatre hall, music/theatre shows) moved entirely to the sibling
