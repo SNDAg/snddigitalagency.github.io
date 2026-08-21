@@ -21,13 +21,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://snddigitalagency.com/show-must/">
 <meta property="og:title" content="SHOWMUST | Show Must Go On | מה עושים הלילה?">
-<meta property="og:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים">
+<meta property="og:description" content="תיאטרון, קולנוע והופעות בתל אביב">
 <meta property="og:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
 <meta property="og:image:width" content="1024">
 <meta property="og:image:height" content="1024">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="SHOWMUST | Show Must Go On | מה עושים הלילה?">
-<meta name="twitter:description" content="תיאטרון, קולנוע והופעות בתל אביב — נתונים חיים מהאתרים הרשמיים">
+<meta name="twitter:description" content="תיאטרון, קולנוע והופעות בתל אביב">
 <meta name="twitter:image" content="https://snddigitalagency.com/image/ShowMust.jpg">
 
 <!-- חימום חיבורים מוקדם לדומיינים חיצוניים - מקצר את זמן הטעינה הראשוני -->
@@ -94,23 +94,15 @@ header.app-header{margin:18px 0 22px}
 .whatsapp-share-cta{background:linear-gradient(135deg,#25d366,#1da851);border-color:transparent;color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:transform .2s,box-shadow .2s}
 .whatsapp-share-cta:hover{background:linear-gradient(135deg,#22c35e,#1a9648);transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,.45)}
 
-.status-bar{display:flex;margin-bottom:10px}
-.status-note{display:flex;align-items:center;gap:7px;color:var(--text-muted);font-size:.8rem}
-.status-note i{color:var(--ok)}
 /* נקודת בריאות עדינה (משימה 7) - ירוקה כשכל המקורות תקינים, כתומה כשמקור אחד או יותר
-   מציג נתוני fallback ממטמון (ר' refreshEvents ב-worker). ה"טולטיפ" הוא title מהמחלקה
-   native של הדפדפן בכוונה - מינימלי ולא דורש מנגנון UI נוסף, עקבי עם שאר כפתורי-אייקון
-   באתר שכבר משתמשים ב-title לרמזים. */
-.status-note i.degraded{color:var(--warn)}
-
-/* גרסה מצומצמת של אותה נקודת-בריאות, למובייל בלבד (ר' משימות): שם ה"נתונים בזמן אמת ·
-   עודכן HH:MM" (status-bar) מוסתר לגמרי - קצת יותר מדי טקסט טכני עבור מסך צר, תחתית
-   הדף עמוסה ממילא בפוטר המשפטי. נקודה קטנה ושקטה מתחת לפוטר ממשיכה לתת את אותו איתות
-   (ירוק=תקין/כתום=מקור בפולבאק) בלי לתפוס מקום או להסביר את עצמה. מוסתרת כברירת מחדל -
-   נחשפת רק בתוך שאילתת המדיה של המובייל למטה. */
-.footer-health-dot{display:none;justify-content:center;padding:10px 0 4px}
-.footer-health-dot span{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px rgba(34,197,94,.55)}
-.footer-health-dot span.degraded{background:var(--warn);box-shadow:0 0 6px rgba(245,158,11,.55)}
+   מציג נתוני fallback ממטמון (ר' refreshEvents ב-worker), בתוספת שעת העדכון האחרון -
+   הערת שוליים טכנית שקטה מתחת לפוטר, בכל הרזולוציות (לא עוד "נתונים בזמן אמת · עודכן
+   HH:MM" בולט למעלה - שעה קפואה שם נראתה "ישנה" גם כשהיא תקינה לגמרי; כאן, קטן ועדין
+   בתחתית ליד הדיסקליימר המשפטי, זה בסדר). ה"טולטיפ" הוא title מהמחלקה native של
+   הדפדפן בכוונה - מינימלי, עקבי עם שאר כפתורי-אייקון באתר. */
+.footer-health-dot{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 0 4px;color:var(--text-muted);font-size:.72rem}
+.footer-health-dot .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px rgba(34,197,94,.55);flex:none}
+.footer-health-dot .dot.degraded{background:var(--warn);box-shadow:0 0 6px rgba(245,158,11,.55)}
 
 /* ===================== פס בקרה דביק =====================
    מחליף את פאנל הפילטרים הענק שהיה תמיד פרוש - מסך ראשון עכשיו: חיפוש + פיל תאריך פעיל +
@@ -498,13 +490,6 @@ footer a{color:var(--accent)}
   .whatsapp-share-cta i{color:#25d366}
   .whatsapp-share-cta:hover{background:rgba(37,211,102,.14);border-color:#25d366;transform:none;box-shadow:none}
 
-  /* "נתונים בזמן אמת · עודכן HH:MM" מוסתר במובייל - טקסט טכני שלא תורם הרבה על מסך צר
-     (ר' משימות). נקודת-הבריאות עצמה (ר' .footer-health-dot למעלה) עוברת למתחת לפוטר
-     במקומה, כך שהאיתות ירוק/כתום עדיין קיים בלי לתפוס מקום למעלה. בדסקטופ הכל נשאר
-     בדיוק כמו שהיה. */
-  .status-bar{display:none}
-  .footer-health-dot{display:flex}
-
   .filter-section{margin-bottom:14px}
   .filter-section h3{font-size:.87rem;margin-bottom:10px}
   .section-icon{width:23px;height:23px;font-size:.68rem}
@@ -627,14 +612,6 @@ footer a{color:var(--accent)}
     </button>
   </div>
 
-  <!-- הועבר לכאן ממש מעל תוצאות הרשימה (משימה 4) - במקום לצוץ בין המיתוג לפס החיפוש
-       (איפה שלא היה ברור מה הקשר שלו לשום דבר סביבו), עכשיו הוא נקרא כהערת-שוליים על
-       הנתונים שבאמת נמצאים ממש מתחתיו. אותו מיקום גם בווב וגם במובייל - אין סיבה טובה
-       שהם יתנהגו אחרת. -->
-  <div class="status-bar">
-    <div class="status-note"><i class="fa-solid fa-circle-check"></i> <span id="statusNoteText">נתונים חיים מהאתרים הרשמיים</span></div>
-  </div>
-
   <div class="results-toolbar" id="resultsToolbar">
     <div class="results-count" id="resultsCount">טוען אירועים...</div>
     <div class="results-toolbar-actions">
@@ -694,13 +671,16 @@ footer a{color:var(--accent)}
   </main>
 
   <footer>
-    הנתונים נשאבים בזמן אמת מהאתרים הרשמיים. מומלץ לוודא מחירים וזמינות באתר הרשמי לפני הרכישה.
+    הנתונים נשאבים מהאתרים הרשמיים. מומלץ לוודא מחירים וזמינות באתר הרשמי לפני הרכישה.
   </footer>
 
-  <!-- גרסת-מובייל של נקודת בריאות הנתונים (ר' updateSourceHealthIndicator) - מוסתרת
-       כברירת מחדל, נחשפת רק במובייל (ר' .footer-health-dot). בדסקטופ האיתות הזה כבר
-       קיים למעלה בתוך status-bar, אין צורך לכפול אותו כאן. -->
-  <div class="footer-health-dot" title="סטטוס נתונים"><span id="footerHealthDot"></span></div>
+  <!-- נקודת בריאות הנתונים (ר' updateSourceHealthIndicator) + שעת העדכון האחרון - הערת
+       שוליים טכנית שקטה, לא מסר שיווקי (הוסר ה"נתונים בזמן אמת" הבולט למעלה כי שעה
+       קפואה נראית "ישנה" גם כשהיא תקינה לגמרי - כאן, קטן ועדין בתחתית, זה בסדר). -->
+  <div class="footer-health-dot" title="סטטוס נתונים">
+    <span class="dot" id="footerHealthDot"></span>
+    <span id="footerUpdatedAt"></span>
+  </div>
 
 </div>
 
@@ -710,7 +690,7 @@ footer a{color:var(--accent)}
     <span class="selection-count" id="selectionCountText">0 נבחרו</span>
     <div class="selection-actions">
       <button type="button" class="selection-action-btn" id="downloadSelectedBtn" onclick="downloadSelected()" disabled title="הורדה ליומן" aria-label="הורדה ליומן"><i class="fa-solid fa-download"></i></button>
-      <button type="button" class="selection-action-btn" id="whatsappSelectedBtn" onclick="shareSelectedToWhatsapp()" title="שתף לחבר" aria-label="שתף לחבר"><i class="fa-solid fa-share-nodes"></i><span class="action-label">שתף לחבר</span></button>
+      <button type="button" class="selection-action-btn" id="whatsappSelectedBtn" onclick="shareSelectedToWhatsapp()" title="שתפו לחברים" aria-label="שתפו לחברים"><i class="fa-solid fa-share-nodes"></i><span class="action-label">שתפו לחברים</span></button>
       <button type="button" class="selection-action-btn" id="copyLinkSelectedBtn" onclick="copySelectedShareLink(this)" title="העתיקו קישור לליינאפ" aria-label="העתיקו קישור לליינאפ"><i class="fa-solid fa-link"></i><span class="action-label">העתיקו קישור</span></button>
       <button type="button" class="selection-action-btn" id="compareSelectedBtn" onclick="toggleSelectedOnlyFilter(this)" title="השוו בין הנבחרים" aria-label="השוו בין הנבחרים" style="display:none"><i class="fa-solid fa-scale-balanced"></i><span class="action-label" id="compareBtnLabel">השוו</span></button>
       <button type="button" class="selection-action-btn reco" id="recoBtn" onclick="openRecoModal()" title="רוצים לשמוע מה דעתי?" aria-label="רוצים לשמוע מה דעתי?" style="display:none"><i class="fa-solid fa-robot"></i><span class="action-label">רוצים לשמוע מה דעתי?</span></button>
@@ -876,6 +856,9 @@ let cinemaDaySortMode = 'time';
 let selectedShowtimeOverride = {}; // venue||title -> id של הקרנה שנבחרה ידנית דרך "שעות נוספות"
 let showOnlyFavs = false;
 let showOnlySelected = false;
+// true כשההיבחרה הנוכחית הגיעה מקישור "לינאפ משותף" (ר' initShareFromUrl) - קובע את
+// הניסוח בסרגל הבחירה הצף (ר' updateSelectionUI). מתאפס ב-clearSelection.
+let sharedLineupActive = false;
 
 /* ריבוי-בחירה של ז'אנרים (משימה 1). selectedTypes הוא ה-state ה"חי" שמניע בפועל את
    הסינון ואת פס הצ'יפים המהיר במסך הראשי - שינוי בו קורה מיידית. modalDraftTypes קיים
@@ -1046,9 +1029,12 @@ async function loadAllEvents(){
     const data = await res.json();
     allEvents = (data.events || []).map(e => ({ ...e, date: new Date(e.date) }));
     lastLoadFailed = false;
-    const statusNote = document.getElementById('statusNoteText');
-    if (statusNote) statusNote.innerText = `נתונים בזמן אמת · עודכן ${new Date(data.meta && data.meta.generatedAt || Date.now()).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' })}`;
     updateSourceHealthIndicator(data.meta);
+    const updatedAt = document.getElementById('footerUpdatedAt');
+    if (updatedAt){
+      const t = new Date((data.meta && data.meta.generatedAt) || Date.now()).toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+      updatedAt.textContent = `עודכן לאחרונה ${t}`;
+    }
   }catch(e){
     console.error('load failed:', e);
     allEvents = [];
@@ -1068,8 +1054,6 @@ async function loadAllEvents(){
 function updateSourceHealthIndicator(meta){
   if (!meta || !meta.sourceStatus) return;
   const isDegraded = Object.values(meta.sourceStatus).some(s => !s.ok);
-  const icon = document.querySelector('.status-note i');
-  if (icon) icon.classList.toggle('degraded', isDegraded);
   const dot = document.getElementById('footerHealthDot');
   if (dot) dot.classList.toggle('degraded', isDegraded);
 }
@@ -1556,6 +1540,7 @@ function toggleSelectAllFiltered(){
    ריקה לגמרי, בלי הסבר למה הרשימה נעלמה. */
 function clearSelection(){
   selectedIds.clear();
+  sharedLineupActive = false;
   if (showOnlySelected){ showOnlySelected = false; filterEvents(); }
   else { updateSelectionUI(); renderEvents(currentFiltered); }
 }
@@ -1569,7 +1554,11 @@ function updateSelectionUI(){
   if (bar) bar.style.display = count > 0 ? 'flex' : 'none';
 
   const countText = document.getElementById('selectionCountText');
-  if (countText) countText.textContent = count === 1 ? 'אירוע אחד נבחר' : `${count} נבחרו`;
+  if (countText){
+    countText.textContent = sharedLineupActive
+      ? `🔗 לינאפ משותף - ${count} נבחרו עבורכם`
+      : (count === 1 ? 'אירוע אחד נבחר' : `${count} נבחרו`);
+  }
 
   const dlBtn = document.getElementById('downloadSelectedBtn');
   if (dlBtn) dlBtn.disabled = count === 0;
@@ -1662,7 +1651,11 @@ function buildWhatsappBlockForEvent(ev, index){
   const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
   const imdbLine = ev.type === 'cinema' && ev.imdbRating ? `\n⭐ IMDb: ${ev.imdbRating}` : '';
   const locationLine = `${ev.venue}${ev.extra ? ' - ' + ev.extra : ''}`;
-  return `${index}. *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 יום ${dayName}, ${dateStr} בשעה ${timeStr}\n🎟️ כרטיסים: ${ev.link}`;
+  // 🎫 בכוונה, לא 🎟️ - ל-U+1F39F (🎟) יש ברירת-מחדל טקסטואלית לא-אמוג'י ב-Unicode, ורק
+  // תוסף ה-variation-selector (️) הופך אותו לאמוג'י צבעוני - הרבה גופנים/גרסאות וואטסאפ
+  // לא תומכות בזה כמו שצריך ומציגות מעוין ריק במקום (ר' משימה). 🎫 (U+1F3AB) הוא אמוג'י
+  // "מלא" כברירת מחדל, בלי תלות ב-variation selector - נתמך בכל מקום.
+  return `${index}. *${ev.title}*${imdbLine}\n📍 ${locationLine}\n📅 יום ${dayName}, ${dateStr} בשעה ${timeStr}\n🎫 כרטיסים: ${ev.link}`;
 }
 
 function buildWhatsappMessageForEvents(events){
@@ -1721,9 +1714,9 @@ function initShareFromUrl(){
 
   matched.forEach(ev => selectedIds.add(ev.id));
   showOnlySelected = true;
-
-  const statusNote = document.getElementById('statusNoteText');
-  if (statusNote) statusNote.innerText = `🔗 לינאפ משותף - ${matched.length} אירועים נבחרו עבורכם`;
+  // מוצג בסרגל הבחירה הצף עצמו (ר' updateSelectionUI) במקום בשורת status-bar שהוסרה -
+  // נשאר עד שהמשתמש מנקה בחירה בעצמו (clearSelection), לא רק עד הרינדור הבא.
+  sharedLineupActive = true;
 
   updateSelectionUI();
   updateFilterBadge();
@@ -1736,7 +1729,7 @@ function initShareFromUrl(){
 
 
 function shareAppToWhatsapp(){
-  const message = `🎭 *SHOWMUST* - Show Must Go On!\nתיאטרון, קולנוע והופעות בתל אביב - נתונים חיים מהאתרים הרשמיים.\n\nמה עושים הלילה? תגלו כאן 👇\n${SHOWMUST_URL}`;
+  const message = `🎭 *SHOWMUST* - Show Must Go On!\nתיאטרון, קולנוע והופעות בתל אביב .\n\nמה עושים הלילה? תגלו כאן 👇\n${SHOWMUST_URL}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
 }
 

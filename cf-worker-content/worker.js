@@ -127,7 +127,14 @@ async function fetchLessinTitleHrefs() {
    different current shows. extractYoutubeId on the client (index.html) already parses
    youtube.com/embed, youtube.com/watch and youtu.be forms alike, so the raw href is passed
    through as-is with no reformatting needed. Some shows (workshop/fringe nights) plausibly
-   have no trailer at all - the selector then simply never fires and trailerUrl stays null. */
+   have no trailer at all - the selector then simply never fires and trailerUrl stays null.
+
+   Image is NOT taken from og:image - verified live that it's just the site's generic
+   homepage banner, identical across every show's page, not a per-show poster. The real
+   per-show photo lives in a Swiper image carousel (`.show_slider .swiper-slide img`) further
+   down the page - first slide is always the show's own hero photo (verified across multiple
+   shows), so only the first match is kept (`current.image` guard, same pattern as other
+   scrapers in this codebase). */
 async function fetchLessinShowDetail(href) {
   const res = await fetch(href, { headers: BROWSER_HEADERS_HTML });
   if (!res.ok) throw new Error('lessin detail HTTP ' + res.status);
@@ -135,6 +142,7 @@ async function fetchLessinShowDetail(href) {
 
   let synopsis = null;
   let trailerUrl = null;
+  const current = { image: null };
 
   await runRewriter(html, (rewriter) => {
     rewriter
@@ -149,11 +157,18 @@ async function fetchLessinShowDetail(href) {
           const href2 = el.getAttribute('href') || '';
           if (/youtu\.?be/.test(href2)) trailerUrl = href2;
         },
+      })
+      .on('.show_slider .swiper-slide img', {
+        element(el) {
+          if (current.image) return;
+          const src = el.getAttribute('src');
+          if (src && !src.startsWith('data:')) current.image = src;
+        },
       });
   });
 
-  if (!synopsis && !trailerUrl) return null;
-  return { synopsis, trailerUrl };
+  if (!synopsis && !trailerUrl && !current.image) return null;
+  return { synopsis, trailerUrl, image: current.image };
 }
 
 // ============================================================================

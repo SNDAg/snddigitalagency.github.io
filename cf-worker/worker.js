@@ -1117,7 +1117,7 @@ async function buildClientPayload(env, coreJson) {
   const events = core.events.map((e) => {
     let out = e;
     const extra = enrichmentBySource[e.source] && enrichmentBySource[e.source][e.title];
-    if (extra) out = { ...out, synopsis: out.synopsis || extra.synopsis || null, trailerUrl: out.trailerUrl || extra.trailerUrl || null };
+    if (extra) out = { ...out, synopsis: out.synopsis || extra.synopsis || null, trailerUrl: out.trailerUrl || extra.trailerUrl || null, image: out.image || extra.image || null };
     // Server-side shared IMDb rating (see refreshImdbRatings) - replaces the old per-user
     // client-side OMDb flow entirely. Only cinema carries a rating; imdbId is still attached
     // even when rating is null (film matched on OMDb but has no numeric rating yet, e.g. too
