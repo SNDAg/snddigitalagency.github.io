@@ -123,25 +123,26 @@ header.app-header{margin:18px 0 22px}
    הפסים גוללים אופקית עם scroll-snap (מרגיש כמו אפליקציה, לא כמו רשימה שנעטפת ומקפיצה
    גובה); בדסקטופ (ר' מדיה-קוורי בהמשך) הם עוברים ל-wrap טבעי - יש מספיק רוחב, אין צורך
    בגלילה, ועטיפה לשורה שנייה שם היא נקייה ולא "מקפצת" פריסה. */
-.quick-genre-bar,.quick-venue-bar,.quick-imdb-bar{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin-bottom:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:2px}
-.quick-genre-bar::-webkit-scrollbar,.quick-venue-bar::-webkit-scrollbar,.quick-imdb-bar::-webkit-scrollbar{display:none}
-.quick-genre-bar .chip,.quick-venue-bar .chip,.quick-imdb-bar .chip{flex:none;scroll-snap-align:start}
+.quick-genre-bar,.quick-venue-bar,.quick-imdb-bar,.quick-time-bar{display:flex;gap:8px;overflow-x:auto;flex-wrap:nowrap;margin-bottom:16px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;padding-bottom:2px}
+.quick-genre-bar::-webkit-scrollbar,.quick-venue-bar::-webkit-scrollbar,.quick-imdb-bar::-webkit-scrollbar,.quick-time-bar::-webkit-scrollbar{display:none}
+.quick-genre-bar .chip,.quick-venue-bar .chip,.quick-imdb-bar .chip,.quick-time-bar .chip{flex:none;scroll-snap-align:start}
 
-/* צ'יפי המקום/דירוג ה-IMDb מוצגים כקבוצה משנית, חזותית "תלויה" בפס הז'אנרים שמעליה -
-   קצת יותר קטנים/עדינים כדי שהיררכיית הסינון (ז'אנר ראשי, מקום/דירוג משניים בתוכו) תהיה
-   ברורה במבט. */
-.quick-venue-bar,.quick-imdb-bar{margin-top:-8px}
+/* צ'יפי המקום/דירוג ה-IMDb/שעת היום מוצגים כקבוצה משנית, חזותית "תלויה" בפס הז'אנרים
+   שמעליה - קצת יותר קטנים/עדינים כדי שהיררכיית הסינון (ז'אנר ראשי, מקום/דירוג/שעה משניים
+   בתוכו) תהיה ברורה במבט. */
+.quick-venue-bar,.quick-imdb-bar,.quick-time-bar{margin-top:-8px}
 /* min-height מוגדר כאן במפורש (לא מסתמך על הכלל הכללי .chip{min-height:44px} שבתוך
    מדיה-קוורי המובייל) - הסלקטור הספציפי יותר .quick-venue-bar .chip היה עוקף אותו
    ומאפס בשקט את יעד המגע ל-44px גם במובייל, בניגוד לדרישת הנגישות המפורשת. */
-.quick-venue-bar .chip,.quick-imdb-bar .chip{padding:6px 14px;font-size:.8rem;min-height:44px;background:rgba(255,255,255,.03)}
+.quick-venue-bar .chip,.quick-imdb-bar .chip,.quick-time-bar .chip{padding:6px 14px;font-size:.8rem;min-height:44px;background:rgba(255,255,255,.03)}
 .quick-venue-bar .chip.active{background:var(--accent);border-color:var(--accent)}
 .quick-imdb-bar .chip.active{background:var(--imdb);border-color:var(--imdb);color:#111;font-weight:700}
+.quick-time-bar .chip.active{background:var(--accent);border-color:var(--accent)}
 
 @media (min-width:641px){
   /* בדסקטופ יש מספיק רוחב לרוב המקרים - עטיפה טבעית במקום גלילה מרגישה נכון יותר
      ("utilizing space efficiently without awkward wrapping"), ו-scroll-snap לא נחוץ. */
-  .quick-genre-bar,.quick-venue-bar,.quick-imdb-bar{flex-wrap:wrap;overflow-x:visible;scroll-snap-type:none}
+  .quick-genre-bar,.quick-venue-bar,.quick-imdb-bar,.quick-time-bar{flex-wrap:wrap;overflow-x:visible;scroll-snap-type:none}
 }
 
 /* ===================== גיליון סינון (Bottom Sheet) =====================
@@ -232,6 +233,11 @@ body.has-selection-bar .imdb-rankings-panel{display:none !important}
   .imdb-rankings-header{padding:10px 14px}
   .imdb-ranking-row{min-height:44px}
   .imdb-rankings-close{width:44px;height:44px}
+  /* רק כאן, במובייל, הפאנל צף על כל רוחב המסך למטה ומכסה לגמרי את רמז הגלילה (אותו עוגן
+     תחתון, z-index גבוה יותר) - נראה כאילו הרמז "נעלם" למרות שהוא טכנית לא מוסתר, פשוט
+     קבור מתחתיו. בדסקטופ הפאנל הוא כרטיס פינתי צר (290px) שלא מתנגש עם הגלולה הממורכזת
+     של רמז הגלילה, אז שם משאירים את הרמז לגמרי ללא שינוי - זו בדיוק ההתנהגות שהתבקשה חזרה. */
+  body.has-imdb-panel .scroll-cue{opacity:0;pointer-events:none}
 }
 
 .select-all-link{background:none;border:none;color:var(--accent);font-size:.85rem;font-weight:600;cursor:pointer;padding:4px}
@@ -590,10 +596,10 @@ footer a{color:var(--accent)}
       <i class="fa-solid fa-magnifying-glass"></i>
       <input type="text" id="searchInput" class="search-input" placeholder="חפשו לפי שם הצגה, סרט, אמן..." oninput="filterEvents()" aria-label="חיפוש">
     </div>
-    <button class="pill-btn" id="datePillBtn" onclick="openFilterSheet()" aria-label="פתיחת סינון תאריך">
+    <button class="pill-btn" id="datePillBtn" onclick="openFilterSheet('date')" aria-label="פתיחת סינון תאריך ושעה">
       <i class="fa-solid fa-calendar-days"></i> <span id="datePillLabel">היום</span>
     </button>
-    <button class="pill-btn" id="filterOpenBtn" onclick="openFilterSheet()" aria-label="פתיחת סינון">
+    <button class="pill-btn" id="filterOpenBtn" onclick="openFilterSheet('filters')" aria-label="פתיחת סינון">
       <i class="fa-solid fa-sliders"></i> סינון <span class="filter-badge" id="filterBadge" style="display:none">0</span>
     </button>
     <button class="pill-btn fav-pill" id="favFilterBtn" onclick="toggleFavFilter(this)" aria-label="הציגו רק מועדפים" title="הציגו רק מועדפים">
@@ -617,6 +623,18 @@ footer a{color:var(--accent)}
       <button type="button" class="cinema-day-sort-btn" id="cinemaDaySortBtn" onclick="toggleCinemaDaySort()" style="display:none"><i class="fa-solid fa-arrow-down-wide-short"></i> <span id="cinemaDaySortLabel">מיון: שעת הקרנה</span></button>
       <button type="button" class="select-all-link" id="selectAllLink" onclick="toggleSelectAllFiltered()" style="display:none">בחרו הכל</button>
     </div>
+  </div>
+
+  <!-- סינון מהיר לפי שעת היום, ברמת התוצאות (לא בגיליון) - קרוב יותר למשתמש מהתפריט
+       "שעות" שקבור בתוך גיליון הסינון. הטווחים חופפים במכוון (ר' TIME_OF_DAY_RANGES) -
+       כל אחד מגדיר "בוקר/אחה"צ/ערב" קצת אחרת, אז עדיף גבולות רכים על פני חלוקה נוקשה.
+       "ערב" עוטף חצות (17:00 עד 04:00 למחרת, ר' matchesTime ב-computeFilteredEvents) כדי
+       שהקרנת/הופעת לילה מאוחרת עדיין תיחשב "ערב" - "בוקר" בכוונה מתחיל רק ב-4, לא
+       מ-00:00, כדי שלא תתנגש עם זה. זמין בכל סוג אירוע, לא רק קולנוע. -->
+  <div class="quick-time-bar" id="quickTimeBar" role="group" aria-label="סינון מהיר לפי שעת היום">
+    <button type="button" class="chip" data-time="morning" onclick="setQuickTimeOfDay('morning')"><i class="fa-solid fa-mug-hot"></i> בוקר</button>
+    <button type="button" class="chip" data-time="afternoon" onclick="setQuickTimeOfDay('afternoon')"><i class="fa-solid fa-cloud-sun"></i> אחה"צ</button>
+    <button type="button" class="chip" data-time="evening" onclick="setQuickTimeOfDay('evening')"><i class="fa-solid fa-cloud-moon"></i> ערב</button>
   </div>
 
   <!-- פס ז'אנרים מהיר - ריבוי-בחירה ישיר מהמסך הראשי, ללא צורך באישור (ר' משימה 1) -->
@@ -690,12 +708,15 @@ footer a{color:var(--accent)}
   <div class="sheet" id="filterSheet">
     <div class="sheet-handle"></div>
     <div class="sheet-header">
-      <h3><i class="fa-solid fa-sliders"></i> סינון</h3>
+      <h3 id="filterSheetTitle"><i class="fa-solid fa-sliders"></i> סינון</h3>
       <button type="button" class="wizard-close-x" onclick="closeFilterSheet()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="sheet-body">
 
-      <div class="filter-section">
+      <!-- "מתי יוצאים" מוצג רק כשהגיליון נפתח מפיל "היום" (openFilterSheet('date')) - שאר
+           הסעיפים מוצגים רק כשנפתח מכפתור "סינון" (openFilterSheet('filters')). ר'
+           applyFilterSheetScope. -->
+      <div class="filter-section" id="dateFilterSection">
         <h3><span class="section-icon date-icon"><i class="fa-solid fa-calendar-days"></i></span> מתי יוצאים</h3>
         <div class="chips-row" id="dateChips">
           <button class="chip active" data-range="today" onclick="setQuickDate('today',this)"><i class="fa-solid fa-star"></i> היום <span id="todayDateSuffix" class="chip-date-suffix"></span></button>
@@ -723,7 +744,7 @@ footer a{color:var(--accent)}
         </div>
       </div>
 
-      <div class="filter-section">
+      <div class="filter-section filter-section-general">
         <h3><span class="section-icon type-icon"><i class="fa-solid fa-masks-theater"></i></span> סוג</h3>
         <div class="chips-row" id="typeChips">
           <button type="button" class="chip active" data-type="all" onclick="toggleModalGenre('all')">כללי</button>
@@ -746,7 +767,7 @@ footer a{color:var(--accent)}
         </div>
       </div>
 
-      <div class="filter-section">
+      <div class="filter-section filter-section-general">
         <h3><span class="section-icon location-icon"><i class="fa-solid fa-location-dot"></i></span> איפה</h3>
         <div class="chips-row">
           <label class="custom-check"><input type="checkbox" class="venue-filter" value="בית ליסין" checked onchange="onVenueCheckboxChange(this)"><span class="check-box"><i class="fa-solid fa-check"></i></span> בית ליסין</label>
@@ -838,6 +859,10 @@ let showOnlySelected = false;
    על "אישור" (applyFilterSheet) - בעוד פס הצ'יפים המהיר ממשיך לפעול בלי אישור בכלל. */
 let selectedTypes = new Set(['all']);
 let modalDraftTypes = null;
+/* "היום" ו"סינון" פותחים את אותו גיליון פיזי, כל אחד עם תחום משלו - ר' openFilterSheet/
+   applyFilterSheetScope. 'filters' כברירת מחדל (לא משנה בפועל - כל פתיחה אמיתית מגדירה
+   את זה מחדש). */
+let filterSheetScope = 'filters';
 
 const today = new Date();
 document.getElementById('startDate').value = localDateStr(today);
@@ -846,6 +871,20 @@ let appliedStartTime = '00:00';
 let appliedEndTime = '23:59';
 const MAX_CUSTOM_RANGE_DAYS = 14;
 let currentQuickRange = 'today'; // עוקב אחרי טווח התאריכים המהיר הפעיל, לצורך "ברירת מחדל" בפופאובר השעות
+
+/* סינון מהיר לפי שעת היום ברמת התוצאות (ר' quickTimeBar ב-HTML) - טווחים חופפים במכוון
+   (כל אחד מגדיר "בוקר/אחה"צ/ערב" קצת אחרת). "ערב" עוטף חצות (17:00 עד 04:00 למחרת) כדי
+   שהקרנה/הופעה מאוחרת אחרי חצות עדיין תיחשב חלק מ"ערב", לא "בוקר" - matchesTime
+   ב-computeFilteredEvents יודעת לטפל בטווח "עוטף" כזה (start > end). "בוקר" בכוונה מתחיל
+   רק ב-4, לא מ-00:00, כדי שלא יתנגש עם קצה ה"ערב" העוטף. activeQuickTimeOfDay עוקב איזה
+   צ'יפ פעיל כרגע (לתצוגה בלבד - appliedStartTime/appliedEndTime הם תיבת-האמת שבפועל
+   מסננת, אותה תשתית בדיוק כמו טווח השעות הידני בגיליון). */
+const TIME_OF_DAY_RANGES = {
+  morning: { start: '04:00', end: '15:00' },
+  afternoon: { start: '14:00', end: '18:00' },
+  evening: { start: '17:00', end: '04:00' },
+};
+let activeQuickTimeOfDay = null;
 
 /* מיישר את מצב השעות ההתחלתי עם מה שלחיצה מפורשת על צ'יפ "היום" הייתה מייצרת (ר' משימה 3)
    - בלי זה, טעינה ראשונה של הדף הציגה את כל אירועי היום כולל כאלה שכבר הסתיימו (00:00-23:59
@@ -999,8 +1038,9 @@ function updateSourceHealthIndicator(meta){
 /* ===================== סינון + סוג/מקום ===================== */
 
 /* ===================== פס בקרה + גיליון סינון =====================
-   badge המספר על כפתור "סינון" סופר רק פילטרים ש"מוסתרים" כרגע בגיליון (לא כולל חיפוש,
-   שכבר גלוי תמיד בפס הבקרה עצמו). פיל התאריך משקף תמיד את הטווח המהיר הפעיל. */
+   "היום" בכוונה בלי badge מספרי משלו - הצ'יפ הפעיל בפס "בוקר/אחה"צ/ערב" (quickTimeBar)
+   וטקסט הפיל עצמו ("היום"/"מחר"/"3 ימים" וכו') כבר מספרים את כל הסיפור בלי מספר נוסף.
+   badge המספר נשאר רק על "סינון" - סוג/דירוג/מקום, ר' countActiveGeneralFilters. */
 function updateDatePillLabel(){
   const label = document.getElementById('datePillLabel');
   if (!label) return;
@@ -1015,12 +1055,9 @@ function updateDatePillLabel(){
    לזמן שבו סימון המקומות בטעינה ראשונית היה שגוי (משימה 6, באג syncVenuesToTypes) -
    אחרי שהוא תוקן ו"הכל" מסמן את כל 8 המקומות כברירת מחדל, ההשוואה מול 3 בלבד גרמה
    ל-badge להראות "1" תמיד מיד בטעינה, בלי שהמשתמש שינה בפועל שום דבר. */
-function countActiveFilters(){
+function countActiveGeneralFilters(){
   let n = 0;
-  if (currentQuickRange !== 'today') n++;
   if (!selectedTypes.has('all')) n++;
-  // הצרה האוטומטית של "היום" לשעה הנוכחית היא ברירת מחדל חכמה, לא בחירה ידנית - לא נספרת
-  if (currentQuickRange !== 'today' && (appliedStartTime !== '00:00' || appliedEndTime !== '23:59')) n++;
   if (minImdbRating > 0) n++;
   const checkedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
   const relevant = relevantVenuesForTypes(selectedTypes);
@@ -1032,7 +1069,7 @@ function countActiveFilters(){
 
 function updateFilterBadge(){
   const badge = document.getElementById('filterBadge');
-  const n = countActiveFilters();
+  const n = countActiveGeneralFilters();
   if (badge){
     badge.style.display = n > 0 ? 'inline-flex' : 'none';
     badge.textContent = n;
@@ -1040,13 +1077,35 @@ function updateFilterBadge(){
   updateDatePillLabel();
 }
 
-function openFilterSheet(){
+/* שני כפתורים נפרדים בפס הבקרה פותחים את אותו גיליון פיזי, אבל לכל אחד "תחום" משלו -
+   "היום" (scope='date') מציג רק את סעיף התאריך/שעות; "סינון" (scope='filters') מציג את
+   השאר (סוג/דירוג IMDb/מקום). ר' applyFilterSheetScope. */
+function openFilterSheet(scope){
+  filterSheetScope = scope === 'date' ? 'date' : 'filters';
   modalDraftTypes = new Set(selectedTypes);
   renderGenreChipsState(document.getElementById('typeChips'), modalDraftTypes);
   refreshVenueVisibility(modalDraftTypes);
+  applyFilterSheetScope();
   refreshImdbRatingFilterSection();
   document.getElementById('filterSheetOverlay').style.display = 'flex';
   updateSheetResultsPreview();
+}
+
+/* מציג/מסתיר את סעיף התאריך מול שאר הסעיפים לפי filterSheetScope. לא נוגעת ב-
+   imdbRatingFilterSection - הסעיף הזה כבר מנוהל לגמרי ע"י refreshCinemaSheetSections
+   (ר' שם), שבודקת גם scope וגם מיקוד-קולנוע יחד - לגעת בו גם כאן היה יוצר מרוץ בין שתי
+   פונקציות שמחליטות על אותו אלמנט. */
+function applyFilterSheetScope(){
+  const isDateScope = filterSheetScope === 'date';
+  const dateSection = document.getElementById('dateFilterSection');
+  if (dateSection) dateSection.style.display = isDateScope ? 'block' : 'none';
+  document.querySelectorAll('.filter-section-general').forEach(s => {
+    s.style.display = isDateScope ? 'none' : 'block';
+  });
+  const titleEl = document.getElementById('filterSheetTitle');
+  if (titleEl) titleEl.innerHTML = isDateScope
+    ? '<i class="fa-solid fa-calendar-days"></i> תאריך ושעה'
+    : '<i class="fa-solid fa-sliders"></i> סינון';
 }
 
 /* סגירה בלי החלה (X / קליק על הרקע) - מבטלת את הטיוטה ומחזירה את נראות תגיות המקום
@@ -1097,6 +1156,10 @@ function applyDefaultTimeForRange(range){
     appliedStartTime = '00:00';
     appliedEndTime = '23:59';
   }
+  // שינוי טווח תאריך תמיד מאפס גם בחירת בוקר/אחה"צ/ערב מהירה - היא הייתה שייכת לטווח
+  // הקודם, לא בטוח שעוד רלוונטית לחדש.
+  activeQuickTimeOfDay = null;
+  renderQuickTimeBarState();
   const startInput = document.getElementById('startTimeInput');
   const endInput = document.getElementById('endTimeInput');
   if (startInput) startInput.value = appliedStartTime;
@@ -1197,6 +1260,10 @@ function updateTimeChipLabel(){
 function applyTimeRangeFromSheet(){
   appliedStartTime = document.getElementById('startTimeInput').value || '00:00';
   appliedEndTime = document.getElementById('endTimeInput').value || '23:59';
+  // עריכה ידנית בגיליון לא בהכרח תואמת עוד לצ'יפ בוקר/אחה"צ/ערב שהיה פעיל (אם היה) - מבטלים
+  // את הסימון שלו כדי לא להטעות שהוא עדיין "פעיל" בזמן שהערכים בפועל כבר שונים.
+  activeQuickTimeOfDay = null;
+  renderQuickTimeBarState();
   updateTimeChipLabel();
   updateFilterBadge();
   filterEvents();
@@ -1205,8 +1272,38 @@ function applyTimeRangeFromSheet(){
 function resetTimeRange(){
   appliedStartTime = '00:00';
   appliedEndTime = '23:59';
+  activeQuickTimeOfDay = null;
+  renderQuickTimeBarState();
   document.getElementById('startTimeInput').value = '00:00';
   document.getElementById('endTimeInput').value = '23:59';
+  updateTimeChipLabel();
+  updateFilterBadge();
+  filterEvents();
+}
+
+function renderQuickTimeBarState(){
+  document.querySelectorAll('#quickTimeBar .chip[data-time]').forEach(b => b.classList.toggle('active', b.dataset.time === activeQuickTimeOfDay));
+}
+
+/* לחיצה חוזרת על אותו צ'יפ מבטלת אותו (טוגל, לא רק בחירה חד-כיוונית) - חוזרת ליום מלא,
+   בדיוק כמו "איפוס שעות" בגיליון. משתמש באותה תיבת-אמת (appliedStartTime/appliedEndTime)
+   כמו טווח השעות הידני - זו רק דרך מהירה נוספת להגדיר אותה, לא מנגנון סינון נפרד. */
+function setQuickTimeOfDay(period){
+  if (activeQuickTimeOfDay === period){
+    activeQuickTimeOfDay = null;
+    appliedStartTime = '00:00';
+    appliedEndTime = '23:59';
+  } else {
+    activeQuickTimeOfDay = period;
+    const range = TIME_OF_DAY_RANGES[period];
+    appliedStartTime = range.start;
+    appliedEndTime = range.end;
+  }
+  const startInput = document.getElementById('startTimeInput');
+  const endInput = document.getElementById('endTimeInput');
+  if (startInput) startInput.value = appliedStartTime;
+  if (endInput) endInput.value = appliedEndTime;
+  renderQuickTimeBarState();
   updateTimeChipLabel();
   updateFilterBadge();
   filterEvents();
@@ -1840,10 +1937,11 @@ function refreshImdbRatingFilterSection(){
 /* בניגוד לזוג שמעל (שתמיד משקפים את selectedTypes המוחל בפועל) - הסעיף המקביל *בתוך*
    הגיליון עצמו חייב לשקף את הטיוטה (modalDraftTypes) כשהגיליון פתוח, אחרת הוא נשאר
    גלוי/מוסתר על בסיס המצב הישן עד ללחיצה על "אישור". ר' isCinemaFocusedForSheetDraft
-   לפירוט המלא של הדימוי. */
+   לפירוט המלא של הדימוי. filterSheetScope !== 'date' - כשהגיליון פתוח בתחום "תאריך"
+   (openFilterSheet('date')) הסעיף הזה לא שייך לשם בכלל, בלי קשר למיקוד-קולנוע. */
 function refreshCinemaSheetSections(){
   const section = document.getElementById('imdbRatingFilterSection');
-  const show = isCinemaFocusedForSheetDraft();
+  const show = filterSheetScope !== 'date' && isCinemaFocusedForSheetDraft();
   if (section) section.style.display = show ? 'block' : 'none';
 }
 
@@ -1912,6 +2010,7 @@ function renderImdbRankingsPanel(){
   const panel = document.getElementById('imdbRankingsPanel');
   const list = document.getElementById('imdbRankingsList');
   if (!panel || !list) return;
+  document.body.classList.toggle('has-imdb-panel', imdbRankingsPanelOpen);
   if (!imdbRankingsPanelOpen){
     panel.style.display = 'none';
     return;
@@ -2093,7 +2192,12 @@ function computeFilteredEvents(types){
     const hh = String(ev.date.getHours()).padStart(2,'0');
     const mm = String(ev.date.getMinutes()).padStart(2,'0');
     const timeStr = `${hh}:${mm}`;
-    const matchesTime = timeStr >= appliedStartTime && timeStr <= appliedEndTime;
+    // טווח "רגיל" (start<=end): AND כרגיל. טווח "עוטף חצות" (start>end, כמו "ערב" הקבוע-מראש
+    // 17:00-04:00 - ר' TIME_OF_DAY_RANGES) - OR: השעה צריכה להיות אחרי ההתחלה *או* לפני הסיום,
+    // לא בין שניהם (אין "בין 17:00 ל-04:00" רציף על ציר יחיד בלי לעטוף).
+    const matchesTime = appliedStartTime <= appliedEndTime
+      ? (timeStr >= appliedStartTime && timeStr <= appliedEndTime)
+      : (timeStr >= appliedStartTime || timeStr <= appliedEndTime);
     const matchesFav = !showOnlyFavs || favorites.includes(ev.id);
     const matchesSelected = !showOnlySelected || selectedIds.has(ev.id);
     const matchesImdbRating = minImdbRating <= 0 || ev.type !== 'cinema' || imdbRatingPasses(ev);
@@ -2252,6 +2356,25 @@ function renderEvents(events){
     });
   }
 
+  // אם ליום הראשון בטווח יש תוצאה בודדת, כותרת מלאה-רוחב מיד אחריה "תוקעת" את הכרטיס
+  // הבודד הזה לבדו בשורת גריד כמעט ריקה (בדסקטופ, עם כמה עמודות - ר' משימה בתור). כדי
+  // למנוע את זה, במקרה הזה מבטלים גם את הכותרת של היום השני ברצף (מקבל תגי-יום מוטבעים
+  // על כל כרטיס, בדיוק כמו יום בודד, גם אם יש לו כמה תוצאות) - כך שהגריד ממשיך לזרום
+  // טבעי באותן שורות בלי הפסקה. מוגבל בכוונה רק ליום הראשון (לא לכל יום בודד באמצע הטווח)
+  // כי שם התופעה הכי בולטת - אין שום כרטיס קודם שממלא את השורה יחד איתו. במובייל (עמודה
+  // יחידה) זה ממילא לא משנה חזותית - כל כרטיס כבר שורה שלמה בפני עצמה, עם או בלי כותרת.
+  let forceInlineDateKey = null;
+  if (showDateGroupHeaders && !groupByWeek && renderItems.length){
+    const orderedKeys = [];
+    renderItems.forEach(item => {
+      const key = localDateStr(item.display.date);
+      if (orderedKeys[orderedKeys.length - 1] !== key) orderedKeys.push(key);
+    });
+    if (orderedKeys.length > 1 && groupSizeByDate[orderedKeys[0]] === 1 && groupSizeByDate[orderedKeys[1]] > 1){
+      forceInlineDateKey = orderedKeys[1];
+    }
+  }
+
   let lastGroupKey = null;
   renderItems.forEach(item => {
     const ev = item.display;
@@ -2270,7 +2393,7 @@ function renderEvents(events){
       }
     } else if (showDateGroupHeaders){
       const dateGroupKey = localDateStr(ev.date);
-      if (groupSizeByDate[dateGroupKey] === 1){
+      if (groupSizeByDate[dateGroupKey] === 1 || dateGroupKey === forceInlineDateKey){
         inlineDayLabel = dateGroupLabel(ev.date);
         lastGroupKey = null; // כדי שקבוצה מרובה-תוצאות שתבוא אחרי תמיד תפתח כותרת משלה
       } else if (dateGroupKey !== lastGroupKey){
