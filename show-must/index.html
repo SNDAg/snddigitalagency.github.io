@@ -103,6 +103,15 @@ header.app-header{margin:18px 0 22px}
    באתר שכבר משתמשים ב-title לרמזים. */
 .status-note i.degraded{color:var(--warn)}
 
+/* גרסה מצומצמת של אותה נקודת-בריאות, למובייל בלבד (ר' משימות): שם ה"נתונים בזמן אמת ·
+   עודכן HH:MM" (status-bar) מוסתר לגמרי - קצת יותר מדי טקסט טכני עבור מסך צר, תחתית
+   הדף עמוסה ממילא בפוטר המשפטי. נקודה קטנה ושקטה מתחת לפוטר ממשיכה לתת את אותו איתות
+   (ירוק=תקין/כתום=מקור בפולבאק) בלי לתפוס מקום או להסביר את עצמה. מוסתרת כברירת מחדל -
+   נחשפת רק בתוך שאילתת המדיה של המובייל למטה. */
+.footer-health-dot{display:none;justify-content:center;padding:10px 0 4px}
+.footer-health-dot span{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 6px rgba(34,197,94,.55)}
+.footer-health-dot span.degraded{background:var(--warn);box-shadow:0 0 6px rgba(245,158,11,.55)}
+
 /* ===================== פס בקרה דביק =====================
    מחליף את פאנל הפילטרים הענק שהיה תמיד פרוש - מסך ראשון עכשיו: חיפוש + פיל תאריך פעיל +
    כפתור סינון (עם badge כשיש פילטרים פעילים) + מועדפים. נשאר דביק גם בגלילה עמוקה ברשימה. */
@@ -152,6 +161,16 @@ header.app-header{margin:18px 0 22px}
 .sheet{background:var(--glass-solid);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 -20px 50px rgba(0,0,0,.5);animation:sheetUp .3s cubic-bezier(.32,.72,0,1) both}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @media (prefers-reduced-motion: reduce){.sheet{animation:none}}
+/* היקף "תאריך" (ר' applyFilterSheetScope) הרבה יותר קצר-תוכן מהגיליון הכללי (רק תאריך
+   ושעה, בלי סוג/מקום/דירוג) - בדסקטופ, נעוץ לתחתית המסך בדיוק כמו הגיליון הכללי, זה נראה
+   כמו קופסה קטנה ותקועה נמוך במסך גבוה, לא כמו דיאלוג מכוון. רק בדסקטופ (הפאטרן של גלישה
+   מלמטה נשאר כרגיל, ללא שינוי, לגיליון הכללי ולמובייל - שם הוא כבר נראה טבעי ותפוס-מקום
+   סביר) - ממרכזים אותו כדיאלוג רגיל, עם פינות מעוגלות מכל הצדדים. */
+@media (min-width:641px){
+  .sheet-overlay.scope-date{align-items:center}
+  .sheet-overlay.scope-date .sheet{border-radius:20px;animation:sheetPop .25s cubic-bezier(.32,.72,0,1) both;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+}
+@keyframes sheetPop{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
 .sheet-handle{width:40px;height:4px;background:var(--border);border-radius:4px;margin:10px auto 0;flex:none}
 .sheet-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 6px;flex:none}
 .sheet-header h3{display:flex;align-items:center;gap:8px;font-size:1.05rem}
@@ -479,11 +498,12 @@ footer a{color:var(--accent)}
   .whatsapp-share-cta i{color:#25d366}
   .whatsapp-share-cta:hover{background:rgba(37,211,102,.14);border-color:#25d366;transform:none;box-shadow:none}
 
-  /* justify-content:center כאן לא עשה כלום בפועל - .status-note לא נמתח לרוחב .status-bar,
-     אז זה רק מרכז את שני הילדים (אייקון+טקסט) בתוך תיבה שכבר בגודל התוכן שלה, ללא אפקט
-     נראה לעין. עכשיו כשהשורה יושבת ממש מעל resultsCount (שגם הוא לא ממורכז) - יישור
-     התחלה עקבי נראה מכוון יותר מקו יחיד ממורכז שאין לו עם מה להתיישר. */
-  .status-note{font-size:.76rem}
+  /* "נתונים בזמן אמת · עודכן HH:MM" מוסתר במובייל - טקסט טכני שלא תורם הרבה על מסך צר
+     (ר' משימות). נקודת-הבריאות עצמה (ר' .footer-health-dot למעלה) עוברת למתחת לפוטר
+     במקומה, כך שהאיתות ירוק/כתום עדיין קיים בלי לתפוס מקום למעלה. בדסקטופ הכל נשאר
+     בדיוק כמו שהיה. */
+  .status-bar{display:none}
+  .footer-health-dot{display:flex}
 
   .filter-section{margin-bottom:14px}
   .filter-section h3{font-size:.87rem;margin-bottom:10px}
@@ -676,6 +696,11 @@ footer a{color:var(--accent)}
   <footer>
     הנתונים נשאבים בזמן אמת מהאתרים הרשמיים. מומלץ לוודא מחירים וזמינות באתר הרשמי לפני הרכישה.
   </footer>
+
+  <!-- גרסת-מובייל של נקודת בריאות הנתונים (ר' updateSourceHealthIndicator) - מוסתרת
+       כברירת מחדל, נחשפת רק במובייל (ר' .footer-health-dot). בדסקטופ האיתות הזה כבר
+       קיים למעלה בתוך status-bar, אין צורך לכפול אותו כאן. -->
+  <div class="footer-health-dot" title="סטטוס נתונים"><span id="footerHealthDot"></span></div>
 
 </div>
 
@@ -931,11 +956,23 @@ function scheduleScrollCueEvaluation(){
   requestAnimationFrame(() => requestAnimationFrame(evaluateScrollCue));
 }
 
+/* היה כאן בעבר חוקי-אצבע נפרד ("scrollY>24 -> הסתר") שהתחרה עם evaluateScrollCue על אותה
+   מחלקת 'hidden': הוא רק *מוסיף* hidden (אף פעם לא מסיר), ובמובייל גלילה גם מכווצת את
+   סרגל הכתובת של הדפדפן - שינוי גובה אמיתי שמשגר resize -> scheduleScrollCueEvaluation
+   -> עלול להסיר שוב את hidden (אם עדיין לא קרוב לסוף) בדיוק תוך כדי אותה גלילה. שני
+   המנגנונים "מתקוטטים" זה עם זה על אותה מחלקה, מה שנראה כרמז שמהבהב מופיע/נעלם (ר'
+   משימה בתור) - כולל הבהוב הגרדיאנט הבהיר של הרמז עצמו בכל מעבר. התיקון: מקור אמת יחיד -
+   אותו evaluateScrollCue (מבוסס אך ורק על "יש עוד תוכן משמעותי + לא קרוב לסוף"), גם
+   בגלילה עצמה (עם throttle של requestAnimationFrame, לא בכל אירוע scroll גולמי). כך
+   הרמז מוצג/מוסתר לפי מצב יציב ואמיתי, לא לפי "האם המשתמש בדיוק זז" - בדיוק כמו שהתבקש. */
 if (scrollCueEl){
+  let scrollCueScrollRaf = null;
   window.addEventListener('scroll', () => {
-    const overflow = scrollCueOverflow();
-    const nearBottom = window.scrollY >= overflow - 32;
-    if (window.scrollY > 24 || nearBottom) scrollCueEl.classList.add('hidden');
+    if (scrollCueScrollRaf) return;
+    scrollCueScrollRaf = requestAnimationFrame(() => {
+      scrollCueScrollRaf = null;
+      evaluateScrollCue();
+    });
   }, { passive: true });
   window.addEventListener('resize', scheduleScrollCueEvaluation);
 }
@@ -1029,10 +1066,12 @@ async function loadAllEvents(){
    מקורות לא התעדכנו הרגע). בכוונה בלי טולטיפ/מודל - בדיקת ה-JSON הגולמי של meta היא
    דרך האבחון המיועדת, לא UI נוסף. */
 function updateSourceHealthIndicator(meta){
-  const icon = document.querySelector('.status-note i');
-  if (!icon || !meta || !meta.sourceStatus) return;
+  if (!meta || !meta.sourceStatus) return;
   const isDegraded = Object.values(meta.sourceStatus).some(s => !s.ok);
-  icon.classList.toggle('degraded', isDegraded);
+  const icon = document.querySelector('.status-note i');
+  if (icon) icon.classList.toggle('degraded', isDegraded);
+  const dot = document.getElementById('footerHealthDot');
+  if (dot) dot.classList.toggle('degraded', isDegraded);
 }
 
 /* ===================== סינון + סוג/מקום ===================== */
@@ -1106,6 +1145,8 @@ function applyFilterSheetScope(){
   if (titleEl) titleEl.innerHTML = isDateScope
     ? '<i class="fa-solid fa-calendar-days"></i> תאריך ושעה'
     : '<i class="fa-solid fa-sliders"></i> סינון';
+  const overlay = document.getElementById('filterSheetOverlay');
+  if (overlay) overlay.classList.toggle('scope-date', isDateScope);
 }
 
 /* סגירה בלי החלה (X / קליק על הרקע) - מבטלת את הטיוטה ומחזירה את נראות תגיות המקום
@@ -1244,15 +1285,14 @@ function toggleTimeSection(){
   if (chip) chip.classList.toggle('open', timeSectionOpen);
 }
 
-/* תווית הצ'יפ משקפת תמיד את הטווח בפועל (גם כשמכווץ) - כולל ברירת המחדל האוטומטית של
-   "היום" - כדי שהמשתמש יידע מה מסונן בלי לפתוח. מודגשת (active) רק כששונתה ידנית, לא
-   כשזו סתם ברירת המחדל החכמה של "היום". */
+/* התג נשאר תמיד עם התווית הגנרית "שעות" - לא מציג את טווח השעות המספרי בפועל (הוצג
+   פעם, אבל עם טווחים עוטפי-חצות כמו "ערב" 17:00-04:00 - ר' TIME_OF_DAY_RANGES - זה נראה
+   לא ברור/כמו טעות, ולא נחוץ: מצב "active" - הדגשה כשנבחר טווח שאינו יום מלא, ר' למטה -
+   כבר מספיק כדי לאותת שיש סינון פעיל, בלי להציג את הערכים הגולמיים). */
 function updateTimeChipLabel(){
-  const label = document.getElementById('timeToggleLabel');
   const chip = document.getElementById('timeToggleChip');
   const resetBtn = document.getElementById('timeResetChip');
   const isFullDay = appliedStartTime === '00:00' && appliedEndTime === '23:59';
-  if (label) label.textContent = isFullDay ? 'שעות' : `${appliedStartTime}-${appliedEndTime}`;
   if (chip) chip.classList.toggle('active', !isFullDay && currentQuickRange !== 'today');
   if (resetBtn) resetBtn.style.display = isFullDay ? 'none' : 'inline-flex';
 }
@@ -2079,6 +2119,19 @@ function byTypeThenDate(a, b){
   return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]) || (a.date - b.date);
 }
 
+/* משמש לסדר הכרטיסים בפועל ברשת (ר' buildRenderItems) - היום תמיד קודם לגמרי, וסדר
+   הסוגים המבוקש (מוזיקה/סטנדאפ/קולנוע/תיאטרון) הוא רק שובר-שוויון *בתוך* אותו יום, לא
+   קריטריון ראשי. בטווח יום בודד זה בדיוק זהה ל-byTypeThenDate (כל האירועים באותו יום ממילא),
+   אבל בטווח רב-ימים (למשל "3 הימים הקרובים") byTypeThenDate היה מציג את *כל* אירועי המוזיקה
+   של שלושת הימים קודם, ורק אחריהם קולנוע/תיאטרון - מה שגרם לכרטיסים מכל מיני תאריכים
+   להופיע לפני הכותרת "היום" עצמה (הכותרות/קיבוץ-הימים - ר' buildDateGroupingPlan - מניחות
+   שהרשימה כבר ממוינת יום-ראשית). */
+function byDateThenType(a, b){
+  const dayA = localDateStr(a.date), dayB = localDateStr(b.date);
+  if (dayA !== dayB) return a.date - b.date;
+  return (TYPE_ORDER[a.type] - TYPE_ORDER[b.type]) || (a.date - b.date);
+}
+
 /* מיון לפי דירוג IMDb (גבוה לנמוך) - משמש רק את פאנל "כל הדירוגים" (ר' renderImdbRankingsPanel),
    לא את הרשת הראשית. אירועים בלי דירוג ידוע (imdbRating חסר) יורדים לסוף, לא נעלמים. */
 function byRatingThenDate(a, b){
@@ -2111,8 +2164,50 @@ function buildRenderItems(events){
     const display = (overrideId && groupEvents.find(e => e.id === overrideId)) || groupEvents[0];
     items.push({ display, times: groupEvents.length > 1 ? groupEvents : null, groupKey: key });
   });
-  items.sort((a,b) => byTypeThenDate(a.display, b.display));
+  items.sort((a,b) => byDateThenType(a.display, b.display));
   return items;
+}
+
+/* מחשבת עבור כל renderItem אם הוא מקבל תג-יום מוטבע (inlineDayLabel) ו/או פותח כותרת
+   חדשה (headerLabel). renderItems כבר ממוין יום-ראשית תמיד (ר' byDateThenType/
+   buildRenderItems, וגם dayThenModeComparator במצב ממוקד-קולנוע) - אז כל הרשימה היא
+   בלוק כרונולוגי רציף אחד, בלי צורך לפצל לפי סוג. קבוצה עם תוצאה בודדת מקבלת תג מוטבע
+   במקום כותרת (ר' .inline-day-badge), וכשהיום *הראשון* ברשימה הוא כזה, גם היום השני
+   ברצף מקבל תג מוטבע (לא כותרת) כדי שהכרטיס הבודד לא יישאר תקוע לבדו בשורת גריד כמעט
+   ריקה. */
+function buildDateGroupingPlan(renderItems){
+  const plan = new Array(renderItems.length);
+
+  const groupSizeByDate = {};
+  renderItems.forEach(item => {
+    const key = localDateStr(item.display.date);
+    groupSizeByDate[key] = (groupSizeByDate[key] || 0) + 1;
+  });
+  const orderedKeys = [];
+  renderItems.forEach(item => {
+    const key = localDateStr(item.display.date);
+    if (orderedKeys[orderedKeys.length - 1] !== key) orderedKeys.push(key);
+  });
+  let forceInlineDateKey = null;
+  if (orderedKeys.length > 1 && groupSizeByDate[orderedKeys[0]] === 1 && groupSizeByDate[orderedKeys[1]] > 1){
+    forceInlineDateKey = orderedKeys[1];
+  }
+
+  let lastGroupKey = null;
+  renderItems.forEach((item, i) => {
+    const ev = item.display;
+    const dateGroupKey = localDateStr(ev.date);
+    if (groupSizeByDate[dateGroupKey] === 1 || dateGroupKey === forceInlineDateKey){
+      plan[i] = { inlineDayLabel: dateGroupLabel(ev.date), headerLabel: null };
+      lastGroupKey = null; // כדי שקבוצה מרובה-תוצאות שתבוא אחרי תמיד תפתח כותרת משלה
+    } else if (dateGroupKey !== lastGroupKey){
+      lastGroupKey = dateGroupKey;
+      plan[i] = { inlineDayLabel: '', headerLabel: dateGroupLabel(ev.date) };
+    } else {
+      plan[i] = { inlineDayLabel: '', headerLabel: null };
+    }
+  });
+  return plan;
 }
 
 function formatShowtimeChipLabel(ev, spansMultipleDays){
@@ -2346,37 +2441,13 @@ function renderEvents(events){
   // יום, עם תג יום על כל כרטיס (לא רק בודדים) כדי שעדיין יהיה ברור בדיוק איזה יום זה.
   const groupByWeek = showDateGroupHeaders && shouldGroupByWeek(events);
 
-  // כמה renderItems יש לכל תאריך - קובע אם קבוצת התאריך מקבלת כותרת ברוחב מלא (2+
-  // תוצאות) או תג מוטבע על הכרטיס עצמו (תוצאה בודדת) - ר' .inline-day-badge למעלה.
-  const groupSizeByDate = {};
-  if (showDateGroupHeaders && !groupByWeek){
-    renderItems.forEach(item => {
-      const key = localDateStr(item.display.date);
-      groupSizeByDate[key] = (groupSizeByDate[key] || 0) + 1;
-    });
-  }
+  // renderItems ממוין יום-ראשית תמיד (ר' byDateThenType/dayThenModeComparator) - אז חישוב
+  // הקיבוץ-לפי-יום יכול לרוץ על הרשימה כולה כרצף כרונולוגי אחד, בלי סיכון שאותו תאריך
+  // "יקבל כותרת" פעמיים במקומות שונים ברשימה.
+  const groupingPlan = (showDateGroupHeaders && !groupByWeek) ? buildDateGroupingPlan(renderItems) : null;
 
-  // אם ליום הראשון בטווח יש תוצאה בודדת, כותרת מלאה-רוחב מיד אחריה "תוקעת" את הכרטיס
-  // הבודד הזה לבדו בשורת גריד כמעט ריקה (בדסקטופ, עם כמה עמודות - ר' משימה בתור). כדי
-  // למנוע את זה, במקרה הזה מבטלים גם את הכותרת של היום השני ברצף (מקבל תגי-יום מוטבעים
-  // על כל כרטיס, בדיוק כמו יום בודד, גם אם יש לו כמה תוצאות) - כך שהגריד ממשיך לזרום
-  // טבעי באותן שורות בלי הפסקה. מוגבל בכוונה רק ליום הראשון (לא לכל יום בודד באמצע הטווח)
-  // כי שם התופעה הכי בולטת - אין שום כרטיס קודם שממלא את השורה יחד איתו. במובייל (עמודה
-  // יחידה) זה ממילא לא משנה חזותית - כל כרטיס כבר שורה שלמה בפני עצמה, עם או בלי כותרת.
-  let forceInlineDateKey = null;
-  if (showDateGroupHeaders && !groupByWeek && renderItems.length){
-    const orderedKeys = [];
-    renderItems.forEach(item => {
-      const key = localDateStr(item.display.date);
-      if (orderedKeys[orderedKeys.length - 1] !== key) orderedKeys.push(key);
-    });
-    if (orderedKeys.length > 1 && groupSizeByDate[orderedKeys[0]] === 1 && groupSizeByDate[orderedKeys[1]] > 1){
-      forceInlineDateKey = orderedKeys[1];
-    }
-  }
-
-  let lastGroupKey = null;
-  renderItems.forEach(item => {
+  let lastWeekKey = null;
+  renderItems.forEach((item, idx) => {
     const ev = item.display;
     let inlineDayLabel = '';
     if (groupByWeek){
@@ -2384,23 +2455,20 @@ function renderEvents(events){
       const d0 = new Date(today); d0.setHours(0,0,0,0);
       const evDay = new Date(ev.date); evDay.setHours(0,0,0,0);
       const weekKey = Math.floor(Math.round((evDay - d0) / 86400000) / 7);
-      if (weekKey !== lastGroupKey){
-        lastGroupKey = weekKey;
+      if (weekKey !== lastWeekKey){
+        lastWeekKey = weekKey;
         const header = document.createElement('div');
         header.className = 'date-group-header';
         header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(weekGroupLabel(ev.date))}`;
         container.appendChild(header);
       }
-    } else if (showDateGroupHeaders){
-      const dateGroupKey = localDateStr(ev.date);
-      if (groupSizeByDate[dateGroupKey] === 1 || dateGroupKey === forceInlineDateKey){
-        inlineDayLabel = dateGroupLabel(ev.date);
-        lastGroupKey = null; // כדי שקבוצה מרובה-תוצאות שתבוא אחרי תמיד תפתח כותרת משלה
-      } else if (dateGroupKey !== lastGroupKey){
-        lastGroupKey = dateGroupKey;
+    } else if (groupingPlan){
+      const plan = groupingPlan[idx];
+      inlineDayLabel = plan.inlineDayLabel;
+      if (plan.headerLabel){
         const header = document.createElement('div');
         header.className = 'date-group-header';
-        header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(dateGroupLabel(ev.date))}`;
+        header.innerHTML = `<i class="fa-regular fa-calendar"></i> ${escapeHtml(plan.headerLabel)}`;
         container.appendChild(header);
       }
     }

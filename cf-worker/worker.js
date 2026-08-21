@@ -1022,7 +1022,24 @@ async function refreshEvents(env) {
   const sourceStatus = {};
   settled.forEach((result, i) => {
     const key = keys[i];
-    if (result.status === 'fulfilled') {
+    const prevCount = (previousEventsBySource[key] || []).length;
+    if (result.status === 'fulfilled' && result.value.length === 0 && prevCount > 0) {
+      // Fulfilled-but-empty is its own failure mode, distinct from a thrown rejection (handled
+      // below): the scrape didn't error, it just found nothing. That's indistinguishable from
+      // "this source genuinely has zero events right now" UNLESS it previously had events -
+      // a source that just had prevCount>0 going to 0 in one round is far more likely a
+      // transient render glitch (observed on Barby: Jina's headless render occasionally
+      // snapshots the page before its client-side SPA finishes hydrating the show list,
+      // returning only the cookie-banner/footer shell with none of the actual listings) than
+      // reality. Treated exactly like a rejection: fall back to last-known-good and mark
+      // degraded, so the source doesn't silently vanish from the feed for a full cron cycle.
+      const fallbackEvents = previousEventsBySource[key].map((e) => ({ ...e, date: new Date(e.date) }));
+      events.push(...fallbackEvents);
+      console.error(key, 'returned 0 events (previously had', prevCount + ') - serving fallback cache');
+      const prevStatus = previousSourceStatus[key];
+      const lastSuccessfulScrape = (prevStatus && prevStatus.lastSuccessfulScrape) || null;
+      sourceStatus[key] = { ok: false, count: fallbackEvents.length, fetchedCount: 0, error: `scrape succeeded but returned 0 events (previously had ${prevCount})`, lastSuccessfulScrape };
+    } else if (result.status === 'fulfilled') {
       events.push(...result.value);
       sourceStatus[key] = { ok: true, count: result.value.length, fetchedCount: result.value.length, lastSuccessfulScrape: generatedAt };
     } else {
