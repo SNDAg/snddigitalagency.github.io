@@ -1,0 +1,27 @@
+name = "calendar-it"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Polls the Drive folder for new screenshots every 5 minutes (see syncOnce() in worker.js).
+# The dashboard's "Sync now" button (GET /sync) triggers the same function on demand, so you
+# never have to wait a full 5 minutes to check whether a screenshot was picked up.
+[triggers]
+crons = ["*/5 * * * *"]
+
+[ai]
+binding = "AI"
+
+[[kv_namespaces]]
+binding = "CAL_KV"
+id = "a1097e47a9ec40bcad3f3a5996b36a6f"
+
+[vars]
+# Name of the Drive folder (in your Drive root) that you share event screenshots into.
+# Create this folder yourself in Drive - the app only needs read access (drive.readonly scope)
+# so it deliberately never creates folders on your Drive.
+DRIVE_FOLDER_NAME = "CalendarIt"
+
+# Required secrets (set once via `wrangler secret put <NAME>`, see calendar-it/README.md):
+#   GOOGLE_CLIENT_ID      - OAuth 2.0 Web client id from Google Cloud Console
+#   GOOGLE_CLIENT_SECRET  - matching client secret
+#   DASHBOARD_KEY         - any password you choose, gates the dashboard/API (remembered via cookie)

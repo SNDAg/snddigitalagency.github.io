@@ -1,0 +1,744 @@
+/* ============================================================================
+   CALENDAR-IT — Cloudflare Worker
+
+   Turns Facebook-feed screenshots into calendar events, with zero typing.
+
+   Flow:
+     1. User screenshots an event post on their phone, shares it into a
+        Google Drive folder (default name "CalendarIt", see DRIVE_FOLDER_NAME
+        in wrangler.toml) - a normal Android/iOS share-sheet action.
+     2. A cron trigger (every 5 min, see [triggers] in wrangler.toml) polls
+        that Drive folder for new images via syncOnce().
+     3. Each new image is sent to a Workers AI vision model
+        (@cf/meta/llama-3.2-11b-vision-instruct) with a prompt asking it to
+        read the (mostly Hebrew) text and return structured JSON: title,
+        location, day/month/year, hour/minute. Israeli screenshots write
+        dates as day.month (e.g. "14.9"), never month.day - the prompt says
+        so explicitly.
+     4. resolveEventDateTime() fills in a missing year (assumes "next
+        occurrence" of that day/month) and decides all-day vs timed.
+     5. The event is inserted straight into the user's Google Calendar
+        (primary) via the Calendar API. An .ics file is ALSO always
+        generated and stored in KV, so there is a manual fallback if the
+        auto-insert fails, the extraction needs a human glance, or the user
+        just wants to hand a specific event's .ics to their phone.
+     6. GET / is a small dashboard (this IS the "known URL": open it,
+        tap "Sync now" or tap an event's "Add to calendar" button to pull
+        a fresh .ics onto the phone) - covers both flows from the brief.
+
+   Auth model:
+     - Google Drive (read-only) + Google Calendar (events) access uses a
+       standard OAuth "installed app" flow that the Worker itself hosts at
+       /auth/start and /auth/callback - no separate script to run. The
+       resulting refresh_token lives in KV (key "oauth:tokens") and access
+       tokens are refreshed on demand (see getAccessToken).
+     - The dashboard itself (everything except /ics/:id, which uses an
+       unguessable id so a phone can open it with zero login friction) is
+       gated behind a single shared secret, DASHBOARD_KEY (wrangler secret
+       put DASHBOARD_KEY), remembered via an HttpOnly cookie after the first
+       ?key=... visit. This is a personal single-user tool, not a multi-
+       tenant product - one shared key is intentionally the whole auth
+       model.
+
+   KV layout (single namespace, binding CAL_KV):
+     oauth:tokens        -> { access_token, refresh_token, expires_at }
+     drive:folder_id      -> cached Drive folder id (found by name once)
+     sync:last_check       -> ISO timestamp watermark, syncOnce() only looks
+                              at files modified after (this - 10min overlap)
+     seen:<driveFileId>    -> "1", marks a Drive file already processed so a
+                              cron overlap never double-inserts a calendar
+                              event (expires after 90 days - Drive file ids
+                              are never reused, so this only bounds KV size)
+     events:index          -> JSON array of the last 100 processed events,
+                              newest first, for the dashboard list
+     ics:<eventId>          -> raw .ics text served by /ics/:id
+   ============================================================================ */
+
+const VISION_MODEL = '@cf/meta/llama-3.2-11b-vision-instruct';
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // vision input is sent as a JSON number array - keep this modest
+const OAUTH_SCOPES = [
+  'https://www.googleapis.com/auth/drive.readonly',
+  'https://www.googleapis.com/auth/calendar.events',
+].join(' ');
+const EVENTS_INDEX_CAP = 100;
+const SYNC_OVERLAP_MS = 10 * 60 * 1000; // re-check the last 10min of Drive listings every run, dedup via seen:*
+
+// ============================================================================
+// Small utilities
+// ============================================================================
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data, null, 2), {
+    status,
+    headers: { 'content-type': 'application/json; charset=utf-8' },
+  });
+}
+
+function html(body, status = 200) {
+  return new Response(body, {
+    status,
+    headers: { 'content-type': 'text/html; charset=utf-8' },
+  });
+}
+
+function pad(n, len = 2) {
+  return String(n).padStart(len, '0');
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
+function getCookie(request, name) {
+  const header = request.headers.get('Cookie') || '';
+  const match = header.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`));
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+// ============================================================================
+// Access gate (single shared-secret cookie, see header comment)
+// ============================================================================
+
+function isAuthorized(request, env) {
+  if (!env.DASHBOARD_KEY) return true; // no key configured - open access (local dev convenience)
+  const url = new URL(request.url);
+  if (url.searchParams.get('key') === env.DASHBOARD_KEY) return true;
+  return getCookie(request, 'cal_key') === env.DASHBOARD_KEY;
+}
+
+function loginPage(error) {
+  return html(`<!doctype html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar-It — התחברות</title>
+${BASE_STYLE}
+</head><body><div class="wrap"><div class="card" style="max-width:360px;margin:15vh auto">
+<h1 style="margin-top:0">🗓️ Calendar-It</h1>
+${error ? `<p class="badge badge-warn">קוד שגוי, נסה שוב</p>` : ''}
+<form method="POST" action="/login">
+<input type="password" name="key" placeholder="קוד גישה" autofocus required
+  style="width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:1px solid var(--border);font-size:16px;margin-bottom:12px;background:var(--bg)">
+<button class="btn btn-primary" style="width:100%" type="submit">כניסה</button>
+</form>
+</div></div></body></html>`, error ? 401 : 200);
+}
+
+// ============================================================================
+// Google OAuth (Worker hosts the whole flow - no separate script to run)
+// ============================================================================
+
+async function getStoredTokens(env) {
+  return (await env.CAL_KV.get('oauth:tokens', 'json')) || null;
+}
+
+async function saveTokens(env, tokens) {
+  await env.CAL_KV.put('oauth:tokens', JSON.stringify(tokens));
+}
+
+async function getAccessToken(env) {
+  const tokens = await getStoredTokens(env);
+  if (!tokens || !tokens.refresh_token) {
+    const err = new Error('not_connected');
+    err.code = 'not_connected';
+    throw err;
+  }
+  if (tokens.expires_at - Date.now() > 60_000) {
+    return tokens.access_token;
+  }
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: tokens.refresh_token,
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+    }),
+  });
+  if (!resp.ok) {
+    const text = await resp.text();
+    const err = new Error(`token_refresh_failed: ${text}`);
+    err.code = 'not_connected';
+    throw err;
+  }
+  const data = await resp.json();
+  const updated = {
+    access_token: data.access_token,
+    refresh_token: tokens.refresh_token, // refresh responses never include a new refresh_token
+    expires_at: Date.now() + (data.expires_in || 3600) * 1000,
+  };
+  await saveTokens(env, updated);
+  return updated.access_token;
+}
+
+function oauthRedirectUri(url) {
+  return `${url.origin}/auth/callback`;
+}
+
+async function handleAuthStart(request, env) {
+  const url = new URL(request.url);
+  if (!env.GOOGLE_CLIENT_ID) {
+    return html('<p style="font-family:sans-serif;padding:2rem">חסר GOOGLE_CLIENT_ID — הרץ <code>wrangler secret put GOOGLE_CLIENT_ID</code> קודם.</p>', 500);
+  }
+  const params = new URLSearchParams({
+    client_id: env.GOOGLE_CLIENT_ID,
+    redirect_uri: oauthRedirectUri(url),
+    response_type: 'code',
+    access_type: 'offline',
+    prompt: 'consent',
+    scope: OAUTH_SCOPES,
+  });
+  return Response.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`, 302);
+}
+
+async function handleAuthCallback(request, env) {
+  const url = new URL(request.url);
+  const code = url.searchParams.get('code');
+  const oauthError = url.searchParams.get('error');
+  if (oauthError) return html(`<p style="font-family:sans-serif;padding:2rem">Google דחה את ההרשאה: ${escapeHtml(oauthError)}</p>`, 400);
+  if (!code) return html('<p style="font-family:sans-serif;padding:2rem">חסר קוד הרשאה בבקשה החוזרת.</p>', 400);
+
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+      redirect_uri: oauthRedirectUri(url),
+    }),
+  });
+  if (!resp.ok) {
+    const text = await resp.text();
+    return html(`<p style="font-family:sans-serif;padding:2rem">חיבור ל-Google נכשל:<br><pre>${escapeHtml(text)}</pre></p>`, 400);
+  }
+  const data = await resp.json();
+  const existing = await getStoredTokens(env);
+  await saveTokens(env, {
+    access_token: data.access_token,
+    refresh_token: data.refresh_token || existing?.refresh_token, // Google only re-sends it sometimes
+    expires_at: Date.now() + (data.expires_in || 3600) * 1000,
+  });
+  return Response.redirect(`${url.origin}/`, 302);
+}
+
+// ============================================================================
+// Google Drive
+// ============================================================================
+
+async function driveApi(accessToken, path, opts = {}) {
+  const resp = await fetch(`https://www.googleapis.com/drive/v3/${path}`, {
+    ...opts,
+    headers: { ...(opts.headers || {}), Authorization: `Bearer ${accessToken}` },
+  });
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`drive_api_${resp.status}: ${text}`);
+  }
+  return resp;
+}
+
+async function findFolderId(env, accessToken) {
+  const cached = await env.CAL_KV.get('drive:folder_id');
+  if (cached) return cached;
+
+  const folderName = env.DRIVE_FOLDER_NAME || 'CalendarIt';
+  const q = `name='${folderName.replace(/'/g, "\\'")}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const resp = await driveApi(accessToken, `files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=5`);
+  const data = await resp.json();
+  if (!data.files || data.files.length === 0) return null;
+  const id = data.files[0].id;
+  await env.CAL_KV.put('drive:folder_id', id);
+  return id;
+}
+
+async function listNewImages(accessToken, folderId, sinceISO) {
+  const q = `'${folderId}' in parents and trashed=false and mimeType contains 'image/' and modifiedTime > '${sinceISO}'`;
+  const fields = 'files(id,name,mimeType,modifiedTime,webViewLink)';
+  const resp = await driveApi(accessToken, `files?q=${encodeURIComponent(q)}&fields=${fields}&orderBy=modifiedTime&pageSize=50`);
+  const data = await resp.json();
+  return data.files || [];
+}
+
+async function downloadFile(accessToken, fileId) {
+  const resp = await driveApi(accessToken, `files/${fileId}?alt=media`);
+  return resp.arrayBuffer();
+}
+
+// ============================================================================
+// Google Calendar
+// ============================================================================
+
+async function insertCalendarEvent(accessToken, ev) {
+  const body = {
+    summary: ev.title,
+    location: ev.location || undefined,
+    description: ev.description,
+    start: ev.allDay ? { date: ev.startDate } : { dateTime: `${ev.startDate}T${pad(ev.startHour)}:${pad(ev.startMinute)}:00`, timeZone: 'Asia/Jerusalem' },
+    end: ev.allDay ? { date: ev.endDate } : { dateTime: `${ev.endDate}T${pad(ev.endHour)}:${pad(ev.endMinute)}:00`, timeZone: 'Asia/Jerusalem' },
+  };
+  const resp = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${accessToken}`, 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`calendar_insert_failed_${resp.status}: ${text}`);
+  }
+  return resp.json();
+}
+
+// ============================================================================
+// Vision extraction (Workers AI)
+// ============================================================================
+
+const EXTRACTION_PROMPT = `You are reading a screenshot from a social-media feed (usually Facebook) that advertises an event. The text is mostly Hebrew, sometimes mixed with English or numbers.
+
+Respond with ONLY a single valid JSON object (no markdown fences, no explanation) in exactly this shape:
+{"title": string|null, "location": string|null, "day": number|null, "month": number|null, "year": number|null, "hour": number|null, "minute": number|null, "raw_text": string}
+
+Rules:
+- Dates are written in Israeli day.month order (e.g. "14.9" means day=14, month=9) - NEVER month.day.
+- "title" is the performer/show/event name only - do not include the date, time or venue in it.
+- "location" is the venue/place name. Strip a leading Hebrew "ב" prefix meaning "at" (e.g. "בבית החייל" -> "בית החייל").
+- If no year is shown in the image, set "year" to null (do not guess a year).
+- If no time is shown, set "hour" and "minute" to null.
+- "raw_text" must contain all readable text from the image, unmodified, so a human can double check your extraction.
+- If you cannot find any date in the image, set "day" and "month" to null.
+Respond with the JSON object only.`;
+
+async function extractEventFromImage(env, arrayBuffer) {
+  if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
+    return { error: 'image_too_large' };
+  }
+  const image = Array.from(new Uint8Array(arrayBuffer));
+  let result;
+  try {
+    result = await env.AI.run(VISION_MODEL, {
+      image,
+      prompt: EXTRACTION_PROMPT,
+      max_tokens: 512,
+      temperature: 0,
+    });
+  } catch (err) {
+    return { error: 'ai_call_failed', detail: String(err) };
+  }
+  const text = result?.response || '';
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) return { error: 'no_json_in_response', raw: text };
+  try {
+    const parsed = JSON.parse(match[0]);
+    return { data: parsed };
+  } catch (err) {
+    return { error: 'json_parse_failed', raw: text };
+  }
+}
+
+// ============================================================================
+// Date resolution + ICS generation
+// ============================================================================
+
+function addDaysToDateStr(dateStr, days) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  dt.setUTCDate(dt.getUTCDate() + days);
+  return `${dt.getUTCFullYear()}-${pad(dt.getUTCMonth() + 1)}-${pad(dt.getUTCDate())}`;
+}
+
+function addHoursWallClock(dateStr, hour, minute, hoursToAdd) {
+  const [y, m, d] = dateStr.split('-').map(Number);
+  const dt = new Date(Date.UTC(y, m - 1, d, hour, minute));
+  dt.setUTCHours(dt.getUTCHours() + hoursToAdd);
+  return {
+    dateStr: `${dt.getUTCFullYear()}-${pad(dt.getUTCMonth() + 1)}-${pad(dt.getUTCDate())}`,
+    hour: dt.getUTCHours(),
+    minute: dt.getUTCMinutes(),
+  };
+}
+
+// Fills in a missing year (assumes the next upcoming occurrence of that day/month) and
+// decides all-day vs timed based on whether the model found a clock time.
+function resolveEventDateTime(fields, now = new Date()) {
+  const day = Number(fields.day);
+  const month = Number(fields.month);
+  if (!Number.isInteger(day) || !Number.isInteger(month) || day < 1 || day > 31 || month < 1 || month > 12) {
+    return null;
+  }
+  let year = Number.isInteger(Number(fields.year)) ? Number(fields.year) : null;
+  if (!year) {
+    const candidateUTC = Date.UTC(now.getUTCFullYear(), month - 1, day);
+    const todayUTC = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    year = candidateUTC < todayUTC - 24 * 3600 * 1000 ? now.getUTCFullYear() + 1 : now.getUTCFullYear();
+  }
+  const startDate = `${year}-${pad(month)}-${pad(day)}`;
+  const hasTime = Number.isInteger(Number(fields.hour));
+  if (!hasTime) {
+    return { allDay: true, startDate, endDate: addDaysToDateStr(startDate, 1) };
+  }
+  const startHour = Math.min(23, Math.max(0, Number(fields.hour)));
+  const startMinute = Number.isInteger(Number(fields.minute)) ? Math.min(59, Math.max(0, Number(fields.minute))) : 0;
+  const end = addHoursWallClock(startDate, startHour, startMinute, 2); // default 2h duration - screenshots rarely state an end time
+  return {
+    allDay: false,
+    startDate, startHour, startMinute,
+    endDate: end.dateStr, endHour: end.hour, endMinute: end.minute,
+  };
+}
+
+function escapeIcsText(str) {
+  return String(str ?? '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+}
+
+function foldIcsLine(line) {
+  if (line.length <= 74) return line;
+  let out = line.slice(0, 74);
+  let rest = line.slice(74);
+  while (rest.length > 0) {
+    out += `\r\n ${rest.slice(0, 73)}`;
+    rest = rest.slice(73);
+  }
+  return out;
+}
+
+function buildIcs({ uid, title, location, description, dt }) {
+  const now = new Date();
+  const dtstamp = now.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+  const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Calendar-It//HE', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT'];
+  lines.push(`UID:${uid}@calendar-it`);
+  lines.push(`DTSTAMP:${dtstamp}`);
+  if (dt.allDay) {
+    lines.push(`DTSTART;VALUE=DATE:${dt.startDate.replace(/-/g, '')}`);
+    lines.push(`DTEND;VALUE=DATE:${dt.endDate.replace(/-/g, '')}`);
+  } else {
+    lines.push(`DTSTART;TZID=Asia/Jerusalem:${dt.startDate.replace(/-/g, '')}T${pad(dt.startHour)}${pad(dt.startMinute)}00`);
+    lines.push(`DTEND;TZID=Asia/Jerusalem:${dt.endDate.replace(/-/g, '')}T${pad(dt.endHour)}${pad(dt.endMinute)}00`);
+  }
+  lines.push(`SUMMARY:${escapeIcsText(title)}`);
+  if (location) lines.push(`LOCATION:${escapeIcsText(location)}`);
+  if (description) lines.push(`DESCRIPTION:${escapeIcsText(description)}`);
+  lines.push('END:VEVENT', 'END:VCALENDAR');
+  return lines.map(foldIcsLine).join('\r\n') + '\r\n';
+}
+
+// ============================================================================
+// Sync orchestrator
+// ============================================================================
+
+async function getEventsIndex(env) {
+  return (await env.CAL_KV.get('events:index', 'json')) || [];
+}
+
+async function pushEventRecord(env, record) {
+  const index = await getEventsIndex(env);
+  index.unshift(record);
+  await env.CAL_KV.put('events:index', JSON.stringify(index.slice(0, EVENTS_INDEX_CAP)));
+}
+
+async function syncOnce(env) {
+  let accessToken;
+  try {
+    accessToken = await getAccessToken(env);
+  } catch (err) {
+    return { ok: false, reason: 'not_connected' };
+  }
+
+  const folderId = await findFolderId(env, accessToken);
+  if (!folderId) {
+    return { ok: false, reason: 'folder_not_found', folderName: env.DRIVE_FOLDER_NAME || 'CalendarIt' };
+  }
+
+  const lastCheck = (await env.CAL_KV.get('sync:last_check')) || new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString();
+  const since = new Date(new Date(lastCheck).getTime() - SYNC_OVERLAP_MS).toISOString();
+  const files = await listNewImages(accessToken, folderId, since);
+
+  const processed = [];
+  for (const file of files) {
+    const seenKey = `seen:${file.id}`;
+    if (await env.CAL_KV.get(seenKey)) continue;
+    await env.CAL_KV.put(seenKey, '1', { expirationTtl: 90 * 24 * 3600 });
+
+    const record = {
+      id: crypto.randomUUID(),
+      fileId: file.id,
+      fileName: file.name,
+      driveLink: file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      const bytes = await downloadFile(accessToken, file.id);
+      const extraction = await extractEventFromImage(env, bytes);
+
+      if (extraction.error) {
+        record.status = 'needs_review';
+        record.error = extraction.error;
+        record.rawText = extraction.raw || null;
+      } else {
+        const fields = extraction.data;
+        const dt = resolveEventDateTime(fields);
+        record.title = fields.title || file.name;
+        record.location = fields.location || null;
+        record.rawText = fields.raw_text || null;
+
+        if (!dt) {
+          record.status = 'needs_review';
+          record.error = 'no_date_found';
+        } else {
+          Object.assign(record, dt);
+          const description = `נוצר אוטומטית ע"י Calendar-It מתוך צילום מסך.\n\n${fields.raw_text || ''}`;
+          const ics = buildIcs({ uid: record.id, title: record.title, location: record.location, description, dt });
+          await env.CAL_KV.put(`ics:${record.id}`, ics);
+          record.icsAvailable = true;
+
+          try {
+            const inserted = await insertCalendarEvent(accessToken, {
+              title: record.title, location: record.location, description, allDay: dt.allDay,
+              startDate: dt.startDate, startHour: dt.startHour, startMinute: dt.startMinute,
+              endDate: dt.endDate, endHour: dt.endHour, endMinute: dt.endMinute,
+            });
+            record.status = 'added';
+            record.calendarLink = inserted.htmlLink;
+          } catch (err) {
+            record.status = 'ics_only';
+            record.error = String(err.message || err);
+          }
+        }
+      }
+    } catch (err) {
+      record.status = 'error';
+      record.error = String(err.message || err);
+    }
+
+    await pushEventRecord(env, record);
+    processed.push(record);
+  }
+
+  await env.CAL_KV.put('sync:last_check', new Date().toISOString());
+  return { ok: true, processed: processed.length, records: processed };
+}
+
+// ============================================================================
+// Dashboard UI
+// ============================================================================
+
+const BASE_STYLE = `<style>
+:root { --bg:#0f1420; --card:#171d2b; --border:#2a3244; --text:#e8ecf4; --muted:#8b95ab; --accent:#5b8cff; --good:#3ecf8e; --warn:#f5a623; --bad:#f45b69; }
+@media (prefers-color-scheme: light) {
+  :root { --bg:#f5f6f9; --card:#ffffff; --border:#e2e5ec; --text:#1b2130; --muted:#6b7386; --accent:#3b6fe0; --good:#1f9d68; --warn:#c9790f; --bad:#d63849; }
+}
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; }
+.wrap { max-width:640px; margin:0 auto; padding:20px 16px 60px; }
+h1 { font-size:1.4rem; display:flex; align-items:center; gap:8px; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:16px; }
+.row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.muted { color:var(--muted); font-size:.9rem; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 18px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); text-decoration:none; font-size:.95rem; cursor:pointer; font-weight:600; }
+.btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn-sm { padding:7px 12px; font-size:.85rem; }
+.badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
+.badge-good { background:color-mix(in srgb, var(--good) 18%, transparent); color:var(--good); }
+.badge-warn { background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn); }
+.badge-bad { background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad); }
+.event { border-top:1px solid var(--border); padding:14px 0; }
+.event:first-child { border-top:none; padding-top:0; }
+.event-title { font-weight:700; font-size:1.02rem; }
+.event-meta { color:var(--muted); font-size:.88rem; margin:2px 0 8px; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px; }
+a { color:var(--accent); }
+.spin { animation:spin 1s linear infinite; display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.footer-note { text-align:center; color:var(--muted); font-size:.8rem; margin-top:24px; }
+</style>`;
+
+function statusBadge(record) {
+  switch (record.status) {
+    case 'added': return `<span class="badge badge-good">✓ נוסף ליומן</span>`;
+    case 'ics_only': return `<span class="badge badge-warn">קובץ ICS מוכן</span>`;
+    case 'needs_review': return `<span class="badge badge-warn">דורש בדיקה ידנית</span>`;
+    default: return `<span class="badge badge-bad">שגיאה</span>`;
+  }
+}
+
+function formatEventMeta(record) {
+  if (!record.startDate) return record.location ? escapeHtml(record.location) : '';
+  const [y, m, d] = record.startDate.split('-');
+  const dateStr = `${d}.${m}.${y}`;
+  const timeStr = record.allDay ? 'כל היום' : `${pad(record.startHour)}:${pad(record.startMinute)}`;
+  return `${dateStr} · ${timeStr}${record.location ? ' · ' + escapeHtml(record.location) : ''}`;
+}
+
+function renderEventCard(record) {
+  const title = escapeHtml(record.title || record.fileName || 'אירוע');
+  const actions = [];
+  if (record.icsAvailable) {
+    actions.push(`<a class="btn btn-sm" href="/ics/${record.id}">📄 הוסף ליומן (ICS)</a>`);
+  }
+  if (record.calendarLink) {
+    actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.calendarLink)}" target="_blank" rel="noopener">פתח ביומן</a>`);
+  }
+  actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.driveLink)}" target="_blank" rel="noopener">🖼️ התמונה המקורית</a>`);
+
+  return `<div class="event">
+    <div class="row"><span class="event-title">${title}</span>${statusBadge(record)}</div>
+    <div class="event-meta">${formatEventMeta(record)}</div>
+    ${record.error ? `<div class="muted">${escapeHtml(record.error)}</div>` : ''}
+    <div class="actions">${actions.join('')}</div>
+  </div>`;
+}
+
+async function renderDashboard(env) {
+  const tokens = await getStoredTokens(env);
+  const connected = !!tokens?.refresh_token;
+  const folderName = env.DRIVE_FOLDER_NAME || 'CalendarIt';
+  let folderStatus = null;
+  if (connected) {
+    try {
+      const accessToken = await getAccessToken(env);
+      folderStatus = await findFolderId(env, accessToken);
+    } catch { /* ignore, connection card below already explains */ }
+  }
+  const events = await getEventsIndex(env);
+
+  return html(`<!doctype html><html lang="he" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar-It</title>
+${BASE_STYLE}
+</head><body><div class="wrap">
+<h1>🗓️ Calendar-It</h1>
+<p class="muted">מצלמים מסך של אירוע בפייסבוק, משתפים לתיקייה ב-Drive, וזהו — האירוע קופץ ליומן.</p>
+
+<div class="card">
+  <div class="row">
+    <div>
+      <div><strong>חיבור ל-Google</strong></div>
+      <div class="muted">${connected ? '✅ מחובר (Drive + Calendar)' : '❌ עדיין לא מחובר'}</div>
+    </div>
+    ${connected ? '' : '<a class="btn btn-primary" href="/auth/start">התחבר עם Google</a>'}
+  </div>
+  ${connected ? `<div class="row" style="margin-top:12px">
+    <div>
+      <div><strong>תיקיית Drive</strong></div>
+      <div class="muted">${folderStatus ? `✅ נמצאה: "${escapeHtml(folderName)}"` : `⚠️ לא נמצאה תיקייה בשם "${escapeHtml(folderName)}" — צור אותה ב-Drive (בתיקיית הבסיס) ושתף אליה צילומי מסך`}</div>
+    </div>
+  </div>` : ''}
+</div>
+
+<div class="card">
+  <div class="row">
+    <strong>סנכרון</strong>
+    <button class="btn btn-primary btn-sm" id="syncBtn" onclick="doSync()">🔄 סנכרן עכשיו</button>
+  </div>
+  <div class="muted" id="syncResult" style="margin-top:8px"></div>
+</div>
+
+<div class="card">
+  <strong>אירועים אחרונים</strong>
+  <div style="margin-top:10px">
+    ${events.length ? events.map(renderEventCard).join('') : '<p class="muted">עדיין אין אירועים. שתף צילום מסך לתיקייה ולחץ סנכרן.</p>'}
+  </div>
+</div>
+
+<div class="footer-note">הריצה האוטומטית בודקת קבצים חדשים כל 5 דקות · <a href="/logout">התנתקות מהדשבורד</a></div>
+</div>
+<script>
+async function doSync() {
+  const btn = document.getElementById('syncBtn');
+  const out = document.getElementById('syncResult');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⏳</span> מסנכרן...';
+  try {
+    const res = await fetch('/sync');
+    const data = await res.json();
+    if (!data.ok) {
+      out.textContent = data.reason === 'not_connected' ? 'צריך להתחבר ל-Google קודם.' :
+        data.reason === 'folder_not_found' ? 'לא נמצאה תיקיית "' + (data.folderName||'') + '" ב-Drive.' :
+        'הסנכרון נכשל.';
+    } else {
+      out.textContent = data.processed > 0 ? ('נמצאו ' + data.processed + ' צילומים חדשים!') : 'אין צילומים חדשים.';
+      if (data.processed > 0) setTimeout(() => location.reload(), 900);
+    }
+  } catch (e) {
+    out.textContent = 'שגיאת רשת בסנכרון.';
+  }
+  btn.disabled = false;
+  btn.innerHTML = '🔄 סנכרן עכשיו';
+}
+</script>
+</body></html>`);
+}
+
+// ============================================================================
+// Fetch handler
+// ============================================================================
+
+export default {
+  async fetch(request, env, ctx) {
+    const url = new URL(request.url);
+    const path = url.pathname;
+
+    if (path.startsWith('/ics/')) {
+      const id = path.slice('/ics/'.length);
+      const ics = await env.CAL_KV.get(`ics:${id}`);
+      if (!ics) return new Response('לא נמצא', { status: 404 });
+      return new Response(ics, {
+        headers: {
+          'content-type': 'text/calendar; charset=utf-8',
+          'content-disposition': `attachment; filename="event-${id}.ics"`,
+        },
+      });
+    }
+
+    if (path === '/login') {
+      if (request.method === 'POST') {
+        const form = await request.formData();
+        const key = form.get('key');
+        if (key === env.DASHBOARD_KEY) {
+          const headers = new Headers({ Location: '/' });
+          headers.append('Set-Cookie', `cal_key=${encodeURIComponent(key)}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
+          return new Response(null, { status: 302, headers });
+        }
+        return loginPage(true);
+      }
+      return loginPage(false);
+    }
+
+    if (path === '/logout') {
+      const headers = new Headers({ Location: '/login' });
+      headers.append('Set-Cookie', 'cal_key=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax');
+      return new Response(null, { status: 302, headers });
+    }
+
+    if (!isAuthorized(request, env)) {
+      if (url.searchParams.get('key')) {
+        const headers = new Headers({ Location: path });
+        headers.append('Set-Cookie', `cal_key=${encodeURIComponent(url.searchParams.get('key'))}; Path=/; Max-Age=31536000; HttpOnly; Secure; SameSite=Lax`);
+        return new Response(null, { status: 302, headers });
+      }
+      return loginPage(false);
+    }
+
+    if (path === '/auth/start') return handleAuthStart(request, env);
+    if (path === '/auth/callback') return handleAuthCallback(request, env);
+
+    if (path === '/sync') {
+      try {
+        const result = await syncOnce(env);
+        return json(result);
+      } catch (err) {
+        return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
+      }
+    }
+
+    if (path === '/' || path === '') return renderDashboard(env);
+
+    return new Response('לא נמצא', { status: 404 });
+  },
+
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(syncOnce(env).catch((err) => console.error('scheduled syncOnce failed:', err)));
+  },
+};
