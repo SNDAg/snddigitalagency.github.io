@@ -729,26 +729,57 @@ const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"
 const FAVICON_LINK = '<link rel="icon" href="/favicon.svg" type="image/svg+xml">';
 
 const BASE_STYLE = `<style>
-:root { --bg:#0f1420; --card:#171d2b; --border:#2a3244; --text:#e8ecf4; --muted:#8b95ab; --accent:#5b8cff; --good:#3ecf8e; --warn:#f5a623; --bad:#f45b69; }
+:root {
+  --bg:#0d1117; --bg-elev:#11161f; --card:#171d29; --card-hover:#1c2333; --border:#2a3244;
+  --text:#e8ecf4; --muted:#8b95ab; --accent:#5b8cff; --accent-soft:#5b8cff22;
+  --good:#3ecf8e; --warn:#f5a623; --bad:#f45b69; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+}
 @media (prefers-color-scheme: light) {
-  :root { --bg:#f5f6f9; --card:#ffffff; --border:#e2e5ec; --text:#1b2130; --muted:#6b7386; --accent:#3b6fe0; --good:#1f9d68; --warn:#c9790f; --bad:#d63849; }
+  :root {
+    --bg:#f3f5f9; --bg-elev:#eef1f6; --card:#ffffff; --card-hover:#f7f9fc; --border:#e4e8f0;
+    --text:#1b2130; --muted:#6b7386; --accent:#3b6fe0; --accent-soft:#3b6fe014;
+    --good:#1f9d68; --warn:#c9790f; --bad:#d63849; --shadow:0 1px 2px rgba(20,30,60,.05), 0 8px 24px -12px rgba(20,30,60,.12);
+  }
 }
 * { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; }
-.wrap { max-width:640px; margin:0 auto; padding:20px 16px 60px; }
-h1 { font-size:1.4rem; display:flex; align-items:center; gap:8px; }
-.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:16px; }
+body {
+  margin:0; background:
+    radial-gradient(1200px 420px at 50% -120px, var(--accent-soft), transparent),
+    var(--bg);
+  color:var(--text); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:640px; margin:0 auto; padding:24px 16px 60px; }
+.topbar { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:22px; }
+.brand { display:flex; align-items:center; gap:12px; }
+.brand-icon { font-size:1.5rem; width:44px; height:44px; flex:none; display:flex; align-items:center; justify-content:center; background:var(--card); border:1px solid var(--border); border-radius:13px; box-shadow:var(--shadow); }
+h1 { font-size:1.2rem; margin:0; font-weight:800; letter-spacing:-.01em; }
+.tagline { margin:2px 0 0; color:var(--muted); font-size:.85rem; }
+.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:16px; box-shadow:var(--shadow); }
+.alert-card { border-color:color-mix(in srgb, var(--warn) 45%, var(--border)); background:linear-gradient(var(--card), var(--card)) padding-box, linear-gradient(135deg, color-mix(in srgb, var(--warn) 14%, transparent), transparent) border-box; }
 .row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
 .muted { color:var(--muted); font-size:.9rem; }
-.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 18px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); text-decoration:none; font-size:.95rem; cursor:pointer; font-weight:600; }
-.btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+.btn {
+  display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 18px;
+  border-radius:11px; border:1px solid var(--border); background:var(--card); color:var(--text);
+  text-decoration:none; font-size:.95rem; cursor:pointer; font-weight:600;
+  transition:transform .12s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.btn:hover { background:var(--card-hover); transform:translateY(-1px); }
+.btn:active { transform:translateY(0); }
+.btn:disabled { opacity:.6; cursor:default; transform:none; }
+.btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 4px 14px -4px var(--accent); }
+.btn-primary:hover { filter:brightness(1.08); background:var(--accent); }
+.btn-danger { color:var(--bad); border-color:color-mix(in srgb, var(--bad) 35%, var(--border)); }
+.btn-danger:hover { background:color-mix(in srgb, var(--bad) 10%, var(--card)); }
 .btn-sm { padding:7px 12px; font-size:.85rem; }
 .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
-.badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
+.badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
 .badge-good { background:color-mix(in srgb, var(--good) 18%, transparent); color:var(--good); }
 .badge-warn { background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn); }
 .badge-bad { background:color-mix(in srgb, var(--bad) 18%, transparent); color:var(--bad); }
-.event { border-top:1px solid var(--border); padding:14px 0; }
+.event { border-top:1px solid var(--border); padding:14px 4px; margin:0 -4px; border-radius:10px; transition:background-color .15s ease; }
+.event:hover { background:var(--card-hover); }
 .event:first-child { border-top:none; padding-top:0; }
 .event-title { font-weight:700; font-size:1.02rem; }
 .event-meta { color:var(--muted); font-size:.88rem; margin:2px 0 8px; }
@@ -757,6 +788,17 @@ a { color:var(--accent); }
 .spin { animation:spin 1s linear infinite; display:inline-block; }
 @keyframes spin { to { transform:rotate(360deg); } }
 .footer-note { text-align:center; color:var(--muted); font-size:.8rem; margin-top:24px; }
+
+/* Settings gear + popover - the "connected, all good" state collapses to just this icon,
+   see the PM's ask: two green checkmarks every visit is noise once nothing needs attention. */
+.settings { position:relative; flex:none; }
+.settings > summary { list-style:none; width:40px; height:40px; border-radius:12px; border:1px solid var(--border); background:var(--card); box-shadow:var(--shadow); display:flex; align-items:center; justify-content:center; font-size:1.1rem; cursor:pointer; }
+.settings > summary::-webkit-details-marker, .settings > summary::marker { display:none; content:''; }
+.settings[open] > summary { background:var(--card-hover); }
+.settings-panel { position:absolute; inset-inline-start:0; top:48px; z-index:20; width:min(300px, 80vw); background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px; box-shadow:var(--shadow); }
+.settings-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 0; font-size:.9rem; }
+.settings-links { display:flex; flex-direction:column; gap:6px; margin-top:6px; padding-top:10px; border-top:1px solid var(--border); }
+.settings-links a { font-size:.85rem; }
 </style>`;
 
 function statusBadge(record) {
@@ -767,6 +809,30 @@ function statusBadge(record) {
     case 'deleted_from_calendar': return `<span class="badge badge-bad">🗑️ נמחק מהיומן</span>`;
     default: return `<span class="badge badge-bad">שגיאה</span>`;
   }
+}
+
+// An event with no resolved date (extraction failed) is never "in the past" - it still needs
+// a look. A dated event drops off once its own calendar day has fully elapsed (compared as
+// plain "YYYY-MM-DD" strings - deliberately day-granularity, not exact start/end time, since
+// this is just decluttering the dashboard and isn't worth the UTC/Asia-Jerusalem precision).
+function isPastEvent(record) {
+  if (!record.startDate) return false;
+  const todayStr = new Date().toISOString().slice(0, 10);
+  return (record.endDate || record.startDate) < todayStr;
+}
+
+// Keeps only the most recently processed record per Drive file. Normally there's exactly one
+// record per file (the "seen:" KV guard in syncOnce prevents reprocessing) - this only matters
+// when a file was reprocessed after clearing its seen key (e.g. while debugging a stuck
+// extraction), which otherwise leaves stale failed attempts sitting next to the eventual
+// success in the dashboard.
+function latestPerFile(events) {
+  const byFile = new Map();
+  for (const r of events) {
+    const existing = byFile.get(r.fileId);
+    if (!existing || new Date(r.createdAt) > new Date(existing.createdAt)) byFile.set(r.fileId, r);
+  }
+  return [...byFile.values()].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
 function formatEventMeta(record) {
@@ -785,7 +851,9 @@ function renderEventCard(record) {
   }
   if (record.status === 'added' && record.calendarLink) {
     actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.calendarLink)}" target="_blank" rel="noopener">פתח ביומן</a>`);
-    actions.push(`<button class="btn btn-sm" style="color:var(--bad)" onclick="deleteEvent('${record.id}', this)">🗑️ מחק מהיומן</button>`);
+  }
+  if (record.status === 'added' && record.calendarEventId) {
+    actions.push(`<button class="btn btn-sm btn-danger" onclick="deleteEvent('${record.id}', this)">🗑️ מחק מהיומן</button>`);
   }
   if (record.imageDeleted) {
     actions.push(`<span class="muted">🗑️ התמונה הועברה לפח ב-Drive</span>`);
@@ -814,9 +882,14 @@ async function renderDashboard(env) {
   }
   const logFileId = await env.CAL_KV.get('drive:log_file_id');
   const errorLogFileId = await env.CAL_KV.get('drive:error_log_file_id');
-  const events = await getEventsIndex(env);
+  const allEvents = await getEventsIndex(env);
   const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
-  const addedThisWeek = events.filter((r) => SUCCESS_STATUSES.has(r.status) && r.status !== 'deleted_from_calendar' && new Date(r.createdAt).getTime() >= weekAgo).length;
+  const addedThisWeek = allEvents.filter((r) => SUCCESS_STATUSES.has(r.status) && r.status !== 'deleted_from_calendar' && new Date(r.createdAt).getTime() >= weekAgo).length;
+  // Dashboard view only: past dated events and superseded reprocessing attempts drop out here
+  // (see isPastEvent/latestPerFile) - the full history still lives in events:index and the
+  // Drive log files regardless, this is purely about what's worth looking at right now.
+  const events = latestPerFile(allEvents).filter((r) => FAILURE_STATUSES.has(r.status) || !isPastEvent(r));
+  const fullyOk = connected && !!folderStatus;
 
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -824,28 +897,35 @@ async function renderDashboard(env) {
 ${FAVICON_LINK}
 ${BASE_STYLE}
 </head><body><div class="wrap">
-<h1>🗓️ Calendar-It</h1>
-<p class="muted">מצלמים מסך של אירוע, משתפים לתיקייה ב-Drive, וזהו — האירוע קופץ ליומן.</p>
 
-<div class="card">
-  <div class="row">
+<div class="topbar">
+  <div class="brand">
+    <span class="brand-icon">🗓️</span>
     <div>
-      <div><strong>חיבור ל-Google</strong></div>
-      <div class="muted">${connected ? '✅ מחובר (Drive + Calendar)' : '❌ עדיין לא מחובר'}</div>
+      <h1>Calendar-It</h1>
+      <p class="tagline">צילום מסך → אירוע ביומן, אוטומטית</p>
     </div>
-    ${connected ? '' : '<a class="btn btn-primary" href="/auth/start">התחבר עם Google</a>'}
   </div>
-  ${connected ? `<div class="row" style="margin-top:12px">
-    <div>
-      <div><strong>תיקיית Drive</strong></div>
-      <div class="muted">${folderStatus ? `✅ נמצאה: "${escapeHtml(folderName)}"` : `⚠️ לא נמצאה תיקייה בשם "${escapeHtml(folderName)}" — צור אותה ב-Drive (בתיקיית הבסיס) ושתף אליה צילומי מסך`}</div>
+  <details class="settings">
+    <summary title="חיבור והגדרות">⚙️</summary>
+    <div class="settings-panel">
+      <div class="settings-row"><span>חיבור ל-Google</span>${connected ? '<span class="badge badge-good">✓ מחובר</span>' : '<span class="badge badge-bad">✗ מנותק</span>'}</div>
+      ${connected ? `<div class="settings-row"><span>תיקיית Drive</span>${folderStatus ? '<span class="badge badge-good">✓ נמצאה</span>' : '<span class="badge badge-warn">לא נמצאה</span>'}</div>` : ''}
+      <a class="btn btn-sm btn-primary" style="width:100%;margin-top:10px" href="/auth/start">${connected ? '🔁 התחבר מחדש' : '🔌 התחבר עם Google'}</a>
+      ${logFileId || errorLogFileId ? `<div class="settings-links">
+        ${logFileId ? `<a href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 לוג אירועים</a>` : ''}
+        ${errorLogFileId ? `<a href="https://drive.google.com/file/d/${errorLogFileId}/view" target="_blank" rel="noopener">⚠️ לוג כשלונות</a>` : ''}
+      </div>` : ''}
+      <a class="muted" style="display:block;text-align:center;margin-top:12px;font-size:.8rem" href="/logout">התנתקות מהדשבורד</a>
     </div>
-  </div>` : ''}
-  ${logFileId || errorLogFileId ? `<div class="row" style="margin-top:12px;gap:8px">
-    ${logFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 לוג אירועים</a>` : ''}
-    ${errorLogFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${errorLogFileId}/view" target="_blank" rel="noopener">⚠️ לוג כשלונות</a>` : ''}
-  </div>` : ''}
+  </details>
 </div>
+
+${!fullyOk ? `<div class="card alert-card">
+  ${!connected
+    ? `<div class="row"><div><strong>עדיין לא מחובר ל-Google</strong><div class="muted">צריך להתחבר כדי לקרוא מהדרייב ולהוסיף ליומן.</div></div><a class="btn btn-primary btn-sm" href="/auth/start">התחבר</a></div>`
+    : `<div><strong>⚠️ תיקייה "${escapeHtml(folderName)}" לא נמצאה</strong><div class="muted" style="margin-top:4px">צרו אותה ב-Drive (בתיקיית הבסיס) ושתפו אליה צילומי מסך.</div></div>`}
+</div>` : ''}
 
 <div class="card">
   <div class="row">
