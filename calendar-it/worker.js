@@ -22,13 +22,22 @@
         generated and stored in KV, so there is a manual fallback if the
         auto-insert fails, the extraction needs a human glance, or the user
         just wants to hand a specific event's .ics to their phone.
-     6. GET / is a small dashboard (this IS the "known URL": open it,
+     6. Once extraction succeeds (so the .ics fallback already exists), the
+        source screenshot is moved to Drive's trash (trashDriveFile) - it
+        did its job and just clutters the folder otherwise. Left in place
+        when extraction fails/needs review, since it's the only copy a
+        human can still check. Every processed file (kept or trashed) also
+        gets one line appended to calendar-it-log.txt in the same Drive
+        folder (see buildLogText) - a plain-text audit trail with what was
+        read, when, and whether the image was deleted.
+     7. GET / is a small dashboard (this IS the "known URL": open it,
         tap "Sync now" or tap an event's "Add to calendar" button to pull
         a fresh .ics onto the phone) - covers both flows from the brief.
 
    Auth model:
-     - Google Drive (read-only) + Google Calendar (events) access uses a
-       standard OAuth "installed app" flow that the Worker itself hosts at
+     - Google Drive (full - see OAUTH_SCOPES, needed to trash files and
+       write the log) + Google Calendar (events) access uses a standard
+       OAuth "installed app" flow that the Worker itself hosts at
        /auth/start and /auth/callback - no separate script to run. The
        resulting refresh_token lives in KV (key "oauth:tokens") and access
        tokens are refreshed on demand (see getAccessToken).
@@ -52,12 +61,16 @@
      events:index          -> JSON array of the last 100 processed events,
                               newest first, for the dashboard list
      ics:<eventId>          -> raw .ics text served by /ics/:id
+     drive:log_file_id      -> cached id of calendar-it-log.txt (found/created once)
    ============================================================================ */
 
 const VISION_MODEL = '@cf/meta/llama-3.2-11b-vision-instruct';
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // vision input is sent as a JSON number array - keep this modest
+// Full (not readonly) Drive scope - needed to trash the source screenshot after it becomes an
+// event and to create/update the activity log file, both written into the same Drive folder.
+// If you connected before this scope changed, reconnect once via "התחבר עם Google" to upgrade.
 const OAUTH_SCOPES = [
-  'https://www.googleapis.com/auth/drive.readonly',
+  'https://www.googleapis.com/auth/drive',
   'https://www.googleapis.com/auth/calendar.events',
 ].join(' ');
 const EVENTS_INDEX_CAP = 100;
@@ -266,6 +279,80 @@ async function listNewImages(accessToken, folderId, sinceISO) {
 async function downloadFile(accessToken, fileId) {
   const resp = await driveApi(accessToken, `files/${fileId}?alt=media`);
   return resp.arrayBuffer();
+}
+
+// Moves the source screenshot to Drive's trash (recoverable for ~30 days) rather than a
+// permanent files.delete - this is a new AI feature acting on a single vision-model read of
+// the image, so keeping a recovery window for a bad extraction/wrong-file case felt safer
+// than an irreversible delete. Ask to switch to permanent delete if you'd rather not keep it.
+async function trashDriveFile(accessToken, fileId) {
+  await driveApi(accessToken, `files/${fileId}`, {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ trashed: true }),
+  });
+}
+
+const LOG_FILE_NAME = 'calendar-it-log.txt';
+
+async function findOrCreateLogFile(env, accessToken, folderId) {
+  const cached = await env.CAL_KV.get('drive:log_file_id');
+  if (cached) return cached;
+
+  const q = `'${folderId}' in parents and name='${LOG_FILE_NAME}' and trashed=false`;
+  const resp = await driveApi(accessToken, `files?q=${encodeURIComponent(q)}&fields=files(id)&pageSize=1`);
+  const data = await resp.json();
+  let id = data.files?.[0]?.id;
+
+  if (!id) {
+    const boundary = `calit_${crypto.randomUUID()}`;
+    const metadata = { name: LOG_FILE_NAME, parents: [folderId], mimeType: 'text/plain' };
+    const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`
+      + `--${boundary}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nCalendar-It — יומן פעילות\r\n\r\n--${boundary}--`;
+    const createResp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}`, 'content-type': `multipart/related; boundary=${boundary}` },
+      body,
+    });
+    if (!createResp.ok) throw new Error(`drive_log_create_failed_${createResp.status}: ${await createResp.text()}`);
+    id = (await createResp.json()).id;
+  }
+  await env.CAL_KV.put('drive:log_file_id', id);
+  return id;
+}
+
+async function writeLogFile(accessToken, logFileId, text) {
+  const resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${logFileId}?uploadType=media`, {
+    method: 'PATCH',
+    headers: { Authorization: `Bearer ${accessToken}`, 'content-type': 'text/plain; charset=UTF-8' },
+    body: text,
+  });
+  if (!resp.ok) throw new Error(`drive_log_write_failed_${resp.status}: ${await resp.text()}`);
+}
+
+function formatLogLine(record) {
+  const ts = (record.createdAt || '').replace('T', ' ').slice(0, 16);
+  const statusText = {
+    added: 'נוסף ליומן אוטומטית',
+    ics_only: 'חולץ בהצלחה, ICS מוכן (ההוספה האוטומטית ליומן נכשלה)',
+    needs_review: 'דורש בדיקה ידנית',
+    error: 'שגיאה בעיבוד',
+  }[record.status] || record.status;
+  const when = record.startDate
+    ? `${record.startDate.split('-').reverse().join('.')}${record.allDay ? '' : ' ' + pad(record.startHour) + ':' + pad(record.startMinute)}`
+    : '—';
+  const imgNote = record.imageDeleted ? 'התמונה נמחקה (הועברה לפח) מהתיקייה' : 'התמונה נשארה בתיקייה';
+  const parts = [
+    `[${ts}]`, statusText, '|', record.title || record.fileName, '|', when, '|', record.location || '—',
+    '|', `מקור: ${record.fileName}`, '|', imgNote,
+  ];
+  if (record.error) parts.push('|', `הערה: ${record.error}`);
+  return parts.join(' ');
+}
+
+function buildLogText(events) {
+  const header = 'Calendar-It — יומן פעילות (הכי חדש למעלה)\r\n' + '='.repeat(60) + '\r\n\r\n';
+  return header + events.map(formatLogLine).join('\r\n') + '\r\n';
 }
 
 // ============================================================================
@@ -506,6 +593,17 @@ async function syncOnce(env) {
             record.status = 'ics_only';
             record.error = String(err.message || err);
           }
+
+          // Extraction succeeded (we have a date + a saved .ics fallback either way) - the
+          // screenshot did its job, so clear it out of the folder. Left in place on
+          // needs_review/error below, since that's the only copy a human can still check.
+          try {
+            await trashDriveFile(accessToken, file.id);
+            record.imageDeleted = true;
+          } catch (err) {
+            record.imageDeleted = false;
+            record.deleteError = String(err.message || err);
+          }
         }
       }
     } catch (err) {
@@ -515,6 +613,16 @@ async function syncOnce(env) {
 
     await pushEventRecord(env, record);
     processed.push(record);
+  }
+
+  if (processed.length > 0) {
+    try {
+      const logFileId = await findOrCreateLogFile(env, accessToken, folderId);
+      const allEvents = await getEventsIndex(env);
+      await writeLogFile(accessToken, logFileId, buildLogText(allEvents));
+    } catch (err) {
+      console.error('calendar-it log file update failed:', err);
+    }
   }
 
   await env.CAL_KV.put('sync:last_check', new Date().toISOString());
@@ -597,7 +705,11 @@ function renderEventCard(record) {
   if (record.calendarLink) {
     actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.calendarLink)}" target="_blank" rel="noopener">פתח ביומן</a>`);
   }
-  actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.driveLink)}" target="_blank" rel="noopener">🖼️ התמונה המקורית</a>`);
+  if (record.imageDeleted) {
+    actions.push(`<span class="muted">🗑️ התמונה הועברה לפח ב-Drive</span>`);
+  } else {
+    actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.driveLink)}" target="_blank" rel="noopener">🖼️ התמונה המקורית</a>`);
+  }
 
   return `<div class="event">
     <div class="row"><span class="event-title">${title}</span>${statusBadge(record)}</div>
@@ -618,6 +730,7 @@ async function renderDashboard(env) {
       folderStatus = await findFolderId(env, accessToken);
     } catch { /* ignore, connection card below already explains */ }
   }
+  const logFileId = await env.CAL_KV.get('drive:log_file_id');
   const events = await getEventsIndex(env);
 
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
@@ -627,7 +740,7 @@ ${FAVICON_LINK}
 ${BASE_STYLE}
 </head><body><div class="wrap">
 <h1>🗓️ Calendar-It</h1>
-<p class="muted">מצלמים מסך של אירוע בפייסבוק, משתפים לתיקייה ב-Drive, וזהו — האירוע קופץ ליומן.</p>
+<p class="muted">מצלמים מסך של אירוע, משתפים לתיקייה ב-Drive, וזהו — האירוע קופץ ליומן.</p>
 
 <div class="card">
   <div class="row">
@@ -642,6 +755,7 @@ ${BASE_STYLE}
       <div><strong>תיקיית Drive</strong></div>
       <div class="muted">${folderStatus ? `✅ נמצאה: "${escapeHtml(folderName)}"` : `⚠️ לא נמצאה תיקייה בשם "${escapeHtml(folderName)}" — צור אותה ב-Drive (בתיקיית הבסיס) ושתף אליה צילומי מסך`}</div>
     </div>
+    ${logFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 קובץ לוג</a>` : ''}
   </div>` : ''}
 </div>
 
