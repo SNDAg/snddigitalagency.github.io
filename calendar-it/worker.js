@@ -26,13 +26,21 @@
         source screenshot is moved to Drive's trash (trashDriveFile) - it
         did its job and just clutters the folder otherwise. Left in place
         when extraction fails/needs review, since it's the only copy a
-        human can still check. Every processed file (kept or trashed) also
-        gets one line appended to calendar-it-log.txt in the same Drive
-        folder (see buildLogText) - a plain-text audit trail with what was
-        read, when, and whether the image was deleted.
+        human can still check. Two plain-text logs are kept up to date in
+        the same Drive folder (see refreshDriveLogs, rebuilt from the KV
+        events index on every run that processes at least one file):
+        calendar-it-log.txt (what got added to/removed from the calendar,
+        and whether the image was kept or trashed) and
+        calendar-it-errors.txt (everything the AI couldn't extract
+        cleanly, WITH the raw model output, for debugging without
+        re-fetching the image).
      7. GET / is a small dashboard (this IS the "known URL": open it,
         tap "Sync now" or tap an event's "Add to calendar" button to pull
         a fresh .ics onto the phone) - covers both flows from the brief.
+        It also lists recent events with a filter bar (all / last 7 days /
+        needs review) and a delete button per added event, which calls
+        DELETE on the Calendar API (see /delete-event, deleteCalendarEvent)
+        and updates both the dashboard and the Drive logs to match.
 
    Auth model:
      - Google Drive (full - see OAUTH_SCOPES, needed to trash files and
@@ -62,6 +70,7 @@
                               newest first, for the dashboard list
      ics:<eventId>          -> raw .ics text served by /ics/:id
      drive:log_file_id      -> cached id of calendar-it-log.txt (found/created once)
+     drive:error_log_file_id -> cached id of calendar-it-errors.txt (found/created once)
    ============================================================================ */
 
 const VISION_MODEL = '@cf/meta/llama-3.2-11b-vision-instruct';
@@ -293,36 +302,43 @@ async function trashDriveFile(accessToken, fileId) {
   });
 }
 
-const LOG_FILE_NAME = 'calendar-it-log.txt';
+// Two separate log files, both in the same Drive folder as the screenshots:
+//   calendar-it-log.txt    - what made it into (or out of) the calendar: added/deleted, when,
+//                            title/date/location, whether the source image was kept or trashed.
+//   calendar-it-errors.txt - everything the AI extraction couldn't handle cleanly, WITH the raw
+//                            model output/error, so you (or I, debugging later) can see exactly
+//                            why without needing to reprocess the image.
+const SUCCESS_LOG_NAME = 'calendar-it-log.txt';
+const ERROR_LOG_NAME = 'calendar-it-errors.txt';
 
-async function findOrCreateLogFile(env, accessToken, folderId) {
-  const cached = await env.CAL_KV.get('drive:log_file_id');
+async function findOrCreateNamedFile(env, kvKey, accessToken, folderId, fileName, initialText) {
+  const cached = await env.CAL_KV.get(kvKey);
   if (cached) return cached;
 
-  const q = `'${folderId}' in parents and name='${LOG_FILE_NAME}' and trashed=false`;
+  const q = `'${folderId}' in parents and name='${fileName}' and trashed=false`;
   const resp = await driveApi(accessToken, `files?q=${encodeURIComponent(q)}&fields=files(id)&pageSize=1`);
   const data = await resp.json();
   let id = data.files?.[0]?.id;
 
   if (!id) {
     const boundary = `calit_${crypto.randomUUID()}`;
-    const metadata = { name: LOG_FILE_NAME, parents: [folderId], mimeType: 'text/plain' };
+    const metadata = { name: fileName, parents: [folderId], mimeType: 'text/plain' };
     const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(metadata)}\r\n`
-      + `--${boundary}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nCalendar-It — יומן פעילות\r\n\r\n--${boundary}--`;
+      + `--${boundary}\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n${initialText}\r\n--${boundary}--`;
     const createResp = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}`, 'content-type': `multipart/related; boundary=${boundary}` },
       body,
     });
-    if (!createResp.ok) throw new Error(`drive_log_create_failed_${createResp.status}: ${await createResp.text()}`);
+    if (!createResp.ok) throw new Error(`drive_file_create_failed_${createResp.status}: ${await createResp.text()}`);
     id = (await createResp.json()).id;
   }
-  await env.CAL_KV.put('drive:log_file_id', id);
+  await env.CAL_KV.put(kvKey, id);
   return id;
 }
 
-async function writeLogFile(accessToken, logFileId, text) {
-  const resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${logFileId}?uploadType=media`, {
+async function writeLogFile(accessToken, fileId, text) {
+  const resp = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${accessToken}`, 'content-type': 'text/plain; charset=UTF-8' },
     body: text,
@@ -330,40 +346,80 @@ async function writeLogFile(accessToken, logFileId, text) {
   if (!resp.ok) throw new Error(`drive_log_write_failed_${resp.status}: ${await resp.text()}`);
 }
 
-function formatLogLine(record) {
+function formatWhen(record) {
+  return record.startDate
+    ? `${record.startDate.split('-').reverse().join('.')}${record.allDay ? '' : ' ' + pad(record.startHour) + ':' + pad(record.startMinute)}`
+    : '—';
+}
+
+function formatSuccessLogLine(record) {
   const ts = (record.createdAt || '').replace('T', ' ').slice(0, 16);
   const statusText = {
     added: 'נוסף ליומן אוטומטית',
     ics_only: 'חולץ בהצלחה, ICS מוכן (ההוספה האוטומטית ליומן נכשלה)',
-    needs_review: 'דורש בדיקה ידנית',
-    error: 'שגיאה בעיבוד',
+    deleted_from_calendar: `נמחק מהיומן ידנית${record.deletedAt ? ' ב-' + record.deletedAt.replace('T', ' ').slice(0, 16) : ''}`,
   }[record.status] || record.status;
-  const when = record.startDate
-    ? `${record.startDate.split('-').reverse().join('.')}${record.allDay ? '' : ' ' + pad(record.startHour) + ':' + pad(record.startMinute)}`
-    : '—';
-  const imgNote = record.imageDeleted ? 'התמונה נמחקה (הועברה לפח) מהתיקייה' : 'התמונה נשארה בתיקייה';
-  const parts = [
-    `[${ts}]`, statusText, '|', record.title || record.fileName, '|', when, '|', record.location || '—',
+  const imgNote = record.imageDeleted ? 'התמונה הועברה לפח בתיקייה' : 'התמונה נשארה בתיקייה';
+  return [
+    `[${ts}]`, statusText, '|', record.title || record.fileName, '|', formatWhen(record), '|', record.location || '—',
     '|', `מקור: ${record.fileName}`, '|', imgNote,
-  ];
-  if (record.error) parts.push('|', `הערה: ${record.error}`);
-  return parts.join(' ');
+  ].join(' ');
 }
 
-function buildLogText(events) {
-  const header = 'Calendar-It — יומן פעילות (הכי חדש למעלה)\r\n' + '='.repeat(60) + '\r\n\r\n';
-  return header + events.map(formatLogLine).join('\r\n') + '\r\n';
+function buildSuccessLogText(events) {
+  const header = 'Calendar-It — אירועים שנוספו/נמחקו מהיומן (הכי חדש למעלה)\r\n' + '='.repeat(60) + '\r\n\r\n';
+  if (events.length === 0) return header + '(עדיין אין אירועים)\r\n';
+  return header + events.map(formatSuccessLogLine).join('\r\n') + '\r\n';
+}
+
+function formatErrorLogLine(record) {
+  const ts = (record.createdAt || '').replace('T', ' ').slice(0, 16);
+  const statusText = record.status === 'error' ? 'שגיאת עיבוד' : 'דורש בדיקה ידנית';
+  const imgNote = record.imageDeleted ? 'התמונה הועברה לפח' : 'התמונה עדיין בתיקייה';
+  const lines = [
+    `[${ts}] ${statusText} | קובץ: ${record.fileName} | ${imgNote} | קישור לתמונה: ${record.driveLink}`,
+    `  סיבה: ${record.error || 'לא ידועה'}`,
+  ];
+  if (record.rawText) lines.push(`  פלט גולמי מה-AI: ${record.rawText.replace(/\r?\n/g, ' \\n ')}`);
+  return lines.join('\r\n');
+}
+
+function buildErrorLogText(events) {
+  const header = 'Calendar-It — כשלונות חילוץ (הכי חדש למעלה)\r\n' + '='.repeat(60) + '\r\n\r\n';
+  if (events.length === 0) return header + '(אין כשלונות רשומים)\r\n';
+  return header + events.map(formatErrorLogLine).join('\r\n\r\n') + '\r\n';
+}
+
+const SUCCESS_STATUSES = new Set(['added', 'ics_only', 'deleted_from_calendar']);
+const FAILURE_STATUSES = new Set(['needs_review', 'error']);
+
+async function refreshDriveLogs(env, accessToken, folderId) {
+  const allEvents = await getEventsIndex(env);
+  const successLogId = await findOrCreateNamedFile(
+    env, 'drive:log_file_id', accessToken, folderId, SUCCESS_LOG_NAME, 'Calendar-It — אירועים שנוספו/נמחקו מהיומן\r\n\r\n',
+  );
+  await writeLogFile(accessToken, successLogId, buildSuccessLogText(allEvents.filter((r) => SUCCESS_STATUSES.has(r.status))));
+
+  const errorLogId = await findOrCreateNamedFile(
+    env, 'drive:error_log_file_id', accessToken, folderId, ERROR_LOG_NAME, 'Calendar-It — כשלונות חילוץ\r\n\r\n',
+  );
+  await writeLogFile(accessToken, errorLogId, buildErrorLogText(allEvents.filter((r) => FAILURE_STATUSES.has(r.status))));
 }
 
 // ============================================================================
 // Google Calendar
 // ============================================================================
 
+// Google Calendar's 11 fixed event colors are a stable, undocumented-by-id-name-in-the-API-
+// response palette (colorId "5" = "Banana", the yellow one in Calendar's own color picker).
+const EVENT_COLOR_ID_YELLOW = '5';
+
 async function insertCalendarEvent(accessToken, ev) {
   const body = {
     summary: ev.title,
     location: ev.location || undefined,
     description: ev.description,
+    colorId: EVENT_COLOR_ID_YELLOW,
     start: ev.allDay ? { date: ev.startDate } : { dateTime: `${ev.startDate}T${pad(ev.startHour)}:${pad(ev.startMinute)}:00`, timeZone: 'Asia/Jerusalem' },
     end: ev.allDay ? { date: ev.endDate } : { dateTime: `${ev.endDate}T${pad(ev.endHour)}:${pad(ev.endMinute)}:00`, timeZone: 'Asia/Jerusalem' },
   };
@@ -377,6 +433,17 @@ async function insertCalendarEvent(accessToken, ev) {
     throw new Error(`calendar_insert_failed_${resp.status}: ${text}`);
   }
   return resp.json();
+}
+
+async function deleteCalendarEvent(accessToken, calendarEventId) {
+  const resp = await fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${calendarEventId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  // 410/404 means it's already gone (e.g. deleted by hand in Google Calendar already) - treat as success.
+  if (!resp.ok && resp.status !== 410 && resp.status !== 404) {
+    throw new Error(`calendar_delete_failed_${resp.status}: ${await resp.text()}`);
+  }
 }
 
 // ============================================================================
@@ -529,6 +596,15 @@ async function pushEventRecord(env, record) {
   await env.CAL_KV.put('events:index', JSON.stringify(index.slice(0, EVENTS_INDEX_CAP)));
 }
 
+async function updateEventRecord(env, id, patch) {
+  const index = await getEventsIndex(env);
+  const i = index.findIndex((r) => r.id === id);
+  if (i === -1) return null;
+  index[i] = { ...index[i], ...patch };
+  await env.CAL_KV.put('events:index', JSON.stringify(index));
+  return index[i];
+}
+
 async function syncOnce(env) {
   let accessToken;
   try {
@@ -593,6 +669,7 @@ async function syncOnce(env) {
             });
             record.status = 'added';
             record.calendarLink = inserted.htmlLink;
+            record.calendarEventId = inserted.id;
           } catch (err) {
             record.status = 'ics_only';
             record.error = String(err.message || err);
@@ -621,11 +698,9 @@ async function syncOnce(env) {
 
   if (processed.length > 0) {
     try {
-      const logFileId = await findOrCreateLogFile(env, accessToken, folderId);
-      const allEvents = await getEventsIndex(env);
-      await writeLogFile(accessToken, logFileId, buildLogText(allEvents));
+      await refreshDriveLogs(env, accessToken, folderId);
     } catch (err) {
-      console.error('calendar-it log file update failed:', err);
+      console.error('calendar-it log files update failed:', err);
     }
   }
 
@@ -668,6 +743,7 @@ h1 { font-size:1.4rem; display:flex; align-items:center; gap:8px; }
 .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:11px 18px; border-radius:10px; border:1px solid var(--border); background:var(--card); color:var(--text); text-decoration:none; font-size:.95rem; cursor:pointer; font-weight:600; }
 .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
 .btn-sm { padding:7px 12px; font-size:.85rem; }
+.filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
 .badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:700; }
 .badge-good { background:color-mix(in srgb, var(--good) 18%, transparent); color:var(--good); }
 .badge-warn { background:color-mix(in srgb, var(--warn) 18%, transparent); color:var(--warn); }
@@ -688,6 +764,7 @@ function statusBadge(record) {
     case 'added': return `<span class="badge badge-good">✓ נוסף ליומן</span>`;
     case 'ics_only': return `<span class="badge badge-warn">קובץ ICS מוכן</span>`;
     case 'needs_review': return `<span class="badge badge-warn">דורש בדיקה ידנית</span>`;
+    case 'deleted_from_calendar': return `<span class="badge badge-bad">🗑️ נמחק מהיומן</span>`;
     default: return `<span class="badge badge-bad">שגיאה</span>`;
   }
 }
@@ -706,8 +783,9 @@ function renderEventCard(record) {
   if (record.icsAvailable) {
     actions.push(`<a class="btn btn-sm" href="/ics/${record.id}">📄 הוסף ליומן (ICS)</a>`);
   }
-  if (record.calendarLink) {
+  if (record.status === 'added' && record.calendarLink) {
     actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.calendarLink)}" target="_blank" rel="noopener">פתח ביומן</a>`);
+    actions.push(`<button class="btn btn-sm" style="color:var(--bad)" onclick="deleteEvent('${record.id}', this)">🗑️ מחק מהיומן</button>`);
   }
   if (record.imageDeleted) {
     actions.push(`<span class="muted">🗑️ התמונה הועברה לפח ב-Drive</span>`);
@@ -715,7 +793,7 @@ function renderEventCard(record) {
     actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.driveLink)}" target="_blank" rel="noopener">🖼️ התמונה המקורית</a>`);
   }
 
-  return `<div class="event">
+  return `<div class="event" data-status="${escapeHtml(record.status)}" data-created="${escapeHtml(record.createdAt || '')}">
     <div class="row"><span class="event-title">${title}</span>${statusBadge(record)}</div>
     <div class="event-meta">${formatEventMeta(record)}</div>
     ${record.error ? `<div class="muted">${escapeHtml(record.error)}</div>` : ''}
@@ -735,7 +813,10 @@ async function renderDashboard(env) {
     } catch { /* ignore, connection card below already explains */ }
   }
   const logFileId = await env.CAL_KV.get('drive:log_file_id');
+  const errorLogFileId = await env.CAL_KV.get('drive:error_log_file_id');
   const events = await getEventsIndex(env);
+  const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+  const addedThisWeek = events.filter((r) => SUCCESS_STATUSES.has(r.status) && r.status !== 'deleted_from_calendar' && new Date(r.createdAt).getTime() >= weekAgo).length;
 
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -759,7 +840,10 @@ ${BASE_STYLE}
       <div><strong>תיקיית Drive</strong></div>
       <div class="muted">${folderStatus ? `✅ נמצאה: "${escapeHtml(folderName)}"` : `⚠️ לא נמצאה תיקייה בשם "${escapeHtml(folderName)}" — צור אותה ב-Drive (בתיקיית הבסיס) ושתף אליה צילומי מסך`}</div>
     </div>
-    ${logFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 קובץ לוג</a>` : ''}
+  </div>` : ''}
+  ${logFileId || errorLogFileId ? `<div class="row" style="margin-top:12px;gap:8px">
+    ${logFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 לוג אירועים</a>` : ''}
+    ${errorLogFileId ? `<a class="btn btn-sm" href="https://drive.google.com/file/d/${errorLogFileId}/view" target="_blank" rel="noopener">⚠️ לוג כשלונות</a>` : ''}
   </div>` : ''}
 </div>
 
@@ -772,10 +856,19 @@ ${BASE_STYLE}
 </div>
 
 <div class="card">
-  <strong>אירועים אחרונים</strong>
-  <div style="margin-top:10px">
+  <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:6px">
+    <strong>אירועים</strong>
+    <span class="muted">${addedThisWeek} נוספו בשבוע האחרון</span>
+  </div>
+  <div class="actions" style="margin-bottom:10px">
+    <button class="btn btn-sm filter-btn active" data-filter="all" onclick="setFilter('all', this)">הכל</button>
+    <button class="btn btn-sm filter-btn" data-filter="week" onclick="setFilter('week', this)">השבוע האחרון</button>
+    <button class="btn btn-sm filter-btn" data-filter="failed" onclick="setFilter('failed', this)">דורש בדיקה</button>
+  </div>
+  <div id="eventsList">
     ${events.length ? events.map(renderEventCard).join('') : '<p class="muted">עדיין אין אירועים. שתף צילום מסך לתיקייה ולחץ סנכרן.</p>'}
   </div>
+  <p class="muted" id="filterEmpty" style="display:none">אין אירועים שתואמים לסינון הזה.</p>
 </div>
 
 <div class="footer-note">הריצה האוטומטית בודקת קבצים חדשים כל 5 דקות · <a href="/logout">התנתקות מהדשבורד</a></div>
@@ -802,6 +895,43 @@ async function doSync() {
   }
   btn.disabled = false;
   btn.innerHTML = '🔄 סנכרן עכשיו';
+}
+
+function setFilter(mode, btn) {
+  const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+  let shown = 0;
+  document.querySelectorAll('#eventsList .event').forEach((el) => {
+    const status = el.dataset.status;
+    const created = new Date(el.dataset.created).getTime();
+    let show = true;
+    if (mode === 'week') show = created >= weekAgo;
+    if (mode === 'failed') show = (status === 'needs_review' || status === 'error');
+    el.style.display = show ? '' : 'none';
+    if (show) shown++;
+  });
+  document.querySelectorAll('.filter-btn').forEach((b) => b.classList.toggle('active', b === btn));
+  document.getElementById('filterEmpty').style.display = shown === 0 ? '' : 'none';
+}
+
+async function deleteEvent(id, btn) {
+  if (!confirm('למחוק את האירוע הזה מהיומן? (התמונה בדרייב, אם עדיין קיימת, לא תושפע)')) return;
+  btn.disabled = true;
+  btn.textContent = 'מוחק...';
+  try {
+    const res = await fetch('/delete-event?id=' + encodeURIComponent(id), { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      location.reload();
+    } else {
+      alert('המחיקה נכשלה: ' + (data.detail || data.reason || 'שגיאה לא ידועה'));
+      btn.disabled = false;
+      btn.textContent = '🗑️ מחק מהיומן';
+    }
+  } catch (e) {
+    alert('שגיאת רשת במחיקה.');
+    btn.disabled = false;
+    btn.textContent = '🗑️ מחק מהיומן';
+  }
 }
 </script>
 </body></html>`);
@@ -868,6 +998,30 @@ export default {
       try {
         const result = await syncOnce(env);
         return json(result);
+      } catch (err) {
+        return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
+      }
+    }
+
+    if (path === '/delete-event' && request.method === 'POST') {
+      const id = url.searchParams.get('id');
+      const index = await getEventsIndex(env);
+      const record = index.find((r) => r.id === id);
+      if (!record) return json({ ok: false, reason: 'not_found' }, 404);
+      if (!record.calendarEventId) return json({ ok: false, reason: 'no_calendar_event' }, 400);
+      try {
+        const accessToken = await getAccessToken(env);
+        await deleteCalendarEvent(accessToken, record.calendarEventId);
+        const updated = await updateEventRecord(env, id, {
+          status: 'deleted_from_calendar', calendarLink: null, deletedAt: new Date().toISOString(),
+        });
+        try {
+          const folderId = await findFolderId(env, accessToken);
+          if (folderId) await refreshDriveLogs(env, accessToken, folderId);
+        } catch (err) {
+          console.error('calendar-it log refresh after delete failed:', err);
+        }
+        return json({ ok: true, record: updated });
       } catch (err) {
         return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
       }
