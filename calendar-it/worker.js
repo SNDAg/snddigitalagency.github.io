@@ -418,7 +418,11 @@ async function extractEventFromImage(env, arrayBuffer) {
   const match = text.match(/\{[\s\S]*\}/);
   if (!match) return { error: 'no_json_in_response', raw: text };
   try {
-    const parsed = JSON.parse(match[0]);
+    // The model sometimes writes zero-padded numbers (e.g. "minute": 09), which is a real
+    // event - Hebrew screenshots often show times like 17:09 - but invalid JSON (a number
+    // literal can't have a leading zero). Strip the padding before parsing: "09" -> "9".
+    const sanitized = match[0].replace(/:(\s*)0+(\d)/g, ':$1$2');
+    const parsed = JSON.parse(sanitized);
     return { data: parsed };
   } catch (err) {
     return { error: 'json_parse_failed', raw: text };
