@@ -112,6 +112,7 @@ function loginPage(error) {
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calendar-It — התחברות</title>
+${FAVICON_LINK}
 ${BASE_STYLE}
 </head><body><div class="wrap"><div class="card" style="max-width:360px;margin:15vh auto">
 <h1 style="margin-top:0">🗓️ Calendar-It</h1>
@@ -524,6 +525,22 @@ async function syncOnce(env) {
 // Dashboard UI
 // ============================================================================
 
+// Calendar-with-checkmark mark, in the app's own accent/good colors (see BASE_STYLE)
+// - a browser-tab favicon, served as a real file so it's cacheable instead of inlined per page.
+const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<defs><linearGradient id="g" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+<stop offset="0" stop-color="#6b9bff"/><stop offset="1" stop-color="#3b5fdb"/>
+</linearGradient></defs>
+<rect width="64" height="64" rx="14" fill="url(#g)"/>
+<rect x="9" y="13" width="46" height="40" rx="7" fill="#ffffff"/>
+<path d="M9 27h46v-7a7 7 0 0 0-7-7H16a7 7 0 0 0-7 7z" fill="#ff5b6b"/>
+<circle cx="21" cy="13" r="3.4" fill="#ffffff"/>
+<circle cx="43" cy="13" r="3.4" fill="#ffffff"/>
+<circle cx="46" cy="47" r="13" fill="#2fbf71" stroke="#ffffff" stroke-width="3.2"/>
+<path d="M39.5 47l4.3 4.3 8-8.6" stroke="#ffffff" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>`;
+const FAVICON_LINK = '<link rel="icon" href="/favicon.svg" type="image/svg+xml">';
+
 const BASE_STYLE = `<style>
 :root { --bg:#0f1420; --card:#171d2b; --border:#2a3244; --text:#e8ecf4; --muted:#8b95ab; --accent:#5b8cff; --good:#3ecf8e; --warn:#f5a623; --bad:#f45b69; }
 @media (prefers-color-scheme: light) {
@@ -606,6 +623,7 @@ async function renderDashboard(env) {
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Calendar-It</title>
+${FAVICON_LINK}
 ${BASE_STYLE}
 </head><body><div class="wrap">
 <h1>🗓️ Calendar-It</h1>
@@ -679,6 +697,10 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const path = url.pathname;
+
+    if (path === '/favicon.svg' || path === '/favicon.ico') {
+      return new Response(FAVICON_SVG, { headers: { 'content-type': 'image/svg+xml', 'cache-control': 'public, max-age=604800' } });
+    }
 
     if (path.startsWith('/ics/')) {
       const id = path.slice('/ics/'.length);
