@@ -318,7 +318,11 @@ function sanitizeFilmTitle(raw, englishFallback) {
     if (best) title = best;
     else if (englishFallback) title = englishFallback;
   }
-  return title.replace(/^[\s:\-–—]+|[\s:\-–—]+$/g, '').replace(/\s+/g, ' ').trim() || raw;
+  // Strip a lone trailing period too - some chains (e.g. Rav-Hen) append one to every title,
+  // which otherwise makes the same film register as two distinct titles ("Movie" vs "Movie.")
+  // and show up twice in title-keyed views like buildImdbRankingsList (see index.html). A
+  // trailing "..." ellipsis is left alone via the lookbehind, since that's meaningful punctuation.
+  return title.replace(/^[\s:\-–—]+|[\s:\-–—]+$/g, '').replace(/(?<!\.)\.$/, '').replace(/\s+/g, ' ').trim() || raw;
 }
 
 async function fetchVistaDay(sourceKey, dateStr) {
