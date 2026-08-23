@@ -93,6 +93,11 @@ header.app-header{margin:18px 0 22px}
    עם תווית מזמינה במקום אייקון בלבד, כדי לגרות לחיצה בפועל ולא רק להיראות כאייקון טכני. */
 .whatsapp-share-cta{background:linear-gradient(135deg,#25d366,#1da851);border-color:transparent;color:#fff;font-weight:700;box-shadow:0 4px 14px rgba(37,211,102,.35);transition:transform .2s,box-shadow .2s}
 .whatsapp-share-cta:hover{background:linear-gradient(135deg,#22c35e,#1a9648);transform:translateY(-1px);box-shadow:0 6px 18px rgba(37,211,102,.45)}
+/* אייקון השיתוף הקלאסי (חץ מיוצא) לצד לוגו הוואטסאפ - לא מחליף אותו, רק מבהיר עוד יותר
+   שזו פעולת "שיתוף" ולא "פתחו את הוואטסאפ" (רלוונטי בעיקר במובייל, שם התווית הטקסטואלית
+   מוסתרת - ר' .whatsapp-cta-label{display:none} במדיה-קוורי המובייל). קטן ומעומעם יותר
+   מהאייקון הראשי כדי שההיררכיה תישאר ברורה: וואטסאפ הוא הפעולה, השיתוף הוא הרמז לצידה. */
+.whatsapp-share-cta .share-glyph{font-size:.62em;opacity:.75;margin-inline-start:-3px}
 
 /* נקודת בריאות עדינה (משימה 7) - ירוקה כשכל המקורות תקינים, כתומה כשמקור אחד או יותר
    מציג נתוני fallback ממטמון (ר' refreshEvents ב-worker), בתוספת שעת העדכון האחרון -
@@ -343,6 +348,10 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 .event-meta-compact i{color:var(--accent);font-size:.85em}
 .event-meta-compact .meta-sep{color:var(--border);opacity:.7}
 .event-meta-compact .meta-venue{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* תג "בעוד..." (ר' formatCountdownLabel) - מוצג רק לאירועי היום שעוד לא התחילו, בצבע
+   האזעקה העדין (warn) כדי להיקרא כמידע דחוף/רגיש-לזמן, שונה מיתר המטא-דאטה הניטרלית. */
+.event-countdown{color:var(--warn);font-weight:700}
+.event-countdown i{color:var(--warn) !important}
 
 /* תקציר עלילה - מוגבל ל-2 שורות כברירת מחדל, עם toggle "קרא עוד/פחות" שלא דורש רינדור מחדש */
 .event-synopsis-wrap{margin-bottom:10px}
@@ -360,7 +369,7 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 .showtime-toggle.open .showtime-chevron{transform:rotate(180deg)}
 .showtime-options{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
 .showtime-options.open{display:flex}
-.showtime-chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);font-size:.78rem;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .15s}
+.showtime-chip{background:rgba(15,23,42,.5);border:1px solid var(--border);color:var(--text-main);font-size:.78rem;padding:5px 12px;border-radius:20px;cursor:pointer;transition:all .15s;text-decoration:none;display:inline-block}
 .showtime-chip:hover{border-color:var(--accent)}
 .showtime-chip.active{background:var(--accent);border-color:var(--accent);font-weight:700}
 
@@ -390,6 +399,12 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 .select-check .check-box i{font-size:.7rem;color:#fff;opacity:0;transform:scale(.4)}
 .select-check input:checked + .check-box{background:linear-gradient(135deg,var(--accent),#8b5cf6);border-color:transparent;transform:scale(1.08)}
 .select-check input:checked + .check-box i{opacity:1;transform:scale(1)}
+
+/* כפתור "מחר" בסוף רשימת "היום" - קטן ועדין בכוונה (ר' renderEvents), לא .chip/.pill-btn
+   הרגילים (44px, רקע מלא) שהיו נראים כמו עוד CTA ראשי בסוף רשימה שכבר יש בה תוצאות. */
+.end-of-list-tomorrow{grid-column:1/-1;justify-self:center;display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--text-muted);font-size:.78rem;font-weight:600;cursor:pointer;padding:14px 6px 4px;font-family:inherit;transition:color .15s}
+.end-of-list-tomorrow:hover{color:var(--accent)}
+.end-of-list-tomorrow i{font-size:.85em}
 
 .loader-container,.no-results{grid-column:1/-1;text-align:center;padding:40px;color:var(--text-muted)}
 .no-results i{display:block;font-size:2rem;margin-bottom:12px;color:var(--text-muted)}
@@ -461,6 +476,25 @@ a.imdb-badge:hover{background:rgba(var(--imdb-rgb),.22)}
 .trailer-fallback{text-align:center;padding:36px 16px}
 .trailer-fallback i{font-size:2.2rem;color:var(--text-muted);margin-bottom:12px;display:block}
 .trailer-fallback p{color:var(--text-muted);margin-bottom:16px}
+
+/* כרטיס-פרטים כללי לסרט "המומלץ" (ר' openMovieDetailModal) - הירו רחב-מסך בלי padding
+   (כמו .card-image, רק גדול יותר) ואז תוכן עם padding רגיל מתחתיו. הסלקטור המורכב
+   .modal-box.movie-detail-box (במקום .movie-detail-box לבד) גובר במפורש גם על
+   .modal-box{padding:26px} וגם על הגרסה הממוזערת שלו במדיה-קוורי המובייל, בלי תלות
+   בסדר-הופעה במקור. */
+.modal-box.movie-detail-box{max-width:520px;width:100%;padding:0;overflow:hidden}
+.movie-detail-hero{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(99,102,241,.35),rgba(139,92,246,.35))}
+.movie-detail-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.movie-detail-hero .fallback-icon{display:none;font-size:2.4rem;color:rgba(255,255,255,.85)}
+.movie-detail-hero.img-fallback .fallback-icon{display:block}
+.movie-detail-hero.img-fallback.type-theatre{background:linear-gradient(135deg,rgba(236,72,153,.4),rgba(139,92,246,.35))}
+.movie-detail-hero.img-fallback.type-cinema{background:linear-gradient(135deg,rgba(6,182,212,.4),rgba(99,102,241,.35))}
+.movie-detail-hero.img-fallback.type-music{background:linear-gradient(135deg,rgba(16,185,129,.4),rgba(6,182,212,.35))}
+.movie-detail-hero.img-fallback.type-standup{background:linear-gradient(135deg,rgba(249,115,22,.4),rgba(236,72,153,.35))}
+.movie-detail-close{position:absolute;top:12px;left:12px}
+.movie-detail-content{padding:20px}
+.movie-detail-content h3{font-size:1.15rem;font-weight:700;margin-bottom:10px;line-height:1.3}
+.movie-detail-content .event-synopsis{margin-bottom:14px}
 
 footer{text-align:center;color:var(--text-muted);font-size:.78rem;margin:30px 0 10px;line-height:1.7}
 footer a{color:var(--accent)}
@@ -590,7 +624,7 @@ footer a{color:var(--accent)}
     <div class="topbar">
       <div class="brand"><span class="emoji-accent">🎭</span> SHOWMUST</div>
       <div class="topbar-actions">
-        <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים בוואטסאפ"><i class="fa-brands fa-whatsapp"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
+        <button class="icon-btn whatsapp-share-cta" onclick="shareAppToWhatsapp()" title="שתפו את SHOWMUST עם חברים" aria-label="שתפו את SHOWMUST"><i class="fa-brands fa-whatsapp"></i><i class="fa-solid fa-arrow-up-from-bracket share-glyph" aria-hidden="true"></i> <span class="whatsapp-cta-label">שתפו עם חברים</span></button>
       </div>
     </div>
     <p class="tagline">Show Must Go On | מה עושים הלילה?</p>
@@ -655,7 +689,7 @@ footer a{color:var(--accent)}
        בגיליון - שתי תצוגות מסונכרנות, לא state כפול. -->
   <div class="quick-imdb-bar" id="quickImdbBar" role="group" aria-label="סינון לפי דירוג IMDb" style="display:none">
     <button type="button" class="chip active" data-min="0" onclick="setImdbRatingFilter(0)"><i class="fa-solid fa-star"></i> הכל</button>
-    <button type="button" class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
+    <button type="button" class="chip" data-min="6.5" onclick="setImdbRatingFilter(6.5)">6.5+</button>
     <button type="button" class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
     <button type="button" class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
     <button type="button" class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
@@ -729,6 +763,7 @@ footer a{color:var(--accent)}
           <button class="chip" data-range="3days" onclick="setQuickDate('3days',this)">3 הימים הקרובים</button>
           <button class="chip" data-range="week" onclick="setQuickDate('week',this)">השבוע</button>
           <button class="chip" data-range="2weeks" onclick="setQuickDate('2weeks',this)">בשבועיים הקרובים</button>
+          <button class="chip" data-range="3weeks" onclick="setQuickDate('3weeks',this)">ב-3 השבועות הקרובים</button>
           <button class="chip" data-range="custom" onclick="setQuickDate('custom',this)"><i class="fa-solid fa-sliders"></i> מותאם אישית</button>
         </div>
 
@@ -765,7 +800,7 @@ footer a{color:var(--accent)}
         <h3><span class="section-icon imdb-icon"><i class="fa-solid fa-star"></i></span> ציון IMDb מינימלי</h3>
         <div class="chips-row" id="imdbRatingChips">
           <button class="chip active" data-min="0" onclick="setImdbRatingFilter(0)">הכל</button>
-          <button class="chip" data-min="6" onclick="setImdbRatingFilter(6)">6+</button>
+          <button class="chip" data-min="6.5" onclick="setImdbRatingFilter(6.5)">6.5+</button>
           <button class="chip" data-min="7" onclick="setImdbRatingFilter(7)">7+</button>
           <button class="chip" data-min="7.5" onclick="setImdbRatingFilter(7.5)">7.5+</button>
           <button class="chip" data-min="8" onclick="setImdbRatingFilter(8)">8+</button>
@@ -810,6 +845,15 @@ footer a{color:var(--accent)}
 <div id="trailerModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeTrailerModal()">
   <div class="modal-box trailer-box">
     <div id="trailerModalBody"></div>
+  </div>
+</div>
+
+<!-- כרטיס-פרטים כללי לסרט "המומלץ" (ר' openMovieDetailModal) - נפתח במקום טריילר ישיר
+     בלחיצה על רצועת "המומלץ": פוסטר/תקציר/מטא-דאטה + כפתור "כרטיסים" (זהה לכרטיס הרגיל)
+     וכפתור "קולנועים" חדש שפותח רשימת כל בתי-הקולנוע שמקרינים את הסרט הזה כרגע. -->
+<div id="movieDetailModal" class="modal-overlay" style="display:none" onclick="if(event.target===this) closeMovieDetailModal()">
+  <div class="modal-box movie-detail-box">
+    <div id="movieDetailModalBody"></div>
   </div>
 </div>
 
@@ -877,7 +921,14 @@ document.getElementById('startDate').value = localDateStr(today);
 document.getElementById('endDate').value = localDateStr(today);
 let appliedStartTime = '00:00';
 let appliedEndTime = '23:59';
-const MAX_CUSTOM_RANGE_DAYS = 14;
+// 21 יום - עקבי עם צ'יפ "3 השבועות הקרובים" ועם SEARCH_DATE_HORIZON_DAYS (חיפוש חופשי):
+// טווח מותאם אישית לא אמור להיות מוגבל יותר מהפריסטים/מהחיפוש עצמם.
+const MAX_CUSTOM_RANGE_DAYS = 21;
+// חיפוש חופשי (searchInput) לא אמור להיות כבול לטווח התאריך/שעה הצר שנבחר כרגע (למשל
+// "היום") - ר' computeFilteredEvents: כשיש מונח חיפוש פעיל, גבול התאריך העליון מורחב
+// ל-21 יום קדימה (ולא מצטמצם משהו רחב יותר שכבר נבחר במפורש), כדי שחיפוש שם הצגה/סרט
+// ימצא תוצאות גם כשהן לא "היום" - עקבי עם אותו אופק של 3 השבועות בכל שאר האתר.
+const SEARCH_DATE_HORIZON_DAYS = 21;
 let currentQuickRange = 'today'; // עוקב אחרי טווח התאריכים המהיר הפעיל, לצורך "ברירת מחדל" בפופאובר השעות
 
 /* סינון מהיר לפי שעת היום ברמת התוצאות (ר' quickTimeBar ב-HTML) - טווחים חופפים במכוון
@@ -967,6 +1018,27 @@ function escapeHtml(str){
 
 function localDateStr(d){
   return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+/* תווית "בעוד..." לאירוע שמתחיל היום ועדיין לא התחיל - מחושבת בדיוק דקות (Math.round על
+   פער המילישניות, לא חלוקה גסה לשעות שלמות) כדי שהמספר יהיה מדויק לאורך כל השעה, למשל
+   ב-13:10 להצגה ב-15:30 מציגה "בעוד שעתיים ו-20 דק'" ולא "בעוד שעה" (שהוא הפער בין
+   *השעות העגולות* 13 ו-15, לא הזמן שנותר בפועל). מוחזר null לאירוע שכבר התחיל, או לאירוע
+   שלא היום (ר' shouldShowCountdown) - התג רלוונטי רק ל"עוד מעט מתחילים", לא לתאריך רחוק. */
+function formatCountdownLabel(date){
+  const diffMs = date.getTime() - Date.now();
+  if (diffMs <= 0) return null;
+  const totalMinutes = Math.round(diffMs / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours === 0) return `בעוד ${minutes} דק'`;
+  const hoursLabel = hours === 1 ? 'שעה' : hours === 2 ? 'שעתיים' : `${hours} שעות`;
+  if (minutes === 0) return `בעוד ${hoursLabel}`;
+  return `בעוד ${hoursLabel} ו-${minutes} דק'`;
+}
+
+function shouldShowCountdown(date){
+  return localDateStr(date) === localDateStr(new Date()) && date.getTime() > Date.now();
 }
 
 /* כותרת קיבוץ ידידותית ליום נתון: היום/מחר/מחרתיים לשלושת הימים הקרובים ביותר,
@@ -1211,6 +1283,7 @@ function setQuickDate(range, btn){
   else if (range === '3days') end.setDate(today.getDate()+3);
   else if (range === 'week') end.setDate(today.getDate()+7);
   else if (range === '2weeks') end.setDate(today.getDate()+14);
+  else if (range === '3weeks') end.setDate(today.getDate()+21);
   document.getElementById('startDate').value = localDateStr(start);
   document.getElementById('endDate').value = localDateStr(range === 'today' || range === 'tomorrow' ? start : end);
   updateFilterBadge();
@@ -1854,6 +1927,95 @@ function closeTrailerModal(){
   document.getElementById('trailerModalBody').innerHTML = ''; // מסיר את ה-iframe בפועל, כדי לעצור ניגון ברקע
 }
 
+/* ===================== כרטיס-פרטים כללי ל"המומלץ" (במקום טריילר ישיר) =====================
+   נפתח מרצועת "המומלץ" (renderTopPick) - פוסטר/מטא-דאטה/תקציר בדיוק כמו כרטיס רגיל ברשת,
+   ובנוסף כפתור "קולנועים" (בדיוק אותו רכיב ותפקוד כמו "שעות נוספות" בכרטיס קולנוע מקובץ
+   - ר' toggleShowtimePicker/.showtime-toggle - רק שכאן הוא חושף בתי-קולנוע שונים באותו סרט,
+   לא הקרנות שונות באותו בית קולנוע) שמראה איפה עוד אפשר לראות את הסרט הזה בשלושת השבועות
+   הקרובים (אותו אופק כמו SEARCH_DATE_HORIZON_DAYS), בלי תלות בפילטרים הפעילים כרגע. */
+function openMovieDetailModal(id){
+  const ev = currentFiltered.find(e => e.id === id) || allEvents.find(e => e.id === id);
+  if (!ev) return;
+
+  const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
+  const badgeClass = ev.type === 'theatre' ? 'badge-theatre' : ev.type === 'cinema' ? 'badge-cinema' : ev.type === 'standup' ? 'badge-standup' : 'badge-music';
+  const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : ev.type === 'standup' ? 'סטנדאפ' : 'מוזיקה';
+  const shortDay = ev.date.toLocaleDateString('he-IL', { weekday:'short' });
+  const dd = String(ev.date.getDate()).padStart(2,'0');
+  const mm = String(ev.date.getMonth()+1).padStart(2,'0');
+  const timeStr = ev.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+  const countdownLabel = shouldShowCountdown(ev.date) ? formatCountdownLabel(ev.date) : null;
+  const gCal = createGoogleCalendarLink(ev);
+
+  // "קולנועים" = בתי קולנוע שונים שמקרינים את הסרט, לא כל הקרנה בנפרד (שם היא כבר תפקידו
+  // של "שעות נוספות" בכרטיס הרגיל) - אחרת סרט פופולרי בפלאנט איילון לבדו יכול להציג עשרות
+  // הקרנות נפרדות ברשימה שטוחה אחת. שומרים רק את ההקרנה הקרובה ביותר לכל בית קולנוע.
+  const horizonEnd = new Date(today); horizonEnd.setDate(horizonEnd.getDate() + SEARCH_DATE_HORIZON_DAYS);
+  const sameMovieByVenue = new Map();
+  allEvents
+    .filter(e => e.type === 'cinema' && e.title === ev.title && e.date <= horizonEnd)
+    .sort((a,b) => a.date - b.date)
+    .forEach(e => { if (!sameMovieByVenue.has(e.venue)) sameMovieByVenue.set(e.venue, e); });
+  const cinemaVenues = Array.from(sameMovieByVenue.values());
+  const cinemasHtml = cinemaVenues.map(e => {
+    const t = e.date.toLocaleTimeString('he-IL', { hour:'2-digit', minute:'2-digit' });
+    const d = `${String(e.date.getDate()).padStart(2,'0')}.${String(e.date.getMonth()+1).padStart(2,'0')}`;
+    return `<a href="${e.link}" target="_blank" rel="noopener" class="showtime-chip">${escapeHtml(e.venue)} · הקרנה קרובה ${d} ${t}</a>`;
+  }).join('');
+  const cinemasBlock = cinemaVenues.length ? `
+    <div class="showtime-picker">
+      <button type="button" class="showtime-toggle" onclick="toggleShowtimePicker(this)">
+        <i class="fa-solid fa-clapperboard"></i> קולנועים (${cinemaVenues.length}) <i class="fa-solid fa-chevron-down showtime-chevron"></i>
+      </button>
+      <div class="showtime-options">${cinemasHtml}</div>
+    </div>` : '';
+
+  const heroImg = ev.image
+    ? `<img src="${escapeHtml(ev.image)}" alt="" referrerpolicy="no-referrer" onerror="this.closest('.movie-detail-hero').classList.add('img-fallback');this.remove()">`
+    : '';
+
+  document.getElementById('movieDetailModalBody').innerHTML = `
+    <div class="movie-detail-hero ${ev.image ? '' : 'img-fallback'} type-${ev.type}">
+      ${heroImg}
+      <i class="fa-solid ${typeIcon} fallback-icon"></i>
+      <div class="card-image-overlay"></div>
+      <button type="button" class="trailer-close-btn movie-detail-close" onclick="closeMovieDetailModal()" aria-label="סגירה"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="movie-detail-content">
+      <div class="card-meta">
+        <span class="badge ${badgeClass}">${escapeHtml(ev.venue)}</span>
+        <span class="type-badge">${typeLabel}</span>
+        ${imdbBadgeHtml(ev)}
+      </div>
+      <h3>${escapeHtml(ev.title)}</h3>
+      <div class="event-meta-compact">
+        <span><i class="fa-regular fa-calendar"></i> ${escapeHtml(shortDay)} ${dd}.${mm}</span>
+        <span class="meta-sep">•</span>
+        <span><i class="fa-regular fa-clock"></i> ${timeStr}</span>
+        <span class="meta-sep">•</span>
+        <span class="meta-venue"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</span>
+        ${countdownLabel ? `<span class="meta-sep">•</span><span class="event-countdown"><i class="fa-solid fa-hourglass-half"></i> ${escapeHtml(countdownLabel)}</span>` : ''}
+      </div>
+      ${ev.synopsis ? `<p class="event-synopsis expanded">${escapeHtml(ev.synopsis)}</p>` : ''}
+      ${cinemasBlock}
+      <div class="card-actions">
+        <div class="btn-row-compact">
+          <a href="${navLink(ev)}" target="_blank" rel="noopener" class="icon-only-btn" title="ניווט עם Waze" aria-label="ניווט עם Waze"><i class="fa-solid fa-car"></i></a>
+          <a href="${gCal}" target="_blank" rel="noopener" class="icon-only-btn" title="הוספה ליומן" aria-label="הוספה ליומן"><i class="fa-regular fa-calendar-plus"></i></a>
+          <a href="${ev.link}" target="_blank" rel="noopener" class="btn-primary-cta"><i class="fa-solid fa-ticket"></i> כרטיסים</a>
+        </div>
+        ${ev.trailerUrl ? `<button type="button" onclick="closeMovieDetailModal();openTrailerModal('${ev.id}')" class="btn-trailer-bar"><i class="fa-brands fa-youtube"></i> טריילר</button>` : ''}
+      </div>
+    </div>
+  `;
+  document.getElementById('movieDetailModal').style.display = 'flex';
+}
+
+function closeMovieDetailModal(){
+  document.getElementById('movieDetailModal').style.display = 'none';
+  document.getElementById('movieDetailModalBody').innerHTML = '';
+}
+
 function quickExpand(range){
   const btn = document.querySelector(`.chip[data-range="${range}"]`);
   if (btn) setQuickDate(range, btn);
@@ -2254,13 +2416,27 @@ function isEveningRange(startTime){
 function computeFilteredEvents(types){
   const activeTypes = types || selectedTypes;
   const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+  const isSearching = !!searchTerm;
   const startDateVal = document.getElementById('startDate').value;
   const endDateVal = document.getElementById('endDate').value;
+
+  // חיפוש פעיל מרחיב את גבול התאריך העליון ל-SEARCH_DATE_HORIZON_DAYS קדימה מהיום (ולא
+  // רק "היום"/מה שנבחר בפילטר) - ר' תיעוד הקבוע. לא מצמצם טווח שכבר רחב יותר שנבחר
+  // במפורש (מותאם אישית) - רק דואג שהחיפוש לעולם לא יהיה צר יותר מ-3 השבועות.
+  let effectiveStartDateVal = startDateVal, effectiveEndDateVal = endDateVal;
+  if (isSearching){
+    const horizonEnd = new Date(today); horizonEnd.setDate(horizonEnd.getDate() + SEARCH_DATE_HORIZON_DAYS);
+    const horizonEndStr = localDateStr(horizonEnd);
+    effectiveStartDateVal = localDateStr(today);
+    effectiveEndDateVal = (!endDateVal || endDateVal < horizonEndStr) ? horizonEndStr : endDateVal;
+  }
+
   const selectedVenues = Array.from(document.querySelectorAll('.venue-filter:checked')).map(cb => cb.value);
   const totalVenueCount = document.querySelectorAll('.venue-filter').length;
   const venuesManuallyNarrowed = selectedVenues.length > 0 && selectedVenues.length < totalVenueCount;
   const cinemaVenueChecked = selectedVenues.some(v => CINEMA_VENUES.includes(v));
-  const cinemaAllowedInAll = isSingleDayRange(startDateVal, endDateVal)
+  const cinemaAllowedInAll = isSearching
+    || isSingleDayRange(startDateVal, endDateVal)
     || isTimeWindowFocusedRange(appliedStartTime, appliedEndTime)
     || isEveningRange(appliedStartTime)
     || (venuesManuallyNarrowed && cinemaVenueChecked);
@@ -2276,16 +2452,21 @@ function computeFilteredEvents(types){
       || activeTypes.has(ev.type)
       || (activeTypes.has('all') && (ev.type !== 'cinema' || cinemaAllowedInAll));
     const dateStr = localDateStr(ev.date);
-    const matchesDate = (!startDateVal || dateStr >= startDateVal) && (!endDateVal || dateStr <= endDateVal);
+    const matchesDate = (!effectiveStartDateVal || dateStr >= effectiveStartDateVal) && (!effectiveEndDateVal || dateStr <= effectiveEndDateVal);
     const hh = String(ev.date.getHours()).padStart(2,'0');
     const mm = String(ev.date.getMinutes()).padStart(2,'0');
     const timeStr = `${hh}:${mm}`;
     // טווח "רגיל" (start<=end): AND כרגיל. טווח "עוטף חצות" (start>end, כמו "ערב" הקבוע-מראש
     // 17:00-04:00 - ר' TIME_OF_DAY_RANGES) - OR: השעה צריכה להיות אחרי ההתחלה *או* לפני הסיום,
     // לא בין שניהם (אין "בין 17:00 ל-04:00" רציף על ציר יחיד בלי לעטוף).
-    const matchesTime = appliedStartTime <= appliedEndTime
+    // בזמן חיפוש, מגבלת שעה שהיא רק ברירת מחדל של הטווח (לא בחירה מפורשת של בוקר/אחה"צ/ערב -
+    // ר' activeQuickTimeOfDay) לא אמורה "לדלוף" ולחתוך שעות בוקר בימים עתידיים שנכנסו רק
+    // בזכות הרחבת התאריך לחיפוש - למשל "היום" מגביל כברירת מחדל משעה נוכחית, אבל זה לא
+    // אמור לחסום הקרנת בוקר של אותו סרט בעוד שבוע.
+    const searchTimeUnrestricted = isSearching && !activeQuickTimeOfDay;
+    const matchesTime = searchTimeUnrestricted || (appliedStartTime <= appliedEndTime
       ? (timeStr >= appliedStartTime && timeStr <= appliedEndTime)
-      : (timeStr >= appliedStartTime || timeStr <= appliedEndTime);
+      : (timeStr >= appliedStartTime || timeStr <= appliedEndTime));
     const matchesFav = !showOnlyFavs || favorites.includes(ev.id);
     const matchesSelected = !showOnlySelected || selectedIds.has(ev.id);
     const matchesImdbRating = minImdbRating <= 0 || ev.type !== 'cinema' || imdbRatingPasses(ev);
@@ -2336,8 +2517,8 @@ function topPickLabel(){
    תנאי כמו פילטר דירוג ה-IMDb) - בתצוגה הכללית ("הכל") היא לא רלוונטית לרוב האירועים
    המוצגים, ומרגישה כמו פרסומת מוזרה לתיאטרון/מוזיקה. מוסתרת גם במצב "מסומנים בלבד"
    (השוואה/לינאפ משותף - רעש חזותי מיותר כשהמשתמש כבר מתמקד ברשימה ספציפית) ובזמן חיפוש
-   פעיל (המשתמש כבר מחפש משהו מסוים, לא רוצה הסחת דעת). לוחצים -> אותו openTrailerModal
-   שהכרטיסים עצמם משתמשים בו, שכבר נופל בחזרה בעדינות למסך "חפשו ביוטיוב" כשאין טריילר ישיר. */
+   פעיל (המשתמש כבר מחפש משהו מסוים, לא רוצה הסחת דעת). לוחצים -> openMovieDetailModal:
+   כרטיס-פרטים כללי על הסרט (לא ישר טריילר) - ר' תיעוד שם. */
 function renderTopPick(events){
   const strip = document.getElementById('topPickStrip');
   if (!strip) return;
@@ -2358,7 +2539,7 @@ function renderTopPick(events){
   const pick = rated[0];
   const label = topPickLabel();
   strip.innerHTML = `
-    <button type="button" class="top-pick-inner" onclick="openTrailerModal('${pick.id}')">
+    <button type="button" class="top-pick-inner" onclick="openMovieDetailModal('${pick.id}')">
       <span class="top-pick-icon">🔥</span>
       <span class="top-pick-text"><strong>${label}:</strong> ${escapeHtml(pick.title)}<span class="top-pick-rating"><i class="fa-solid fa-star"></i> ${escapeHtml(pick.imdbRating)}</span></span>
       <i class="fa-solid fa-chevron-left top-pick-arrow"></i>
@@ -2414,7 +2595,7 @@ function renderEvents(events){
         <div class="no-results-actions">
           ${timeClearBtn}
           <button class="chip" onclick="quickExpand('week')">הציגו את השבוע הקרוב</button>
-          <button class="chip" onclick="quickExpand('2weeks')">הציגו את השבועיים הקרובים</button>
+          <button class="chip" onclick="quickExpand('3weeks')">הציגו את 3 השבועות הקרובים</button>
         </div>
       </div>`;
     scheduleScrollCueEvaluation();
@@ -2487,6 +2668,7 @@ function renderEvents(events){
     const typeLabel = ev.type === 'theatre' ? 'תיאטרון' : ev.type === 'cinema' ? 'קולנוע' : ev.type === 'standup' ? 'סטנדאפ' : 'מוזיקה';
     const typeIcon = TYPE_ICON[ev.type] || 'fa-star';
     const gCal = createGoogleCalendarLink(ev);
+    const countdownLabel = shouldShowCountdown(ev.date) ? formatCountdownLabel(ev.date) : null;
 
     const imageBlock = ev.image
       ? `<div class="card-image type-${ev.type}"><img src="${escapeHtml(ev.image)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.card-image').classList.add('img-fallback');this.remove()"><i class="fa-solid ${typeIcon} fallback-icon"></i><div class="card-image-overlay"></div></div>`
@@ -2515,6 +2697,7 @@ function renderEvents(events){
           <span><i class="fa-regular fa-clock"></i> ${timeStr}</span>
           <span class="meta-sep">•</span>
           <span class="meta-venue"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(ev.extra || ev.venue)}</span>
+          ${countdownLabel ? `<span class="meta-sep">•</span><span class="event-countdown"><i class="fa-solid fa-hourglass-half"></i> ${escapeHtml(countdownLabel)}</span>` : ''}
         </div>
         ${showtimePickerHtml}
         ${ev.synopsis ? `
@@ -2534,6 +2717,18 @@ function renderEvents(events){
     `;
     container.appendChild(card);
   });
+
+  // כפתור "מחר" קטן ועדין בתחתית רשימת "היום" (ר' .end-of-list-tomorrow) - להבדיל
+  // בבירור מכפתורי מצב-ריק הבולטים (no-results-actions) שמוצגים רק כשאין 0 תוצאות:
+  // כאן יש תוצאות, זו רק קיצור-דרך נוח להמשיך הלאה בלי לפתוח את גיליון הסינון.
+  if (currentQuickRange === 'today'){
+    const tomorrowRow = document.createElement('button');
+    tomorrowRow.type = 'button';
+    tomorrowRow.className = 'end-of-list-tomorrow';
+    tomorrowRow.onclick = () => quickExpand('tomorrow');
+    tomorrowRow.innerHTML = '<span>למחר</span><i class="fa-solid fa-chevron-left"></i>';
+    container.appendChild(tomorrowRow);
+  }
 
   scheduleScrollCueEvaluation();
 }
