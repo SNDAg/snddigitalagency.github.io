@@ -199,6 +199,24 @@ function oauthRedirectUri(url) {
   return `${url.origin}/auth/callback`;
 }
 
+// "Connected" only tells us a refresh_token exists - it says nothing about which scopes it was
+// actually granted with. Reconnecting after OAUTH_SCOPES changed silently keeps the OLD scope
+// if the new one was never added to the OAuth consent screen's scope list in Cloud Console (a
+// one-time step Google requires for restricted scopes like full Drive access, separate from
+// clicking "connect" again) - which is exactly what caused Drive trash/log writes to keep
+// failing after a "successful" reconnect. Checking the live token's scope, instead of trusting
+// that a reconnect fixed things, is what actually catches that.
+async function getGrantedScopes(accessToken) {
+  try {
+    const resp = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${encodeURIComponent(accessToken)}`);
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    return (data.scope || '').split(' ').filter(Boolean);
+  } catch {
+    return null;
+  }
+}
+
 async function handleAuthStart(request, env) {
   const url = new URL(request.url);
   if (!env.GOOGLE_CLIENT_ID) {
@@ -465,6 +483,22 @@ Rules:
 - If you cannot find any date in the image, set "day" and "month" to null.
 Respond with the JSON object only.`;
 
+// Workers AI's vision model occasionally throws a transient "capacity temporarily exceeded"
+// error (observed directly while building this, code 3040) that has nothing to do with the
+// image itself - a couple of short retries clears most of them up.
+async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
+  let lastErr;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await env.AI.run(VISION_MODEL, { image, prompt: EXTRACTION_PROMPT, max_tokens: 512, temperature: 0 });
+    } catch (err) {
+      lastErr = err;
+      if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, 1000 * attempt));
+    }
+  }
+  throw lastErr;
+}
+
 async function extractEventFromImage(env, arrayBuffer) {
   if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
     return { error: 'image_too_large' };
@@ -472,14 +506,9 @@ async function extractEventFromImage(env, arrayBuffer) {
   const image = Array.from(new Uint8Array(arrayBuffer));
   let result;
   try {
-    result = await env.AI.run(VISION_MODEL, {
-      image,
-      prompt: EXTRACTION_PROMPT,
-      max_tokens: 512,
-      temperature: 0,
-    });
+    result = await runVisionModelWithRetry(env, image);
   } catch (err) {
-    return { error: 'ai_call_failed', detail: String(err) };
+    return { error: 'ai_call_failed', raw: String(err.message || err) };
   }
   const text = result?.response || '';
   const match = text.match(/\{[\s\S]*\}/);
@@ -799,6 +828,19 @@ a { color:var(--accent); }
 .settings-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:6px 0; font-size:.9rem; }
 .settings-links { display:flex; flex-direction:column; gap:6px; margin-top:6px; padding-top:10px; border-top:1px solid var(--border); }
 .settings-links a { font-size:.85rem; }
+
+.tabs { display:flex; gap:6px; margin-bottom:14px; background:var(--bg-elev); padding:4px; border-radius:12px; }
+.tab-btn { flex:1; border:none; background:transparent; padding:9px 10px; border-radius:9px; font-weight:700; font-size:.88rem; cursor:pointer; color:var(--muted); transition:background-color .15s ease, color .15s ease; }
+.tab-btn.active { background:var(--card); color:var(--text); box-shadow:var(--shadow); }
+.btn-ghost { border-color:transparent; background:transparent; color:var(--muted); }
+.btn-ghost:hover { background:var(--card-hover); color:var(--bad); }
+.raw-details { margin-top:6px; font-size:.82rem; }
+.raw-details summary { cursor:pointer; color:var(--muted); }
+.raw-details pre { white-space:pre-wrap; word-break:break-word; background:var(--bg-elev); border:1px solid var(--border); border-radius:8px; padding:8px; margin-top:6px; font-size:.78rem; }
+.empty-state { text-align:center; padding:28px 10px; color:var(--muted); }
+.empty-state .emoji { font-size:2rem; display:block; margin-bottom:8px; }
+@keyframes fadeInUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+.event { animation:fadeInUp .35s ease both; }
 </style>`;
 
 function statusBadge(record) {
@@ -860,11 +902,17 @@ function renderEventCard(record) {
   } else {
     actions.push(`<a class="btn btn-sm" href="${escapeHtml(record.driveLink)}" target="_blank" rel="noopener">🖼️ התמונה המקורית</a>`);
   }
+  actions.push(`<button class="btn btn-sm btn-ghost" title="הסר מהרשימה בדשבורד (לא נוגע ביומן/בתמונה)" onclick="removeEvent('${record.id}', this)">✕ הסר מהרשימה</button>`);
+
+  const rawTextBlock = record.rawText && FAILURE_STATUSES.has(record.status)
+    ? `<details class="raw-details"><summary>פלט גולמי מה-AI</summary><pre>${escapeHtml(record.rawText)}</pre></details>`
+    : '';
 
   return `<div class="event" data-status="${escapeHtml(record.status)}" data-created="${escapeHtml(record.createdAt || '')}">
     <div class="row"><span class="event-title">${title}</span>${statusBadge(record)}</div>
     <div class="event-meta">${formatEventMeta(record)}</div>
     ${record.error ? `<div class="muted">${escapeHtml(record.error)}</div>` : ''}
+    ${rawTextBlock}
     <div class="actions">${actions.join('')}</div>
   </div>`;
 }
@@ -874,11 +922,14 @@ async function renderDashboard(env) {
   const connected = !!tokens?.refresh_token;
   const folderName = env.DRIVE_FOLDER_NAME || 'CalendarIt';
   let folderStatus = null;
+  let hasWriteScope = null; // null = unknown (couldn't check) - only nag when we're sure it's missing
   if (connected) {
     try {
       const accessToken = await getAccessToken(env);
       folderStatus = await findFolderId(env, accessToken);
-    } catch { /* ignore, connection card below already explains */ }
+      const scopes = await getGrantedScopes(accessToken);
+      if (scopes) hasWriteScope = scopes.includes('https://www.googleapis.com/auth/drive');
+    } catch { /* ignore, alert banner below already explains */ }
   }
   const logFileId = await env.CAL_KV.get('drive:log_file_id');
   const errorLogFileId = await env.CAL_KV.get('drive:error_log_file_id');
@@ -889,7 +940,9 @@ async function renderDashboard(env) {
   // (see isPastEvent/latestPerFile) - the full history still lives in events:index and the
   // Drive log files regardless, this is purely about what's worth looking at right now.
   const events = latestPerFile(allEvents).filter((r) => FAILURE_STATUSES.has(r.status) || !isPastEvent(r));
-  const fullyOk = connected && !!folderStatus;
+  const successEvents = events.filter((r) => SUCCESS_STATUSES.has(r.status) && r.status !== 'deleted_from_calendar');
+  const failureEvents = events.filter((r) => FAILURE_STATUSES.has(r.status));
+  const fullyOk = connected && !!folderStatus && hasWriteScope !== false;
 
   return html(`<!doctype html><html lang="he" dir="rtl"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -911,6 +964,7 @@ ${BASE_STYLE}
     <div class="settings-panel">
       <div class="settings-row"><span>חיבור ל-Google</span>${connected ? '<span class="badge badge-good">✓ מחובר</span>' : '<span class="badge badge-bad">✗ מנותק</span>'}</div>
       ${connected ? `<div class="settings-row"><span>תיקיית Drive</span>${folderStatus ? '<span class="badge badge-good">✓ נמצאה</span>' : '<span class="badge badge-warn">לא נמצאה</span>'}</div>` : ''}
+      ${connected ? `<div class="settings-row"><span>הרשאת כתיבה ל-Drive</span>${hasWriteScope === false ? '<span class="badge badge-bad">חסרה</span>' : hasWriteScope === true ? '<span class="badge badge-good">✓ יש</span>' : '<span class="badge badge-warn">לא ידוע</span>'}</div>` : ''}
       <a class="btn btn-sm btn-primary" style="width:100%;margin-top:10px" href="/auth/start">${connected ? '🔁 התחבר מחדש' : '🔌 התחבר עם Google'}</a>
       ${logFileId || errorLogFileId ? `<div class="settings-links">
         ${logFileId ? `<a href="https://drive.google.com/file/d/${logFileId}/view" target="_blank" rel="noopener">📋 לוג אירועים</a>` : ''}
@@ -924,6 +978,15 @@ ${BASE_STYLE}
 ${!fullyOk ? `<div class="card alert-card">
   ${!connected
     ? `<div class="row"><div><strong>עדיין לא מחובר ל-Google</strong><div class="muted">צריך להתחבר כדי לקרוא מהדרייב ולהוסיף ליומן.</div></div><a class="btn btn-primary btn-sm" href="/auth/start">התחבר</a></div>`
+    : hasWriteScope === false
+    ? `<div><strong>⚠️ חסרה הרשאת כתיבה ל-Drive</strong><div class="muted" style="margin-top:4px">בלי זה, מחיקת תמונות וקבצי הלוג ימשיכו להיכשל בשקט (האירועים עצמם כן ייכנסו ליומן כרגיל). לחיצה נוספת על "התחבר מחדש" <u>לא מספיקה</u> אם ה-scope הזה לא הוגדר קודם ב-Google Cloud Console:</div>
+       <ol class="muted" style="margin:8px 0 10px;padding-inline-start:20px;line-height:1.7">
+         <li>console.cloud.google.com → הפרויקט שלכם → <strong>APIs &amp; Services → OAuth consent screen</strong></li>
+         <li><strong>Data Access → Add or Remove Scopes</strong></li>
+         <li>סמנו את <code>.../auth/drive</code> ("See, edit, create, and delete all of your Google Drive files") ושמרו</li>
+         <li>חזרו לכאן ולחצו "התחבר מחדש"</li>
+       </ol>
+       <a class="btn btn-primary btn-sm" href="/auth/start">🔁 התחבר מחדש</a></div>`
     : `<div><strong>⚠️ תיקייה "${escapeHtml(folderName)}" לא נמצאה</strong><div class="muted" style="margin-top:4px">צרו אותה ב-Drive (בתיקיית הבסיס) ושתפו אליה צילומי מסך.</div></div>`}
 </div>` : ''}
 
@@ -936,19 +999,28 @@ ${!fullyOk ? `<div class="card alert-card">
 </div>
 
 <div class="card">
-  <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:6px">
-    <strong>אירועים</strong>
-    <span class="muted">${addedThisWeek} נוספו בשבוע האחרון</span>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="ok" onclick="setTab('ok', this)">✅ אירועים שנוספו</button>
+    <button class="tab-btn" data-tab="fail" onclick="setTab('fail', this)">⚠️ בעיות${failureEvents.length ? ` (${failureEvents.length})` : ''}</button>
   </div>
-  <div class="actions" style="margin-bottom:10px">
-    <button class="btn btn-sm filter-btn active" data-filter="all" onclick="setFilter('all', this)">הכל</button>
-    <button class="btn btn-sm filter-btn" data-filter="week" onclick="setFilter('week', this)">השבוע האחרון</button>
-    <button class="btn btn-sm filter-btn" data-filter="failed" onclick="setFilter('failed', this)">דורש בדיקה</button>
+
+  <div id="tabOk">
+    <div class="row" style="flex-wrap:wrap;gap:8px;margin-bottom:10px">
+      <span class="muted">${addedThisWeek} נוספו בשבוע האחרון</span>
+      <div class="actions" style="margin:0">
+        <button class="btn btn-sm filter-btn active" data-filter="all" onclick="setFilter('all', this)">הכל</button>
+        <button class="btn btn-sm filter-btn" data-filter="week" onclick="setFilter('week', this)">השבוע האחרון</button>
+      </div>
+    </div>
+    <div id="eventsList">
+      ${successEvents.length ? successEvents.map(renderEventCard).join('') : `<div class="empty-state"><span class="emoji">📸</span>עדיין אין אירועים שנוספו.<br>שתפו צילום מסך לתיקייה ב-Drive ולחצו "סנכרן עכשיו".</div>`}
+    </div>
+    <p class="muted" id="filterEmpty" style="display:none">אין אירועים שתואמים לסינון הזה.</p>
   </div>
-  <div id="eventsList">
-    ${events.length ? events.map(renderEventCard).join('') : '<p class="muted">עדיין אין אירועים. שתף צילום מסך לתיקייה ולחץ סנכרן.</p>'}
+
+  <div id="tabFail" style="display:none">
+    ${failureEvents.length ? failureEvents.map(renderEventCard).join('') : `<div class="empty-state"><span class="emoji">🎉</span>אין בעיות פתוחות כרגע.</div>`}
   </div>
-  <p class="muted" id="filterEmpty" style="display:none">אין אירועים שתואמים לסינון הזה.</p>
 </div>
 
 <div class="footer-note">הריצה האוטומטית בודקת קבצים חדשים כל 5 דקות · <a href="/logout">התנתקות מהדשבורד</a></div>
@@ -977,15 +1049,18 @@ async function doSync() {
   btn.innerHTML = '🔄 סנכרן עכשיו';
 }
 
+function setTab(tab, btn) {
+  document.getElementById('tabOk').style.display = tab === 'ok' ? '' : 'none';
+  document.getElementById('tabFail').style.display = tab === 'fail' ? '' : 'none';
+  document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('active', b === btn));
+}
+
 function setFilter(mode, btn) {
   const weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
   let shown = 0;
   document.querySelectorAll('#eventsList .event').forEach((el) => {
-    const status = el.dataset.status;
     const created = new Date(el.dataset.created).getTime();
-    let show = true;
-    if (mode === 'week') show = created >= weekAgo;
-    if (mode === 'failed') show = (status === 'needs_review' || status === 'error');
+    const show = mode === 'week' ? created >= weekAgo : true;
     el.style.display = show ? '' : 'none';
     if (show) shown++;
   });
@@ -1012,6 +1087,20 @@ async function deleteEvent(id, btn) {
     btn.disabled = false;
     btn.textContent = '🗑️ מחק מהיומן';
   }
+}
+
+async function removeEvent(id, btn) {
+  if (!confirm('להסיר את הפריט הזה מהרשימה בדשבורד? (לא נוגע ביומן או בתמונה בדרייב)')) return;
+  btn.disabled = true;
+  try {
+    const res = await fetch('/remove-event?id=' + encodeURIComponent(id), { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) location.reload();
+    else alert('ההסרה נכשלה: ' + (data.reason || 'שגיאה לא ידועה'));
+  } catch (e) {
+    alert('שגיאת רשת.');
+  }
+  btn.disabled = false;
 }
 </script>
 </body></html>`);
@@ -1105,6 +1194,22 @@ export default {
       } catch (err) {
         return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
       }
+    }
+
+    if (path === '/remove-event' && request.method === 'POST') {
+      const id = url.searchParams.get('id');
+      const index = await getEventsIndex(env);
+      const next = index.filter((r) => r.id !== id);
+      if (next.length === index.length) return json({ ok: false, reason: 'not_found' }, 404);
+      await env.CAL_KV.put('events:index', JSON.stringify(next));
+      try {
+        const accessToken = await getAccessToken(env);
+        const folderId = await findFolderId(env, accessToken);
+        if (folderId) await refreshDriveLogs(env, accessToken, folderId);
+      } catch (err) {
+        console.error('calendar-it log refresh after remove failed:', err);
+      }
+      return json({ ok: true });
     }
 
     if (path === '/' || path === '') return renderDashboard(env);
