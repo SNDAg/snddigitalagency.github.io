@@ -11,28 +11,35 @@
         that Drive folder for new images via syncOnce().
      3. Each new image is sent to a Workers AI vision model
         (@cf/meta/llama-3.2-11b-vision-instruct) with a prompt asking it to
-        read the (mostly Hebrew) text and return structured JSON: title,
-        location, day/month/year, hour/minute. Israeli screenshots write
-        dates as day.month (e.g. "14.9"), never month.day - the prompt says
-        so explicitly.
+        read the (mostly Hebrew) text and return a JSON ARRAY, one entry
+        per distinct date found: title, location, day/month/year,
+        hour/minute (see EXTRACTION_PROMPT). A single screenshot can
+        advertise more than one date - the same show on several nights, a
+        multi-day event, or a few events stacked in one flyer - so
+        processImageFile() turns each array entry into its own dashboard
+        record + calendar event, all sharing the source image's
+        fileId/createdAt as a "batch". Israeli screenshots write dates as
+        day.month (e.g. "14.9"), never month.day - the prompt says so
+        explicitly.
      4. resolveEventDateTime() fills in a missing year (assumes "next
-        occurrence" of that day/month) and decides all-day vs timed.
-     5. The event is inserted straight into the user's Google Calendar
+        occurrence" of that day/month) and decides all-day vs timed, once
+        per extracted date.
+     5. Each event is inserted straight into the user's Google Calendar
         (primary) via the Calendar API. An .ics file is ALSO always
         generated and stored in KV, so there is a manual fallback if the
         auto-insert fails, the extraction needs a human glance, or the user
         just wants to hand a specific event's .ics to their phone.
-     6. Once extraction succeeds (so the .ics fallback already exists), the
-        source screenshot is moved to Drive's trash (trashDriveFile) - it
-        did its job and just clutters the folder otherwise. Left in place
-        when extraction fails/needs review, since it's the only copy a
-        human can still check. Two plain-text logs are kept up to date in
-        the same Drive folder (see refreshDriveLogs, rebuilt from the KV
-        events index on every run that processes at least one file):
-        calendar-it-log.txt (what got added to/removed from the calendar,
-        and whether the image was kept or trashed) and
-        calendar-it-errors.txt (everything the AI couldn't extract
-        cleanly, WITH the raw model output, for debugging without
+     6. Once every date found in the image resolved successfully (so each
+        has an .ics fallback already), the source screenshot is moved to
+        Drive's trash (trashDriveFile) - it did its job and just clutters
+        the folder otherwise. Left in place when any date still needs
+        review, since it's the only copy a human can still check. Two
+        plain-text logs are kept up to date in the same Drive folder (see
+        refreshDriveLogs, rebuilt from the KV events index on every run
+        that processes at least one file): calendar-it-log.txt (what got
+        added to/removed from the calendar, and whether the image was kept
+        or trashed) and calendar-it-errors.txt (everything the AI couldn't
+        extract cleanly, WITH the raw model output, for debugging without
         re-fetching the image).
      7. GET / is a small dashboard (this IS the "known URL": open it,
         tap "Sync now" or tap an event's "Add to calendar" button to pull
@@ -40,7 +47,13 @@
         It also lists recent events with a filter bar (all / last 7 days /
         needs review) and a delete button per added event, which calls
         DELETE on the Calendar API (see /delete-event, deleteCalendarEvent)
-        and updates both the dashboard and the Drive logs to match.
+        and updates both the dashboard and the Drive logs to match. Each
+        card under the "בעיות" (failures) tab also gets its own "נסה שוב"
+        retry button (see /retry-event, retryRecord) - it re-runs
+        processImageFile() on that same source image and replaces every
+        record from that original batch, so a partial multi-date failure
+        can be retried without creating duplicate calendar events for the
+        dates that had already succeeded.
 
    Auth model:
      - Google Drive (full - see OAUTH_SCOPES, needed to trash files and
@@ -468,20 +481,25 @@ async function deleteCalendarEvent(accessToken, calendarEventId) {
 // Vision extraction (Workers AI)
 // ============================================================================
 
-const EXTRACTION_PROMPT = `You are reading a screenshot from a social-media feed (usually Facebook) that advertises an event. The text is mostly Hebrew, sometimes mixed with English or numbers.
+const EXTRACTION_PROMPT = `You are reading a screenshot from a social-media feed (usually Facebook) that advertises one or more events. The text is mostly Hebrew, sometimes mixed with English or numbers.
 
-Respond with ONLY a single valid JSON object (no markdown fences, no explanation) in exactly this shape:
-{"title": string|null, "location": string|null, "day": number|null, "month": number|null, "year": number|null, "hour": number|null, "minute": number|null, "raw_text": string}
+Some screenshots show a single date. Others show MULTIPLE dates - e.g. the same show repeated on several nights, a multi-day event, or a few distinct events stacked in one flyer. Look carefully and find EVERY distinct date shown, not just the first one.
+
+Respond with ONLY a single valid JSON array (no markdown fences, no explanation), with exactly this shape - one array entry per distinct date:
+[{"title": string|null, "location": string|null, "day": number|null, "month": number|null, "year": number|null, "hour": number|null, "minute": number|null, "raw_text": string}]
 
 Rules:
+- If the image has only one date, return an array with exactly one object.
+- If several dates belong to the same event (e.g. same show, different nights), repeat that event's title/location in every object and only change day/month/year/hour/minute per date.
+- If the image shows several different events, give each its own title/location too.
 - Dates are written in Israeli day.month order (e.g. "14.9" means day=14, month=9) - NEVER month.day.
 - "title" is the performer/show/event name only - do not include the date, time or venue in it.
 - "location" is the venue/place name. Strip a leading Hebrew "ב" prefix meaning "at" (e.g. "בבית החייל" -> "בית החייל").
 - If no year is shown in the image, set "year" to null (do not guess a year).
 - If no time is shown, set "hour" and "minute" to null.
-- "raw_text" must contain all readable text from the image, unmodified, so a human can double check your extraction.
-- If you cannot find any date in the image, set "day" and "month" to null.
-Respond with the JSON object only.`;
+- "raw_text" must contain all readable text from the image, unmodified, identically in every object, so a human can double check your extraction against the whole image.
+- If you cannot find any date at all in the image, return a single-object array with "day" and "month" set to null.
+Respond with the JSON array only.`;
 
 // Workers AI's vision model occasionally throws a transient "capacity temporarily exceeded"
 // error (observed directly while building this, code 3040) that has nothing to do with the
@@ -499,7 +517,11 @@ async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
   throw lastErr;
 }
 
-async function extractEventFromImage(env, arrayBuffer) {
+// Returns { data: [fields, ...] } - always an array, even for a single-date image - or
+// { error, raw? }. A screenshot can contain more than one date (see EXTRACTION_PROMPT), so the
+// model is asked for a JSON array; older/looser model output that comes back as a single bare
+// object is still accepted and wrapped in a one-element array.
+async function extractEventsFromImage(env, arrayBuffer) {
   if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
     return { error: 'image_too_large' };
   }
@@ -511,7 +533,12 @@ async function extractEventFromImage(env, arrayBuffer) {
     return { error: 'ai_call_failed', raw: String(err.message || err) };
   }
   const text = result?.response || '';
-  const match = text.match(/\{[\s\S]*\}/);
+  // Array form is checked first: a `{...}` regex against "[{...},{...}]" would greedily span
+  // both objects and fail to parse, so only fall back to the bare-object match when there's no
+  // array in the response at all.
+  const arrayMatch = text.match(/\[[\s\S]*\]/);
+  const objectMatch = text.match(/\{[\s\S]*\}/);
+  const match = arrayMatch || objectMatch;
   if (!match) return { error: 'no_json_in_response', raw: text };
   try {
     // The model sometimes writes zero-padded numbers (e.g. "minute": 09), which is a real
@@ -519,7 +546,9 @@ async function extractEventFromImage(env, arrayBuffer) {
     // literal can't have a leading zero). Strip the padding before parsing: "09" -> "9".
     const sanitized = match[0].replace(/:(\s*)0+(\d)/g, ':$1$2');
     const parsed = JSON.parse(sanitized);
-    return { data: parsed };
+    const list = Array.isArray(parsed) ? parsed : [parsed];
+    if (list.length === 0) return { error: 'no_json_in_response', raw: text };
+    return { data: list };
   } catch (err) {
     return { error: 'json_parse_failed', raw: text };
   }
@@ -634,6 +663,97 @@ async function updateEventRecord(env, id, patch) {
   return index[i];
 }
 
+// Downloads and extracts ONE Drive image, turning it into one dashboard record PER DATE found
+// (see EXTRACTION_PROMPT - a single screenshot can advertise more than one date). All records
+// from one call share fileId/fileName/driveLink/createdAt, which is how latestPerFile() and
+// retryRecord() later recognize them as one batch. Always returns a non-empty array, even for a
+// total failure (image_too_large/ai_call_failed/no_date_found/etc - a single needs_review or
+// error record in that case).
+async function processImageFile(env, accessToken, file) {
+  const baseRecord = {
+    id: crypto.randomUUID(),
+    fileId: file.id,
+    fileName: file.name,
+    driveLink: file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`,
+    createdAt: new Date().toISOString(),
+  };
+
+  let bytes;
+  try {
+    bytes = await downloadFile(accessToken, file.id);
+  } catch (err) {
+    return [{ ...baseRecord, status: 'error', error: String(err.message || err) }];
+  }
+
+  let extraction;
+  try {
+    extraction = await extractEventsFromImage(env, bytes);
+  } catch (err) {
+    return [{ ...baseRecord, status: 'error', error: String(err.message || err) }];
+  }
+
+  if (extraction.error) {
+    return [{ ...baseRecord, status: 'needs_review', error: extraction.error, rawText: extraction.raw || null }];
+  }
+
+  const subRecords = extraction.data.map((fields, i) => ({
+    ...baseRecord,
+    id: i === 0 ? baseRecord.id : crypto.randomUUID(),
+    title: fields.title || file.name,
+    location: fields.location || null,
+    rawText: fields.raw_text || null,
+    _dt: resolveEventDateTime(fields),
+    _rawText: fields.raw_text || '',
+  }));
+
+  for (const sub of subRecords) {
+    const dt = sub._dt;
+    if (!dt) {
+      sub.status = 'needs_review';
+      sub.error = 'no_date_found';
+    } else {
+      Object.assign(sub, dt);
+      const description = `נוצר אוטומטית ע"י Calendar-It מתוך צילום מסך.\n\n${sub._rawText}`;
+      const ics = buildIcs({ uid: sub.id, title: sub.title, location: sub.location, description, dt });
+      await env.CAL_KV.put(`ics:${sub.id}`, ics);
+      sub.icsAvailable = true;
+      try {
+        const inserted = await insertCalendarEvent(accessToken, {
+          title: sub.title, location: sub.location, description, allDay: dt.allDay,
+          startDate: dt.startDate, startHour: dt.startHour, startMinute: dt.startMinute,
+          endDate: dt.endDate, endHour: dt.endHour, endMinute: dt.endMinute,
+        });
+        sub.status = 'added';
+        sub.calendarLink = inserted.htmlLink;
+        sub.calendarEventId = inserted.id;
+      } catch (err) {
+        sub.status = 'ics_only';
+        sub.error = String(err.message || err);
+      }
+    }
+    delete sub._dt;
+    delete sub._rawText;
+  }
+
+  // Extraction succeeded for every date found (each has a saved .ics fallback either way) - the
+  // screenshot did its job, so clear it out of the folder. Left in place if ANY date still
+  // needs review, since that's the only copy a human can still check.
+  const allResolved = subRecords.every((r) => r.status !== 'needs_review');
+  if (allResolved) {
+    try {
+      await trashDriveFile(accessToken, file.id);
+      subRecords.forEach((r) => { r.imageDeleted = true; });
+    } catch (err) {
+      const deleteError = String(err.message || err);
+      subRecords.forEach((r) => { r.imageDeleted = false; r.deleteError = deleteError; });
+    }
+  } else {
+    subRecords.forEach((r) => { r.imageDeleted = false; });
+  }
+
+  return subRecords;
+}
+
 async function syncOnce(env) {
   let accessToken;
   try {
@@ -657,72 +777,11 @@ async function syncOnce(env) {
     if (await env.CAL_KV.get(seenKey)) continue;
     await env.CAL_KV.put(seenKey, '1', { expirationTtl: 90 * 24 * 3600 });
 
-    const record = {
-      id: crypto.randomUUID(),
-      fileId: file.id,
-      fileName: file.name,
-      driveLink: file.webViewLink || `https://drive.google.com/file/d/${file.id}/view`,
-      createdAt: new Date().toISOString(),
-    };
-
-    try {
-      const bytes = await downloadFile(accessToken, file.id);
-      const extraction = await extractEventFromImage(env, bytes);
-
-      if (extraction.error) {
-        record.status = 'needs_review';
-        record.error = extraction.error;
-        record.rawText = extraction.raw || null;
-      } else {
-        const fields = extraction.data;
-        const dt = resolveEventDateTime(fields);
-        record.title = fields.title || file.name;
-        record.location = fields.location || null;
-        record.rawText = fields.raw_text || null;
-
-        if (!dt) {
-          record.status = 'needs_review';
-          record.error = 'no_date_found';
-        } else {
-          Object.assign(record, dt);
-          const description = `נוצר אוטומטית ע"י Calendar-It מתוך צילום מסך.\n\n${fields.raw_text || ''}`;
-          const ics = buildIcs({ uid: record.id, title: record.title, location: record.location, description, dt });
-          await env.CAL_KV.put(`ics:${record.id}`, ics);
-          record.icsAvailable = true;
-
-          try {
-            const inserted = await insertCalendarEvent(accessToken, {
-              title: record.title, location: record.location, description, allDay: dt.allDay,
-              startDate: dt.startDate, startHour: dt.startHour, startMinute: dt.startMinute,
-              endDate: dt.endDate, endHour: dt.endHour, endMinute: dt.endMinute,
-            });
-            record.status = 'added';
-            record.calendarLink = inserted.htmlLink;
-            record.calendarEventId = inserted.id;
-          } catch (err) {
-            record.status = 'ics_only';
-            record.error = String(err.message || err);
-          }
-
-          // Extraction succeeded (we have a date + a saved .ics fallback either way) - the
-          // screenshot did its job, so clear it out of the folder. Left in place on
-          // needs_review/error below, since that's the only copy a human can still check.
-          try {
-            await trashDriveFile(accessToken, file.id);
-            record.imageDeleted = true;
-          } catch (err) {
-            record.imageDeleted = false;
-            record.deleteError = String(err.message || err);
-          }
-        }
-      }
-    } catch (err) {
-      record.status = 'error';
-      record.error = String(err.message || err);
+    const records = await processImageFile(env, accessToken, file);
+    for (const record of [...records].reverse()) {
+      await pushEventRecord(env, record);
     }
-
-    await pushEventRecord(env, record);
-    processed.push(record);
+    processed.push(...records);
   }
 
   if (processed.length > 0) {
@@ -735,6 +794,52 @@ async function syncOnce(env) {
 
   await env.CAL_KV.put('sync:last_check', new Date().toISOString());
   return { ok: true, processed: processed.length, records: processed };
+}
+
+// Retries ONE failed record from the "בעיות" tab. Because extraction happens at the whole-image
+// level (one screenshot -> possibly several dates, see processImageFile), a retry re-reads the
+// entire source image again - not just the failed date - so it must replace every record that
+// came out of that same original run (same fileId + createdAt), deleting any calendar events
+// they'd already created, to avoid ending up with duplicates for dates that had succeeded.
+async function retryRecord(env, id) {
+  const index = await getEventsIndex(env);
+  const target = index.find((r) => r.id === id);
+  if (!target) return { ok: false, reason: 'not_found' };
+  if (!FAILURE_STATUSES.has(target.status)) return { ok: false, reason: 'not_a_failure' };
+
+  let accessToken;
+  try {
+    accessToken = await getAccessToken(env);
+  } catch {
+    return { ok: false, reason: 'not_connected' };
+  }
+
+  const batch = index.filter((r) => r.fileId === target.fileId && r.createdAt === target.createdAt);
+  for (const r of batch) {
+    if (r.calendarEventId) {
+      try {
+        await deleteCalendarEvent(accessToken, r.calendarEventId);
+      } catch (err) {
+        console.error('calendar-it retry: failed to remove stale calendar event', err);
+      }
+    }
+  }
+
+  const file = { id: target.fileId, name: target.fileName, webViewLink: target.driveLink };
+  const newRecords = await processImageFile(env, accessToken, file);
+
+  const batchIds = new Set(batch.map((r) => r.id));
+  const next = [...newRecords, ...index.filter((r) => !batchIds.has(r.id))];
+  await env.CAL_KV.put('events:index', JSON.stringify(next.slice(0, EVENTS_INDEX_CAP)));
+
+  try {
+    const folderId = await findFolderId(env, accessToken);
+    if (folderId) await refreshDriveLogs(env, accessToken, folderId);
+  } catch (err) {
+    console.error('calendar-it log refresh after retry failed:', err);
+  }
+
+  return { ok: true, records: newRecords };
 }
 
 // ============================================================================
@@ -863,18 +968,27 @@ function isPastEvent(record) {
   return (record.endDate || record.startDate) < todayStr;
 }
 
-// Keeps only the most recently processed record per Drive file. Normally there's exactly one
-// record per file (the "seen:" KV guard in syncOnce prevents reprocessing) - this only matters
-// when a file was reprocessed after clearing its seen key (e.g. while debugging a stuck
-// extraction), which otherwise leaves stale failed attempts sitting next to the eventual
-// success in the dashboard.
+// Keeps only the most recently processed BATCH per Drive file - a batch being every record
+// produced by the same processImageFile() call (same fileId + identical createdAt), which for a
+// multi-date screenshot is more than one record. Collapsing to a single record here would hide
+// legitimate extra dates, so the dedup key is the batch, not the individual record. This only
+// discards anything when a file was reprocessed (retryRecord, or a cleared seen key while
+// debugging), which otherwise leaves stale attempts sitting next to the eventual result.
 function latestPerFile(events) {
   const byFile = new Map();
   for (const r of events) {
-    const existing = byFile.get(r.fileId);
-    if (!existing || new Date(r.createdAt) > new Date(existing.createdAt)) byFile.set(r.fileId, r);
+    if (!byFile.has(r.fileId)) byFile.set(r.fileId, []);
+    byFile.get(r.fileId).push(r);
   }
-  return [...byFile.values()].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const kept = [];
+  for (const records of byFile.values()) {
+    const latestCreatedAt = records.reduce(
+      (max, r) => (new Date(r.createdAt) > new Date(max) ? r.createdAt : max),
+      records[0].createdAt,
+    );
+    kept.push(...records.filter((r) => r.createdAt === latestCreatedAt));
+  }
+  return kept.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
 function formatEventMeta(record) {
@@ -888,6 +1002,9 @@ function formatEventMeta(record) {
 function renderEventCard(record) {
   const title = escapeHtml(record.title || record.fileName || 'אירוע');
   const actions = [];
+  if (FAILURE_STATUSES.has(record.status)) {
+    actions.push(`<button class="btn btn-sm btn-primary" onclick="retryEvent('${record.id}', this)">🔁 נסה שוב</button>`);
+  }
   if (record.icsAvailable) {
     actions.push(`<a class="btn btn-sm" href="/ics/${record.id}">📄 הוסף ליומן (ICS)</a>`);
   }
@@ -1089,6 +1206,27 @@ async function deleteEvent(id, btn) {
   }
 }
 
+async function retryEvent(id, btn) {
+  btn.disabled = true;
+  const original = btn.innerHTML;
+  btn.innerHTML = '<span class="spin">⏳</span> מנסה שוב...';
+  try {
+    const res = await fetch('/retry-event?id=' + encodeURIComponent(id), { method: 'POST' });
+    const data = await res.json();
+    if (data.ok) {
+      location.reload();
+    } else {
+      alert('הניסיון החוזר נכשל: ' + (data.detail || data.reason || 'שגיאה לא ידועה'));
+      btn.disabled = false;
+      btn.innerHTML = original;
+    }
+  } catch (e) {
+    alert('שגיאת רשת בניסיון החוזר.');
+    btn.disabled = false;
+    btn.innerHTML = original;
+  }
+}
+
 async function removeEvent(id, btn) {
   if (!confirm('להסיר את הפריט הזה מהרשימה בדשבורד? (לא נוגע ביומן או בתמונה בדרייב)')) return;
   btn.disabled = true;
@@ -1191,6 +1329,19 @@ export default {
           console.error('calendar-it log refresh after delete failed:', err);
         }
         return json({ ok: true, record: updated });
+      } catch (err) {
+        return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
+      }
+    }
+
+    if (path === '/retry-event' && request.method === 'POST') {
+      const id = url.searchParams.get('id');
+      try {
+        const result = await retryRecord(env, id);
+        if (!result.ok) {
+          return json(result, result.reason === 'not_found' ? 404 : 400);
+        }
+        return json(result);
       } catch (err) {
         return json({ ok: false, reason: 'error', detail: String(err.message || err) }, 500);
       }
