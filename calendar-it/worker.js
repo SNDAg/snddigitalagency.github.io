@@ -11,16 +11,18 @@
         that Drive folder for new images via syncOnce().
      3. Each new image is sent to a Workers AI vision model
         (@cf/meta/llama-3.2-11b-vision-instruct) with a prompt asking it to
-        read the (mostly Hebrew) text and return a JSON ARRAY, one entry
-        per distinct date found: title, location, day/month/year,
-        hour/minute (see EXTRACTION_PROMPT). A single screenshot can
-        advertise more than one date - the same show on several nights, a
-        multi-day event, or a few events stacked in one flyer - so
-        processImageFile() turns each array entry into its own dashboard
-        record + calendar event, all sharing the source image's
-        fileId/createdAt as a "batch". Israeli screenshots write dates as
-        day.month (e.g. "14.9"), never month.day - the prompt says so
-        explicitly.
+        read the (mostly Hebrew) text and return a JSON object shaped
+        {raw_text, events:[{title, location, day/month/year, hour/minute}]}
+        - one events entry per distinct date, with the full transcription
+        kept ONCE at the top level, not repeated per date (see
+        EXTRACTION_PROMPT; repeating it per date overran the token budget
+        and truncated the JSON). A single screenshot can advertise more
+        than one date - the same show on several nights, a multi-day
+        event, or a few events stacked in one flyer - so processImageFile()
+        turns each events entry into its own dashboard record + calendar
+        event, all sharing the source image's fileId/createdAt as a
+        "batch". Israeli screenshots write dates as day.month (e.g.
+        "14.9"), never month.day - the prompt says so explicitly.
      4. resolveEventDateTime() fills in a missing year (assumes "next
         occurrence" of that day/month) and decides all-day vs timed, once
         per extracted date.
@@ -485,21 +487,22 @@ const EXTRACTION_PROMPT = `You are reading a screenshot from a social-media feed
 
 Some screenshots show a single date. Others show MULTIPLE dates - e.g. the same show repeated on several nights, a multi-day event, or a few distinct events stacked in one flyer. Look carefully and find EVERY distinct date shown, not just the first one.
 
-Respond with ONLY a single valid JSON array (no markdown fences, no explanation), with exactly this shape - one array entry per distinct date:
-[{"title": string|null, "location": string|null, "day": number|null, "month": number|null, "year": number|null, "hour": number|null, "minute": number|null, "raw_text": string}]
+Respond with ONLY a single valid JSON object (no markdown fences, no explanation), with exactly this shape:
+{"raw_text": string, "events": [{"title": string|null, "location": string|null, "day": number|null, "month": number|null, "year": number|null, "hour": number|null, "minute": number|null}]}
 
 Rules:
-- If the image has only one date, return an array with exactly one object.
-- If several dates belong to the same event (e.g. same show, different nights), repeat that event's title/location in every object and only change day/month/year/hour/minute per date.
-- If the image shows several different events, give each its own title/location too.
+- "raw_text" appears ONCE, at the top level - all readable text from the image, so a human can double-check the extraction against the whole image. Do NOT repeat it inside the events.
+- Inside "raw_text", replace every double-quote character (") with a single quote (') so the JSON stays valid. Keep everything else as written.
+- "events" has one entry per distinct date. If the image has only one date, return exactly one entry.
+- If several dates belong to the same event (same show, different nights), repeat that event's title/location in every entry and only change day/month/year/hour/minute.
+- If the image shows several different events, give each its own title/location.
 - Dates are written in Israeli day.month order (e.g. "14.9" means day=14, month=9) - NEVER month.day.
 - "title" is the performer/show/event name only - do not include the date, time or venue in it.
 - "location" is the venue/place name. Strip a leading Hebrew "ב" prefix meaning "at" (e.g. "בבית החייל" -> "בית החייל").
 - If no year is shown in the image, set "year" to null (do not guess a year).
 - If no time is shown, set "hour" and "minute" to null.
-- "raw_text" must contain all readable text from the image, unmodified, identically in every object, so a human can double check your extraction against the whole image.
-- If you cannot find any date at all in the image, return a single-object array with "day" and "month" set to null.
-Respond with the JSON array only.`;
+- If you cannot find any date at all in the image, return one events entry with "day" and "month" set to null.
+Respond with the JSON object only.`;
 
 // Workers AI's vision model occasionally throws a transient "capacity temporarily exceeded"
 // error (observed directly while building this, code 3040) that has nothing to do with the
@@ -508,7 +511,11 @@ async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
   let lastErr;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return await env.AI.run(VISION_MODEL, { image, prompt: EXTRACTION_PROMPT, max_tokens: 512, temperature: 0 });
+      // raw_text (a full Hebrew transcription of the flyer) is emitted once now, not repeated
+      // per date - but Hebrew tokenizes to ~3 tokens/word, so a text-heavy poster plus the
+      // events array still needs real headroom. 512 truncated the JSON mid-string and every
+      // such image fell through to needs_review.
+      return await env.AI.run(VISION_MODEL, { image, prompt: EXTRACTION_PROMPT, max_tokens: 2048, temperature: 0 });
     } catch (err) {
       lastErr = err;
       if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, 1000 * attempt));
@@ -517,10 +524,14 @@ async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
   throw lastErr;
 }
 
-// Returns { data: [fields, ...] } - always an array, even for a single-date image - or
-// { error, raw? }. A screenshot can contain more than one date (see EXTRACTION_PROMPT), so the
-// model is asked for a JSON array; older/looser model output that comes back as a single bare
-// object is still accepted and wrapped in a one-element array.
+// Returns { data: [fields, ...] } - one entry per date, each carrying its own `raw_text` (the
+// shared top-level transcription is copied onto every entry here so downstream code stays
+// per-record) - or { error, raw? }.
+//
+// Expected model output is { "raw_text": ..., "events": [ {fields}, ... ] }. For resilience we
+// also accept a bare array of field objects and a single bare field object (older/looser
+// output). `ai_response_truncated` is split out from `json_parse_failed` so a cut-off answer
+// reads as retryable rather than as a broken image.
 async function extractEventsFromImage(env, arrayBuffer) {
   if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
     return { error: 'image_too_large' };
@@ -533,23 +544,55 @@ async function extractEventsFromImage(env, arrayBuffer) {
     return { error: 'ai_call_failed', raw: String(err.message || err) };
   }
   const text = result?.response || '';
-  // Array form is checked first: a `{...}` regex against "[{...},{...}]" would greedily span
-  // both objects and fail to parse, so only fall back to the bare-object match when there's no
-  // array in the response at all.
-  const arrayMatch = text.match(/\[[\s\S]*\]/);
-  const objectMatch = text.match(/\{[\s\S]*\}/);
-  const match = arrayMatch || objectMatch;
-  if (!match) return { error: 'no_json_in_response', raw: text };
+
+  // Grab the outermost JSON value. The wrapper is an object, so `{...}` first; but if the model
+  // skipped the wrapper and emitted a bare `[{...},{...}]`, a `{...}` regex would greedily span
+  // both objects and fail to parse - so when a `[` opens before any `{`, match the array.
+  const firstBrace = text.indexOf('{');
+  const firstBracket = text.indexOf('[');
+  const arrayFirst = firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace);
+  const match = arrayFirst
+    ? text.match(/\[[\s\S]*\]/)
+    : (text.match(/\{[\s\S]*\}/) || text.match(/\[[\s\S]*\]/));
+  if (!match) {
+    // Started emitting JSON but never closed it -> the token budget cut the answer off.
+    if (/[[{]\s*"/.test(text)) return { error: 'ai_response_truncated', raw: text };
+    return { error: 'no_json_in_response', raw: text };
+  }
   try {
-    // The model sometimes writes zero-padded numbers (e.g. "minute": 09), which is a real
-    // event - Hebrew screenshots often show times like 17:09 - but invalid JSON (a number
-    // literal can't have a leading zero). Strip the padding before parsing: "09" -> "9".
-    const sanitized = match[0].replace(/:(\s*)0+(\d)/g, ':$1$2');
+    // The model sometimes zero-pads the numeric fields (e.g. "minute": 09), which is invalid
+    // JSON (a number literal can't have a leading zero). Strip it - but ONLY on the known
+    // numeric keys: a blanket ":0\d -> :\d" also rewrites clock times sitting inside raw_text
+    // ("20:05" -> "20:5"), which then land wrong in the calendar event + .ics.
+    const sanitized = match[0].replace(/("(?:day|month|year|hour|minute)"\s*:\s*)0+(\d)/g, '$1$2');
     const parsed = JSON.parse(sanitized);
-    const list = Array.isArray(parsed) ? parsed : [parsed];
-    if (list.length === 0) return { error: 'no_json_in_response', raw: text };
-    return { data: list };
+
+    let events;
+    let sharedRawText = '';
+    if (Array.isArray(parsed)) {
+      events = parsed;
+    } else if (parsed && Array.isArray(parsed.events)) {
+      events = parsed.events;
+      sharedRawText = typeof parsed.raw_text === 'string' ? parsed.raw_text : '';
+    } else {
+      events = [parsed]; // a single bare fields object
+    }
+    if (events.length === 0) return { error: 'no_date_found', raw: text };
+
+    const data = events.map((e) => ({
+      ...e,
+      raw_text: (typeof e.raw_text === 'string' && e.raw_text) ? e.raw_text : sharedRawText,
+    }));
+    return { data };
   } catch (err) {
+    // A response cut off mid-answer can still leave an earlier `}`/`]` for the greedy match to
+    // grab, so truncation and a genuine parse error look alike here. Unbalanced brackets in the
+    // matched slice (more opens than closes) means it was cut off - flag that as retryable
+    // rather than parking it as a broken image. Rough count (ignores braces inside strings) is
+    // fine: it only ever runs on already-unparseable output.
+    const opens = (match[0].match(/[[{]/g) || []).length;
+    const closes = (match[0].match(/[\]}]/g) || []).length;
+    if (opens > closes) return { error: 'ai_response_truncated', raw: text };
     return { error: 'json_parse_failed', raw: text };
   }
 }
