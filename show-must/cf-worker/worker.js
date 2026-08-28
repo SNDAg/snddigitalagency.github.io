@@ -560,7 +560,10 @@ async function refreshImdbRatings(env) {
 
   // Prune ratings for films that are no longer showing anywhere - avoids imdb-v1 accumulating
   // stale entries forever, same reasoning as showmust-content's own pruning step.
-  Object.keys(store.ratings).forEach((title) => { if (!cinemaTitles.has(title)) delete store.ratings[title]; });
+  let prunedAny = false;
+  Object.keys(store.ratings).forEach((title) => {
+    if (!cinemaTitles.has(title)) { delete store.ratings[title]; prunedAny = true; }
+  });
 
   const now = Date.now();
   const titlesList = Array.from(cinemaTitles.keys());
@@ -569,11 +572,17 @@ async function refreshImdbRatings(env) {
   const queue = [...neverChecked, ...stale];
 
   if (!queue.length) {
-    // Nothing to do this run, but still persist the pruning above (harmless if unchanged) and
-    // an updated generatedAt so the client-visible imdbGeneratedAt reflects a live worker.
-    store.generatedAt = new Date().toISOString();
-    try { await env.SHOWMUST_KV.put(IMDB_KV_KEY, JSON.stringify(store)); }
-    catch (e) { console.error('imdb-v1 put failed:', e); }
+    // Nothing to look up this run. Persist ONLY if the prune above actually dropped a film -
+    // otherwise this run changed no data at all, and rewriting imdb-v1 just to bump generatedAt
+    // spends one KV write every 10 min (~144/day, most of this worker's write volume) for
+    // nothing. generatedAt is metadata only: buildClientPayload passes it straight through as
+    // meta.imdbGeneratedAt and no client reads it, so letting it go stale between real updates
+    // is harmless. Ratings themselves are untouched here either way.
+    if (prunedAny) {
+      store.generatedAt = new Date().toISOString();
+      try { await env.SHOWMUST_KV.put(IMDB_KV_KEY, JSON.stringify(store)); }
+      catch (e) { console.error('imdb-v1 put failed:', e); }
+    }
     return;
   }
 
