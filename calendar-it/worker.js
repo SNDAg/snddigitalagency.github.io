@@ -492,7 +492,7 @@ Respond with ONLY a single valid JSON object (no markdown fences, no explanation
 
 Rules:
 - "raw_text" appears ONCE, at the top level - all readable text from the image, so a human can double-check the extraction against the whole image. Do NOT repeat it inside the events.
-- Inside "raw_text", replace every double-quote character (") with a single quote (') so the JSON stays valid. Keep everything else as written.
+- Write "raw_text" as ONE line: replace every line break with a single space, and replace every double-quote character (") with a single quote ('), so the JSON stays valid. Keep everything else as written.
 - "events" has one entry per distinct date. If the image has only one date, return exactly one entry.
 - If several dates belong to the same event (same show, different nights), repeat that event's title/location in every entry and only change day/month/year/hour/minute.
 - If the image shows several different events, give each its own title/location.
@@ -507,15 +507,11 @@ Respond with the JSON object only.`;
 // Workers AI's vision model occasionally throws a transient "capacity temporarily exceeded"
 // error (observed directly while building this, code 3040) that has nothing to do with the
 // image itself - a couple of short retries clears most of them up.
-async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
+async function runVisionModelWithRetry(env, image, maxAttempts = 3, maxTokens = 2048) {
   let lastErr;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      // raw_text (a full Hebrew transcription of the flyer) is emitted once now, not repeated
-      // per date - but Hebrew tokenizes to ~3 tokens/word, so a text-heavy poster plus the
-      // events array still needs real headroom. 512 truncated the JSON mid-string and every
-      // such image fell through to needs_review.
-      return await env.AI.run(VISION_MODEL, { image, prompt: EXTRACTION_PROMPT, max_tokens: 2048, temperature: 0 });
+      return await env.AI.run(VISION_MODEL, { image, prompt: EXTRACTION_PROMPT, max_tokens: maxTokens, temperature: 0 });
     } catch (err) {
       lastErr = err;
       if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, 1000 * attempt));
@@ -524,77 +520,133 @@ async function runVisionModelWithRetry(env, image, maxAttempts = 3) {
   throw lastErr;
 }
 
-// Returns { data: [fields, ...] } - one entry per date, each carrying its own `raw_text` (the
-// shared top-level transcription is copied onto every entry here so downstream code stays
-// per-record) - or { error, raw? }.
-//
-// Expected model output is { "raw_text": ..., "events": [ {fields}, ... ] }. For resilience we
-// also accept a bare array of field objects and a single bare field object (older/looser
-// output). `ai_response_truncated` is split out from `json_parse_failed` so a cut-off answer
-// reads as retryable rather than as a broken image.
+// Best-effort repair of the two ways this weak model produces invalid JSON in a string value:
+// a raw line break, and an unescaped double-quote (the prompt says swap " for ' inside
+// raw_text, but Hebrew acronyms - ת"א, עו"ד, ד"ר - slip through). Walks the text tracking
+// string state; a '"' while inside a string counts as the terminator only when the next
+// non-space char is JSON-structural (: , } ] or end), otherwise it's an inner quote and gets
+// escaped. Only ever run as a fallback after a clean JSON.parse already failed.
+function repairJsonStrings(s) {
+  let out = '';
+  let inString = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (!inString) {
+      out += c;
+      if (c === '"') inString = true;
+      continue;
+    }
+    if (c === '\\') { // preserve escapes already in the text
+      out += c + (s[i + 1] ?? '');
+      i++;
+      continue;
+    }
+    if (c === '\n') { out += '\\n'; continue; }
+    if (c === '\r') { out += '\\r'; continue; }
+    if (c === '\t') { out += '\\t'; continue; }
+    if (c === '"') {
+      let j = i + 1;
+      while (j < s.length && ' \t\r\n'.includes(s[j])) j++;
+      if (j >= s.length || ':,}]'.includes(s[j])) {
+        out += '"';
+        inString = false;
+      } else {
+        out += '\\"';
+      }
+      continue;
+    }
+    out += c;
+  }
+  return out;
+}
+
+// Coerces whatever the model returned into an array of per-date field objects, each carrying
+// its own `raw_text` (the shared top-level one is copied onto every entry so downstream code
+// stays per-record). Accepts the documented { raw_text, events:[...] } wrapper, a bare
+// [{...}] array, and a single bare {...} object. Returns null if `parsed` isn't a usable shape.
+function normalizeEvents(parsed) {
+  let events;
+  let sharedRawText = '';
+  if (Array.isArray(parsed)) {
+    events = parsed;
+  } else if (parsed && Array.isArray(parsed.events)) {
+    events = parsed.events;
+    sharedRawText = typeof parsed.raw_text === 'string' ? parsed.raw_text : '';
+  } else if (parsed && typeof parsed === 'object') {
+    events = [parsed];
+  } else {
+    return null;
+  }
+  return events.map((e) => ({
+    ...(e && typeof e === 'object' ? e : {}),
+    raw_text: (e && typeof e.raw_text === 'string' && e.raw_text) ? e.raw_text : sharedRawText,
+  }));
+}
+
+// Pulls the events out of a raw model response string. Returns { data:[fields,...] } or
+// { error, raw }. Tries both the `{...}` and `[...]` greedy slices and keeps whichever actually
+// parses into usable events (so a prose prefix containing a stray bracket no longer decides it
+// by position), each slice attempted first as-is then through repairJsonStrings(). Unbalanced
+// brackets in a slice that never parsed => the answer was cut off (ai_response_truncated),
+// which the caller retries with a bigger token budget rather than parking the image.
+function parseModelJson(text) {
+  const candidates = [];
+  const objMatch = text.match(/\{[\s\S]*\}/);
+  const arrMatch = text.match(/\[[\s\S]*\]/);
+  if (objMatch) candidates.push(objMatch[0]);
+  if (arrMatch) candidates.push(arrMatch[0]);
+  if (candidates.length === 0) {
+    if (/[[{]\s*"/.test(text)) return { error: 'ai_response_truncated', raw: text };
+    return { error: 'no_json_in_response', raw: text };
+  }
+
+  let sawUnbalanced = false;
+  for (const candidate of candidates) {
+    // "minute": 09 -> 9 (a leading zero is invalid JSON). Numeric keys only, so clock times
+    // sitting inside raw_text ("20:05") are left alone.
+    const zeroFixed = candidate.replace(/("(?:day|month|year|hour|minute)"\s*:\s*)0+(\d)/g, '$1$2');
+    const opens = (candidate.match(/[[{]/g) || []).length;
+    const closes = (candidate.match(/[\]}]/g) || []).length;
+    if (opens > closes) sawUnbalanced = true;
+
+    for (const attempt of [zeroFixed, repairJsonStrings(zeroFixed)]) {
+      let parsed;
+      try {
+        parsed = JSON.parse(attempt);
+      } catch {
+        continue;
+      }
+      const events = normalizeEvents(parsed);
+      if (!events) continue;
+      if (events.length === 0) return { error: 'no_date_found', raw: text };
+      return { data: events };
+    }
+  }
+  if (sawUnbalanced) return { error: 'ai_response_truncated', raw: text };
+  return { error: 'json_parse_failed', raw: text };
+}
+
+// Returns { data: [fields, ...] } - one entry per date - or { error, raw? }. Sends the image at
+// a 2048-token budget; if the model still cut the JSON off, retries ONCE at 4096 (temperature
+// is 0, so only a bigger budget changes the outcome - a plain retry reproduces the same cut).
 async function extractEventsFromImage(env, arrayBuffer) {
   if (arrayBuffer.byteLength > MAX_IMAGE_BYTES) {
     return { error: 'image_too_large' };
   }
   const image = Array.from(new Uint8Array(arrayBuffer));
-  let result;
-  try {
-    result = await runVisionModelWithRetry(env, image);
-  } catch (err) {
-    return { error: 'ai_call_failed', raw: String(err.message || err) };
-  }
-  const text = result?.response || '';
 
-  // Grab the outermost JSON value. The wrapper is an object, so `{...}` first; but if the model
-  // skipped the wrapper and emitted a bare `[{...},{...}]`, a `{...}` regex would greedily span
-  // both objects and fail to parse - so when a `[` opens before any `{`, match the array.
-  const firstBrace = text.indexOf('{');
-  const firstBracket = text.indexOf('[');
-  const arrayFirst = firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace);
-  const match = arrayFirst
-    ? text.match(/\[[\s\S]*\]/)
-    : (text.match(/\{[\s\S]*\}/) || text.match(/\[[\s\S]*\]/));
-  if (!match) {
-    // Started emitting JSON but never closed it -> the token budget cut the answer off.
-    if (/[[{]\s*"/.test(text)) return { error: 'ai_response_truncated', raw: text };
-    return { error: 'no_json_in_response', raw: text };
-  }
-  try {
-    // The model sometimes zero-pads the numeric fields (e.g. "minute": 09), which is invalid
-    // JSON (a number literal can't have a leading zero). Strip it - but ONLY on the known
-    // numeric keys: a blanket ":0\d -> :\d" also rewrites clock times sitting inside raw_text
-    // ("20:05" -> "20:5"), which then land wrong in the calendar event + .ics.
-    const sanitized = match[0].replace(/("(?:day|month|year|hour|minute)"\s*:\s*)0+(\d)/g, '$1$2');
-    const parsed = JSON.parse(sanitized);
-
-    let events;
-    let sharedRawText = '';
-    if (Array.isArray(parsed)) {
-      events = parsed;
-    } else if (parsed && Array.isArray(parsed.events)) {
-      events = parsed.events;
-      sharedRawText = typeof parsed.raw_text === 'string' ? parsed.raw_text : '';
-    } else {
-      events = [parsed]; // a single bare fields object
+  let parsed;
+  for (const maxTokens of [2048, 4096]) {
+    let result;
+    try {
+      result = await runVisionModelWithRetry(env, image, 3, maxTokens);
+    } catch (err) {
+      return { error: 'ai_call_failed', raw: String(err.message || err) };
     }
-    if (events.length === 0) return { error: 'no_date_found', raw: text };
-
-    const data = events.map((e) => ({
-      ...e,
-      raw_text: (typeof e.raw_text === 'string' && e.raw_text) ? e.raw_text : sharedRawText,
-    }));
-    return { data };
-  } catch (err) {
-    // A response cut off mid-answer can still leave an earlier `}`/`]` for the greedy match to
-    // grab, so truncation and a genuine parse error look alike here. Unbalanced brackets in the
-    // matched slice (more opens than closes) means it was cut off - flag that as retryable
-    // rather than parking it as a broken image. Rough count (ignores braces inside strings) is
-    // fine: it only ever runs on already-unparseable output.
-    const opens = (match[0].match(/[[{]/g) || []).length;
-    const closes = (match[0].match(/[\]}]/g) || []).length;
-    if (opens > closes) return { error: 'ai_response_truncated', raw: text };
-    return { error: 'json_parse_failed', raw: text };
+    parsed = parseModelJson(result?.response || '');
+    if (parsed.error !== 'ai_response_truncated') break;
   }
+  return parsed;
 }
 
 // ============================================================================
