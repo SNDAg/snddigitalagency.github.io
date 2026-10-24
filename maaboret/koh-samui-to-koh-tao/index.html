@@ -1999,7 +1999,6 @@
             const seatsElement = document.getElementById('randomSeats');
             if (seatsElement) seatsElement.innerText = '';
         }
-        }
         function copyCoupon() {
             navigator.clipboard.writeText(couponCode).then(() => {
                 const el = document.getElementById('couponCopied');
@@ -2121,7 +2120,6 @@
                 setTimeout(() => toast.classList.remove('show'), 4500);
                 socialProofShown = true;
             }
-        }
         }
 
         // איחוד אירועי טעינה - מונע כפילויות ומפעיל לוגיקת קישורים גיאוגרפיים (SEO GEO)
