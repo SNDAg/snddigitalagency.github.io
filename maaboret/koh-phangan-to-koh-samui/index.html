@@ -2112,14 +2112,7 @@
         }
 
         function maybeShowSocialProof() {
-            if (socialProofShown) return;
-            const toast = document.getElementById('socialProof');
-            if (toast) {
-                document.getElementById('socialProofText').innerHTML = `🔥 <b>מסלול פופולרי</b> — מומלץ להזמין מוקדם כדי לשמור על שעת ההפלגה המועדפת`;
-                setTimeout(() => toast.classList.add('show'), 800);
-                setTimeout(() => toast.classList.remove('show'), 4500);
-                socialProofShown = true;
-            }
+            return; // Disabled for specific courses
         }
 
         // איחוד אירועי טעינה - מונע כפילויות ומפעיל לוגיקת קישורים גיאוגרפיים (SEO GEO)
